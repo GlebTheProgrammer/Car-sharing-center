@@ -1,6 +1,8 @@
 ﻿using CarSharingApp.Models;
+using CarSharingApp.Models.VehicleData;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Drawing;
 
 namespace CarSharingApp.Controllers
 {
@@ -15,7 +17,18 @@ namespace CarSharingApp.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            float[][] array = new float[3][];
+            int x = 10;
+            int y = 10;
+
+            for (int i = 0; i < 3; i++)
+            {
+                array[i] = new float[2] { x, y };
+                x += 10;
+                y += 10;
+            }
+
+            return View(array);
         }
 
         public IActionResult Privacy()

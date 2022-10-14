@@ -1,4 +1,6 @@
-﻿<div class="container-fluid p-0 mt-3">
+﻿@model float[][]
+
+<div class="container-fluid p-0 mt-3">
     <section class="row no-gutters align-items-center">
         <div class="col-12 text-center d-flex">
             <img class="img-fluid mt-3" src="~/Images/AboutUsPage/main.jpg" alt="First slide">
@@ -36,9 +38,57 @@
     <button type="button" class="btn btn-primary btn-lg btn-secondary align-content-center mt-4" onclick="location.href='@Url.Action("Index","CarSharing")'">View Available Cars</button>
 </div>
 
+<hr class="featurette-divider mt-5 mb-5">
+
 <div class="content-section__header content-lg spacing-2rem text-center medium-text-center mt-5">
-    <h2>Becoming a Sam Car Sharing member</h2>
-    <h6><span class="text-muted">Applying is as easy as 1,2,3. All you need is to be 21 or older (18 if a student or where required by law) and have a valid driver’s license.</span></h6>
+    <h2>Becoming a Sam family member</h2>
+    <h6><span class="text-muted">Get some positive emotions. Have a great time. Or just cruise around your favorite streats and attractions? Explore more with one of the world's leading car-sharing network...</span></h6>
+    <h6><span class="text-muted">Use the map to have a look at vehicle locations near you</span></h6>
+</div>
+
+<div class="mt-4">
+    <div class="container-fluid">
+        <div id="map" class="text-center" style="height: 400px; width: 100%;"></div>
+        <script>
+            var map;
+            function initMap()
+            {
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: { lat: 53.90588468960213, lng: 27.555191727187893 },
+                    zoom : 11
+                });
+
+                var model = '@Html.Raw(Json.Serialize(Model))';
+                var data = JSON.parse(model);
+
+                var marker = new google.maps.Marker({
+                    position: {
+                        lat: 53.936800785193505,
+                        lng: 27.59339282885198
+                    },
+                    map: map,
+                    draggable: true
+                });
+
+                for (i = 0; i < data.length; i++) {
+                    marker = new google.maps.Marker(
+                    {
+                        position: new google.maps.LatLng(data[i][0], data[i][1]),
+                        map: map
+                    });
+                }
+            }
+        </script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9AIXs7jB_3r8oRc1zd0i9p0nanEH5Q6M&callback=initMap" async defer></script>
+    </div>
+</div>
+
+<hr class="featurette-divider mt-5 mb-5">
+
+<div class="content-section__header content-lg spacing-2rem text-center medium-text-center mt-5">
+    <h2>Sam Car Sharing in Minsk</h2>
+    <h6><span class="text-muted">Applying is as easy as 1,2,3. All you need is to be 21 or older</span></h6>
+    <h6><span class="text-muted">(18 if a student or where required by law) and have a valid driver’s license.</span></h6>
 </div>
 
 <div class="container marketing mt-5">
@@ -66,43 +116,56 @@
     </div><!-- /.row -->
     <!-- START THE FEATURETTES -->
 
+    <div class="content-section__header content-lg spacing-2rem text-center medium-text-center mt-5">
+        <h2>Have a look at our Clients Stories</h2>
+    </div>
+
     <hr class="featurette-divider">
 
     <div class="row featurette">
-        <div class="col-md-7 ">
-            <h2 class="featurette-heading">First featurette heading. <span class="text-muted">It'll blow your mind.</span></h2>
-            <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
+        <div class="col-md-7 mt-5">
+            <h2 class="featurette-heading">Avid Minsk traveler. <span class="text-muted">It is time to conquer new heights.</span></h2>
+            <p class="lead">
+                Mikle: "I took a trip in a BMW 2 Series Convertible with Sam Car Sharing and embarked on a lake tour in Minsk and then to visit clients. The car is fun! Everything worked wonderfully - from free refuelling outside of Minsk, to unlocking and locking the car with the app. I just had to quickly look in the airport parking spots before I found this beautiful car."
+            </p>
         </div>
         <div class="col-md-5">
-            <img class="featurette-image img-fluid mx-auto" src="~/Images/AboutUsPage/brands.jpg" alt="Generic placeholder image">
+            <img class="featurette-image img-fluid mx-auto" src="~/Images/AboutUsPage/review1.jpg" alt="Generic placeholder image">
         </div>
     </div>
 
     <hr class="featurette-divider">
 
     <div class="row featurette">
-        <div class="col-md-7 order-md-2">
-            <h2 class="featurette-heading">Oh yeah, it's that good. <span class="text-muted">See for yourself.</span></h2>
-            <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
+        <div class="col-md-7 order-md-2 mt-5">
+            <h2 class="featurette-heading">The 75-year-old Bob. <span class="text-muted">«Oh yeah, it's that good.»</span></h2>
+            <p class="lead">
+                Bob: My kids used car-sharing and convinced me to sign up as well. I find it fun to try out different cars and drive a different model every now and then. I think car-sharing is perfect for people who live in the city and don't need a car for cross-country trips. Car-sharing helps to reduce the number of cars on the road in the city because several people share one car. Basically, I think free-floating car sharing is a great system.
+            </p>
         </div>
         <div class="col-md-5 order-md-1">
-            <img class="featurette-image img-fluid mx-auto" data-src="holder.js/500x500/auto" src="~/Images/AboutUsPage/brands.jpg" alt="Generic placeholder image">
+            <img class="featurette-image img-fluid mx-auto" src="~/Images/AboutUsPage/review2.jpg" alt="Generic placeholder image">
         </div>
     </div>
 
     <hr class="featurette-divider">
 
     <div class="row featurette">
-        <div class="col-md-7">
-            <h2 class="featurette-heading">And lastly, this one. <span class="text-muted">Checkmate.</span></h2>
-            <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
+        <div class="col-md-7 mt-3">
+            <h2 class="featurette-heading">Delivery room dash. <span class="text-muted">How is that even possible???</span></h2>
+            <p class="lead">
+                Rayan: We haven't had our own private car for a few years now, and we also gave up my company car at some point. It's just not worth it for us to own a car. The parking situation in Minsk doesn't make it any better. That's why we use car sharing about three times a week.
+            </p>
+            <p class="lead">
+                Sabine: Our circle of friends had joked that we'd probably go to the delivery in a smart - and that's how it turned out: out of panic, I sat on the floor while Christoph went to get a SHARE NOW smart. It's still the running gag with us now.
+            </p>
         </div>
         <div class="col-md-5">
-            <img class="featurette-image img-fluid mx-auto" data-src="holder.js/500x500/auto" alt="Generic placeholder image">
+            <img class="featurette-image img-fluid mx-auto" src="~/Images/AboutUsPage/review3.jpg" alt="Generic placeholder image">
         </div>
     </div>
 
-    <hr class="featurette-divider">
+    <hr class="featurette-divider mb-5">
 
     <!-- /END THE FEATURETTES -->
 
