@@ -9,7 +9,22 @@
     List<CarSharingApp.Models.VehicleViewModel> vehiclesForThirdColumn = Model.Where((vehicle, index) => index % 3 == 2).ToList();
 }
 
-<h1 class="pt-5" style="color:black; text-align:center">Catalog</h1>
+<h1 class="pt-5 mb-4" style="color:black; text-align:center">Explore Sam Car's Prices for Daily and Hourly Car Rental</h1>
+
+<div class="d-flex flex-row col-sm-12 ">
+    <label class="mr-2">Show</label>
+    <select class="custom-select custom-select-sm form-control form-control-sm" style="width: 8%">
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+    </select>
+    <label class="ml-2">vehicles</label>
+    <div class="d-flex flex-row ml-auto">
+        <label class="mr-2">Search:</label>
+        <input type="search" class="form-control form-control-sm" placeholder="Type here" style="width:70%">
+    </div>
+</div>
 
 <div class="container">
     <div class="row mt-4">
@@ -73,23 +88,43 @@
                 }
             }
         </div>
+    </div>
+</div>
 
 
-@*        <div class="col">
-            <div class="card">
-                <img class="card-img-top" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/2015-bmw-x6.jpg/1200px-2015-bmw-x6.jpg">
-
-                <div class="card-body">
-                    <h3 class="card-title">@Model[0].Name</h3>
-                    <p class="card-text">@Model[0].Description</p>
-                    <a href="#" class="btn btn-primary" style="width:max-content">Order</a>
-                    <p></p>
-                    <p class="card-text"><small class="text-muted">Last taken 3 mins ago</small></p>
-                </div>
-            </div>
-        </div>*@
-
-
-
+@* Need fix in future  (for hiding - visually-hidden)*@
+<div class="d-flex flex-row col-sm-12 ">
+    <div class="">
+        <div class="dataTables_info" id="dtOrderExample_info" role="status" aria-live="polite">Showing 51 to 57 of 57 entries</div>
+    </div>
+    <div class="ml-auto">
+        <div class="dataTables_paginate paging_simple_numbers" id="dtOrderExample_paginate">
+            <ul class="pagination">
+                <li class="paginate_button page-item previous" id="dtOrderExample_previous">
+                    <a href="#" aria-controls="dtOrderExample" data-dt-idx="0" tabindex="0" class="page-link">Previous</a>
+                </li>
+                <li class="paginate_button page-item">
+                    <a href="#" aria-controls="dtOrderExample" data-dt-idx="1" tabindex="0" class="page-link">1</a>
+                </li>
+                <li class="paginate_button page-item">
+                    <a href="#" aria-controls="dtOrderExample" data-dt-idx="2" tabindex="0" class="page-link">2</a>
+                </li>
+                <li class="paginate_button page-item">
+                    <a href="#" aria-controls="dtOrderExample" data-dt-idx="3" tabindex="0" class="page-link">3</a>
+                </li>
+                <li class="paginate_button page-item">
+                    <a href="#" aria-controls="dtOrderExample" data-dt-idx="4" tabindex="0" class="page-link">4</a>
+                </li>
+                <li class="paginate_button page-item">
+                    <a href="#" aria-controls="dtOrderExample" data-dt-idx="5" tabindex="0" class="page-link">5</a>
+                </li>
+                <li class="paginate_button page-item active">
+                    <a href="#" aria-controls="dtOrderExample" data-dt-idx="6" tabindex="0" class="page-link">6</a>
+                </li>
+                <li class="paginate_button page-item next disabled" id="dtOrderExample_next">
+                    <a href="#" aria-controls="dtOrderExample" data-dt-idx="7" tabindex="0" class="page-link">Next</a>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>

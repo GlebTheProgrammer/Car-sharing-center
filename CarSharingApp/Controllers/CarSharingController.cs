@@ -54,10 +54,5 @@ namespace CarSharingApp.Controllers
 
             return View(vehicles);
         }
-
-        public string Hello()
-        {
-            return "Who's there?";
-        }
     }
 }
