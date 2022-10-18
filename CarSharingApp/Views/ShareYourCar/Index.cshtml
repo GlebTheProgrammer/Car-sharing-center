@@ -1,0 +1,233 @@
+﻿<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9AIXs7jB_3r8oRc1zd0i9p0nanEH5Q6M&callback=initMap" async defer></script>
+
+
+
+
+<main class="container mt-5">
+
+
+    <div class="row g-5">
+        <div class="col-md-8">
+            <h3 class="pb-2 mb-4 fst-italic border-bottom text-center">
+                Share Your Car
+            </h3>
+
+            <img class="img-fluid mt-3 mx-auto d-block rounded" style="height: auto" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/2015-bmw-x6.jpg/1200px-2015-bmw-x6.jpg">
+
+            <h2 class="mt-3">Fill the data</h2>
+
+            <div class="mt-4">
+                <div class="d-flex flex-row">
+                    <label class="mt-2 mr-2" style="white-space: nowrap;">Exterior Color: </label>
+                    <input type="text" class="form-control" placeholder="" value="" required="">
+                </div>
+            </div>
+            <div class="mt-4">
+                <div class="d-flex flex-row">
+                    <label class="mt-2 mr-2" style="white-space: nowrap;">Interior Color: </label>
+                    <input type="text" class="form-control" placeholder="" value="" required="">
+                </div>
+            </div>
+            <div class="mt-4">
+                <div class="d-flex flex-row">
+                    <label class="mt-2 mr-2">Drivetrain: </label>
+                    <select class="custom-select d-block" required="">
+                        <option value="">Choose...</option>
+                        <option>All-wheel drive</option>
+                        <option>Four-wheel drive</option>
+                        <option>Front-wheel drive</option>
+                        <option>Rear-wheel drive</option>
+                        <option>-</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mt-4">
+                <div class="d-flex flex-row">
+                    <label class="mt-2 mr-2" style="white-space: nowrap;">Fuel Type: </label>
+                    <select class="custom-select d-block" required="">
+                        <option value="">Choose...</option>
+                        <option>Electric</option>
+                        <option>Gasoline</option>
+                        <option>Diesel Fuel</option>
+                        <option>Bio-diesel</option>
+                        <option>Ethanol</option>
+                        <option>-</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mt-4">
+                <div class="d-flex flex-row">
+                    <label class="mt-2 mr-2">Transmission: </label>
+                    <select class="custom-select d-block" required="">
+                        <option value="">Choose...</option>
+                        <option>Automatic Transmission (AT)</option>
+                        <option>Manual Transmission (MT)</option>
+                        <option>Automated Manual Transmission (AM)</option>
+                        <option>Continuously Variable Transmission (CVT)</option>
+                        <option>-</option>
+                    </select>
+                </div>
+            </div>
+            <div class="mt-4">
+                <div class="d-flex flex-row">
+                    <label class="mt-2 mr-2">Engine: </label>
+                    <select class="custom-select d-block" required="">
+                        <option value="">Choose...</option>
+                        <option>Thermal</option>
+                        <option>Electrical</option>
+                        <option>Physical</option>
+                        <option>-</option>
+                    </select>
+                </div>
+            </div>
+            <!--Идентификационный номер транспортного средства (17 цифр и букв в сумме)-->
+            <div class="mt-4">
+                <div class="d-flex flex-row">
+                    <label class="mt-2 mr-2">VIN: </label> 
+                    <input type="text" class="form-control" placeholder="" value="" required="">
+                </div>
+            </div>
+
+
+            <hr class="featurette-divider">
+
+            <h2 class="mt-3">Location Info</h2>
+
+            <div class="mt-4">
+                <div class="d-flex flex-row">
+                    <label class="mt-2 mr-2" style="white-space: nowrap;">Car location (Address): </label>
+                    <input type="text" id="carAddress" class="form-control mr-2" placeholder="" value="" required="">
+                    <button class="btn btn-primary" onclick="setUpTheMarker()">Search</button>
+                </div>
+                <label class="mt-2 mr-2">Note: Enter the current location of the car in the «Car location» field, then click the «Search» button. If the address was found, a marker will appear on the map, and coordinates that characterize the lat and long of the location you have chosen will appear below. If there is no marker or coordinates below, please try again.</label>
+            </div>
+
+
+            <div class="mt-4">
+                <div class="container-fluid">
+                    <div id="map" class="text-center" style="height: 400px; width: 100%;"></div>
+                    <script>
+                        var map;
+                        function initMap() {
+                            map = new google.maps.Map(document.getElementById('map'), {
+                                center: { lat: 53.90588468960213, lng: 27.555191727187893 },
+                                zoom: 11
+                            });
+                        }
+                    </script>
+
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <div class="d-flex flex-row">
+                    <span class="text-muted h5 mt-2 mr-2">Latitude: </span>
+                    <input disabled type="text" class="form-control text-center disabled" style="width: 15%" id="latit" placeholder="" value="" required="">
+                    <span class="text-muted h5 ml-4 mt-2">Longitude: </span>
+                    <input disabled type="text" class="form-control text-center ml-2 disabled" style="width: 15%" id="longit" placeholder="" value="" required="">
+                </div>
+            </div>
+
+
+
+
+
+
+            <nav class="blog-pagination mt-4" aria-label="Pagination">
+                <a class="btn btn-outline-primary w-25" href="#">Share</a>
+            </nav>
+
+
+
+
+        </div>
+
+        <div class="col-md-4">
+            <div class="position-sticky" style="top: 3rem;">
+                <div class="mt-4">
+                    <label for="firstName" class="mt-4">Car name</label>
+                    <input type="text" class="form-control" id="firstName" placeholder="" value="" required="">
+                </div>
+
+                <div class="mt-4">
+                    <label for="firstName">Brief Description</label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="4" style="resize: none"></textarea>
+                </div>
+
+                <div class="mt-4">
+                    <label for="firstName">Basic Tariff</label>
+                    <div class="d-flex flex-row">
+                        <input type="text" class="form-control text-center" style="width: 20%" id="firstName" placeholder="" value="" required="">
+                        <span class="text-muted h5 ml-1 mt-2">/hr - </span>
+                        <input type="text" class="form-control text-center ml-2" style="width: 25%" id="firstName" placeholder="" value="" required="">
+                        <span class="text-muted h5 ml-1 mt-2">/day</span>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <label for="firstName">Description</label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="10" style="resize: none"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+
+    var markersArray = [];
+
+    function setUpTheMarker() 
+    {
+
+        var address = document.getElementById('carAddress').value;
+
+        geocoder = new google.maps.Geocoder();
+
+        geocoder.geocode({
+            address: address
+        }, (results, status) => {
+            if (status == google.maps.GeocoderStatus.OK) {
+
+                clearAllMarkers();
+                var marker = new google.maps.Marker(
+                {
+                        position: new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng()),
+                        map: map
+                });
+
+                markersArray.push(marker);
+
+                document.getElementById('latit').value = results[0].geometry.location.lat();
+                document.getElementById('longit').value = results[0].geometry.location.lng();
+
+                map.setCenter({ lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng()});
+
+            } else {
+                alert('Address was not found. Response: ' + status);
+            }
+        });
+
+    }
+
+    function clearAllMarkers()
+    {
+        for (var i = 0; i < markersArray.length; i++)
+        {
+            markersArray[i].setMap(null);
+        }
+        markersArray.length = 0;
+    }
+
+</script>

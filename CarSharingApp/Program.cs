@@ -23,6 +23,6 @@ app.UseAuthorization();
 // Here we can specify the start page wich is shown to the user
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=ShareYourCar}/{action=Index}/{id?}");
 
 app.Run();
