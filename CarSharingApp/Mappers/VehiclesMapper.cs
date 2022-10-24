@@ -9,7 +9,9 @@ namespace CarSharingApp.Mappers
         {
             // Add models mapping here
 
+            // From -> Into
             CreateMap<VehicleShareModel, VehicleModel>();
+            CreateMap<VehicleModel, VehicleViewModel>();
         }
     }
 }

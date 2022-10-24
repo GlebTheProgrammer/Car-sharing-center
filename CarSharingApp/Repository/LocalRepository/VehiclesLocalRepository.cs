@@ -47,6 +47,11 @@ namespace CarSharingApp.Repository.LocalRepository
             if (vehicles == null)
                 SetUpLocalRepository();
 
+            if (vehicles.Count == 0)
+                vehicleModel.Id = 0;
+            else
+                vehicleModel.Id = vehicles.Max(vehicle => vehicle.Id)+1;
+
             vehicles.Add(vehicleModel);
             await SaveChanges();
         }

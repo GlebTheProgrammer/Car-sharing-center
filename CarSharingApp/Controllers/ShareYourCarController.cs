@@ -56,8 +56,7 @@ namespace CarSharingApp.Controllers
 
             vehiclesRepository.ShareNewVehicle(mapper.Map<VehicleModel>(vehicleShareModel));
 
-
-            return View();
+            return RedirectToAction("Index", "CarSharingController");
         }
     }
 }
