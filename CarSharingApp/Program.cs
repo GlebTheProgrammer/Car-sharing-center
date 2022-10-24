@@ -1,7 +1,19 @@
+using CarSharingApp.Repository.Interfaces;
+using CarSharingApp.Repository.LocalRepository;
+using CarSharingApp.Services;
+using CarSharingApp.Services.Interfaces;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Connect AutoMapper in the program
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+// Dependency injection is here
+builder.Services.AddSingleton<IVehiclesRepository, VehiclesLocalRepository>();
+builder.Services.AddScoped<IFileUploadService, LocalFileUploadService>();
 
 var app = builder.Build();
 
@@ -23,6 +35,6 @@ app.UseAuthorization();
 // Here we can specify the start page wich is shown to the user
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=ShareYourCar}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

@@ -1,12 +1,13 @@
-﻿@model List<CarSharingApp.Models.VehicleViewModel>
+﻿@using CarSharingApp.Models.VehicleData
+@model List<VehicleViewModel>
 
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-    List<CarSharingApp.Models.VehicleViewModel> vehiclesForFirstColumn = Model.Where((vehicle, index) => index % 3 == 0).ToList();
-    List<CarSharingApp.Models.VehicleViewModel> vehiclesForSecondColumn = Model.Where((vehicle, index) => index % 3 == 1).ToList();
-    List<CarSharingApp.Models.VehicleViewModel> vehiclesForThirdColumn = Model.Where((vehicle, index) => index % 3 == 2).ToList();
+    List<VehicleViewModel> vehiclesForFirstColumn = Model.Where((vehicle, index) => index % 3 == 0).ToList();
+    List<CarSharingApp.Models.VehicleData.VehicleViewModel> vehiclesForSecondColumn = Model.Where((vehicle, index) => index % 3 == 1).ToList();
+    List<CarSharingApp.Models.VehicleData.VehicleViewModel> vehiclesForThirdColumn = Model.Where((vehicle, index) => index % 3 == 2).ToList();
 }
 
 <h1 class="pt-5 mb-4" style="color:black; text-align:center">Explore Sam Car's Prices for Daily and Hourly Car Rental</h1>
@@ -38,8 +39,8 @@
 
                         <div class="card-body">
                             <h3 class="card-title">@vehicle.Name</h3>
-                            <p class="card-text">@vehicle.Description</p>
-                            <h4 class="card-text">@vehicle.HourPrice $<span class="text-muted h5">/hr - </span>@vehicle.DailyPrice $<span class="text-muted h5">/day</span></h4>
+                            <p class="card-text">@vehicle.BriefDescription</p>
+                            <h4 class="card-text">@vehicle.Tariff.TariffPerHour $<span class="text-muted h5">/hr - </span>@vehicle.Tariff.TariffPerDay $<span class="text-muted h5">/day</span></h4>
                             <a href="#" class="btn btn-primary mt-2" style="width:max-content">Order</a>
                             <a href="#" class="btn btn-info mt-2 ml-1" style="width:max-content">Information</a>
                             <p></p>
@@ -59,8 +60,8 @@
 
                         <div class="card-body">
                             <h3 class="card-title">@vehicle.Name</h3>
-                            <p class="card-text">@vehicle.Description</p>
-                            <h4 class="card-text">@vehicle.HourPrice $<span class="text-muted h5">/hr - </span>@vehicle.DailyPrice $<span class="text-muted h5">/day</span></h4>
+                            <p class="card-text">@vehicle.BriefDescription</p>
+                            <h4 class="card-text">@vehicle.Tariff.TariffPerHour $<span class="text-muted h5">/hr - </span>@vehicle.Tariff.TariffPerDay $<span class="text-muted h5">/day</span></h4>
                             <a href="#" class="btn btn-primary mt-2" style="width:max-content">Order</a>
                             <a href="#" class="btn btn-info mt-2 ml-1" style="width:max-content">Information</a>
                             <p></p>
@@ -80,8 +81,8 @@
 
                         <div class="card-body">
                             <h3 class="card-title">@vehicle.Name</h3>
-                            <p class="card-text">@vehicle.Description</p>
-                            <h4 class="card-text">@vehicle.HourPrice $<span class="text-muted h5">/hr - </span>@vehicle.DailyPrice $<span class="text-muted h5">/day</span></h4>
+                            <p class="card-text">@vehicle.BriefDescription</p>
+                            <h4 class="card-text">@vehicle.Tariff.TariffPerHour $<span class="text-muted h5">/hr - </span>@vehicle.Tariff.TariffPerDay $<span class="text-muted h5">/day</span></h4>
                             <a href="#" class="btn btn-primary mt-2" style="width:max-content">Order</a>
                             <a href="#" class="btn btn-info mt-2 ml-1" style="width:max-content">Information</a>
                             <p></p>
@@ -131,3 +132,13 @@
         </div>
     </div>
 </div>
+
+
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        localStorage.clear();
+    });
+</script>

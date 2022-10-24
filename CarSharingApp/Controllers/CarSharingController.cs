@@ -1,4 +1,4 @@
-﻿using CarSharingApp.Models;
+﻿using CarSharingApp.Models.VehicleData;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarSharingApp.Controllers
@@ -12,43 +12,38 @@ namespace CarSharingApp.Controllers
                 new VehicleViewModel()
                 {
                     Name = "BMW x6",
-                    HourPrice = 20m,
-                    DailyPrice = 160m,
+                    Tariff = new Models.VehicleData.Includes.Tariff() {TariffPerHour = 20m, TariffPerDay = 160m},
                     Image = "../../../Images/BMW_x6.jpg",
-                    Description = "Very fast car Very fast carVery fast carVery fast carVery fast carVery fast carVery fast carVery fast carVery fast carVery fast carVery fast carVery fast carVery fast carVery fast car"
+                    BriefDescription = "Very fast car Very fast carVery fast carVery fast carVery fast carVery fast carVery fast carVery fast carVery fast carVery fast carVery fast carVery fast carVery fast carVery fast car"
 
                 },
                 new VehicleViewModel()
                 {
                     Name = "BMW x6",
-                    HourPrice = 30m,
-                    DailyPrice = 260m,
+                    Tariff = new Models.VehicleData.Includes.Tariff() {TariffPerHour = 30m, TariffPerDay = 260m},
                     Image = "../../../Images/BMW_x6.jpg",
-                    Description = "Very fast car"
+                    BriefDescription = "Very fast car"
                 },
                 new VehicleViewModel()
                 {
                     Name = "BMW x6",
-                    HourPrice = 30m,
-                    DailyPrice = 360m,
+                    Tariff = new Models.VehicleData.Includes.Tariff() {TariffPerHour = 30m, TariffPerDay = 360m},
                     Image = "../../../Images/BMW_x6.jpg",
-                    Description = "Very fast car"
+                    BriefDescription = "Very fast car"
                 },
                 new VehicleViewModel()
                 {
                     Name = "BMW x6",
-                    HourPrice = 40m,
-                    DailyPrice = 460m,
+                    Tariff = new Models.VehicleData.Includes.Tariff() {TariffPerHour = 40m, TariffPerDay = 460m},
                     Image = "../../../Images/BMW_x6.jpg",
-                    Description = "Very fast car"
+                    BriefDescription = "Very fast car"
                 },
                 new VehicleViewModel()
                 {
                     Name = "BMW x6",
-                    HourPrice = 50m,
-                    DailyPrice = 560m,
+                    Tariff = new Models.VehicleData.Includes.Tariff() {TariffPerHour = 50m, TariffPerDay = 560m},
                     Image = "../../../Images/BMW_x6.jpg",
-                    Description = "Very fast car"
+                    BriefDescription = "Very fast car"
                 }
             };
 
