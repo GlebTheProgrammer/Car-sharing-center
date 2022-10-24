@@ -9,6 +9,5 @@ namespace CarSharingApp.Views.CarSharing
         public int NumberOfVehicles { get; set; }
         public int StartVehiclesIndex { get; set; }
         public int EndVehiclesIndex { get; set; }
-        public int PageNumber { get; set; }
     }
 }

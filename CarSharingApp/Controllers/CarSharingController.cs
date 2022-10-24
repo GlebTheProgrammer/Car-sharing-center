@@ -22,7 +22,7 @@ namespace CarSharingApp.Controllers
 
 
 
-        public IActionResult Index()
+        public IActionResult Index(int page = 1, string pageSizeStr = "3")
         {
             //var vehicleViewModels = mapper.Map<IEnumerable<VehicleViewModel>>(vehiclesRepository.GetAllVehicles()).Take(3).ToList();
 
@@ -70,16 +70,29 @@ namespace CarSharingApp.Controllers
                     BriefDescription = "Very fast car"  
                 }
             };
-            var vehicleViewModels = vehicles.Take(3).ToList();
+
+
+            int pageSize = int.Parse(pageSizeStr);
+            if (page < 1)
+                page = 1;
+
+            int vehiclesCount = vehicles.Count();
+
+            var pager = new Pager(vehiclesCount, page, pageSize);
+
+            int vehiclesSkip = (page - 1) * pageSize;
+
+            var vehiclesData = vehicles.Skip(vehiclesSkip).Take(pager.PageSize).ToList();
+
+            this.ViewBag.Pager = pager;
 
             CarSharingDataViewModel model = new CarSharingDataViewModel
             {
-                Vehicles = vehicleViewModels,
+                Vehicles = vehiclesData,
                 NumberOfVehicles = vehicles.Count,
-                NumberOfVehiclesDisplayed = 3,
-                StartVehiclesIndex = 1,
-                EndVehiclesIndex = vehicleViewModels.Count,
-                PageNumber = 1
+                NumberOfVehiclesDisplayed = pageSize,
+                StartVehiclesIndex = vehiclesSkip + 1,
+                EndVehiclesIndex = vehiclesSkip + pageSize > vehicles.Count ? vehicles.Count : vehiclesSkip + pageSize
             };
 
             return View(model);
@@ -144,8 +157,7 @@ namespace CarSharingApp.Controllers
                 NumberOfVehicles = vehicles.Count,
                 NumberOfVehiclesDisplayed = numberOfVehiclesToDisplay,
                 StartVehiclesIndex = 1,
-                EndVehiclesIndex = vehicleViewModels.Count,
-                PageNumber = 1
+                EndVehiclesIndex = vehicleViewModels.Count
             };
 
             return View("Index", model);

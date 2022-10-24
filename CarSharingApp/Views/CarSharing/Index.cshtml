@@ -1,10 +1,24 @@
-﻿@using CarSharingApp.Models.VehicleData
+﻿@using CarSharingApp.Models.ApplicationData
+@using CarSharingApp.Models.VehicleData
 @using CarSharingApp.Views.CarSharing
 @model CarSharingDataViewModel
 
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
+
+@{
+    Pager pager = new Pager();
+
+    int pageNo = 0;
+
+    if (ViewBag.Pager != null)
+    {
+        pager = ViewBag.Pager;
+        pageNo = pager.CurrentPage;
+    }
+}
+
 @{
     List<VehicleViewModel> vehiclesForFirstColumn = Model.Vehicles.Where((vehicle, index) => index % 3 == 0).ToList();
     List<VehicleViewModel> vehiclesForSecondColumn = Model.Vehicles.Where((vehicle, index) => index % 3 == 1).ToList();
@@ -17,8 +31,8 @@
 
 <div class="d-flex flex-row col-sm-12 ">
     <label class="mr-2">Show</label>
-    <form asp-controller="CarSharing" asp-action="ChangeDisplayedVehiclesCount" method="post" >
-        <select name="data" id="totalVehiclesDisplayedSelect" class="custom-select custom-select-sm form-control form-control-sm">
+    <form asp-controller="CarSharing" asp-action="Index" method="post" >
+        <select name="pageSizeStr" id="totalVehiclesDisplayedSelect" class="custom-select custom-select-sm form-control form-control-sm">
             <option value="3">3</option>
             <option value="6">6</option>
             <option value="9">9</option>
@@ -109,77 +123,39 @@
     </div>
     <div class="ml-auto">
         <div class="dataTables_paginate paging_simple_numbers" id="dtOrderExample_paginate">
-            <form asp-controller="CarSharing" asp-action="MoveToTheNextPage" method="post">
-            <ul class="pagination">
-                @{
+            @if (pager.TotalPages > 0)
+            {
+                <ul class="pagination">
 
-                    // Prev page button
-                    if (Model.PageNumber == 1)
+                    @if (pager.CurrentPage > 1)
                     {
-                        <li class="paginate_button page-item previous disabled">
-                            <a onclick="" tabindex="0" class="page-link">Previous</a>
+                        <li class="page-item">
+                            <a class="page-link" asp-controller="CarSharing" asp-action="Index" asp-route-page="1">First</a>
                         </li>
-                    }
-                    else
-                    {
-                        <li class="paginate_button page-item previous disabled">
-                            <a onclick="" tabindex="0" class="page-link">Previous</a>
+                        <li class="page-item">
+                            <a class="page-link" asp-controller="CarSharing" asp-action="Index" asp-route-page="@(pager.CurrentPage - 1)">Previous</a>
                         </li>
                     }
 
-
-                    // Getting number of total buttons to provide
-                    int j = Model.NumberOfVehicles / Model.NumberOfVehiclesDisplayed;
-                    if (Model.NumberOfVehicles % Model.NumberOfVehiclesDisplayed != 0)
-                        j += 1;
-
-                    int startIndex;
-                    int endIndex;
-
-                    if(Model.PageNumber > 6)
+                    @for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
                     {
-                        startIndex = Model.PageNumber - 3;
-                        endIndex = Model.PageNumber + 2;
-                    }
-                    else
-                    {
-                        startIndex = 1;
-                        endIndex = j;
-                    }
-
-                    for (int i = startIndex; i <= endIndex; i++)
-                    {
-                        if (Model.PageNumber == i)
-                        {
-                            <li class="paginate_button page-item active">
-                                <a tabindex="0" class="page-link">@i</a>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="paginate_button page-item">
-                                <a tabindex="0" class="page-link">@i</a>
-                            </li>
-                        }
-                    }
-
-
-                    // Next page button
-                    if (Model.PageNumber == j)
-                    {
-                        <li class="paginate_button page-item next disabled">
-                            <a tabindex="0" class="page-link">Next</a>
+                        <li class="page-item @(pge == pager.CurrentPage ? "active" : "")">
+                            <a class="page-link" asp-controller="CarSharing" asp-action="Index" asp-route-page="@pge">@pge</a>
                         </li>
                     }
-                    else
+
+                    @if (pager.CurrentPage < pager.TotalPages)
                     {
-                        <li class="paginate_button page-item next">
-                            <a tabindex="0" class="page-link">Next</a>
+                        <li class="page-item">
+                            <a class="page-link" asp-controller="CarSharing" asp-action="Index" asp-route-page="@(pager.CurrentPage + 1)">Next</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" asp-controller="CarSharing" asp-action="Index" asp-route-page="@(pager.TotalPages)">Last</a>
                         </li>
                     }
-                }
-            </ul>
-            </form>
+
+                </ul>
+            }
         </div>
     </div>
 </div>
