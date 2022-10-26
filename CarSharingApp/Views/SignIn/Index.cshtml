@@ -1,4 +1,7 @@
-﻿
+﻿@using CarSharingApp.Models.ClientData
+@inject IHttpContextAccessor contextAccessor;
+
+@model ClientSignInViewModel
 
 <head>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
@@ -8,25 +11,29 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
 </head>
+
 <body class="justify-content-center align-content-center" style="background-color: rgb(246, 246, 246)">
+
     <div class="justify-content-center mt-5 text-center">
-        <form class="justify-content-center align-content-center mt-5">
+        <form asp-controller="SignIn" asp-action="TrySignIn" class="justify-content-center align-content-center mt-5">
             <img class="mb-4" src="~/Images/SignInPage/samSolutionsLogo.png" alt="" width="72" height="72">
             <h1 class="h3 mb-4 font-weight-normal">Please sign in</h1>
             <div class="mb-4">
                 <div class="col-md-4 mx-auto">
-                    <input type="text" class="form-control" placeholder="Email address">
+                    <input asp-for="Email" type="email" class="form-control" placeholder="Email address" id="EmailAddress" onfocus="HideErrorSpan('EmailAddressError')">
+                    <span asp-validation-for="Email" id="EmailAddressError" class="text-danger text-center"></span>
                 </div>
             </div>
             <div class="mb-4">
                 <div class="col-md-4 mx-auto">
-                    <input type="text" class="form-control" placeholder="Password">
+                    <input asp-for="Password" type="password" class="form-control" placeholder="Password" id="Password" onfocus="HideErrorSpan('PasswordError')">
+                    <span asp-validation-for="Password" id="PasswordError" class="text-danger text-center"></span>
                 </div>
             </div>
 
             <div class="custom-control custom-checkbox mb-3">
-                <input type="checkbox" class="custom-control-input" id="same-address">
-                <label class="custom-control-label" for="same-address">Remember me</label>
+                <input asp-for="RememberMe" type="checkbox" class="custom-control-input" id="RememberMeCheckBox">
+                <label class="custom-control-label" for="RememberMeCheckBox">Remember me</label>
             </div>
 
             <div class="mb-4">
@@ -42,3 +49,52 @@
         </div>
     </div>
 </body>
+
+
+<!--Script for pop up success registration message starts here-->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        if(@contextAccessor?.HttpContext?.Session.GetString("Registered"))
+        {
+            Swal.fire({
+                title: "Success!",
+                text: "You have registered successfully. Please, Sign In with your credentials.",
+                icon: 'success',
+                confirmButtonColor: '#007aff'
+            });
+
+            @{contextAccessor?.HttpContext?.Session.Remove("Registered");}
+        }
+    });
+</script>
+<!--Script for pop up success registration message ends here-->
+
+
+<!--Script for pop up sign in error message starts here-->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        if (@contextAccessor?.HttpContext?.Session.GetString("AuthorizationFailed")) {
+            Swal.fire({
+                title: "Authorization Failed!",
+                text: "You have provided wrong credentials. Check and try again.",
+                icon: 'error',
+                confirmButtonColor: '#007aff'
+            });
+
+    @{
+        contextAccessor?.HttpContext?.Session.Remove("AuthorizationFailed");
+    }
+                
+        }
+    });
+</script>
+<!--Script for pop up sign in error message ends here-->
+
+<!--Script for hiding error message starts here-->
+<script>
+    function HideErrorSpan(componentId) {
+        var component = document.getElementById(componentId);
+        component.textContent = "";
+    }
+</script>
+<!--Script for hiding error message ends here-->

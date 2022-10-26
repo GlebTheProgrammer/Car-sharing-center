@@ -12,7 +12,7 @@ namespace CarSharingApp.Repository.LocalRepository
 
         private void SetUpLocalRepository()
         {
-            string filePath = "~/../Repository/LocalRepository/Data/Data.json";
+            string filePath = "~/../Repository/LocalRepository/Data/VehiclesData.json";
 
             if(File.Exists(filePath))
             {
@@ -58,7 +58,7 @@ namespace CarSharingApp.Repository.LocalRepository
 
         public async Task SaveChanges()
         {
-            string filePath = "~/../Repository/LocalRepository/Data/Data.json";
+            string filePath = "~/../Repository/LocalRepository/Data/VehiclesData.json";
 
             var options = new JsonSerializerOptions { WriteIndented = true };
 

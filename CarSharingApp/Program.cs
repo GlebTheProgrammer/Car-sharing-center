@@ -2,18 +2,28 @@ using CarSharingApp.Repository.Interfaces;
 using CarSharingApp.Repository.LocalRepository;
 using CarSharingApp.Services;
 using CarSharingApp.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+// Sessions setting
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(60); // Session time regulates here
+});
+
 // Connect AutoMapper in the program
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Dependency injection is here
 builder.Services.AddSingleton<IVehiclesRepository, VehiclesLocalRepository>();
+builder.Services.AddSingleton<IClientsRepository, ClientsLocalRepository>();
 builder.Services.AddScoped<IFileUploadService, LocalFileUploadService>();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 var app = builder.Build();
 
@@ -27,6 +37,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseSession();
 
 app.UseRouting();
 
