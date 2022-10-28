@@ -24,12 +24,13 @@
                             <a class="nav-link text-white" asp-area="" asp-controller="CarSharing" asp-action="Index">Catalog and Pricing</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="ShareYourCar" asp-action="Index">Share your car</a>
+                            <a id="ShareYourCarBtn" class="nav-link text-white" asp-area="" asp-controller="ShareYourCar" asp-action="Index" style="display: none;">Share your car</a>
                         </li>
                     </ul>
 
-                    <button class="btn btn-outline-secondary my-2 my-sm-0 mr-3" onclick="location.href='@Url.Action("Index","SignIn")'">Sign in</button>
-                    <button class="btn btn-outline-success my-2 my-sm-0" onclick="location.href='@Url.Action("Index","Registration")'">Join</button>
+                    <button id="LogoutBtn" class="btn btn-outline-warning my-2 my-sm-0 mr-3" style="display: none" onclick="ShowLogoutConfirmationAlert()">Logout</button>
+                    <button id="SignInBtn" class="btn btn-outline-secondary my-2 my-sm-0 mr-3" onclick="location.href='@Url.Action("Index","SignIn")'">Sign in</button>
+                    <button id="RegisterBtn" class="btn btn-outline-success my-2 my-sm-0" onclick="location.href='@Url.Action("Index","Registration")'">Join</button>
                 </div>
             </div>
         </nav>
@@ -111,3 +112,46 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+<script>
+    function ShowLogoutConfirmationAlert()
+    {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You will need to Sign In again!",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#4FA64F',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+
+                Swal.fire({
+                    title: "Success!",
+                    text: "You have successfully logout from your account.",
+                    icon: 'success',
+                    confirmButtonColor: '#007aff'
+                });
+
+                $.ajax({
+                    url: "/SignIn/Logout",
+                    method: "POST"
+                });
+           
+                setTimeout(() => window.location.reload(), 2000);
+            }
+        });
+    }
+</script>
+
+
+
+
+<script>
+    function Check()
+    {
+        if(localStorage.)
+    }
+</script>

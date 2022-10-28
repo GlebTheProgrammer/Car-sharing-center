@@ -1,5 +1,9 @@
 ﻿using CarSharingApp.Models;
 using CarSharingApp.Models.VehicleData;
+using CarSharingApp.Repository.Interfaces;
+using CarSharingApp.Services.Includes;
+using CarSharingApp.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Drawing;
@@ -8,24 +12,41 @@ namespace CarSharingApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ICurrentUserStatusProvider currentUserStatusProvider;
+        private readonly IVehiclesRepository vehiclesRepository;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ICurrentUserStatusProvider currentUserStatusProvider, IVehiclesRepository vehiclesRepository, IHttpContextAccessor httpContextAccessor)
         {
-            _logger = logger;
+            this.currentUserStatusProvider = currentUserStatusProvider;
+            this.vehiclesRepository = vehiclesRepository;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         public IActionResult Index()
         {
-            float[][] array = new float[3][];
-            int x = 10;
-            int y = 10;
-
-            for (int i = 0; i < 3; i++)
+            // If we deal with the user who already logged -> set up session as logged user in thes controller
+            if (currentUserStatusProvider.GetUserRole() == UserRole.Client && currentUserStatusProvider.GetUserId() != null &&
+                httpContextAccessor.HttpContext?.Session.GetString("UserRole") == null)
             {
-                array[i] = new float[2] { x, y };
-                x += 10;
-                y += 10;
+                httpContextAccessor.HttpContext?.Session.SetString("UserRole", currentUserStatusProvider.GetUserRole().ToString());
+            }
+
+            // If someone logged out -> delete user session (delete his role)
+            if (currentUserStatusProvider.GetUserRole() == UserRole.Unauthorized && httpContextAccessor.HttpContext?.Session.GetString("UserRole") != null)
+                httpContextAccessor.HttpContext.Session.Remove("UserRole");
+
+            int vehiclesCount = vehiclesRepository.GetAllVehicles().Count();
+
+            float[][] array = new float[vehiclesCount][];
+
+            int i = 0;
+            foreach (var vehicle in vehiclesRepository.GetAllVehicles())
+            {
+                string latitude = vehicle.Location.Latitude.Replace('.', ',');
+                string longitude = vehicle.Location.Longitude.Replace('.', ',');
+                array[i] = new float[2] {float.Parse(latitude), float.Parse(longitude)};
+                i += 1;
             }
 
             return View(array);

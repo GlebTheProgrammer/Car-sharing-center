@@ -24,6 +24,7 @@ builder.Services.AddSingleton<IVehiclesRepository, VehiclesLocalRepository>();
 builder.Services.AddSingleton<IClientsRepository, ClientsLocalRepository>();
 builder.Services.AddScoped<IFileUploadService, LocalFileUploadService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddSingleton<ICurrentUserStatusProvider, CurrentUserStatusProviderService>();
 
 var app = builder.Build();
 

@@ -2,6 +2,8 @@
 using CarSharingApp.Models.ApplicationData;
 using CarSharingApp.Models.VehicleData;
 using CarSharingApp.Repository.Interfaces;
+using CarSharingApp.Services.Includes;
+using CarSharingApp.Services.Interfaces;
 using CarSharingApp.Views.CarSharing;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
@@ -12,18 +14,34 @@ namespace CarSharingApp.Controllers
     {
         private readonly IVehiclesRepository vehiclesRepository;
         private readonly IMapper mapper;
+        private readonly ICurrentUserStatusProvider currentUserStatusProvider;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
 
-        public CarSharingController(IVehiclesRepository vehiclesRepository, IMapper mapper)
+        public CarSharingController(IVehiclesRepository vehiclesRepository, IMapper mapper, ICurrentUserStatusProvider currentUserStatusProvider, IHttpContextAccessor httpContextAccessor)
         {
             this.vehiclesRepository = vehiclesRepository;
             this.mapper = mapper;
+            this.currentUserStatusProvider = currentUserStatusProvider;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
 
 
         public IActionResult Index(int page = 1, string pageSizeStr = "3")
         {
+            // If we deal with the user who already logged -> set up session as logged user in thes controller
+            if(currentUserStatusProvider.GetUserRole() == UserRole.Client && currentUserStatusProvider.GetUserId() != null &&
+                httpContextAccessor.HttpContext?.Session.GetString("UserRole") == null)
+            {
+                httpContextAccessor.HttpContext?.Session.SetString("HasSignedIn", "true");
+                httpContextAccessor.HttpContext?.Session.SetString("UserRole", currentUserStatusProvider.GetUserRole().ToString());
+            }
+
+            // If someone logged out -> delete user session (delete his role)
+            if (currentUserStatusProvider.GetUserRole() == UserRole.Unauthorized && httpContextAccessor.HttpContext?.Session.GetString("UserRole") != null)
+                httpContextAccessor.HttpContext.Session.Remove("UserRole");
+
             //var vehicleViewModels = mapper.Map<IEnumerable<VehicleViewModel>>(vehiclesRepository.GetAllVehicles()).Take(3).ToList();
 
             List<VehicleViewModel> vehicles = new List<VehicleViewModel>()
@@ -71,7 +89,6 @@ namespace CarSharingApp.Controllers
                 }
             };
 
-
             int pageSize = int.Parse(pageSizeStr);
             if (page < 1)
                 page = 1;
@@ -92,7 +109,7 @@ namespace CarSharingApp.Controllers
                 NumberOfVehicles = vehicles.Count,
                 NumberOfVehiclesDisplayed = pageSize,
                 StartVehiclesIndex = vehiclesSkip + 1,
-                EndVehiclesIndex = vehiclesSkip + pageSize > vehicles.Count ? vehicles.Count : vehiclesSkip + pageSize
+                EndVehiclesIndex = vehiclesSkip + pageSize > vehicles.Count ? vehicles.Count : vehiclesSkip + pageSize,
             };
 
             return View(model);

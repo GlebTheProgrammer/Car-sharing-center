@@ -60,7 +60,7 @@ namespace CarSharingApp.Repository.LocalRepository
             else
                 client.Id = clients.Max(client => client.Id) + 1;
 
-            client.Role = Role.User;
+            client.Role = Role.Client;
             client.Password = GetPasswordHash(client.Password);
 
             clients.Add(client);

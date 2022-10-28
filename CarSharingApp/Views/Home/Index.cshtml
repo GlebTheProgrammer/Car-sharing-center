@@ -61,16 +61,9 @@
                 var model = '@Html.Raw(Json.Serialize(Model))';
                 var data = JSON.parse(model);
 
-                var marker = new google.maps.Marker({
-                    position: {
-                        lat: 53.936800785193505,
-                        lng: 27.59339282885198
-                    },
-                    map: map
-                });
 
                 for (i = 0; i < data.length; i++) {
-                    marker = new google.maps.Marker(
+                    var marker = new google.maps.Marker(
                     {
                         position: new google.maps.LatLng(data[i][0], data[i][1]),
                         map: map

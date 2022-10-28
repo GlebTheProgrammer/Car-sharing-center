@@ -73,7 +73,8 @@
 <!--Script for pop up sign in error message starts here-->
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-        if (@contextAccessor?.HttpContext?.Session.GetString("AuthorizationFailed")) {
+        if (@contextAccessor?.HttpContext?.Session.GetString("AuthorizationFailed")) 
+        {
             Swal.fire({
                 title: "Authorization Failed!",
                 text: "You have provided wrong credentials. Check and try again.",
@@ -81,10 +82,7 @@
                 confirmButtonColor: '#007aff'
             });
 
-    @{
-        contextAccessor?.HttpContext?.Session.Remove("AuthorizationFailed");
-    }
-                
+            @{contextAccessor?.HttpContext?.Session.Remove("AuthorizationFailed");}
         }
     });
 </script>
