@@ -25,17 +25,6 @@ namespace CarSharingApp.Controllers
 
         public IActionResult Index()
         {
-            // If we deal with the user who already logged -> set up session as logged user in thes controller
-            if (currentUserStatusProvider.GetUserRole() == UserRole.Client && currentUserStatusProvider.GetUserId() != null &&
-                httpContextAccessor.HttpContext?.Session.GetString("UserRole") == null)
-            {
-                httpContextAccessor.HttpContext?.Session.SetString("UserRole", currentUserStatusProvider.GetUserRole().ToString());
-            }
-
-            // If someone logged out -> delete user session (delete his role)
-            if (currentUserStatusProvider.GetUserRole() == UserRole.Unauthorized && httpContextAccessor.HttpContext?.Session.GetString("UserRole") != null)
-                httpContextAccessor.HttpContext.Session.Remove("UserRole");
-
             int vehiclesCount = vehiclesRepository.GetAllVehicles().Count();
 
             float[][] array = new float[vehiclesCount][];

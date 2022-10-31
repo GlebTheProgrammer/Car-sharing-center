@@ -1,8 +1,5 @@
-﻿@inject IHttpContextAccessor httpContextAccessor
-
-@using CarSharingApp.Models.ApplicationData
+﻿@using CarSharingApp.Models.ApplicationData
 @using CarSharingApp.Models.VehicleData
-@using CarSharingApp.Services.Includes
 
 @using CarSharingApp.Views.CarSharing
 @model CarSharingDataViewModel
@@ -164,45 +161,6 @@
     </div>
 </div>
 
-
-<script>
-    window.addEventListener('DOMContentLoaded', () => {
-        localStorage.removeItem("marker-lat");
-        localStorage.removeItem("marker-long");
-    });
-</script>
-
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-
-        if ("@httpContextAccessor?.HttpContext?.Session.GetString("UserRole")" === "Client" && @httpContextAccessor?.HttpContext?.Session.GetString("HasSignedIn")) {
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                    toast.addEventListener('mouseleave', Swal.resumeTimer)
-                }
-            });
-
-            Toast.fire({
-                icon: 'success',
-                title: 'Signed in successfully'
-            })
-
-            @{
-        httpContextAccessor?.HttpContext?.Session.Remove("HasSignedIn");
-            }
-
-        }
-    });
-</script>
-
-
-
 <script>
     document.getElementById("totalVehiclesDisplayedSelect").addEventListener("change", function () {
 
@@ -218,25 +176,5 @@
         const options = Array.from(selectTag.options);
         const optionToSelect = options.find(item => item.text === "@Model.NumberOfVehiclesDisplayed");
         selectTag.value = optionToSelect.value;
-    });
-</script>
-
-
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-
-        if ("@httpContextAccessor?.HttpContext?.Session.GetString("UserRole")" === "Client") {
-            var signInBtn = document.getElementById("SignInBtn");
-            signInBtn.style.display = "none";
-
-            var registerBtn = document.getElementById("RegisterBtn");
-            registerBtn.style.display = "none";
-
-            var logoutBtn = document.getElementById("LogoutBtn");
-            logoutBtn.style.display = "block";
-
-            var shareYourCarBtn = document.getElementById("ShareYourCarBtn");
-            shareYourCarBtn.style.display = "block";
-        }
     });
 </script>

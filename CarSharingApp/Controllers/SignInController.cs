@@ -47,13 +47,15 @@ namespace CarSharingApp.Controllers
             {
                 currentUserStatusProvider.SetUserCredentials(signedUser.Id, UserRole.Client);
             }
+            currentUserStatusProvider.ChangeSignedInState(true);
 
-            return RedirectToAction("Index", "CarSharing");
+            return RedirectToAction("Index", "Home");
         }
 
         public void Logout()
         {
             currentUserStatusProvider.SetUserCredentials(null, UserRole.Unauthorized);
+            currentUserStatusProvider.ChangeLoggedOutState(true);
         }
     }
 }

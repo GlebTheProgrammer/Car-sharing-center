@@ -54,8 +54,7 @@
 <!--Script for pop up success registration message starts here-->
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-        if(@contextAccessor?.HttpContext?.Session.GetString("Registered"))
-        {
+        if (@(contextAccessor?.HttpContext?.Session.GetString("Registered") == null ? "false" : contextAccessor?.HttpContext?.Session.GetString("Registered"))) {
             Swal.fire({
                 title: "Success!",
                 text: "You have registered successfully. Please, Sign In with your credentials.",
@@ -73,8 +72,7 @@
 <!--Script for pop up sign in error message starts here-->
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-        if (@contextAccessor?.HttpContext?.Session.GetString("AuthorizationFailed")) 
-        {
+        if (@(contextAccessor?.HttpContext?.Session.GetString("AuthorizationFailed") == null ? "false" : contextAccessor?.HttpContext?.Session.GetString("AuthorizationFailed"))) {
             Swal.fire({
                 title: "Authorization Failed!",
                 text: "You have provided wrong credentials. Check and try again.",

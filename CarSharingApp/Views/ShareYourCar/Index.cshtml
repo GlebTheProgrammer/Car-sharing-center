@@ -243,6 +243,13 @@
 </script>-->
 <!--Script for uploading user image into local session storage ends here-->
 
+<script>
+    window.onbeforeunload = function () {
+        localStorage.removeItem("marker-lat");
+        localStorage.removeItem("marker-long");
+    }
+</script>
+
 <!--Script for hiding error message starts here-->
 <script>
     function HideErrorSpan(componentId)
