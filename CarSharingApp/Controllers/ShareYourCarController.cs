@@ -2,7 +2,7 @@
 using CarSharingApp.Models.VehicleData;
 using CarSharingApp.Repository.Interfaces;
 using CarSharingApp.Services.Interfaces;
-using Microsoft.AspNetCore.Identity;
+using CarSharingApp.Services.Includes;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarSharingApp.Controllers
@@ -13,18 +13,25 @@ namespace CarSharingApp.Controllers
         private readonly IVehiclesRepository vehiclesRepository;
         private readonly IMapper mapper;
         private readonly IFileUploadService fileUploadService;
+        private readonly ICurrentUserStatusProvider currentUserStatusProvider;
 
 
-        public ShareYourCarController(IVehiclesRepository vehiclesRepository, IMapper mapper, IFileUploadService fileUploadService)
+        public ShareYourCarController(IVehiclesRepository vehiclesRepository, IMapper mapper, IFileUploadService fileUploadService, ICurrentUserStatusProvider currentUserStatusProvider)
         {
             this.vehiclesRepository = vehiclesRepository;
             this.mapper = mapper;
             this.fileUploadService = fileUploadService;
+            this.currentUserStatusProvider = currentUserStatusProvider;
         }
 
         // Return basic view with page
         public IActionResult Index()
-        {   
+        {
+            if (currentUserStatusProvider.GetUserRole() != UserRole.Client)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             return View(new VehicleShareModel()
             {
                 Name = "hello",
