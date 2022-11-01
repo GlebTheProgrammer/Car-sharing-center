@@ -34,19 +34,11 @@ namespace CarSharingApp.Controllers
 
             return View(new VehicleShareModel()
             {
-                Name = "hello",
-                Engine = Models.VehicleData.Includes.Engine.Thermal,
-                ExteriorColor = "black",
-                MaxSpeed = 100,
-                FuelType = Models.VehicleData.Includes.FuelType.Gasoline,
-                Description = "grwesdd wdldk dwdm dedjed ddijedidj edejdijede edijeffj fejfieieoj",
-                Drivetrain = Models.VehicleData.Includes.Drivetrain.Four_wheel_drive,
-                BriefDescription = "world ыволоыы ыоыоы",
-                InteriorColor = "white",
-                Tariff = new Models.VehicleData.Includes.Tariff { TariffPerDay = 100, TariffPerHour = 10},
-                Location = new Models.VehicleData.Includes.Location { Address = "L. Bedy", Latitude = "24.55", Longitude = "26.30"},
-                Transmission = Models.VehicleData.Includes.Transmission.Manual,
-                VIN = "12345671234561234"
+                Location = new Models.VehicleData.Includes.Location
+                {
+                    Latitude = null,
+                    Longitude = null
+                }
             });
         }
 
@@ -61,7 +53,12 @@ namespace CarSharingApp.Controllers
             if (file != null)
                 vehicleShareModel.Image = await fileUploadService.UploadFileAsync(file);
 
-            vehiclesRepository.ShareNewVehicle(mapper.Map<VehicleModel>(vehicleShareModel));
+            var vehicleModel = mapper.Map<VehicleModel>(vehicleShareModel);
+
+            if(currentUserStatusProvider.GetUserId() != null)
+                vehicleModel.OwnerId = (int)currentUserStatusProvider.GetUserId();
+
+            vehiclesRepository.ShareNewVehicle(vehicleModel);
 
             return RedirectToAction("Index", "CarSharing");
         }

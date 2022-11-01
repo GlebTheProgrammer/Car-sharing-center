@@ -136,10 +136,28 @@
                         <script>
                             var map;
                             function initMap() {
-                                map = new google.maps.Map(document.getElementById('map'), {
-                                    center: { lat: 53.90588468960213, lng: 27.555191727187893 },
-                                    zoom: 11
-                                });
+
+                                if ("@Model.Location.Longitude" != "" && "@Model.Location.Latitude" != "") {
+                                    localStorage.setItem("marker-lat", @Model.Location.Latitude);
+                                    localStorage.setItem("marker-long", @Model.Location.Longitude);
+                                }
+
+                                if (localStorage.hasOwnProperty("marker-lat") && localStorage.hasOwnProperty("marker-long")) {
+
+                                    var latitCenter = JSON.parse(localStorage.getItem("marker-lat"));
+                                    var longCenter = JSON.parse(localStorage.getItem("marker-long"));
+
+                                    map = new google.maps.Map(document.getElementById('map'), {
+                                        center: { lat: latitCenter, lng: longCenter },
+                                        zoom: 11
+                                    });
+                                }
+                                else {
+                                    map = new google.maps.Map(document.getElementById('map'), {
+                                        center: { lat: 53.90588468960213, lng: 27.555191727187893 },
+                                        zoom: 11
+                                    });
+                                }
                             }
                         </script>
 
@@ -243,11 +261,12 @@
 </script>-->
 <!--Script for uploading user image into local session storage ends here-->
 
+
 <script>
-    window.onbeforeunload = function () {
+    addEventListener("beforeunload", () => {
         localStorage.removeItem("marker-lat");
         localStorage.removeItem("marker-long");
-    }
+    });
 </script>
 
 <!--Script for hiding error message starts here-->
@@ -349,6 +368,7 @@
 <!--Script for setting marker on google map if it was before page refreshing starts here-->
 <script>
     window.addEventListener("load", () => {
+
         if (localStorage.hasOwnProperty("marker-lat") && localStorage.hasOwnProperty("marker-long")) {
 
             var latit = JSON.parse(localStorage.getItem("marker-lat"));

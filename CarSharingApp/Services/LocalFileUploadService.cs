@@ -16,11 +16,12 @@ namespace CarSharingApp.Services
             DateTime dateTime = DateTime.Now;
             string newFileName = $"{dateTime.Hour}_{dateTime.Minute}_{dateTime.Second}_{file.FileName}";
 
-            //var filePath = Path.Combine(environment.ContentRootPath, "Repository/LocalRepository/VehicleImages/", newFileName);
-            var filePath = Path.Combine("~/../Repository/LocalRepository/VehicleImages/", newFileName);
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot/vehicleImages/", newFileName);
+
             using var fileStream = new FileStream(filePath, FileMode.Create);
             await file.CopyToAsync(fileStream);
-            return filePath;
+            return Path.Combine("/vehicleImages/", newFileName);
+            Path.Combine("/vehicleImages/", newFileName);
         }
     }
 }
