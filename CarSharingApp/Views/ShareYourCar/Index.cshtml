@@ -132,7 +132,7 @@
                         <input asp-for="Location.Address" type="text" id="carAddress" class="form-control mr-2" placeholder="" onfocus="HideErrorSpan('LocationAddressError'); HideErrorSpan('LocationLatitideError')">
                         <label class="btn btn-primary" onclick="setUpTheMarker()">Search</label>
                     </div>
-                    <label class="mt-2 mr-2">Note: Enter the current location of the car in the «Car location» field, then click the «Search» button. If the address was found, a marker will appear on the map, and coordinates that characterize the lat and long of the location you have chosen will appear below. If there is no marker or coordinates below, please try again.</label>
+                    <label class="mt-2 mr-2">Note: Enter the current location of the car in the «Car location» field, then click the «Search» button. If the address was found, a marker will appear on the map. If error occured, you will see error message and marker will not be set. If so, please try again.</label>
                 </div>
 
 

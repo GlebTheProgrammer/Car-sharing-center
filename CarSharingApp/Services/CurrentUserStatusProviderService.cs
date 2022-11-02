@@ -7,8 +7,9 @@ namespace CarSharingApp.Services
     {
         private UserRole UserRole { get; set; } = UserRole.Unauthorized;
         private int? UserId { get; set; } = null;
-        public bool HasLoggedOut { get; set; } = false;
-        public bool HasSignedIn { get; set; } = false;
+        private bool HasLoggedOut { get; set; } = false;
+        private bool HasSignedIn { get; set; } = false;
+        private bool UnauthorizedAccess { get; set; } = false;
 
         public int? GetUserId()
         {
@@ -44,6 +45,16 @@ namespace CarSharingApp.Services
         public void ChangeLoggedOutState(bool state)
         {
             HasLoggedOut = state;
+        }
+
+        public void ChangeUnauthorizedAccessState(bool state)
+        {
+            UnauthorizedAccess = state;
+        }
+
+        public bool HasTriedToGetUnauthorizedAccess()
+        {
+            return UnauthorizedAccess;
         }
     }
 }

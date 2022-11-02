@@ -1,26 +1,18 @@
 ﻿using CarSharingApp.Models;
-using CarSharingApp.Models.VehicleData;
 using CarSharingApp.Repository.Interfaces;
-using CarSharingApp.Services.Includes;
 using CarSharingApp.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using System.Drawing;
 
 namespace CarSharingApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ICurrentUserStatusProvider currentUserStatusProvider;
         private readonly IVehiclesRepository vehiclesRepository;
-        private readonly IHttpContextAccessor httpContextAccessor;
 
         public HomeController(ICurrentUserStatusProvider currentUserStatusProvider, IVehiclesRepository vehiclesRepository, IHttpContextAccessor httpContextAccessor)
         {
-            this.currentUserStatusProvider = currentUserStatusProvider;
             this.vehiclesRepository = vehiclesRepository;
-            this.httpContextAccessor = httpContextAccessor;
         }
 
         public IActionResult Index()

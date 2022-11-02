@@ -30,8 +30,12 @@ namespace CarSharingApp.Controllers
         // Return basic view with page
         public IActionResult Index()
         {
+            if (currentUserStatusProvider.HasUserLoggedOut())
+                return RedirectToAction("Index", "Home");
+
             if (currentUserStatusProvider.GetUserRole() != UserRole.Client)
             {
+                currentUserStatusProvider.ChangeUnauthorizedAccessState(true);
                 return RedirectToAction("Index", "Home");
             }
 

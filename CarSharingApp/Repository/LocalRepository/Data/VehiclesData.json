@@ -27,5 +27,63 @@
       "Latitude": "53.9368387",
       "Longitude": "27.593307"
     }
+  },
+  {
+    "Id": 1,
+    "OwnerId": 0,
+    "RatingId": 1,
+    "OrderHistoryId": 0,
+    "PublishedTime": "2022-11-02T18:16:54.3989717+03:00",
+    "Name": "Mozo 2 LE",
+    "BriefDescription": "This is a great car for daily usage",
+    "Description": "There is a car description. Here you can find some detailed information, but for now there is some unuseful information",
+    "Tariff": {
+      "TariffPerHour": 10,
+      "TariffPerDay": 150
+    },
+    "Image": "/vehicleImages/18_16_54_car2.jpg",
+    "ProductionYear": 2010,
+    "MaxSpeed": 220,
+    "ExteriorColor": "white",
+    "InteriorColor": "black",
+    "Drivetrain": 2,
+    "FuelType": 2,
+    "Transmission": 4,
+    "Engine": 1,
+    "VIN": "12345678888998765",
+    "Location": {
+      "Address": "\u041A\u0430\u043C\u0435\u043D\u043D\u0430\u044F \u0433\u043E\u0440\u043A\u0430",
+      "Latitude": "53.9224375",
+      "Longitude": "27.4318803"
+    }
+  },
+  {
+    "Id": 2,
+    "OwnerId": 0,
+    "RatingId": 2,
+    "OrderHistoryId": 0,
+    "PublishedTime": "2022-11-02T18:19:42.1811452+03:00",
+    "Name": "Volvo Coupe",
+    "BriefDescription": "Volvo is the best car I\u0027ve ever seen!!!!",
+    "Description": "This is my favourite car. I have published it to show that there is no better car then mine!",
+    "Tariff": {
+      "TariffPerHour": 25,
+      "TariffPerDay": 299
+    },
+    "Image": "/vehicleImages/18_19_42_car3.jpg",
+    "ProductionYear": 2016,
+    "MaxSpeed": 310,
+    "ExteriorColor": "black",
+    "InteriorColor": "white",
+    "Drivetrain": 1,
+    "FuelType": 3,
+    "Transmission": 3,
+    "Engine": 0,
+    "VIN": "Dolores vel nemo ",
+    "Location": {
+      "Address": "\u0443\u043B\u0438\u0446\u0430 \u0434\u0435\u043D\u0438\u0441\u043E\u0432\u0441\u043A\u0430\u044F",
+      "Latitude": "53.8727645",
+      "Longitude": "27.5722425"
+    }
   }
 ]
