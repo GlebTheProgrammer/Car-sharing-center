@@ -4,8 +4,11 @@ namespace CarSharingApp.Controllers
 {
     public class CarInformationController : Controller
     {
-        public IActionResult Index()
+
+
+        public IActionResult Index(int id)
         {
+
             return View();
         }
     }

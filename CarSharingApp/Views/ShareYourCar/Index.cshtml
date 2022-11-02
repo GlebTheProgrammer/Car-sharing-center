@@ -31,7 +31,13 @@
 
                 <h2 class="mt-3">Fill the data</h2>
 
-
+                <div>
+                    <span asp-validation-for="ProductionYear" id="ProductionYearError" class="text-danger text-center" style="margin-left: 135px;"></span>
+                    <div class="d-flex flex-row">
+                        <label class="mr-2" style="white-space: nowrap;">Production year: </label>
+                        <input asp-for="ProductionYear" type="number" class="form-control" placeholder="" onfocus="HideErrorSpan('ProductionYearError')">
+                    </div>
+                </div>
                 <div>
                     <span asp-validation-for="MaxSpeed" id="MaxSpeedError" class="text-danger text-center" style="margin-left: 135px;"></span>
                     <div class="d-flex flex-row">

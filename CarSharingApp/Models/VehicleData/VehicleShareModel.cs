@@ -26,6 +26,10 @@ namespace CarSharingApp.Models.VehicleData
         [Required(ErrorMessage = "Vehicle Image is required")]
         public string Image { get; set; }
 
+        [Required(ErrorMessage = "Production year field is required")]
+        [Range(1500, 2022, ErrorMessage = "Wrong production year")]
+        public int ProductionYear { get; set; }
+
         [Required(ErrorMessage = "Max vehicle speed field is required")]
         [Range(1, 1000, ErrorMessage = "Speed must be a positive number less then 1000 kph")]
         public int MaxSpeed { get; set; }
