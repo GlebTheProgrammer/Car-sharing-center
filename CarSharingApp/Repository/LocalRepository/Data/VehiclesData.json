@@ -2,126 +2,30 @@
   {
     "Id": 0,
     "OwnerId": 0,
-    "Name": "Alexander",
-    "BriefDescription": "Fugiat qui cupiditate eum dolor eiusmod",
-    "Description": "Eos a similique explicabo Excepteur et",
+    "RatingId": 0,
+    "OrderHistoryId": 0,
+    "PublishedTime": "2022-11-02T17:04:28.5778276+03:00",
+    "Name": "BMW Series x6",
+    "BriefDescription": "Eos odio voluptate aut ut aut qui",
+    "Description": "Maxime ad quo maxime voluptatem esse necessitatibus in placeat hello",
     "Tariff": {
-      "TariffPerHour": 11,
-      "TariffPerDay": 100
+      "TariffPerHour": 12,
+      "TariffPerDay": 200
     },
-    "Image": "/vehicleImages/0_15_47_car1.jpg",
-    "MaxSpeed": 53,
-    "ExteriorColor": "Velit soluta culpa esse quo magna distinctio Velit aliqua Libero",
-    "InteriorColor": "In proident in labore veritatis est officia laudantium qui rem",
-    "Drivetrain": 4,
-    "FuelType": 5,
+    "Image": "/vehicleImages/17_4_28_car1.jpg",
+    "ProductionYear": 2000,
+    "MaxSpeed": 400,
+    "ExteriorColor": "Possimus voluptatem dicta voluptate esse voluptatem eiusmod eu natus libero",
+    "InteriorColor": "Corrupti soluta nemo dolore eos sapiente quos et molestiae facilis deserunt et impedit omnis non ",
+    "Drivetrain": 2,
+    "FuelType": 3,
     "Transmission": 2,
-    "Engine": 2,
-    "VIN": "12312311111111111",
+    "Engine": 3,
+    "VIN": "Dolore enim odit ",
     "Location": {
       "Address": "\u043B\u0438\u043E\u043D\u0438\u0434\u0430 \u0431\u0435\u0434\u044B",
       "Latitude": "53.9368387",
       "Longitude": "27.593307"
-    }
-  },
-  {
-    "Id": 1,
-    "OwnerId": 0,
-    "Name": "Amy",
-    "BriefDescription": "Maiores nulla saepe quis neque consequat",
-    "Description": "adskscj scdjnkldkld sjncklsklsdv dvsdklv;sds sdkvkldkljsdv",
-    "Tariff": {
-      "TariffPerHour": 16,
-      "TariffPerDay": 230
-    },
-    "Image": "/vehicleImages/0_17_50_car2.jpg",
-    "MaxSpeed": 15,
-    "ExteriorColor": "Dolore est tenetur sunt exercitationem suscipit veritatis mollit nisi veniam voluptas totam delec",
-    "InteriorColor": "Quibusdam aliquam quasi recusandae Ratione velit dolore sunt sunt hic saepe ipsum est dolore sit",
-    "Drivetrain": 1,
-    "FuelType": 5,
-    "Transmission": 0,
-    "Engine": 3,
-    "VIN": "Omnis quia non do",
-    "Location": {
-      "Address": "\u0441\u0432\u0438\u0441\u043B\u043E\u0447\u044C",
-      "Latitude": "53.0360074",
-      "Longitude": "24.0940923"
-    }
-  },
-  {
-    "Id": 2,
-    "OwnerId": 0,
-    "Name": "Brock",
-    "BriefDescription": "Modi earum amet est qui vero quae qui",
-    "Description": "\u041F\u0440\u0438\u0432\u0435\u0442 \u043C\u0435\u043D\u044F \u0437\u043E\u0432\u0443\u0442 \u0413\u043B\u0435\u0431 \u0438 \u044D\u0442\u043E \u043C\u043E\u044F \u043D\u043E\u0432\u0430\u044F \u043C\u0430\u0448\u0438\u043D\u0430, \u043A\u043E\u0442\u043E\u0440\u0443\u044E \u044F \u043A\u0443\u043F\u0438\u043B \u0432 \u043A\u0440\u0435\u0434\u0438\u0442",
-    "Tariff": {
-      "TariffPerHour": 55,
-      "TariffPerDay": 341
-    },
-    "Image": "/vehicleImages/0_19_45_car3.jpg",
-    "MaxSpeed": 99,
-    "ExteriorColor": "Nisi temporibus amet labore consequatur qui aute",
-    "InteriorColor": "Quia delectus quibusdam tenetur aut minim omnis eiusmod magnam pariatur Dolorum",
-    "Drivetrain": 1,
-    "FuelType": 2,
-    "Transmission": 4,
-    "Engine": 3,
-    "VIN": "12345678912345678",
-    "Location": {
-      "Address": "\u041A\u043E\u043C\u0430\u0440\u043E\u0432\u043A\u0430",
-      "Latitude": "53.9223114",
-      "Longitude": "27.5749255"
-    }
-  },
-  {
-    "Id": 3,
-    "OwnerId": 0,
-    "Name": "Daphne",
-    "BriefDescription": "Aut sed est aut elit magna et Nam repr",
-    "Description": "\u0432\u0441\u0435\u043C \u043F\u0440\u0438\u0432\u0435\u0442 \u043C\u0435\u043D\u044F \u0437\u043E\u0432\u0443\u0442 \u043C\u0430\u0440\u0433\u0430\u0440\u0438\u0442\u0430 \u044F \u0438\u0437 \u043F\u0438\u0442\u0435\u0440\u0430 \u043C\u043D\u0435 5 \u043B\u0435\u0442",
-    "Tariff": {
-      "TariffPerHour": 50,
-      "TariffPerDay": 600
-    },
-    "Image": "/vehicleImages/0_21_17_car2.jpg",
-    "MaxSpeed": 46,
-    "ExteriorColor": "Non unde et esse rerum minus ea rerum quibusdam nobis ad",
-    "InteriorColor": "Reiciendis dolor aliquid nulla dolorem ut ratione lorem",
-    "Drivetrain": 2,
-    "FuelType": 5,
-    "Transmission": 2,
-    "Engine": 1,
-    "VIN": "12345678888998765",
-    "Location": {
-      "Address": "\u041F\u0430\u0440\u043A \u0433\u043E\u0440\u044C\u043A\u043E\u0433\u043E",
-      "Latitude": "55.72836479999999",
-      "Longitude": "37.6012908"
-    }
-  },
-  {
-    "Id": 4,
-    "OwnerId": 0,
-    "Name": "Bianca",
-    "BriefDescription": "\u043F\u0440\u0438\u0432\u0435\u0442 \u0434\u0438\u0430\u043D\u0430 \u044D\u0442\u043E \u044F",
-    "Description": "Incidunt nobis ipsa et rem provdxddjk dkdkwdjkwd kwdkident sed ad",
-    "Tariff": {
-      "TariffPerHour": 6,
-      "TariffPerDay": 130
-    },
-    "Image": "/vehicleImages/0_25_22_car1.jpg",
-    "MaxSpeed": 60,
-    "ExteriorColor": "Natus dolorem aut accusantium vel molestiae nihil ut aut quibusdam eum",
-    "InteriorColor": "Consequatur et culpa officia praesentium sed non rerum magnam provident quis nihil veniam quia au",
-    "Drivetrain": 3,
-    "FuelType": 5,
-    "Transmission": 3,
-    "Engine": 1,
-    "VIN": "12345678912345678",
-    "Location": {
-      "Address": "\u0440\u043E\u043A\u043E\u0441\u0441\u043E\u0432\u0441\u043A\u043E\u0433\u043E 64",
-      "Latitude": "53.8677587",
-      "Longitude": "27.5998907"
     }
   }
 ]

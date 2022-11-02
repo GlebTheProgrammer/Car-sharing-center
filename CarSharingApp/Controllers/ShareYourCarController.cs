@@ -14,14 +14,17 @@ namespace CarSharingApp.Controllers
         private readonly IMapper mapper;
         private readonly IFileUploadService fileUploadService;
         private readonly ICurrentUserStatusProvider currentUserStatusProvider;
+        private readonly IRatingRepository ratingRepository;
 
 
-        public ShareYourCarController(IVehiclesRepository vehiclesRepository, IMapper mapper, IFileUploadService fileUploadService, ICurrentUserStatusProvider currentUserStatusProvider)
+        public ShareYourCarController(IVehiclesRepository vehiclesRepository, IMapper mapper, IFileUploadService fileUploadService, ICurrentUserStatusProvider currentUserStatusProvider, 
+                                      IRatingRepository ratingRepository)
         {
             this.vehiclesRepository = vehiclesRepository;
             this.mapper = mapper;
             this.fileUploadService = fileUploadService;
             this.currentUserStatusProvider = currentUserStatusProvider;
+            this.ratingRepository = ratingRepository;
         }
 
         // Return basic view with page
@@ -57,6 +60,9 @@ namespace CarSharingApp.Controllers
 
             if(currentUserStatusProvider.GetUserId() != null)
                 vehicleModel.OwnerId = (int)currentUserStatusProvider.GetUserId();
+
+            vehicleModel.RatingId = ratingRepository.CreateNewVehicleRating().Result;
+            vehicleModel.PublishedTime = DateTime.Now;
 
             vehiclesRepository.ShareNewVehicle(vehicleModel);
 

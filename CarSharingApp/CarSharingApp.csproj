@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Repository\LocalRepository\VehicleImages\" />
     <Folder Include="Repository\LocalRepository\Data\" />
     <Folder Include="wwwroot\Images\Vehicles\" />
     <Folder Include="wwwroot\vehicleImages\" />

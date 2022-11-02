@@ -1,19 +1,13 @@
-﻿using CarSharingApp.Models.VehicleData.Includes;
+﻿using CarSharingApp.Models.RatingData;
+using CarSharingApp.Models.VehicleData.Includes;
 
 namespace CarSharingApp.Models.VehicleData
 {
-    public class VehicleModel
+    public class VehicleInformationViewModel
     {
-        public int Id { get; set; }
-
+        public string OwnerUsername { get; set; }
         public int OwnerId { get; set; }
 
-        public int RatingId { get; set; }
-        public int OrderHistoryId { get; set; }
-
-        public DateTime PublishedTime { get; set; }
-
-        // Заполняется на странице
         public string Name { get; set; }
         public string BriefDescription { get; set; }
         public string Description { get; set; }
@@ -27,7 +21,12 @@ namespace CarSharingApp.Models.VehicleData
         public FuelType FuelType { get; set; }
         public Transmission Transmission { get; set; }
         public Engine Engine { get; set; }
-        public string VIN { get; set; }
         public Location Location { get; set; }
+
+        public DateTime PublishedTime { get; set; }
+
+        public VehicleRatingViewModel Rating { get; set; }
+
+        public int TimesOrdered { get; set; }
     }
 }

@@ -1,4 +1,7 @@
-﻿<main class="container mt-5">
+﻿@using CarSharingApp.Models.VehicleData
+@model VehicleInformationViewModel
+
+<main class="container mt-5">
 
 
     <div class="row g-5">
@@ -7,16 +10,19 @@
                 About Car Page
             </h3>
 
-            <img class="img-fluid mt-3 mx-auto d-block rounded" style="height: auto" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/2015-bmw-x6.jpg/1200px-2015-bmw-x6.jpg">
+            <img class="img-fluid mt-3 mx-auto d-block rounded" style="height: auto" src="@Model.Image">
 
             <article class="blog-post mt-2">
-                <h2 class="blog-post-title">BMW X6 Competition</h2>
-                <p class="blog-post-meta">Published: January 1, 2021 by <a href="#">Mark</a></p>
+                <h2 class="blog-post-title">@Model.Name</h2>
+                <p class="blog-post-meta">Published: @(Model.PublishedTime.Month) @(Model.PublishedTime.Day), @(Model.PublishedTime.Year) by <a href="@Url.Action("Index", "ClientProfile", new {id = Model.OwnerId})">@Model.OwnerUsername</a></p>
 
-                <p>This blog post shows several different types of content that were provided by the author who posted the offer. The campaign is not responsible for the basic typography, lists, tables, images, information and much more posted. The author himself takes responsibility.</p>
+                <p>@Model.Description</p>
                 <hr>
             </article>
-
+            @{
+                var latModel = float.Parse(Model.Location.Latitude.Replace('.', ','));
+                var longModel = float.Parse(Model.Location.Longitude.Replace('.', ','));
+            }
             <article class="blog-post">
                 <h3>Vehicle location</h3>
                 <p>You can see vehicle location on the map and check if it suits you:</p>
@@ -25,15 +31,24 @@
                         <div id="map" class="text-center" style="height: 400px; width: 100%;"></div>
                         <script>
                             var map;
-                            function initMap() {
+                            function initMap() 
+                            {
+
+
+                                var latitude = '@Html.Raw(Json.Serialize(latModel))';
+                                var longitude = '@Html.Raw(Json.Serialize(longModel))';
+
+                                var latSerialized = JSON.parse(latitude);
+                                var longSerialized = JSON.parse(longitude);
+
                                 map = new google.maps.Map(document.getElementById('map'), {
-                                    center: { lat: 53.90588468960213, lng: 27.555191727187893 },
+                                    center: { lat: latSerialized, lng: longSerialized },
                                     zoom: 11
                                 });
 
                                 var marker = new google.maps.Marker(
                                 {
-                                    position: new google.maps.LatLng(53.90588468960213, 27.555191727187893),
+                                    position: new google.maps.LatLng(latSerialized, longSerialized),
                                     map: map
                                 });
                             }
@@ -58,48 +73,48 @@
                         <tr>
                             <!--Год выуска-->
                             <td>Production year</td>
-                            <td class="text-center">2021</td>
+                            <td class="text-center">@Model.ProductionYear</td>
                         </tr>
                         <tr>
                             <!--Скорость автомобиля-->
                             <td>Max speed</td>
-                            <td class="text-center">White</td>
+                            <td class="text-center">@Model.MaxSpeed</td>
                         </tr>
                         <tr>
                             <!--Внешний цвет автомобиля-->
                             <td>Exterior color</td>
-                            <td class="text-center">White</td>
+                            <td class="text-center">@Model.ExteriorColor</td>
                         </tr>
                         <tr>
                             <!--Цвет салона-->
                             <td>Interior color</td>
-                            <td class="text-center">Black</td>
+                            <td class="text-center">@Model.InteriorColor</td>
                         </tr>
                         <tr>
                             <!--Трансмиссия-->
                             <td>Drivetrain</td>
-                            <td class="text-center">Black</td>
+                            <td class="text-center">@Model.Drivetrain</td>
                         </tr>
                         <tr>
                             <!--Тип топлива-->
                             <td>Fuel type</td>
-                            <td class="text-center">Black</td>
+                            <td class="text-center">@Model.FuelType</td>
                         </tr>
                         <tr>
                             <!--Коробка передач-->
                             <td>Drivetrain</td>
-                            <td class="text-center">Black</td>
+                            <td class="text-center">@Model.Drivetrain</td>
                         </tr>
                         <tr>
                             <!--Тип двигателя-->
                             <td>Engine</td>
-                            <td class="text-center">Black</td>
+                            <td class="text-center">@Model.Engine</td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
                             <td>Times ordered</td>
-                            <td class="text-center">21</td>
+                            <td class="text-center">@Model.TimesOrdered</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -112,73 +127,169 @@
             <div class="position-sticky" style="top: 4rem;">
                 <div class="p-4 mb-3 bg-light rounded">
                     <h4 class="fst-italic">Description</h4>
-                    <p class="mb-0">Customize this section to tell your visitors a little bit about your publication, writers, content, or something else entirely. Totally up to you.</p>
+                    <p class="mb-0">@Model.BriefDescription</p>
                 </div>
 
                 <div class="ml-4 mt-4">
-                    <h4 class="fst-italic mb-3">Rating (0 reviews)</h4>
+                    <h4 class="fst-italic mb-3">Rating (@(Model.Rating.ReviewsCount) reviews)</h4>
                     <span class="h6 mr-1">Condition:</span>
-                    <span class="card-text">3.6 </span>
-                    <span class="fa fa-star checked" style="color: orange"></span>
-                    <span class="fa fa-star checked" style="color: orange"></span>
-                    <span class="fa fa-star checked" style="color: orange"></span>
-                    <span class="fa fa-star-half-stroke" style="color: orange"></span>
-                    <span class="fa fa-star"></span>
+                    <span class="card-text">@Math.Round(Model.Rating.Condition, 1) </span>
+                    @{
+                        double rating = Math.Round(Model.Rating.Condition, 1);
+                        for(int i = 0; i < 5; i++)
+                        {
+                            if (rating > i && rating >= i + 1)
+                            {
+                                    <span class="fa fa-star checked" style="color: orange"></span>
+                            }
+                            else
+                            {
+                                if(rating > i && rating < i + 1)
+                                {
+                                        <span class="fa fa-star-half-stroke" style="color: orange"></span>
+                                }
+                                else
+                                {
+                                        <span class="fa fa-star"></span>
+                                }
+                            }
+                        }
+                    }
                 </div>
 
                 <div class="ml-4 mt-1">
                     <span class="h6 mr-1">Fuel consumption:</span>
-                    <span class="card-text">3.6 </span>
-                    <span class="fa fa-star checked" style="color: orange"></span>
-                    <span class="fa fa-star checked" style="color: orange"></span>
-                    <span class="fa fa-star checked" style="color: orange"></span>
-                    <span class="fa fa-star-half-stroke" style="color: orange"></span>
-                    <span class="fa fa-star"></span>
+                    <span class="card-text">@Math.Round(Model.Rating.FuelConsumption, 1) </span>
+                    @{
+                        rating = Math.Round(Model.Rating.FuelConsumption, 1);
+                        for (int i = 0; i < 5; i++)
+                        {
+                            if (rating > i && rating >= i + 1)
+                            {
+                                    <span class="fa fa-star checked" style="color: orange"></span>
+                            }
+                            else
+                            {
+                                if (rating > i && rating < i + 1)
+                                {
+                                        <span class="fa fa-star-half-stroke" style="color: orange"></span>
+                                }
+                                else
+                                {
+                                        <span class="fa fa-star"></span>
+                                }
+                            }
+                        }
+                    }
                 </div>
 
                 <div class="ml-4 mt-1">
                     <span class="h6 mr-1">Easy to drive:</span>
-                    <span class="card-text">3.6 </span>
-                    <span class="fa fa-star checked" style="color: orange"></span>
-                    <span class="fa fa-star checked" style="color: orange"></span>
-                    <span class="fa fa-star checked" style="color: orange"></span>
-                    <span class="fa fa-star-half-stroke" style="color: orange"></span>
-                    <span class="fa fa-star"></span>
+                    <span class="card-text">@Math.Round(Model.Rating.EasyToDrive, 1) </span>
+                    @{
+                        rating = Math.Round(Model.Rating.EasyToDrive, 1);
+                        for (int i = 0; i < 5; i++)
+                        {
+                            if (rating > i && rating >= i + 1)
+                            {
+                                    <span class="fa fa-star checked" style="color: orange"></span>
+                            }
+                            else
+                            {
+                                if (rating > i && rating < i + 1)
+                                {
+                                        <span class="fa fa-star-half-stroke" style="color: orange"></span>
+                                }
+                                else
+                                {
+                                        <span class="fa fa-star"></span>
+                                }
+                            }
+                        }
+                    }
                 </div>
 
                 <div class="ml-4 mt-1">
                     <span class="h6 mr-1">Family-friendly:</span>
-                    <span class="card-text">3.6 </span>
-                    <span class="fa fa-star checked" style="color: orange"></span>
-                    <span class="fa fa-star checked" style="color: orange"></span>
-                    <span class="fa fa-star checked" style="color: orange"></span>
-                    <span class="fa fa-star-half-stroke" style="color: orange"></span>
-                    <span class="fa fa-star"></span>
+                    <span class="card-text">@Math.Round(Model.Rating.FamilyFriendly, 1) </span>
+                    @{
+                        rating = Math.Round(Model.Rating.FamilyFriendly, 1);
+                        for (int i = 0; i < 5; i++)
+                        {
+                            if (rating > i && rating >= i + 1)
+                            {
+                                    <span class="fa fa-star checked" style="color: orange"></span>
+                            }
+                            else
+                            {
+                                if (rating > i && rating < i + 1)
+                                {
+                                        <span class="fa fa-star-half-stroke" style="color: orange"></span>
+                                }
+                                else
+                                {
+                                        <span class="fa fa-star"></span>
+                                }
+                            }
+                        }
+                    }
                 </div>
 
                 <div class="ml-4 mt-1">
                     <span class="h6 mr-1">SUV:</span>
-                    <span class="card-text">3.6 </span>
-                    <span class="fa fa-star checked" style="color: orange"></span>
-                    <span class="fa fa-star checked" style="color: orange"></span>
-                    <span class="fa fa-star checked" style="color: orange"></span>
-                    <span class="fa fa-star-half-stroke" style="color: orange"></span>
-                    <span class="fa fa-star"></span>
+                    <span class="card-text">@Math.Round(Model.Rating.SUV, 1) </span>
+                    @{
+                        rating = Math.Round(Model.Rating.SUV, 1);
+                        for (int i = 0; i < 5; i++)
+                        {
+                            if (rating > i && rating >= i + 1)
+                            {
+                                    <span class="fa fa-star checked" style="color: orange"></span>
+                            }
+                            else
+                            {
+                                if (rating > i && rating < i + 1)
+                                {
+                                        <span class="fa fa-star-half-stroke" style="color: orange"></span>
+                                }
+                                else
+                                {
+                                        <span class="fa fa-star"></span>
+                                }
+                            }
+                        }
+                    }
                 </div>
 
                 <div class="ml-4 mt-4">
                     <span class="h4 mr-1">Overall:</span>
-                    <span class="card-text">3.6 </span>
-                    <span class="fa fa-star checked" style="color: orange"></span>
-                    <span class="fa fa-star checked" style="color: orange"></span>
-                    <span class="fa fa-star checked" style="color: orange"></span>
-                    <span class="fa fa-star-half-stroke" style="color: orange"></span>
-                    <span class="fa fa-star"></span>
+                    <span class="card-text">@Math.Round(Model.Rating.Overall, 1) </span>
+                    @{
+                        rating = Math.Round(Model.Rating.Overall, 1);
+                        for (int i = 0; i < 5; i++)
+                        {
+                            if (rating > i && rating >= i + 1)
+                            {
+                                    <span class="fa fa-star checked" style="color: orange"></span>
+                            }
+                            else
+                            {
+                                if (rating > i && rating < i + 1)
+                                {
+                                        <span class="fa fa-star-half-stroke" style="color: orange"></span>
+                                }
+                                else
+                                {
+                                        <span class="fa fa-star"></span>
+                                }
+                            }
+                        }
+                    }
                 </div>
 
                 <div class="ml-4 mt-4">
                     <h4 class="fst-italic">Price</h4>
-                    <h4 class="card-text">20 $<span class="text-muted h5">/hr - </span>180 $<span class="text-muted h5">/day</span></h4>
+                    <h4 class="card-text">@Model.Tariff.TariffPerHour $<span class="text-muted h5">/hr - </span>@Model.Tariff.TariffPerDay $<span class="text-muted h5">/day</span></h4>
                 </div>
 
                 <nav class="blog-pagination ml-4 mt-4" aria-label="Pagination">

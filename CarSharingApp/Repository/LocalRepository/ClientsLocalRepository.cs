@@ -106,5 +106,13 @@ namespace CarSharingApp.Repository.LocalRepository
 
             return signInUser;
         }
+
+        public string GetClientUsername(int id)
+        {
+            if (clients == null)
+                SetUpLocalRepository();
+
+            return clients.First(client => client.Id == id).Username;
+        }
     }
 }

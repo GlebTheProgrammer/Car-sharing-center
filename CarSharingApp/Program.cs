@@ -2,7 +2,6 @@ using CarSharingApp.Repository.Interfaces;
 using CarSharingApp.Repository.LocalRepository;
 using CarSharingApp.Services;
 using CarSharingApp.Services.Interfaces;
-using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +21,9 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 // Dependency injection is here
 builder.Services.AddSingleton<IVehiclesRepository, VehiclesLocalRepository>();
 builder.Services.AddSingleton<IClientsRepository, ClientsLocalRepository>();
+builder.Services.AddSingleton<IOrdersRepository, OrdersLocalRepository>();
+builder.Services.AddSingleton<IRatingRepository, RatingLocalRepository>();
+
 builder.Services.AddScoped<IFileUploadService, LocalFileUploadService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddSingleton<ICurrentUserStatusProvider, CurrentUserStatusProviderService>();
