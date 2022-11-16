@@ -83,5 +83,17 @@ namespace CarSharingApp.Repository.LocalRepository
 
             return vehicles.Where(vehicle => vehicle.OwnerId == userId);
         }
+
+        public async void PublishVehicleInTheCatalog(int vehicleId)
+        {
+            vehicles.First(vehicle => vehicle.Id == vehicleId).IsPublished = true;
+            await SaveChanges();
+        }
+
+        public async void RemoveVehicleFromTheCatalog(int vehicleId)
+        {
+            vehicles.First(vehicle => vehicle.Id == vehicleId).IsPublished = false;
+            await SaveChanges();
+        }
     }
 }

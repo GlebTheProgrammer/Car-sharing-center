@@ -67,13 +67,13 @@ namespace CarSharingApp.Controllers
 
         public IActionResult PublishVehicleInTheCatalog(int vehicleId)
         {
-            vehiclesRepository.GetVehicleById(vehicleId).IsPublished = true;
+            vehiclesRepository.PublishVehicleInTheCatalog(vehicleId);
             return RedirectToAction("Index");
         }
 
         public IActionResult RemoveVehicleFromTheCatalog(int vehicleId)
         {
-            vehiclesRepository.GetVehicleById(vehicleId).IsPublished = false;
+            vehiclesRepository.RemoveVehicleFromTheCatalog(vehicleId);
             return RedirectToAction("Index");
         }
     }

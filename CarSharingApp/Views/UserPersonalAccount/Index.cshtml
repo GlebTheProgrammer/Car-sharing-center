@@ -162,7 +162,8 @@
                             <td class="table-warning">@vehicle.TimesOrdered</td>
                             <td class="table-warning">@(vehicle.IsOrdered ? "Yes" : "No")</td>
                             <td>
-                                <button type="button" class="btn btn-outline-success mt-1 mb-1" onclick="location.href='@Url.Action("PublishVehicleInTheCatalog","UserPersonalAccount")'">Publish</button>
+
+                                <button type="button" class="btn btn-outline-success mt-1 mb-1" onclick="location.href='@Url.Action("PublishVehicleInTheCatalog","UserPersonalAccount", new {vehicleId = vehicle.Id})'">Publish</button>
                                 <button type="button" class="btn btn-outline-primary mt-1 mb-1">Edit</button>
                                 <button type="button" class="btn btn-outline-danger mt-1 mb-1">Delete</button>
                             </td>
@@ -181,7 +182,7 @@
                             <td class="">@vehicle.TimesOrdered</td>
                             <td class="">No</td>
                             <td>
-                                <button type="button" class="btn btn-outline-warning mt-1 mb-1" onclick="location.href='@Url.Action("RemoveVehicleFromTheCatalog","UserPersonalAccount")'">Hide</button>
+                                <button type="button" class="btn btn-outline-warning mt-1 mb-1" onclick="location.href='@Url.Action("RemoveVehicleFromTheCatalog","UserPersonalAccount", new {vehicleId = vehicle.Id})'">Hide</button>
                                 <button type="button" class="btn btn-outline-primary mt-1 mb-1">Edit</button>
                                 <button type="button" class="btn btn-outline-danger mt-1 mb-1">Delete</button>
                             </td>
