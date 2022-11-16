@@ -78,5 +78,12 @@ namespace CarSharingApp.Repository.LocalRepository
             await JsonSerializer.SerializeAsync(createStream, ratings, options);
             await createStream.DisposeAsync();
         }
+
+        public async void DeleteVehicleRating(int ratingId)
+        {
+            ratings.Remove(ratings.First(rating => rating.Id == ratingId));
+
+            await SaveChanges();
+        }
     }
 }

@@ -10,6 +10,7 @@ namespace CarSharingApp.Services
         private bool HasLoggedOut { get; set; } = false;
         private bool HasSignedIn { get; set; } = false;
         private bool UnauthorizedAccess { get; set; } = false;
+        private bool HasDeletedVehicle { get; set; } = false;
 
         public int? GetUserId()
         {
@@ -55,6 +56,16 @@ namespace CarSharingApp.Services
         public bool HasTriedToGetUnauthorizedAccess()
         {
             return UnauthorizedAccess;
+        }
+
+        public bool HasUserDeletedVehicle()
+        {
+            return HasDeletedVehicle;
+        }
+
+        public void ChangeUserDeletedVehicleState(bool state)
+        {
+            HasDeletedVehicle = state;
         }
     }
 }

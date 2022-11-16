@@ -11,9 +11,11 @@ namespace CarSharingApp.Services.Interfaces
         public bool HasUserSignedIn();
         public bool HasUserLoggedOut();
         public bool HasTriedToGetUnauthorizedAccess();
+        public bool HasUserDeletedVehicle();
 
         public void ChangeSignedInState(bool state);
         public void ChangeLoggedOutState(bool state);
         public void ChangeUnauthorizedAccessState(bool state);
+        public void ChangeUserDeletedVehicleState(bool state);
     }
 }

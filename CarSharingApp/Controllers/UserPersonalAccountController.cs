@@ -17,15 +17,17 @@ namespace CarSharingApp.Controllers
         private readonly IMapper mapper;
         private readonly ICurrentUserStatusProvider currentUserStatusProvider;
         private readonly IOrdersRepository ordersRepository;
+        private readonly IRatingRepository ratingRepository;
 
         public UserPersonalAccountController(IVehiclesRepository vehiclesRepository, IMapper mapper, ICurrentUserStatusProvider currentUserStatusProvider, 
-                                             IOrdersRepository ordersRepository, IClientsRepository clientsRepository)
+                                             IOrdersRepository ordersRepository, IClientsRepository clientsRepository, IRatingRepository ratingRepository)
         {
             this.vehiclesRepository = vehiclesRepository;
             this.mapper = mapper;
             this.currentUserStatusProvider = currentUserStatusProvider;
             this.ordersRepository = ordersRepository;
             this.clientsRepository = clientsRepository;
+            this.ratingRepository = ratingRepository;
         }
 
         public IActionResult Index()
@@ -75,6 +77,14 @@ namespace CarSharingApp.Controllers
         {
             vehiclesRepository.RemoveVehicleFromTheCatalog(vehicleId);
             return RedirectToAction("Index");
+        }
+
+        public void DeleteVehicle(int vehicleId)
+        {
+            ratingRepository.DeleteVehicleRating(vehiclesRepository.GetVehicleById(vehicleId).RatingId);
+            vehiclesRepository.DeleteVehicle(vehicleId);
+
+            currentUserStatusProvider.ChangeUserDeletedVehicleState(true);
         }
     }
 }

@@ -95,5 +95,17 @@ namespace CarSharingApp.Repository.LocalRepository
             vehicles.First(vehicle => vehicle.Id == vehicleId).IsPublished = false;
             await SaveChanges();
         }
+
+        public async void DeleteVehicle(int vehicleId)
+        {
+            var vehicleToDelete = vehicles.First(vehicle => vehicle.Id == vehicleId);
+            var vehicleImagePath = "wwwroot" + vehicleToDelete.Image;
+
+            if (File.Exists(vehicleImagePath))
+                File.Delete(vehicleImagePath);
+
+            vehicles.Remove(vehicleToDelete);
+            await SaveChanges();
+        }
     }
 }

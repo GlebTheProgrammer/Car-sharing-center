@@ -53,9 +53,21 @@ namespace CarSharingApp.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveSharedCar(VehicleShareModel vehicleShareModel, IFormFile file)
         {
+            // Check whether latitude and longitude have any letters. If so -> change location to null
+            if (vehicleShareModel.Location.Latitude.Any(x => char.IsLetter(x)))
+            {
+                vehicleShareModel.Location = new Models.VehicleData.Includes.Location
+                {
+                    Latitude = null,
+                    Longitude = null
+                };
+            }
+
             // If validation error occured -> return same view with errors and current model
             if (!ModelState.IsValid)
+            {
                 return View("Index", vehicleShareModel);
+            }    
 
             if (file != null)
                 vehicleShareModel.Image = await fileUploadService.UploadFileAsync(file);
