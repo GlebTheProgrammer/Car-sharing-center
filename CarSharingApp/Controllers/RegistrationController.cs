@@ -32,6 +32,11 @@ namespace CarSharingApp.Controllers
             if (!ModelState.IsValid)
                 return View("Index", clientViewModel);
 
+            var newClient = mapper.Map<ClientModel>(clientViewModel);
+            newClient.VehiclesOrdered = 0;
+            newClient.VehiclesShared = 0;
+            newClient.AccountDescription = "No description yet";
+
             clientsRepository.AddNewClient(mapper.Map<ClientModel>(clientViewModel));
 
             httpContextAccessor.HttpContext.Session.SetString("Registered", "true");

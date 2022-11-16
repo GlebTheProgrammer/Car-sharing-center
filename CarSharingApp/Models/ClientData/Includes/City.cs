@@ -1,6 +1,6 @@
 ﻿namespace CarSharingApp.Models.ClientData.Includes
 {
-    public enum BelarusCity
+    public enum City
     {
         NotMentioned = 0,
         Minsk = 1,

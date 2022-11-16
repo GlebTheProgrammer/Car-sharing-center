@@ -26,12 +26,13 @@ namespace CarSharingApp.Repository.LocalRepository
 
         }
 
-        public IEnumerable<VehicleModel> GetAllVehicles()
+        public IEnumerable<VehicleModel> GetAllVehiclesForCatalog()
         {
             if (vehicles == null)
                 SetUpLocalRepository();
 
-            return vehicles;
+            // Возвращаем только те автомобили, которые были опубликованы пользователем в его личном кабинете, а также те, которые не заказаны другим пользователем в нынешний момент
+            return vehicles.Where(vehicle => vehicle.IsPublished && !vehicle.IsOrdered);
         }
 
         public VehicleModel GetVehicleById(int id)
@@ -65,6 +66,22 @@ namespace CarSharingApp.Repository.LocalRepository
             using FileStream createStream = File.Create(filePath);
             await JsonSerializer.SerializeAsync(createStream, vehicles, options);
             await createStream.DisposeAsync();
+        }
+
+        public IEnumerable<VehicleModel> GetAllActiveUserVehicles(int userId)
+        {
+            if (vehicles == null)
+                SetUpLocalRepository();
+
+            return vehicles.Where(vehicle => vehicle.IsPublished && vehicle.OwnerId == userId);
+        }
+
+        public IEnumerable<VehicleModel> GetAllUserVehicles(int userId)
+        {
+            if (vehicles == null)
+                SetUpLocalRepository();
+
+            return vehicles.Where(vehicle => vehicle.OwnerId == userId);
         }
     }
 }

@@ -8,25 +8,5 @@
     "SUV": 0,
     "Overall": 0,
     "ReviewsCount": 0
-  },
-  {
-    "Id": 1,
-    "Condition": 0,
-    "FuelConsumption": 0,
-    "EasyToDrive": 0,
-    "FamilyFriendly": 0,
-    "SUV": 0,
-    "Overall": 0,
-    "ReviewsCount": 0
-  },
-  {
-    "Id": 2,
-    "Condition": 0,
-    "FuelConsumption": 0,
-    "EasyToDrive": 0,
-    "FamilyFriendly": 0,
-    "SUV": 0,
-    "Overall": 0,
-    "ReviewsCount": 0
   }
 ]

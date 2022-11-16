@@ -1,0 +1,214 @@
+﻿@using CarSharingApp.Views.UserPersonalAccount
+@model UserPersonalInformationDataViewModel
+
+
+<section>
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card mb-4 mt-3">
+                    <div class="card-body text-center">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTdmrjoiXGVFEcd1cX9Arb1itXTr2u8EKNpw&usqp=CAU" alt="avatar"
+                             class="rounded-circle img-fluid" style="width: 150px;">
+                        <h5 class="my-3">@Model.ClientAccountViewModel.Username</h5>
+                        <p class="text-muted mb-1">@Model.ClientAccountViewModel.AccountDescription</p>
+                        <p class="text-muted mb-4">@Model.ClientAccountViewModel.Address, @Model.ClientAccountViewModel.City, @Model.ClientAccountViewModel.Country</p>
+                        <div class="d-flex justify-content-center mb-2">
+                            <button type="button" class="btn btn-outline-secondary mr-3">Get Back</button>
+                            <button type="button" class="btn btn-outline-info">Edit Profile</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+
+                <h2 class="text-left ml-2">Account Info</h2>
+
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Full Name</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">@Model.ClientAccountViewModel.LastName @Model.ClientAccountViewModel.FirstName</p>
+                            </div>
+                        </div>
+                        <hr class="featurette-divider">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Email</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">@Model.ClientAccountViewModel.Email</p>
+                            </div>
+                        </div>
+                        <hr class="featurette-divider">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Phone Number</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">@Model.ClientAccountViewModel.PhoneNumber</p>
+                            </div>
+                        </div>
+                        <hr class="featurette-divider">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Postcode</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">@Model.ClientAccountViewModel.Postcode</p>
+                            </div>
+                        </div>
+                        <hr class="featurette-divider">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Driver's License</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">@Model.ClientAccountViewModel.DriverLicenseNumber</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+        </div>
+
+        <hr class="featurette-divider mb-4">
+
+        <div class="row justify-content-center mt-2">
+            <div class="col-lg-2 text-center">
+                <p class="mb-2 h5">@Model.VehiclesAdded</p>
+                <p class="text-muted mb-3">Vehicles added</p>
+            </div>
+            <div class="col-lg-2 text-center">
+                <p class="mb-2 h5">@Model.ActiveVehicles</p>
+                <p class="text-muted mb-3">Active vehicles</p>
+            </div>
+            <div class="col-lg-2 text-center">
+                <p class="mb-2 h5">@Model.ActiveOrdersCount</p>
+                <p class="text-muted mb-3">Active orders</p>
+            </div>
+            <div class="col-lg-2 text-center">
+                <p class="mb-2 h5">@Model.ClientAccountViewModel.VehiclesOrdered</p>
+                <p class="text-muted mb-3">Vehicles ordered</p>
+            </div>
+            <div class="col-lg-2 text-center">
+                <p class="mb-2 h5">@Model.ClientAccountViewModel.VehiclesShared</p>
+                <p class="text-muted mb-3">Vehicles shared</p>
+            </div>
+        </div>
+
+        <hr class="featurette-divider mt-1 mb-4">
+
+        <h2 class="text-center mt-4 mb-4">My orders</h2>
+
+        <table class="table">
+            <thead class="thead-dark text-center">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Vehicle</th>
+                    <th scope="col">Paid time</th>
+                    <th scope="col">Time Left</th>
+                    <th scope="col">Expires</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var order in Model.ActveOrders)
+                {
+                    <tr class="text-center">
+                        <th scope="row" class="">@order.Id</th>
+                        <td class="">@order.VehicleName</td>
+                        <td class="">@(order.PaidTimeInMinutes / 1440 > 0 ? order.PaidTimeInMinutes / 1440 : "") days @(order.PaidTimeInMinutes % 1440 / 60) hours @(order.PaidTimeInMinutes % 1440 % 60)</td>
+                        <td class="">@(DateTime.Now - order.OrderMadeTime) hours</td>
+                        <td class="">@(order.OrderMadeTime.AddMinutes(order.PaidTimeInMinutes))</td>
+                        <td>
+                            <button type="button" class="btn btn-outline-primary mt-1 mb-1">Finish</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <hr class="featurette-divider mt-1 mb-4">
+
+        <h2 class="text-center mt-4 mb-4">My vehicles</h2>
+
+        <table class="table">
+            <thead class="thead-dark text-center">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Added</th>
+                    <th scope="col">Times Ordered</th>
+                    <th scope="col">Is Ordered</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var vehicle in Model.UserVehicles)
+                {
+                    if (!vehicle.IsPublished)
+                    {
+                        <tr class="text-center">
+                            <th scope="row" class="table-warning">@vehicle.Id</th>
+                            <td class="table-warning">@vehicle.Name</td>
+                            <td class="table-warning">@(vehicle.Tariff.TariffPerHour)/h - @(vehicle.Tariff.TariffPerDay)/d</td>
+                            <td class="table-warning">@vehicle.PublishedTime</td>
+                            <td class="table-warning">@vehicle.TimesOrdered</td>
+                            <td class="table-warning">@(vehicle.IsOrdered ? "Yes" : "No")</td>
+                            <td>
+                                <button type="button" class="btn btn-outline-success mt-1 mb-1" onclick="location.href='@Url.Action("PublishVehicleInTheCatalog","UserPersonalAccount")'">Publish</button>
+                                <button type="button" class="btn btn-outline-primary mt-1 mb-1">Edit</button>
+                                <button type="button" class="btn btn-outline-danger mt-1 mb-1">Delete</button>
+                            </td>
+                        </tr>
+
+                        continue;
+                    }
+
+                    if (vehicle.IsPublished && !vehicle.IsOrdered)
+                    {
+                        <tr class="text-center">
+                            <th scope="row" class="">@vehicle.Id</th>
+                            <td class="">@vehicle.Name</td>
+                            <td class="">@(vehicle.Tariff.TariffPerHour)/h - @(vehicle.Tariff.TariffPerDay)/d</td>
+                            <td class="">@vehicle.PublishedTime</td>
+                            <td class="">@vehicle.TimesOrdered</td>
+                            <td class="">No</td>
+                            <td>
+                                <button type="button" class="btn btn-outline-warning mt-1 mb-1" onclick="location.href='@Url.Action("RemoveVehicleFromTheCatalog","UserPersonalAccount")'">Hide</button>
+                                <button type="button" class="btn btn-outline-primary mt-1 mb-1">Edit</button>
+                                <button type="button" class="btn btn-outline-danger mt-1 mb-1">Delete</button>
+                            </td>
+                        </tr>
+
+                        continue;
+                    }
+
+                    if (vehicle.IsPublished && vehicle.IsOrdered)
+                    {
+                        <tr class="text-center">
+                            <th scope="row" class="table-success">@vehicle.Id</th>
+                            <td class="table-success">@vehicle.Name</td>
+                            <td class="table-success">@(vehicle.Tariff.TariffPerHour)/h - @(vehicle.Tariff.TariffPerDay)/d</td>
+                            <td class="table-success">@vehicle.PublishedTime</td>
+                            <td class="table-success">@vehicle.TimesOrdered</td>
+                            <td class="table-success">Yes</td>
+                            <td>
+                                <button type="button" class="btn btn-outline-warning mt-1 mb-1" disabled>Hide</button>
+                                <button type="button" class="btn btn-outline-primary mt-1 mb-1" disabled>Edit</button>
+                                <button type="button" class="btn btn-outline-danger mt-1 mb-1" disabled>Delete</button>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+    </div>
+</section>

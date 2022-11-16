@@ -9,7 +9,6 @@ namespace CarSharingApp.Models.VehicleData
         public int OwnerId { get; set; }
 
         public int RatingId { get; set; }
-        public int OrderHistoryId { get; set; }
 
         public DateTime PublishedTime { get; set; }
 
@@ -29,5 +28,9 @@ namespace CarSharingApp.Models.VehicleData
         public Engine Engine { get; set; }
         public string VIN { get; set; }
         public Location Location { get; set; }
+
+        // Активна ли техника или нет (меняется пользователем в личном кабинете)
+        public bool IsPublished { get; set; }
+        public bool IsOrdered { get; set; }
     }
 }

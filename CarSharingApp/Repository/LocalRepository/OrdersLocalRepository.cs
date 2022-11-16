@@ -31,5 +31,21 @@ namespace CarSharingApp.Repository.LocalRepository
 
             return orders.Where(order => order.OrderedVehicleId == vehicleId).Count();
         }
+
+        public int GetNumberOfActiveOrdersForAUser(int userId)
+        {
+            if (orders == null)
+                SetUpLocalRepository();
+
+            return orders.Where(order => order.IsActive && order.OrderedUserId == userId).Count();
+        }
+
+        public List<OrderModel> GetActiveOrdersForAUser(int userId)
+        {
+            if (orders == null)
+                SetUpLocalRepository();
+
+            return orders.Where(order => order.IsActive && order.OrderedUserId == userId).ToList();
+        }
     }
 }

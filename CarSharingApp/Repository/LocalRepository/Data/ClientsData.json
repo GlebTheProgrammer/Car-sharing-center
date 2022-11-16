@@ -3,16 +3,18 @@
     "Id": 0,
     "Role": 1,
     "FirstName": "Glebs15",
-    "LastName": "Sukristik",
-    "Username": "Its_Glebyshka",
+    "LastName": "Deksirion",
+    "Username": "rajejum",
     "Country": 1,
-    "BelarusCity": 1,
-    "Postcode": 220040,
+    "City": 4,
+    "Postcode": 27,
     "Address": "\u041B.\u0411\u0435\u0434\u044B 29-97",
-    "PhoneNumber": "12334556787",
+    "PhoneNumber": "\u002B1 (639) 873-1734",
     "Email": "gleb15a@gmail.com",
     "Password": "A665A45920422F9D417E4867EFDC4FB8A04A1F3FFF1FA07E998E86F7F7A27AE3",
-    "DriverLicenseNumber": "5AA000031",
-    "IsAcceptedNewsSharing": true
+    "DriverLicenseNumber": "199",
+    "IsAcceptedNewsSharing": false,
+    "VehiclesOrdered": 0,
+    "VehiclesShared": 0
   }
 ]

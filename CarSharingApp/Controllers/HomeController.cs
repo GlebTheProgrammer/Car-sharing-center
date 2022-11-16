@@ -17,12 +17,12 @@ namespace CarSharingApp.Controllers
 
         public IActionResult Index()
         {
-            int vehiclesCount = vehiclesRepository.GetAllVehicles().Count();
+            int vehiclesCount = vehiclesRepository.GetAllVehiclesForCatalog().Count();
 
             float[][] array = new float[vehiclesCount][];
 
             int i = 0;
-            foreach (var vehicle in vehiclesRepository.GetAllVehicles())
+            foreach (var vehicle in vehiclesRepository.GetAllVehiclesForCatalog())
             {
                 string latitude = vehicle.Location.Latitude.Replace('.', ',');
                 string longitude = vehicle.Location.Longitude.Replace('.', ',');

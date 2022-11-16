@@ -30,7 +30,8 @@ namespace CarSharingApp.Controllers
 
         public IActionResult Index(int page = 1, string pageSizeStr = "3")
         {
-            var vehicleViewModels = mapper.Map<IEnumerable<VehicleViewModel>>(vehiclesRepository.GetAllVehicles()).ToList();
+            // Получаем только те модельки, которые не относятся к текущему пользователю
+            var vehicleViewModels = mapper.Map<IEnumerable<VehicleViewModel>>(vehiclesRepository.GetAllVehiclesForCatalog().Where(vehicle => vehicle.OwnerId != currentUserStatusProvider.GetUserId())).ToList();
 
             int pageSize = int.Parse(pageSizeStr);
             if (page < 1)
@@ -63,7 +64,7 @@ namespace CarSharingApp.Controllers
         public IActionResult ChangeDisplayedVehiclesCount(string data)
         {
             int numberOfVehiclesToDisplay = int.Parse(data);
-            var vehicleViewModels = mapper.Map<IEnumerable<VehicleViewModel>>(vehiclesRepository.GetAllVehicles()).ToList();
+            var vehicleViewModels = mapper.Map<IEnumerable<VehicleViewModel>>(vehiclesRepository.GetAllVehiclesForCatalog()).ToList();
 
             CarSharingDataViewModel model = new CarSharingDataViewModel
             {

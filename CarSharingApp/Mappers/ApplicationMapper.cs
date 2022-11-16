@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CarSharingApp.Models.ClientData;
+using CarSharingApp.Models.OrderData;
 using CarSharingApp.Models.RatingData;
 using CarSharingApp.Models.VehicleData;
 
@@ -17,6 +18,9 @@ namespace CarSharingApp.Mappers
             CreateMap<ClientRegistrationViewModel, ClientModel>();
             CreateMap<VehicleModel, VehicleInformationViewModel>();
             CreateMap<RatingModel, VehicleRatingViewModel>();
+            CreateMap<ClientModel, ClientAccountViewModel>();
+            CreateMap<OrderModel, OrderInUserAccountViewModel>();
+            CreateMap<VehicleModel, VehicleAccountViewModel>();
         }
     }
 }

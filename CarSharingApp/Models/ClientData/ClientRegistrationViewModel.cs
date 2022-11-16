@@ -23,7 +23,7 @@ namespace CarSharingApp.Models.ClientData
 
         [Required(ErrorMessage = "City is required")]
         [Range(1,100, ErrorMessage = "City is required")]
-        public BelarusCity BelarusCity { get; set; }
+        public City City { get; set; }
 
         [Required(ErrorMessage = "Postal Code is required")]
         [DataType(DataType.PostalCode, ErrorMessage = "Wrong Post Code")]

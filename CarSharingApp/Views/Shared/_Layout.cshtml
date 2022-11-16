@@ -37,6 +37,7 @@
                     @if(currentUserStatusProvider.GetUserRole() == CarSharingApp.Services.Includes.UserRole.Client)
                     {
                         <button id="LogoutBtn" class="btn btn-outline-warning my-2 my-sm-0 mr-3" onclick="ShowLogoutConfirmationAlert()">Logout</button>
+                        <button id="UserAccountBtn" type="button" class="btn btn-outline-info" onclick="location.href='@Url.Action("Index", "UserPersonalAccount")'"><i class="far fa-user pr-2"></i>My Account</button>
                     }
                     else
                     {

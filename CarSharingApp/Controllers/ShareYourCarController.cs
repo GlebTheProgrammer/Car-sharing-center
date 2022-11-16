@@ -67,6 +67,8 @@ namespace CarSharingApp.Controllers
 
             vehicleModel.RatingId = ratingRepository.CreateNewVehicleRating().Result;
             vehicleModel.PublishedTime = DateTime.Now;
+            vehicleModel.IsPublished = false;
+            vehicleModel.IsOrdered = false;
 
             vehiclesRepository.ShareNewVehicle(vehicleModel);
 
