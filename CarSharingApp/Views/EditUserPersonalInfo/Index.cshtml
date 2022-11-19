@@ -301,7 +301,7 @@
                     </div>
                 </div>
 
-                <form id="userEditedDataForm" asp-controller="EditUserPersonalInfo" asp-action="ChangeUserPersonalInfo" method="post" enctype="multipart/form-data">
+                <form id="userEditedDataForm" asp-controller="EditUserPersonalInfo" asp-action="ChangeUserPersonalInfo" method="post" enctype="multipart/form-data" class="visually-hidden">
                     <input id="ModelFirstName" asp-for="FirstName" value="@Model.FirstName" class="form-control" readonly="readonly"/>
                     <input id="ModelLastName" asp-for="LastName" value="@Model.LastName" class="form-control" readonly="readonly" />
                     <input id="ModelUsername" asp-for="Username" value="@Model.Username" class="form-control" readonly="readonly" />
