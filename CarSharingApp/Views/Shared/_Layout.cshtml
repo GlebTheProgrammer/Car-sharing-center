@@ -123,6 +123,10 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://kit.fontawesome.com/81f3a44f30.js" crossorigin="anonymous"></script>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
@@ -186,6 +190,64 @@
     });
 </script>
 <!--Script for showing the alert when user logged in ends here-->
+
+<!--Script for showing the alert when user changed account data starts here-->
+<script>
+    window.addEventListener("DOMContentLoaded", () => {
+
+        if ("@currentUserStatusProvider.HasChangedAccountData()" === "True") {
+
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-start',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            Toast.fire({
+                icon: 'success',
+                title: 'Account data was changed successfully'
+            });
+
+            @{currentUserStatusProvider.ChangeAccountDataHasChangedState(false);}
+        }
+    });
+</script>
+<!--Script for showing the alert when user changed account data ends here-->
+
+<!--Script for showing the alert when user changed password starts here-->
+<script>
+    window.addEventListener("DOMContentLoaded", () => {
+
+        if ("@currentUserStatusProvider.HasChangedPasswordData()" === "True") {
+
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-start',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            Toast.fire({
+                icon: 'success',
+                title: 'Password was changed successfully'
+            });
+
+            @{currentUserStatusProvider.ChangePasswordDataHasChangedState(false);}
+        }
+    });
+</script>
+<!--Script for showing the alert when user changed password ends here-->
 
 <!--Script for showing the alert when user logged out starts here-->
 <script>

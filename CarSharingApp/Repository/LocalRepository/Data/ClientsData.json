@@ -2,19 +2,21 @@
   {
     "Id": 0,
     "Role": 1,
-    "FirstName": "Glebs15",
-    "LastName": "Deksirion",
-    "Username": "rajejum",
+    "FirstName": "Gleb",
+    "LastName": "Sukristik",
+    "Username": "Its_Glebyshka",
     "Country": 1,
-    "City": 4,
-    "Postcode": 27,
+    "City": 1,
+    "Postcode": 220040,
     "Address": "\u041B.\u0411\u0435\u0434\u044B 29-97",
-    "PhoneNumber": "\u002B1 (639) 873-1734",
+    "PhoneNumber": "80336006038",
     "Email": "gleb15a@gmail.com",
     "Password": "A665A45920422F9D417E4867EFDC4FB8A04A1F3FFF1FA07E998E86F7F7A27AE3",
-    "DriverLicenseNumber": "199",
-    "IsAcceptedNewsSharing": false,
+    "DriverLicenseNumber": "621",
+    "IsAcceptedNewsSharing": true,
     "VehiclesOrdered": 0,
-    "VehiclesShared": 0
+    "VehiclesShared": 0,
+    "AccountDescription": "No description yet",
+    "UserImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTdmrjoiXGVFEcd1cX9Arb1itXTr2u8EKNpw\u0026usqp=CAU"
   }
 ]

@@ -8,14 +8,14 @@
             <div class="col-lg-4">
                 <div class="card mb-4 mt-3">
                     <div class="card-body text-center">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTdmrjoiXGVFEcd1cX9Arb1itXTr2u8EKNpw&usqp=CAU" alt="avatar"
+                        <img src="@Model.ClientAccountViewModel.UserImage" alt="avatar"
                              class="rounded-circle img-fluid" style="width: 150px;">
                         <h5 class="my-3">@Model.ClientAccountViewModel.Username</h5>
                         <p class="text-muted mb-1">@Model.ClientAccountViewModel.AccountDescription</p>
                         <p class="text-muted mb-4">@Model.ClientAccountViewModel.Address, @Model.ClientAccountViewModel.City, @Model.ClientAccountViewModel.Country</p>
                         <div class="d-flex justify-content-center mb-2">
-                            <a asp-action="Index" asp-controller="Home" type="button" class="btn btn-outline-secondary mr-3">Get Back</a>
-                            <button type="button" class="btn btn-outline-info">Edit Profile</button>
+                            <a asp-action="Index" asp-controller="Home" type="button" class="btn btn-outline-secondary mr-3">Homepage</a>
+                            <a asp-action="Index" asp-controller="EditUserPersonalInfo" type="button" class="btn btn-outline-info mr-3">Edit Profile</a>
                         </div>
                     </div>
                 </div>
@@ -248,7 +248,7 @@
 </script>
 <!--Script for showing the alert when user click on Delete vehicle button ends here-->
 
-<!--Script for showing the alert when user logged in starts here-->
+<!--Script for showing the alert when user deleted vehicle and reloaded page starts here-->
 <script>
     window.addEventListener("DOMContentLoaded", () => {
 
@@ -275,4 +275,4 @@
         }
     });
 </script>
-<!--Script for showing the alert when user logged in ends here-->
+<!--Script for showing the alert when user deleted vehicle and reloaded page ends here-->

@@ -28,6 +28,7 @@ namespace CarSharingApp.Models.ClientData
 
         // Описание в личном кабинете пользователя
         public string AccountDescription { get; set; }
+        public string UserImage { get; set; }
 
     }
 }

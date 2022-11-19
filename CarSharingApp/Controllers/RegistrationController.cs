@@ -36,8 +36,9 @@ namespace CarSharingApp.Controllers
             newClient.VehiclesOrdered = 0;
             newClient.VehiclesShared = 0;
             newClient.AccountDescription = "No description yet";
+            newClient.UserImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTdmrjoiXGVFEcd1cX9Arb1itXTr2u8EKNpw&usqp=CAU";
 
-            clientsRepository.AddNewClient(mapper.Map<ClientModel>(clientViewModel));
+            clientsRepository.AddNewClient(newClient);
 
             httpContextAccessor.HttpContext.Session.SetString("Registered", "true");
 

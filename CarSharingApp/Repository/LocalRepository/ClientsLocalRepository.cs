@@ -114,5 +114,25 @@ namespace CarSharingApp.Repository.LocalRepository
 
             return clients.First(client => client.Id == id).Username;
         }
+
+        public async void UpdateClient(ClientModel client)
+        {
+            int replaceIndex = clients.IndexOf(clients.First(prevClient => prevClient.Id == client.Id));
+
+            clients[replaceIndex] = client;
+
+            await SaveChanges();
+        }
+
+        public async void UpdateClientPassword(int clientId, string clientNewPassword)
+        {
+            string clientNewHashPassword = GetPasswordHash(clientNewPassword);
+
+            var client = clients.First(client => client.Id == clientId);
+
+            client.Password = clientNewHashPassword;
+
+            await SaveChanges();
+        }
     }
 }

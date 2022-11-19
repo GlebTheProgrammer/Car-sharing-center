@@ -10,7 +10,8 @@ namespace CarSharingApp.Services
         private bool HasLoggedOut { get; set; } = false;
         private bool HasSignedIn { get; set; } = false;
         private bool UnauthorizedAccess { get; set; } = false;
-        private bool HasDeletedVehicle { get; set; } = false;
+        public bool HasChangedUserAccountData { get; set; } = false;
+        public bool HasChangedUserAccountPassword { get; set; } = false;
 
         public int? GetUserId()
         {
@@ -58,14 +59,24 @@ namespace CarSharingApp.Services
             return UnauthorizedAccess;
         }
 
-        public bool HasUserDeletedVehicle()
+        public bool HasChangedAccountData()
         {
-            return HasDeletedVehicle;
+            return HasChangedUserAccountData;
         }
 
-        public void ChangeUserDeletedVehicleState(bool state)
+        public void ChangeAccountDataHasChangedState(bool state)
         {
-            HasDeletedVehicle = state;
+            HasChangedUserAccountData = state;
+        }
+
+        public bool HasChangedPasswordData()
+        {
+            return HasChangedUserAccountPassword;
+        }
+
+        public void ChangePasswordDataHasChangedState(bool state)
+        {
+            HasChangedUserAccountPassword = state;
         }
     }
 }
