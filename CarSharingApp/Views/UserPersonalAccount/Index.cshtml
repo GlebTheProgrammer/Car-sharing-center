@@ -164,7 +164,7 @@
                             <td>
 
                                 <button type="button" class="btn btn-outline-success mt-1 mb-1" onclick="location.href='@Url.Action("PublishVehicleInTheCatalog","UserPersonalAccount", new {vehicleId = vehicle.Id})'">Publish</button>
-                                <button type="button" class="btn btn-outline-primary mt-1 mb-1">Edit</button>
+                                <button type="button" class="btn btn-outline-primary mt-1 mb-1" onclick="location.href='@Url.Action("Index", "EditVehicleInfo", new {vehicleId = vehicle.Id})'">Edit</button>
                                 <button type="button" class="btn btn-outline-danger mt-1 mb-1" onclick="ShowDeleteVehicleConfirmationAlert(@vehicle.Id)">Delete</button>
                             </td>
                         </tr>

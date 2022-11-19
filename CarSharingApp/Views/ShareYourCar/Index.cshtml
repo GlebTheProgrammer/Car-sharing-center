@@ -203,7 +203,7 @@
 
                     <div class="mt-2">
                         <label for="firstName">Brief Description</label>
-                        <textarea asp-for="BriefDescription" class="form-control" id="exampleFormControlTextarea1" rows="4" style="resize: none" onfocus="HideErrorSpan('BriefDescriptionError')"></textarea>
+                        <textarea asp-for="BriefDescription" class="form-control" id="exampleFormControlTextarea1" rows="4" style="resize: none" onfocus="HideErrorSpan('BriefDescriptionError')" onkeydown="CheckTextAreaInput(event)"></textarea>
                         <span asp-validation-for="BriefDescription" id="BriefDescriptionError" class="text-danger"></span>
                     </div>
 
@@ -221,7 +221,7 @@
 
                     <div class="mt-2">
                         <label for="firstName">Description</label>
-                        <textarea asp-for="Description" class="form-control" id="exampleFormControlTextarea1" rows="9" style="resize: none" onfocus="HideErrorSpan('DescriptionError')"></textarea>
+                        <textarea asp-for="Description" class="form-control" id="exampleFormControlTextarea1" rows="9" style="resize: none" onfocus="HideErrorSpan('DescriptionError')" onkeydown="CheckTextAreaInput(event)"></textarea>
                         <span asp-validation-for="Description" id="DescriptionError" class="text-danger"></span>
                     </div>
                 </div>
@@ -266,6 +266,18 @@
     });
 </script>-->
 <!--Script for uploading user image into local session storage ends here-->
+
+<!--Script for checking textarea input to prevent multiple enters starts here-->
+<script>
+    function CheckTextAreaInput(e) {
+        // Enter was pressed without shift key
+        if (e.keyCode == 13 && !e.shiftKey) {
+            // prevent default behavior
+            e.preventDefault();
+        }
+    };
+</script>
+<!--Script for checking textarea input to prevent multiple enters ends here-->
 
 
 <script>

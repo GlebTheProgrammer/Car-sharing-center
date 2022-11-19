@@ -1,0 +1,126 @@
+﻿@using CarSharingApp.Models.VehicleData
+@model VehicleEditInfoViewModel
+
+
+<section>
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card mb-4 mt-3">
+                    <div class="card-body text-center">
+                        <img id="VehicleImage" src="@Model.Image" alt="avatar"
+                             class="img-fluid" style="border-radius: 5%;">
+                        <h5 class="mt-2 mb-3">Vehicle Image</h5>
+                        <div class="d-flex justify-content-center flex-column mb-2">
+                            <button type="submit" form="userEditedDataForm" value="Submit" class="btn btn-outline-success mb-3">Save Changes</button>
+                            <buton type="button" class="btn btn-outline-danger mb-3" onclick="ShowCancelChangesConfirmationAlert()">Cancel Changes</buton>
+                            <a asp-action="Index" asp-controller="UserPersonalAccount" type="button" class="btn btn-outline-secondary">Get Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+
+                <h2 class="text-left ml-2">Change Account Info</h2>
+
+                <div class="card mb-4">
+                    <div class="card-body">
+
+                        <iframe name="votar" style="display: none;"></iframe>
+
+                        <form class="row" method="post" target="votar" onsubmit="HideInputField('BriefDescription')">
+                            <div class="col-sm-3 d-flex align-items-center">
+                                <p class="mb-0">Brief Description</p>
+                            </div>
+                            <div class="col-sm-6 d-flex flex-column justify-content-center">
+                                <span asp-validation-for="BriefDescription" id="BriefDescriptionError" class="text-danger text-center flex-column"></span>
+                                <label id="BriefDescriptionText" class="text-muted mb-0">@Model.BriefDescription</label>
+                                <textarea id="BriefDescriptionInput" type="text" class="form-control visually-hidden" required minlength="10" maxlength="255" rows="4" style="resize: none;" onfocus="HideErrorSpan('BriefDescriptionError')" onkeydown="CheckTextAreaInput(event)"></textarea>
+                            </div>
+                            <div class="col-sm-3 d-flex align-items-center justify-content-center">
+                                <button id="ChangeBriefDescriptionBtn" type="button" class="btn btn-outline-warning" onclick="ShowInputField('BriefDescription')"><i class="far fa-pen-to-square pr-2 text-center"></i>Change</button>
+                                <button id="SaveBriefDescriptionBtn" type="submit" class="btn btn-outline-success visually-hidden"><i class="fa-regular fa-circle-check pr-2 text-center"></i>Save</button>
+                            </div>
+                        </form>
+
+                        <hr class="featurette-divider">
+
+
+
+                    </div>
+                </div>
+
+                <form id="vehicleEditedDataForm" asp-controller="EditVehicleInfo" asp-action="" method="post" enctype="multipart/form-data" >
+                    <input id="ModelBriefDescription" asp-for="BriefDescription" value="@Model.BriefDescription" class="form-control" readonly="readonly" />
+                </form>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!--Script for checking textarea input to prevent multiple enters starts here-->
+<script>
+    function CheckTextAreaInput (e) {
+        // Enter was pressed without shift key
+        if (e.keyCode == 13 && !e.shiftKey) {
+            // prevent default behavior
+            e.preventDefault();
+        }
+    };
+</script>
+<!--Script for checking textarea input to prevent multiple enters ends here-->
+
+<!--Script for changing item visibility starts here-->
+<script>
+    function ShowInputField(target) {
+
+        var text = document.getElementById(target + "Text");
+        var changeBtn = document.getElementById("Change" + target + "Btn");
+        var input = document.getElementById(target + "Input");
+        var saveBtn = document.getElementById("Save" + target + "Btn");
+
+        text.setAttribute("class", "visually-hidden");
+        changeBtn.setAttribute("class", "visually-hidden");
+
+        input.setAttribute("class", "form-control");
+        input.value = text.textContent;
+        saveBtn.setAttribute("class", "btn btn-outline-success");
+    }
+
+    function HideInputField(target) {
+
+        var text = document.getElementById(target + "Text");
+        var changeBtn = document.getElementById("Change" + target + "Btn");
+        var input = document.getElementById(target + "Input");
+        var saveBtn = document.getElementById("Save" + target + "Btn");
+
+        text.textContent = input.value;
+        SetModelValue(target);
+
+        input.setAttribute("class", "visually-hidden");
+        saveBtn.setAttribute("class", "visually-hidden");
+
+        text.setAttribute("class", "text-muted mb-0");
+        changeBtn.setAttribute("class", "btn btn-outline-warning");
+    }
+
+    function SetModelValue(valueName) {
+
+        var input = document.getElementById(valueName + "Input");
+        var modelAttribute = document.getElementById("Model" + valueName);
+
+        modelAttribute.value = input.value;
+    }
+</script>
+<!--Script for changing item visibility ends here-->
+
+<!--Script for hiding error message starts here-->
+<script>
+    function HideErrorSpan(componentId) {
+        var component = document.getElementById(componentId);
+        component.setAttribute("class", "visually-hidden");
+    }
+</script>
+<!--Script for hiding error message ends here-->
