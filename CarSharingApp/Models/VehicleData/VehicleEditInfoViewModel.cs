@@ -8,6 +8,7 @@ namespace CarSharingApp.Models.VehicleData
         public int Id { get; set; }
 
         // Пользователь не может изменять эти поля
+        public string Name { get; set; }
         public string Image { get; set; }
         public int ProductionYear { get; set; }
         public int MaxSpeed { get; set; }

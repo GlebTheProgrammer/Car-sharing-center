@@ -1,4 +1,5 @@
-﻿using CarSharingApp.Models.VehicleData;
+﻿using CarSharingApp.Models.ClientData;
+using CarSharingApp.Models.VehicleData;
 using CarSharingApp.Repository.Interfaces;
 using System.Text;
 using System.Text.Json;
@@ -105,6 +106,15 @@ namespace CarSharingApp.Repository.LocalRepository
                 File.Delete(vehicleImagePath);
 
             vehicles.Remove(vehicleToDelete);
+            await SaveChanges();
+        }
+
+        public async void UpdateVehicle(VehicleModel vehicle)
+        {
+            int replaceIndex = vehicles.IndexOf(vehicles.First(prevVehicle => prevVehicle.Id == vehicle.Id));
+
+            vehicles[replaceIndex] = vehicle;
+
             await SaveChanges();
         }
     }

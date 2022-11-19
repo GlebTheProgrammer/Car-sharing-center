@@ -9,19 +9,86 @@
                 <div class="card mb-4 mt-3">
                     <div class="card-body text-center">
                         <img id="VehicleImage" src="@Model.Image" alt="avatar"
-                             class="img-fluid" style="border-radius: 5%;">
-                        <h5 class="mt-2 mb-3">Vehicle Image</h5>
+                             class="img-fluid mb-3" style="border-radius: 5%;">
+                        <h5 class="mb-0">@Model.Name</h5>
+                    </div>
+                </div>
+
+                <div class="card mb-4 mt-3">
+                    <div class="card-body text-center">
                         <div class="d-flex justify-content-center flex-column mb-2">
-                            <button type="submit" form="userEditedDataForm" value="Submit" class="btn btn-outline-success mb-3">Save Changes</button>
+                            <button type="submit" form="vehicleEditedDataForm" value="Submit" class="btn btn-outline-success mb-3">Save Changes</button>
                             <buton type="button" class="btn btn-outline-danger mb-3" onclick="ShowCancelChangesConfirmationAlert()">Cancel Changes</buton>
                             <a asp-action="Index" asp-controller="UserPersonalAccount" type="button" class="btn btn-outline-secondary">Get Back</a>
                         </div>
                     </div>
                 </div>
+
+                <div class="card mb-4 mt-3">
+                    <div class="card-body text-center">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th class="text-center">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <!--Год выуска-->
+                                    <td>Production year</td>
+                                    <td class="text-center">@Model.ProductionYear</td>
+                                </tr>
+                                <tr>
+                                    <!--Скорость автомобиля-->
+                                    <td>Max speed</td>
+                                    <td class="text-center">@Model.MaxSpeed</td>
+                                </tr>
+                                <tr>
+                                    <!--Внешний цвет автомобиля-->
+                                    <td>Exterior color</td>
+                                    <td class="text-center">@Model.ExteriorColor</td>
+                                </tr>
+                                <tr>
+                                    <!--Цвет салона-->
+                                    <td>Interior color</td>
+                                    <td class="text-center">@Model.InteriorColor</td>
+                                </tr>
+                                <tr>
+                                    <!--Трансмиссия-->
+                                    <td>Drivetrain</td>
+                                    <td class="text-center">@Model.Drivetrain</td>
+                                </tr>
+                                <tr>
+                                    <!--Тип топлива-->
+                                    <td>Fuel type</td>
+                                    <td class="text-center">@Model.FuelType</td>
+                                </tr>
+                                <tr>
+                                    <!--Коробка передач-->
+                                    <td>Transmission</td>
+                                    <td class="text-center">@Model.Transmission</td>
+                                </tr>
+                                <tr>
+                                    <!--Тип двигателя-->
+                                    <td>Engine</td>
+                                    <td class="text-center">@Model.Engine</td>
+                                </tr>
+
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td>VIN</td>
+                                    <td class="text-center">@Model.VIN</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
             </div>
             <div class="col-lg-8">
 
-                <h2 class="text-left ml-2">Change Account Info</h2>
+                <h2 class="text-left ml-2">Change Vehicle Info</h2>
 
                 <div class="card mb-4">
                     <div class="card-body">
@@ -35,7 +102,7 @@
                             <div class="col-sm-6 d-flex flex-column justify-content-center">
                                 <span asp-validation-for="BriefDescription" id="BriefDescriptionError" class="text-danger text-center flex-column"></span>
                                 <label id="BriefDescriptionText" class="text-muted mb-0">@Model.BriefDescription</label>
-                                <textarea id="BriefDescriptionInput" type="text" class="form-control visually-hidden" required minlength="10" maxlength="255" rows="4" style="resize: none;" onfocus="HideErrorSpan('BriefDescriptionError')" onkeydown="CheckTextAreaInput(event)"></textarea>
+                                <textarea id="BriefDescriptionInput" type="text" class="form-control visually-hidden" required minlength="10" maxlength="50" rows="4" style="resize: none;" onfocus="HideErrorSpan('BriefDescriptionError')" onkeydown="CheckTextAreaInput(event)"></textarea>
                             </div>
                             <div class="col-sm-3 d-flex align-items-center justify-content-center">
                                 <button id="ChangeBriefDescriptionBtn" type="button" class="btn btn-outline-warning" onclick="ShowInputField('BriefDescription')"><i class="far fa-pen-to-square pr-2 text-center"></i>Change</button>
@@ -45,13 +112,143 @@
 
                         <hr class="featurette-divider">
 
+                        <form class="row" method="post" target="votar" onsubmit="HideInputField('Description')">
+                            <div class="col-sm-3 d-flex align-items-center">
+                                <p class="mb-0">Description</p>
+                            </div>
+                            <div class="col-sm-6 d-flex flex-column justify-content-center">
+                                <span asp-validation-for="Description" id="DescriptionError" class="text-danger text-center flex-column"></span>
+                                <label id="DescriptionText" class="text-muted mb-0">@Model.Description</label>
+                                <textarea id="DescriptionInput" type="text" class="form-control visually-hidden" required minlength="30" maxlength="255" rows="9" style="resize: none;" onfocus="HideErrorSpan('DescriptionError')" onkeydown="CheckTextAreaInput(event)"></textarea>
+                            </div>
+                            <div class="col-sm-3 d-flex align-items-center justify-content-center">
+                                <button id="ChangeDescriptionBtn" type="button" class="btn btn-outline-warning" onclick="ShowInputField('Description')"><i class="far fa-pen-to-square pr-2 text-center"></i>Change</button>
+                                <button id="SaveDescriptionBtn" type="submit" class="btn btn-outline-success visually-hidden"><i class="fa-regular fa-circle-check pr-2 text-center"></i>Save</button>
+                            </div>
+                        </form>
 
+                        <hr class="featurette-divider">
+
+                        <form class="row" method="post" target="votar" onsubmit="HideInputField('HourTariff')">
+                            <div class="col-sm-3 d-flex align-items-center">
+                                <p class="mb-0">Hourly Price ($)</p>
+                            </div>
+                            <div class="col-sm-6 d-flex flex-column justify-content-center">
+                                <span asp-validation-for="Tariff.TariffPerHour" id="HourTariffError" class="text-danger text-center flex-column"></span>
+                                <label id="HourTariffText" class="text-muted mb-0">@Model.Tariff.TariffPerHour</label>
+                                <input id="HourTariffInput" type="number" class="form-control visually-hidden" required min="1" max="9999" onfocus="HideErrorSpan('HourTariffError')">
+                            </div>
+                            <div class="col-sm-3 d-flex align-items-center justify-content-center">
+                                <button id="ChangeHourTariffBtn" type="button" class="btn btn-outline-warning" onclick="ShowInputField('HourTariff')"><i class="far fa-pen-to-square pr-2 text-center"></i>Change</button>
+                                <button id="SaveHourTariffBtn" type="submit" class="btn btn-outline-success visually-hidden"><i class="fa-regular fa-circle-check pr-2 text-center"></i>Save</button>
+                            </div>
+                        </form>
+
+                        <hr class="featurette-divider">
+
+                        <form class="row" method="post" target="votar" onsubmit="HideInputField('DailyTariff')">
+                            <div class="col-sm-3 d-flex align-items-center">
+                                <p class="mb-0">Daily Price ($)</p>
+                            </div>
+                            <div class="col-sm-6 d-flex flex-column justify-content-center">
+                                <span asp-validation-for="Tariff.TariffPerDay" id="DailyTariffError" class="text-danger text-center flex-column"></span>
+                                <label id="DailyTariffText" class="text-muted mb-0">@Model.Tariff.TariffPerDay</label>
+                                <input id="DailyTariffInput" type="number" class="form-control visually-hidden" required min="1" max="9999" onfocus="HideErrorSpan('DailyTariffError')">
+                            </div>
+                            <div class="col-sm-3 d-flex align-items-center justify-content-center">
+                                <button id="ChangeDailyTariffBtn" type="button" class="btn btn-outline-warning" onclick="ShowInputField('DailyTariff')"><i class="far fa-pen-to-square pr-2 text-center"></i>Change</button>
+                                <button id="SaveDailyTariffBtn" type="submit" class="btn btn-outline-success visually-hidden"><i class="fa-regular fa-circle-check pr-2 text-center"></i>Save</button>
+                            </div>
+                        </form>
+
+                        <hr class="featurette-divider">
+
+                        @{
+                            var latModel = float.Parse(Model.Location.Latitude.Replace('.', ','));
+                            var longModel = float.Parse(Model.Location.Longitude.Replace('.', ','));
+                        }
+
+                        <div class="row">
+
+                            <div class="col-sm-1 d-flex align-items-center">
+                                <p class="mb-0">Location</p>
+                            </div>
+
+                            <div class="col-sm-9 d-flex flex-column justify-content-center">
+
+                                <label id="AddressText" class="text-muted mb-0 visually-hidden">@Model.Location.Address</label>
+
+                                <div class="container-fluid">
+                                    <div id="map" class="text-center" style="height: 400px; width: 100%;"></div>
+                                    <script>
+                                        var map;
+                                        function initMap() {
+                                            var latitude = '@Html.Raw(Json.Serialize(latModel))';
+                                            var longitude = '@Html.Raw(Json.Serialize(longModel))';
+
+                                            var latSerialized = JSON.parse(latitude);
+                                            var longSerialized = JSON.parse(longitude);
+
+                                            map = new google.maps.Map(document.getElementById('map'), {
+                                                center: { lat: latSerialized, lng: longSerialized },
+                                                zoom: 11
+                                            });
+
+                                            var marker = new google.maps.Marker(
+                                            {
+                                                position: new google.maps.LatLng(latSerialized, longSerialized),
+                                                map: map
+                                            });
+
+                                            markersArray.push(marker);
+                                        }
+                                    </script>
+                                    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9AIXs7jB_3r8oRc1zd0i9p0nanEH5Q6M&callback=initMap" async defer></script>
+                                </div>
+
+                                <div class="mt-3">
+                                    <span asp-validation-for="Location.Address" id="AddressError" class="text-danger text-center d-flex justify-content-center"></span>
+                                    <div class="d-flex flex-row">
+                                        <input id="AddressInput" type="text" class="form-control visually-hidden" required maxlength="255" onfocus="HideErrorSpan('AddressError')">
+                                        <button id="SearchAddressBtn" class="btn btn-outline-primary ml-2 visually-hidden" type="button" onclick="setUpTheMarker()">Search</button>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-sm-2 d-flex align-items-center justify-content-center">
+                                <button id="ChangeAddressBtn" type="button" class="btn btn-outline-warning" onclick="ShowAddressInputField('Address')"><i class="far fa-pen-to-square pr-2 text-center"></i>Change</button>
+                                <button id="CancelAddressChangesBtn" type="button" class="btn btn-outline-danger visually-hidden" onclick="CancelMapChanges('Address')"><i class="fa-solid fa-circle-xmark pr-2 text-center"></i>Cancel</button>
+                            </div>
+
+                        </div>
 
                     </div>
                 </div>
 
-                <form id="vehicleEditedDataForm" asp-controller="EditVehicleInfo" asp-action="" method="post" enctype="multipart/form-data" >
+                <form id="vehicleEditedDataForm" asp-controller="EditVehicleInfo" asp-action="UpdateVehicle" method="post" enctype="multipart/form-data" class="visually-hidden" >
                     <input id="ModelBriefDescription" asp-for="BriefDescription" value="@Model.BriefDescription" class="form-control" readonly="readonly" />
+                    <input id="ModelDescription" asp-for="Description" value="@Model.Description" class="form-control" readonly="readonly" />
+                    <input id="ModelHourTariff" asp-for="Tariff.TariffPerHour" value="@Model.Tariff.TariffPerHour" class="form-control" readonly="readonly" />
+                    <input id="ModelDailyTariff" asp-for="Tariff.TariffPerDay" value="@Model.Tariff.TariffPerDay" class="form-control" readonly="readonly" />
+                    <input id="ModelAddress" asp-for="Location.Address" value="@Model.Location.Address" class="form-control" readonly="readonly" />
+                    <input id="ModelLocationLatitude" asp-for="Location.Latitude" value="@Model.Location.Latitude" class="form-control" readonly="readonly" />
+                    <input id="ModelLocationLongitude" asp-for="Location.Longitude" value="@Model.Location.Longitude" class="form-control" readonly="readonly" />
+
+                    <!-- User can't changethis fields -->
+                    <input id="ModelId" asp-for="Id" value="@Model.Id" class="form-control" readonly="readonly" />
+                    <input id="ModelName" asp-for="Name" value="@Model.Name" class="form-control" readonly="readonly" />
+                    <input id="ModelImage" asp-for="Image" value="@Model.Image" class="form-control" readonly="readonly" />
+
+                    <input id="ModelProductionYear" asp-for="ProductionYear" value="@Model.ProductionYear" class="form-control" readonly="readonly" />
+                    <input id="ModelMaxSpeed" asp-for="MaxSpeed" value="@Model.MaxSpeed" class="form-control" readonly="readonly" />
+                    <input id="ModelExteriorColor" asp-for="ExteriorColor" value="@Model.ExteriorColor" class="form-control" readonly="readonly" />
+                    <input id="ModelInteriorColor" asp-for="InteriorColor" value="@Model.InteriorColor" class="form-control" readonly="readonly" />
+                    <input id="ModelDrivetrain" asp-for="Drivetrain" value="@Model.Drivetrain" class="form-control" readonly="readonly" />
+                    <input id="ModelFuelType" asp-for="FuelType" value="@Model.FuelType" class="form-control" readonly="readonly" />
+                    <input id="ModelTransmission" asp-for="Transmission" value="@Model.Transmission" class="form-control" readonly="readonly" />
+                    <input id="ModelEngine" asp-for="Engine" value="@Model.Engine" class="form-control" readonly="readonly" />
+                    <input id="ModelVIN" asp-for="VIN" value="@Model.VIN" class="form-control" readonly="readonly" />
                 </form>
 
             </div>
@@ -59,6 +256,25 @@
     </div>
 </section>
 
+<!--Script for showing the alert when user click on Cancel Changes button starts here-->
+<script>
+    function ShowCancelChangesConfirmationAlert() {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "All new information will be removed!",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#4FA64F',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.reload(true);
+            }
+        });
+    }
+</script>
+<!--Script for showing the alert when user click on Cancel Changes button ends here-->
 
 <!--Script for checking textarea input to prevent multiple enters starts here-->
 <script>
@@ -124,3 +340,127 @@
     }
 </script>
 <!--Script for hiding error message ends here-->
+
+<!-- Script for working with map starts here -->
+<script>
+
+     var markersArray = [];
+
+    function setUpTheMarker() 
+    {
+        var address = document.getElementById('AddressInput').value;
+
+        if (address === "")
+        {
+            var addressErrorSpan = document.getElementById("AddressError");
+            addressErrorSpan.textContent = "Address can't be empty";
+            addressErrorSpan.setAttribute("class", "text-danger text-center d-flex justify-content-center");
+            return;
+        }
+
+        geocoder = new google.maps.Geocoder();
+
+        geocoder.geocode({
+            address: address
+        }, (results, status) => {
+            if (status == google.maps.GeocoderStatus.OK) {
+
+                clearAllMarkers();
+                var marker = new google.maps.Marker(
+                {
+                        position: new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng()),
+                        map: map
+                });
+
+                markersArray.push(marker);
+
+                document.getElementById('ModelLocationLatitude').value = results[0].geometry.location.lat();
+                document.getElementById('ModelLocationLongitude').value = results[0].geometry.location.lng();
+
+                map.setCenter({ lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng()});
+
+                HideAddressInputField("Address");
+
+            } else {
+                alert('Address was not found. Response: ' + status);
+            }
+        });
+
+    }
+
+    function CancelMapChanges(target)
+    {
+        clearAllMarkers();
+
+        var latitude = document.getElementById("ModelLocationLatitude").value;
+        var longitude = document.getElementById("ModelLocationLongitude").value;
+
+        var latSerialized = JSON.parse(latitude);
+        var longSerialized = JSON.parse(longitude);
+
+        var marker = new google.maps.Marker(
+        {
+            position: new google.maps.LatLng(latSerialized, longSerialized),
+            map: map
+        });
+
+        markersArray.push(marker);
+
+        map.setCenter({ lat: latSerialized, lng: longSerialized });
+
+        var changeBtn = document.getElementById("Change" + target + "Btn");
+        var input = document.getElementById(target + "Input");
+        var cancelChangesBtn = document.getElementById("Cancel" + target + "ChangesBtn");
+        var searchAddressBtn = document.getElementById("Search" + target + "Btn");
+
+        input.setAttribute("class", "visually-hidden");
+        cancelChangesBtn.setAttribute("class", "visually-hidden");
+        searchAddressBtn.setAttribute("class", "visually-hidden");
+        changeBtn.setAttribute("class", "btn btn-outline-warning");
+    }
+
+    function clearAllMarkers()
+    {
+        for (var i = 0; i < markersArray.length; i++)
+        {
+            markersArray[i].setMap(null);
+        }
+        markersArray.length = 0;
+    }
+
+    function ShowAddressInputField(target) {
+
+        clearAllMarkers();
+        var text = document.getElementById(target + "Text");
+        var changeBtn = document.getElementById("Change" + target + "Btn");
+        var input = document.getElementById(target + "Input");
+        var cancelChangesBtn = document.getElementById("Cancel" + target + "ChangesBtn");
+        var searchAddressBtn = document.getElementById("Search" + target + "Btn");
+
+        changeBtn.setAttribute("class", "visually-hidden");
+
+        input.setAttribute("class", "form-control");
+        input.value = text.textContent;
+        cancelChangesBtn.setAttribute("class", "btn btn-outline-danger");
+        searchAddressBtn.setAttribute("class", "btn btn-outline-primary ml-2");
+    }
+
+    function HideAddressInputField(target) {
+
+        var text = document.getElementById(target + "Text");
+        var changeBtn = document.getElementById("Change" + target + "Btn");
+        var input = document.getElementById(target + "Input");
+        var cancelChangesBtn = document.getElementById("Cancel" + target + "ChangesBtn");
+        var searchAddressBtn = document.getElementById("Search" + target + "Btn");
+
+        text.textContent = input.value;
+        SetModelValue(target);
+
+        input.setAttribute("class", "visually-hidden");
+        cancelChangesBtn.setAttribute("class", "visually-hidden");
+        searchAddressBtn.setAttribute("class", "visually-hidden");
+
+        changeBtn.setAttribute("class", "btn btn-outline-warning");
+    }
+</script>
+<!-- Script for working with map ends here -->

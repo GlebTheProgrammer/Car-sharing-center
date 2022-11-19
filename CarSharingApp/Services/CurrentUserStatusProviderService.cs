@@ -12,6 +12,7 @@ namespace CarSharingApp.Services
         private bool UnauthorizedAccess { get; set; } = false;
         public bool HasChangedUserAccountData { get; set; } = false;
         public bool HasChangedUserAccountPassword { get; set; } = false;
+        public bool HasChangedUserVehicleData { get; set; } = false;
 
         public int? GetUserId()
         {
@@ -77,6 +78,16 @@ namespace CarSharingApp.Services
         public void ChangePasswordDataHasChangedState(bool state)
         {
             HasChangedUserAccountPassword = state;
+        }
+
+        public bool HasChangedVehicleData()
+        {
+            return HasChangedUserVehicleData;
+        }
+
+        public void ChangeVehicleDataHasChangedState(bool state)
+        {
+            HasChangedUserVehicleData = state;
         }
     }
 }

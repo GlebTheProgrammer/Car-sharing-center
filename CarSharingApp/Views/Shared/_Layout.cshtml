@@ -220,6 +220,35 @@
 </script>
 <!--Script for showing the alert when user changed account data ends here-->
 
+<!--Script for showing the alert when user changed vehicle data starts here-->
+<script>
+    window.addEventListener("DOMContentLoaded", () => {
+
+        if ("@currentUserStatusProvider.HasChangedVehicleData()" === "True") {
+
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-start',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            Toast.fire({
+                icon: 'success',
+                title: 'Vehicle data was changed successfully'
+            });
+
+            @{currentUserStatusProvider.ChangeVehicleDataHasChangedState(false);}
+        }
+    });
+</script>
+<!--Script for showing the alert when user changed vehicle data ends here-->
+
 <!--Script for showing the alert when user changed password starts here-->
 <script>
     window.addEventListener("DOMContentLoaded", () => {
