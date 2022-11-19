@@ -54,7 +54,7 @@ namespace CarSharingApp.Controllers
         public async Task<IActionResult> SaveSharedCar(VehicleShareModel vehicleShareModel, IFormFile file)
         {
             // Check whether latitude and longitude have any letters. If so -> change location to null
-            if (vehicleShareModel.Location.Latitude.Any(x => char.IsLetter(x)))
+            if (vehicleShareModel.Location.Latitude != null && vehicleShareModel.Location.Latitude.Any(x => char.IsLetter(x)))
             {
                 vehicleShareModel.Location = new Models.VehicleData.Includes.Location
                 {
