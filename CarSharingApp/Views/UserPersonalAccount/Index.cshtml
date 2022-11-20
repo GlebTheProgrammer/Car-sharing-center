@@ -183,7 +183,7 @@
                             <td class="">No</td>
                             <td>
                                 <button type="button" class="btn btn-outline-warning mt-1 mb-1" onclick="location.href='@Url.Action("RemoveVehicleFromTheCatalog","UserPersonalAccount", new {vehicleId = vehicle.Id})'">Hide</button>
-                                <button type="button" class="btn btn-outline-primary mt-1 mb-1">Edit</button>
+                                <button type="button" class="btn btn-outline-primary mt-1 mb-1" onclick="location.href='@Url.Action("Index","EditVehicleInfo", new {vehicleId = vehicle.Id})'">Edit</button>
                                 <button type="button" class="btn btn-outline-danger mt-1 mb-1" onclick="ShowDeleteVehicleConfirmationAlert(@vehicle.Id)">Delete</button>
                             </td>
                         </tr>

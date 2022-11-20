@@ -138,17 +138,17 @@
                         {
                             if (rating > i && rating >= i + 1)
                             {
-                                    <span class="fa fa-star checked" style="color: orange"></span>
+                                                                                            <span class="fa fa-star checked" style="color: orange"></span>
                             }
                             else
                             {
                                 if(rating > i && rating < i + 1)
                                 {
-                                        <span class="fa fa-star-half-stroke" style="color: orange"></span>
+                                                                                                <span class="fa fa-star-half-stroke" style="color: orange"></span>
                                 }
                                 else
                                 {
-                                        <span class="fa fa-star"></span>
+                                                                                                <span class="fa fa-star"></span>
                                 }
                             }
                         }
@@ -164,17 +164,17 @@
                         {
                             if (rating > i && rating >= i + 1)
                             {
-                                    <span class="fa fa-star checked" style="color: orange"></span>
+                                                                                            <span class="fa fa-star checked" style="color: orange"></span>
                             }
                             else
                             {
                                 if (rating > i && rating < i + 1)
                                 {
-                                        <span class="fa fa-star-half-stroke" style="color: orange"></span>
+                                                                                                <span class="fa fa-star-half-stroke" style="color: orange"></span>
                                 }
                                 else
                                 {
-                                        <span class="fa fa-star"></span>
+                                                                                                <span class="fa fa-star"></span>
                                 }
                             }
                         }
@@ -190,17 +190,17 @@
                         {
                             if (rating > i && rating >= i + 1)
                             {
-                                    <span class="fa fa-star checked" style="color: orange"></span>
+                                                                                            <span class="fa fa-star checked" style="color: orange"></span>
                             }
                             else
                             {
                                 if (rating > i && rating < i + 1)
                                 {
-                                        <span class="fa fa-star-half-stroke" style="color: orange"></span>
+                                                                                                <span class="fa fa-star-half-stroke" style="color: orange"></span>
                                 }
                                 else
                                 {
-                                        <span class="fa fa-star"></span>
+                                                                                                <span class="fa fa-star"></span>
                                 }
                             }
                         }
@@ -216,17 +216,17 @@
                         {
                             if (rating > i && rating >= i + 1)
                             {
-                                    <span class="fa fa-star checked" style="color: orange"></span>
+                                                                                            <span class="fa fa-star checked" style="color: orange"></span>
                             }
                             else
                             {
                                 if (rating > i && rating < i + 1)
                                 {
-                                        <span class="fa fa-star-half-stroke" style="color: orange"></span>
+                                                                                                <span class="fa fa-star-half-stroke" style="color: orange"></span>
                                 }
                                 else
                                 {
-                                        <span class="fa fa-star"></span>
+                                                                                                <span class="fa fa-star"></span>
                                 }
                             }
                         }
@@ -242,17 +242,17 @@
                         {
                             if (rating > i && rating >= i + 1)
                             {
-                                    <span class="fa fa-star checked" style="color: orange"></span>
+                                                                                            <span class="fa fa-star checked" style="color: orange"></span>
                             }
                             else
                             {
                                 if (rating > i && rating < i + 1)
                                 {
-                                        <span class="fa fa-star-half-stroke" style="color: orange"></span>
+                                                                                                <span class="fa fa-star-half-stroke" style="color: orange"></span>
                                 }
                                 else
                                 {
-                                        <span class="fa fa-star"></span>
+                                                                                                <span class="fa fa-star"></span>
                                 }
                             }
                         }
@@ -268,17 +268,17 @@
                         {
                             if (rating > i && rating >= i + 1)
                             {
-                                    <span class="fa fa-star checked" style="color: orange"></span>
+                                                                                            <span class="fa fa-star checked" style="color: orange"></span>
                             }
                             else
                             {
                                 if (rating > i && rating < i + 1)
                                 {
-                                        <span class="fa fa-star-half-stroke" style="color: orange"></span>
+                                                                                                <span class="fa fa-star-half-stroke" style="color: orange"></span>
                                 }
                                 else
                                 {
-                                        <span class="fa fa-star"></span>
+                                                                                                <span class="fa fa-star"></span>
                                 }
                             }
                         }
@@ -291,7 +291,14 @@
                 </div>
 
                 <nav class="blog-pagination ml-4 mt-4" aria-label="Pagination">
-                    <a class="btn btn-outline-primary mr-2" href="#">Order</a>
+
+
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-outline-primary mr-2" data-bs-toggle="modal"
+                            data-bs-target="#exampleModal">Order
+                    </button>
+
+
                     <a class="btn btn-outline-secondary" asp-controller="CarSharing" asp-action="Index">Get back</a>
                 </nav>
             </div>
@@ -299,3 +306,115 @@
     </div>
 
 </main>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-bottom-0">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-start text-black p-4">
+                <h3 class="mb-4" style="color: #35558a;">Order Details</h3>
+                <h5 class="modal-title mb-2" id="exampleModalLabel">Your order Starts from</h5>
+
+                <div class="md-form md-outline datepicker mb-4" id="customDays">
+                    <input type="text" id="datetimesStarts" class="form-control" name="datetimesStarts" disabled>
+                </div>
+
+                <h5 class="modal-title mb-2" id="exampleModalLabel">Your order Ends at</h5>
+
+                <div class="md-form md-outline datepicker mb-5" id="customDays">
+                    <input placeholder="Select date" type="text" id="datetimesEnds" class="form-control" name="datetimesEnds">
+                </div>
+
+                <script>
+                    $(function () {
+                        $('input[name="datetimesStarts"]').daterangepicker({
+                            timePicker: true,
+                            startDate: moment().startOf('hour'), // Время для автоматического подставления (с ...)
+                            timePicker24Hour: true,
+                            singleDatePicker: true,
+                            locale: {
+                                format: 'HH:mm DD MMMM YYYY'
+                            }
+                        });
+                    });
+
+                    $(function () {
+                        $('input[name="datetimesEnds"]').daterangepicker({
+                            timePicker: true, // Возможность выставлять время
+                            minDate: moment().startOf('hour').add(1, 'hour'), // Минимальная дата, которая может быть выставлена
+                            maxDate: moment().startOf('hour').add(7, 'day'), // Максимальная дата, которая может быть выставлена
+                            timePicker24Hour: true, // 24-часовой аояс
+                            timePickerIncrement: 60, // Можно редактировать только часы (минуты всегда 00)
+                            singleDatePicker: true, // DatePicker только для одной даты
+                            locale: {
+                                format: 'HH:mm DD MMMM YYYY'
+                            },
+
+                            onselect: function() {
+                                var dateObj = $(this).daterangepicker('getDate');
+                                alert(dateObj);
+                            }
+                        });
+                    });
+
+                    $('#datetimesEnds').on('hide.daterangepicker', function (ev, picker) {
+
+                        var datetimeObj = $('#datetimesEnds').data('daterangepicker').startDate;
+                        const datetimeStr = datetimeObj.toString();
+
+                        var array = datetimeStr.split(' ');
+
+                        var dayOfWeek = array[0];
+                        var month = array[1];
+                        var day = array[2];
+                        var year = array[3];
+                        var time = array[4];
+                        var timezone = array[5];
+
+                        console.log(dayOfWeek);
+                    });
+
+                </script>
+
+
+                <p class="mb-0" style="color: #35558a;">Payment summary</p>
+                <hr class="mt-2 mb-4"
+                    style="height: 0; background-color: transparent; opacity: .75; border-top: 2px dashed #9e9e9e;">
+
+                <div class="d-flex justify-content-between">
+                    <p class="fw-bold mb-0">@Model.Name (Daily payment)</p>
+                    <p class="text-muted mb-0">$1750.00</p>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <p class="small mb-0">Houtly payment</p>
+                    <p class="small mb-0">$175.00</p>
+                </div>
+
+                <div class="d-flex justify-content-between pb-1">
+                    <p class="small">Tax</p>
+                    <p class="small">$200.00</p>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <p class="fw-bold">Total</p>
+                    <p class="fw-bold" style="color: #35558a;">$2125.00</p>
+                </div>
+
+            </div>
+            <div class="modal-footer d-flex justify-content-center border-top-0 py-4">
+                <button type="button" class="btn btn-outline-primary btn-lg mb-1">
+                    Track your order
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
