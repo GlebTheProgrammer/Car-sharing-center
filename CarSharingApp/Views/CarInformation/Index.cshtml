@@ -138,17 +138,17 @@
                         {
                             if (rating > i && rating >= i + 1)
                             {
-                                                                                            <span class="fa fa-star checked" style="color: orange"></span>
+                                                                                                                <span class="fa fa-star checked" style="color: orange"></span>
                             }
                             else
                             {
                                 if(rating > i && rating < i + 1)
                                 {
-                                                                                                <span class="fa fa-star-half-stroke" style="color: orange"></span>
+                                                                                                                    <span class="fa fa-star-half-stroke" style="color: orange"></span>
                                 }
                                 else
                                 {
-                                                                                                <span class="fa fa-star"></span>
+                                                                                                                    <span class="fa fa-star"></span>
                                 }
                             }
                         }
@@ -164,17 +164,17 @@
                         {
                             if (rating > i && rating >= i + 1)
                             {
-                                                                                            <span class="fa fa-star checked" style="color: orange"></span>
+                                                                                                                <span class="fa fa-star checked" style="color: orange"></span>
                             }
                             else
                             {
                                 if (rating > i && rating < i + 1)
                                 {
-                                                                                                <span class="fa fa-star-half-stroke" style="color: orange"></span>
+                                                                                                                    <span class="fa fa-star-half-stroke" style="color: orange"></span>
                                 }
                                 else
                                 {
-                                                                                                <span class="fa fa-star"></span>
+                                                                                                                    <span class="fa fa-star"></span>
                                 }
                             }
                         }
@@ -190,17 +190,17 @@
                         {
                             if (rating > i && rating >= i + 1)
                             {
-                                                                                            <span class="fa fa-star checked" style="color: orange"></span>
+                                                                                                                <span class="fa fa-star checked" style="color: orange"></span>
                             }
                             else
                             {
                                 if (rating > i && rating < i + 1)
                                 {
-                                                                                                <span class="fa fa-star-half-stroke" style="color: orange"></span>
+                                                                                                                    <span class="fa fa-star-half-stroke" style="color: orange"></span>
                                 }
                                 else
                                 {
-                                                                                                <span class="fa fa-star"></span>
+                                                                                                                    <span class="fa fa-star"></span>
                                 }
                             }
                         }
@@ -216,17 +216,17 @@
                         {
                             if (rating > i && rating >= i + 1)
                             {
-                                                                                            <span class="fa fa-star checked" style="color: orange"></span>
+                                                                                                                                                                            <span class="fa fa-star checked" style="color: orange"></span>
                             }
                             else
                             {
                                 if (rating > i && rating < i + 1)
                                 {
-                                                                                                <span class="fa fa-star-half-stroke" style="color: orange"></span>
+                                                                                                                                                                                <span class="fa fa-star-half-stroke" style="color: orange"></span>
                                 }
                                 else
                                 {
-                                                                                                <span class="fa fa-star"></span>
+                                                                                                                                                                                <span class="fa fa-star"></span>
                                 }
                             }
                         }
@@ -242,17 +242,17 @@
                         {
                             if (rating > i && rating >= i + 1)
                             {
-                                                                                            <span class="fa fa-star checked" style="color: orange"></span>
+                                                                                                                                                                            <span class="fa fa-star checked" style="color: orange"></span>
                             }
                             else
                             {
                                 if (rating > i && rating < i + 1)
                                 {
-                                                                                                <span class="fa fa-star-half-stroke" style="color: orange"></span>
+                                                                                                                                                                                <span class="fa fa-star-half-stroke" style="color: orange"></span>
                                 }
                                 else
                                 {
-                                                                                                <span class="fa fa-star"></span>
+                                                                                                                                                                                <span class="fa fa-star"></span>
                                 }
                             }
                         }
@@ -268,17 +268,17 @@
                         {
                             if (rating > i && rating >= i + 1)
                             {
-                                                                                            <span class="fa fa-star checked" style="color: orange"></span>
+                                                                                                                                                                            <span class="fa fa-star checked" style="color: orange"></span>
                             }
                             else
                             {
                                 if (rating > i && rating < i + 1)
                                 {
-                                                                                                <span class="fa fa-star-half-stroke" style="color: orange"></span>
+                                                                                                                                                                                <span class="fa fa-star-half-stroke" style="color: orange"></span>
                                 }
                                 else
                                 {
-                                                                                                <span class="fa fa-star"></span>
+                                                                                                                                                                                <span class="fa fa-star"></span>
                                 }
                             }
                         }
@@ -335,7 +335,7 @@
                     $(function () {
                         $('input[name="datetimesStarts"]').daterangepicker({
                             timePicker: true,
-                            startDate: moment().startOf('hour'), // Время для автоматического подставления (с ...)
+                            startDate: moment().startOf('hour').add(1,'hour'), // Время для автоматического подставления (с ...)
                             timePicker24Hour: true,
                             singleDatePicker: true,
                             locale: {
@@ -347,8 +347,8 @@
                     $(function () {
                         $('input[name="datetimesEnds"]').daterangepicker({
                             timePicker: true, // Возможность выставлять время
-                            minDate: moment().startOf('hour').add(1, 'hour'), // Минимальная дата, которая может быть выставлена
-                            maxDate: moment().startOf('hour').add(7, 'day'), // Максимальная дата, которая может быть выставлена
+                            minDate: moment().startOf('hour').add(2,'hour'), // Минимальная дата, которая может быть выставлена
+                            maxDate: moment().startOf('hour').add(7,'day').add(1,'hour'), // Максимальная дата, которая может быть выставлена
                             timePicker24Hour: true, // 24-часовой аояс
                             timePickerIncrement: 60, // Можно редактировать только часы (минуты всегда 00)
                             singleDatePicker: true, // DatePicker только для одной даты
@@ -363,22 +363,7 @@
                         });
                     });
 
-                    $('#datetimesEnds').on('hide.daterangepicker', function (ev, picker) {
-
-                        var datetimeObj = $('#datetimesEnds').data('daterangepicker').startDate;
-                        const datetimeStr = datetimeObj.toString();
-
-                        var array = datetimeStr.split(' ');
-
-                        var dayOfWeek = array[0];
-                        var month = array[1];
-                        var day = array[2];
-                        var year = array[3];
-                        var time = array[4];
-                        var timezone = array[5];
-
-                        console.log(dayOfWeek);
-                    });
+                    
 
                 </script>
 
@@ -389,32 +374,106 @@
 
                 <div class="d-flex justify-content-between">
                     <p class="fw-bold mb-0">@Model.Name (Daily payment)</p>
-                    <p class="text-muted mb-0">$1750.00</p>
+                    <p id="totalDailyPrice" class="text-muted mb-0">$0.00</p>
                 </div>
 
                 <div class="d-flex justify-content-between">
                     <p class="small mb-0">Houtly payment</p>
-                    <p class="small mb-0">$175.00</p>
-                </div>
-
-                <div class="d-flex justify-content-between pb-1">
-                    <p class="small">Tax</p>
-                    <p class="small">$200.00</p>
+                    <p id="totalHourlyPrice" class="small mb-0">$@(Model.Tariff.TariffPerHour).00</p>
                 </div>
 
                 <div class="d-flex justify-content-between">
                     <p class="fw-bold">Total</p>
-                    <p class="fw-bold" style="color: #35558a;">$2125.00</p>
+                    <p id="totalPrice" class="fw-bold" style="color: #35558a;">$@(Model.Tariff.TariffPerHour).00</p>
                 </div>
 
             </div>
             <div class="modal-footer d-flex justify-content-center border-top-0 py-4">
                 <button type="button" class="btn btn-outline-primary btn-lg mb-1">
-                    Track your order
+                    Pay for the order
                 </button>
             </div>
         </div>
     </div>
 </div>
 
+
+<script>
+    function getDaysInCurrentMonth() {
+        const date = new Date();
+
+        return new Date(
+            date.getFullYear(),
+            date.getMonth() + 1,
+            0
+        ).getDate();
+    }
+</script>
+
+<script>
+    $('#datetimesEnds').on('hide.daterangepicker', function (ev, picker) {
+
+        var datetimesStartsObj = $('#datetimesStarts').data('daterangepicker').startDate;
+        var datetimesEndsObj = $('#datetimesEnds').data('daterangepicker').startDate;
+
+        const datetimesStartsStr = datetimesStartsObj.toString();
+        const datetimesEndsStr = datetimesEndsObj.toString();
+
+        var arrayStarts = datetimesStartsStr.split(' ');
+        var arrayEnds = datetimesEndsStr.split(' ');
+
+        var dayStarts = arrayStarts[2];
+        var timeStarts = arrayStarts[4];
+
+        var dayEnds = arrayEnds[2];
+        var timeEnds = arrayEnds[4];
+
+        var vehicleHourlyTariff = parseInt("@Model.Tariff.TariffPerHour");
+        var vehicleDailyTariff = parseInt("@Model.Tariff.TariffPerDay");
+
+        var timeStartsInt = parseInt(timeStarts.slice(0, 2));
+        var timeEndsInt = parseInt(timeEnds.slice(0, 2));
+        var dayStartsInt = parseInt(dayStarts);
+        var dayEndsInt = parseInt(dayEnds);
+
+
+        var totalHourlyPrice;
+        var totalDailyPrice;
+        var totalPrice
+
+        if (dayEndsInt > dayStartsInt && timeStartsInt > timeEndsInt) // 28 23:00 -> 30 1:00
+        {
+            totalDailyPrice = (dayEndsInt - dayStartsInt - 1) * vehicleDailyTariff;
+            totalHourlyPrice = (24 - timeStartsInt + timeEndsInt) * vehicleHourlyTariff;
+        }
+        else {
+
+            if (dayEndsInt < dayStartsInt && timeStartsInt > timeEndsInt) // 28 23:00 -> 1 1:00
+            {
+                totalDailyPrice = (getDaysInCurrentMonth() - dayEndsInt - 1 + dayStartsInt) * vehicleDailyTariff;
+                totalHourlyPrice = (24 - timeStartsInt + timeEndsInt) * vehicleHourlyTariff;
+            }
+            else
+            {
+                if (dayEndsInt < dayStartsInt && timeStartsInt <= timeEndsInt) // 28 1:00 -> 1 23:00
+                {
+                    totalDailyPrice = (getDaysInCurrentMonth() - dayEndsInt + dayStartsInt) * vehicleDailyTariff;
+                    totalHourlyPrice = (timeEndsInt - timeStartsInt) * vehicleHourlyTariff;
+                }
+                else
+                {
+                    totalDailyPrice = (dayEndsInt - dayStartsInt) * vehicleDailyTariff;
+                    totalHourlyPrice = (timeEndsInt - timeStartsInt) * vehicleHourlyTariff;
+                }
+            }
+        }
+
+        totalPrice = totalHourlyPrice + totalDailyPrice;
+
+        document.getElementById("totalDailyPrice").textContent = "$" + totalDailyPrice + ".00";
+        document.getElementById("totalHourlyPrice").textContent = "$" + totalHourlyPrice + ".00";
+        document.getElementById("totalPrice").textContent = "$" + (totalDailyPrice + totalHourlyPrice) + ".00";
+
+    });
+</script>
 
