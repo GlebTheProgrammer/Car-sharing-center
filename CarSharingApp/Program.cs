@@ -2,6 +2,7 @@ using CarSharingApp.Repository.Interfaces;
 using CarSharingApp.Repository.LocalRepository;
 using CarSharingApp.Services;
 using CarSharingApp.Services.Interfaces;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,6 +46,8 @@ app.UseSession();
 app.UseRouting();
 
 app.UseAuthorization();
+
+StripeConfiguration.ApiKey = "sk_test_51M6B0AGBXizEWSwDh5mkyk4o3DvKzmywGwJh7Fg2cpd9mxmhLiIPkARsFcvN3Yov0Qyshlqu8gITm3NGPPReXtbW00dvIu6aGa";
 
 // Here we can specify the start page wich is shown to the user
 app.MapControllerRoute(

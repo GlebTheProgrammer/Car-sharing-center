@@ -138,17 +138,17 @@
                         {
                             if (rating > i && rating >= i + 1)
                             {
-                                                                                                                <span class="fa fa-star checked" style="color: orange"></span>
+                                                                                                                                                                    <span class="fa fa-star checked" style="color: orange"></span>
                             }
                             else
                             {
                                 if(rating > i && rating < i + 1)
                                 {
-                                                                                                                    <span class="fa fa-star-half-stroke" style="color: orange"></span>
+                                                                                                                                                                        <span class="fa fa-star-half-stroke" style="color: orange"></span>
                                 }
                                 else
                                 {
-                                                                                                                    <span class="fa fa-star"></span>
+                                                                                                                                                                        <span class="fa fa-star"></span>
                                 }
                             }
                         }
@@ -164,17 +164,17 @@
                         {
                             if (rating > i && rating >= i + 1)
                             {
-                                                                                                                <span class="fa fa-star checked" style="color: orange"></span>
+                                                                                                                                                                    <span class="fa fa-star checked" style="color: orange"></span>
                             }
                             else
                             {
                                 if (rating > i && rating < i + 1)
                                 {
-                                                                                                                    <span class="fa fa-star-half-stroke" style="color: orange"></span>
+                                                                                                                                                                        <span class="fa fa-star-half-stroke" style="color: orange"></span>
                                 }
                                 else
                                 {
-                                                                                                                    <span class="fa fa-star"></span>
+                                                                                                                                                                        <span class="fa fa-star"></span>
                                 }
                             }
                         }
@@ -190,17 +190,17 @@
                         {
                             if (rating > i && rating >= i + 1)
                             {
-                                                                                                                <span class="fa fa-star checked" style="color: orange"></span>
+                                                                                                                                                                    <span class="fa fa-star checked" style="color: orange"></span>
                             }
                             else
                             {
                                 if (rating > i && rating < i + 1)
                                 {
-                                                                                                                    <span class="fa fa-star-half-stroke" style="color: orange"></span>
+                                                                                                                                                                        <span class="fa fa-star-half-stroke" style="color: orange"></span>
                                 }
                                 else
                                 {
-                                                                                                                    <span class="fa fa-star"></span>
+                                                                                                                                                                        <span class="fa fa-star"></span>
                                 }
                             }
                         }
@@ -216,17 +216,17 @@
                         {
                             if (rating > i && rating >= i + 1)
                             {
-                                                                                                                                                                            <span class="fa fa-star checked" style="color: orange"></span>
+                                                                                                                                                                                                                                <span class="fa fa-star checked" style="color: orange"></span>
                             }
                             else
                             {
                                 if (rating > i && rating < i + 1)
                                 {
-                                                                                                                                                                                <span class="fa fa-star-half-stroke" style="color: orange"></span>
+                                                                                                                                                                                                                                    <span class="fa fa-star-half-stroke" style="color: orange"></span>
                                 }
                                 else
                                 {
-                                                                                                                                                                                <span class="fa fa-star"></span>
+                                                                                                                                                                                                                                    <span class="fa fa-star"></span>
                                 }
                             }
                         }
@@ -242,17 +242,17 @@
                         {
                             if (rating > i && rating >= i + 1)
                             {
-                                                                                                                                                                            <span class="fa fa-star checked" style="color: orange"></span>
+                                                                                                                                                                                                                                <span class="fa fa-star checked" style="color: orange"></span>
                             }
                             else
                             {
                                 if (rating > i && rating < i + 1)
                                 {
-                                                                                                                                                                                <span class="fa fa-star-half-stroke" style="color: orange"></span>
+                                                                                                                                                                                                                                    <span class="fa fa-star-half-stroke" style="color: orange"></span>
                                 }
                                 else
                                 {
-                                                                                                                                                                                <span class="fa fa-star"></span>
+                                                                                                                                                                                                                                    <span class="fa fa-star"></span>
                                 }
                             }
                         }
@@ -268,17 +268,17 @@
                         {
                             if (rating > i && rating >= i + 1)
                             {
-                                                                                                                                                                            <span class="fa fa-star checked" style="color: orange"></span>
+                                                                                                                                                                                                                                <span class="fa fa-star checked" style="color: orange"></span>
                             }
                             else
                             {
                                 if (rating > i && rating < i + 1)
                                 {
-                                                                                                                                                                                <span class="fa fa-star-half-stroke" style="color: orange"></span>
+                                                                                                                                                                                                                                    <span class="fa fa-star-half-stroke" style="color: orange"></span>
                                 }
                                 else
                                 {
-                                                                                                                                                                                <span class="fa fa-star"></span>
+                                                                                                                                                                                                                                    <span class="fa fa-star"></span>
                                 }
                             }
                         }
@@ -308,94 +308,108 @@
 </main>
 
 
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header border-bottom-0">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body text-start text-black p-4">
-                <h3 class="mb-4" style="color: #35558a;">Order Details</h3>
-                <h5 class="modal-title mb-2" id="exampleModalLabel">Your order Starts from</h5>
-
-                <div class="md-form md-outline datepicker mb-4" id="customDays">
-                    <input type="text" id="datetimesStarts" class="form-control" name="datetimesStarts" disabled>
+<form asp-controller="CarInformation" asp-action="CreateCheckoutSession" method="post">
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header border-bottom-0">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+                <div class="modal-body text-start text-black p-4">
+                    <h3 class="mb-4" style="color: #35558a;">Order Details</h3>
+                    <h5 class="modal-title mb-2" id="exampleModalLabel">Your order Starts from</h5>
 
-                <h5 class="modal-title mb-2" id="exampleModalLabel">Your order Ends at</h5>
+                    <div class="md-form md-outline datepicker mb-4" id="customDays">
+                        <input type="text" id="datetimesStarts" class="form-control" name="datetimesStarts" disabled>
+                    </div>
 
-                <div class="md-form md-outline datepicker mb-5" id="customDays">
-                    <input placeholder="Select date" type="text" id="datetimesEnds" class="form-control" name="datetimesEnds">
-                </div>
+                    <h5 class="modal-title mb-2" id="exampleModalLabel">Your order Ends at</h5>
 
-                <script>
-                    $(function () {
-                        $('input[name="datetimesStarts"]').daterangepicker({
-                            timePicker: true,
-                            startDate: moment().startOf('hour').add(1,'hour'), // Время для автоматического подставления (с ...)
-                            timePicker24Hour: true,
-                            singleDatePicker: true,
-                            locale: {
-                                format: 'HH:mm DD MMMM YYYY'
-                            }
+                    <div class="md-form md-outline datepicker mb-5" id="customDays">
+                        <input placeholder="Select date" type="text" id="datetimesEnds" class="form-control" name="datetimesEnds">
+                    </div>
+
+                    <script>
+                        $(function () {
+                            $('input[name="datetimesStarts"]').daterangepicker({
+                                timePicker: true,
+                                startDate: moment().startOf('hour').add(1,'hour'), // Время для автоматического подставления (с ...)
+                                timePicker24Hour: true,
+                                singleDatePicker: true,
+                                locale: {
+                                    format: 'HH:mm DD MMMM YYYY'
+                                }
+                            });
                         });
-                    });
 
-                    $(function () {
-                        $('input[name="datetimesEnds"]').daterangepicker({
-                            timePicker: true, // Возможность выставлять время
-                            minDate: moment().startOf('hour').add(2,'hour'), // Минимальная дата, которая может быть выставлена
-                            maxDate: moment().startOf('hour').add(7,'day').add(1,'hour'), // Максимальная дата, которая может быть выставлена
-                            timePicker24Hour: true, // 24-часовой аояс
-                            timePickerIncrement: 60, // Можно редактировать только часы (минуты всегда 00)
-                            singleDatePicker: true, // DatePicker только для одной даты
-                            locale: {
-                                format: 'HH:mm DD MMMM YYYY'
-                            },
+                        $(function () {
+                            $('input[name="datetimesEnds"]').daterangepicker({
+                                timePicker: true, // Возможность выставлять время
+                                minDate: moment().startOf('hour').add(2,'hour'), // Минимальная дата, которая может быть выставлена
+                                maxDate: moment().startOf('hour').add(7,'day').add(1,'hour'), // Максимальная дата, которая может быть выставлена
+                                startDate: moment().startOf('hour').add(2, 'hour'), // Время для автоматического подставления (с ...)
+                                timePicker24Hour: true, // 24-часовой аояс
+                                timePickerIncrement: 60, // Можно редактировать только часы (минуты всегда 00)
+                                singleDatePicker: true, // DatePicker только для одной даты
+                                locale: {
+                                    format: 'HH:mm DD MMMM YYYY'
+                                },
 
-                            onselect: function() {
-                                var dateObj = $(this).daterangepicker('getDate');
-                                alert(dateObj);
-                            }
+                                onselect: function() {
+                                    var dateObj = $(this).daterangepicker('getDate');
+                                    alert(dateObj);
+                                }
+                            });
                         });
-                    });
 
                     
 
-                </script>
+                    </script>
 
 
-                <p class="mb-0" style="color: #35558a;">Payment summary</p>
-                <hr class="mt-2 mb-4"
-                    style="height: 0; background-color: transparent; opacity: .75; border-top: 2px dashed #9e9e9e;">
+                    <p class="mb-0" style="color: #35558a;">Payment summary</p>
+                    <hr class="mt-2 mb-4"
+                        style="height: 0; background-color: transparent; opacity: .75; border-top: 2px dashed #9e9e9e;">
 
-                <div class="d-flex justify-content-between">
-                    <p class="fw-bold mb-0">@Model.Name (Daily payment)</p>
-                    <p id="totalDailyPrice" class="text-muted mb-0">$0.00</p>
+                    <div class="d-flex justify-content-between">
+                        <p class="fw-bold mb-0">@Model.Name (Daily payment)</p>
+                        <p id="totalDailyPrice" class="text-muted mb-0">$0.00</p>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <p class="small mb-0">Houtly payment</p>
+                        <p id="totalHourlyPrice" class="small mb-0">$@(Model.Tariff.TariffPerHour).00</p>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <p class="fw-bold">Total</p>
+                        <p id="totalPrice" class="fw-bold" style="color: #35558a;">$@(Model.Tariff.TariffPerHour).00</p>
+
+
+                        <input class="visually-hidden" type="text" id="totalPriceInput" placeholder="amount" value="@Model.Tariff.TariffPerHour" name="amount" readonly/>
+                        <input class="visually-hidden" type="text" value="@Model.Name" name="vehicleName" readonly/>
+
+                        <input class="visually-hidden" type="text" id="startMonthInput" value="@DateTime.Now.AddMinutes(60).ToString("MMMM")" name="startMonth" readonly />
+                        <input class="visually-hidden" type="text" id="endMonthInput" value="@DateTime.Now.AddMinutes(120).ToString("MMMM")" name="endMonth" readonly />
+                        <input class="visually-hidden" type="text" id="startDayInput" value="@DateTime.Now.AddMinutes(60).Day" name="startDay" readonly />
+                        <input class="visually-hidden" type="text" id="endDayInput" value="@DateTime.Now.AddMinutes(120).Day" name="endDay" readonly />
+                        <input class="visually-hidden" type="text" id="startHourInput" value="@DateTime.Now.AddMinutes(60).Hour" name="startHour" readonly />
+                        <input class="visually-hidden" type="text" id="endHourInput" value="@DateTime.Now.AddMinutes(120).Hour" name="endHour" readonly />
+
+                    </div>
+
                 </div>
-
-                <div class="d-flex justify-content-between">
-                    <p class="small mb-0">Houtly payment</p>
-                    <p id="totalHourlyPrice" class="small mb-0">$@(Model.Tariff.TariffPerHour).00</p>
+                <div class="modal-footer d-flex justify-content-center border-top-0 py-4">
+                    <button type="submit" class="btn btn-outline-primary btn-lg mb-1">
+                        Pay for the order
+                    </button>
                 </div>
-
-                <div class="d-flex justify-content-between">
-                    <p class="fw-bold">Total</p>
-                    <p id="totalPrice" class="fw-bold" style="color: #35558a;">$@(Model.Tariff.TariffPerHour).00</p>
-                </div>
-
-            </div>
-            <div class="modal-footer d-flex justify-content-center border-top-0 py-4">
-                <button type="button" class="btn btn-outline-primary btn-lg mb-1">
-                    Pay for the order
-                </button>
             </div>
         </div>
     </div>
-</div>
+</form>
 
 
 <script>
@@ -439,7 +453,7 @@
 
         var totalHourlyPrice;
         var totalDailyPrice;
-        var totalPrice
+        var totalPrice;
 
         if (dayEndsInt > dayStartsInt && timeStartsInt > timeEndsInt) // 28 23:00 -> 30 1:00
         {
@@ -472,8 +486,88 @@
 
         document.getElementById("totalDailyPrice").textContent = "$" + totalDailyPrice + ".00";
         document.getElementById("totalHourlyPrice").textContent = "$" + totalHourlyPrice + ".00";
-        document.getElementById("totalPrice").textContent = "$" + (totalDailyPrice + totalHourlyPrice) + ".00";
+        document.getElementById("totalPrice").textContent = "$" + (totalPrice) + ".00";
+
+        document.getElementById("totalPriceInput").value = totalPrice;
+
+        document.getElementById("startMonthInput").value = arrayStarts[1];
+        document.getElementById("endMonthInput").value = arrayEnds[1];
+        document.getElementById("startDayInput").value = dayStartsInt;
+        document.getElementById("endDayInput").value = dayEndsInt;
+        document.getElementById("startHourInput").value = timeStartsInt;
+        document.getElementById("endHourInput").value = timeEndsInt;
 
     });
+
+    window.addEventListener("DOMContentLoaded", function () {
+        var datetimesStartsObj = $('#datetimesStarts').data('daterangepicker').startDate;
+        var datetimesEndsObj = $('#datetimesEnds').data('daterangepicker').startDate;
+
+        const datetimesStartsStr = datetimesStartsObj.toString();
+        const datetimesEndsStr = datetimesEndsObj.toString();
+
+        var arrayStarts = datetimesStartsStr.split(' ');
+        var arrayEnds = datetimesEndsStr.split(' ');
+
+        var dayStarts = arrayStarts[2];
+        var timeStarts = arrayStarts[4];
+
+        var dayEnds = arrayEnds[2];
+        var timeEnds = arrayEnds[4];
+
+        var vehicleHourlyTariff = parseInt("@Model.Tariff.TariffPerHour");
+        var vehicleDailyTariff = parseInt("@Model.Tariff.TariffPerDay");
+
+        var timeStartsInt = parseInt(timeStarts.slice(0, 2));
+        var timeEndsInt = parseInt(timeEnds.slice(0, 2));
+        var dayStartsInt = parseInt(dayStarts);
+        var dayEndsInt = parseInt(dayEnds);
+
+
+        var totalHourlyPrice;
+        var totalDailyPrice;
+        var totalPrice;
+
+        if (dayEndsInt > dayStartsInt && timeStartsInt > timeEndsInt) // 28 23:00 -> 30 1:00
+        {
+            totalDailyPrice = (dayEndsInt - dayStartsInt - 1) * vehicleDailyTariff;
+            totalHourlyPrice = (24 - timeStartsInt + timeEndsInt) * vehicleHourlyTariff;
+        }
+        else {
+
+            if (dayEndsInt < dayStartsInt && timeStartsInt > timeEndsInt) // 28 23:00 -> 1 1:00
+            {
+                totalDailyPrice = (getDaysInCurrentMonth() - dayEndsInt - 1 + dayStartsInt) * vehicleDailyTariff;
+                totalHourlyPrice = (24 - timeStartsInt + timeEndsInt) * vehicleHourlyTariff;
+            }
+            else {
+                if (dayEndsInt < dayStartsInt && timeStartsInt <= timeEndsInt) // 28 1:00 -> 1 23:00
+                {
+                    totalDailyPrice = (getDaysInCurrentMonth() - dayEndsInt + dayStartsInt) * vehicleDailyTariff;
+                    totalHourlyPrice = (timeEndsInt - timeStartsInt) * vehicleHourlyTariff;
+                }
+                else {
+                    totalDailyPrice = (dayEndsInt - dayStartsInt) * vehicleDailyTariff;
+                    totalHourlyPrice = (timeEndsInt - timeStartsInt) * vehicleHourlyTariff;
+                }
+            }
+        }
+
+        totalPrice = totalHourlyPrice + totalDailyPrice;
+
+        document.getElementById("totalDailyPrice").textContent = "$" + totalDailyPrice + ".00";
+        document.getElementById("totalHourlyPrice").textContent = "$" + totalHourlyPrice + ".00";
+        document.getElementById("totalPrice").textContent = "$" + (totalPrice) + ".00";
+
+        document.getElementById("totalPriceInput").value = totalPrice;
+
+        document.getElementById("startMonthInput").value = arrayStarts[1];
+        document.getElementById("endMonthInput").value = arrayEnds[1];
+        document.getElementById("startDayInput").value = dayStartsInt;
+        document.getElementById("endDayInput").value = dayEndsInt;
+        document.getElementById("startHourInput").value = timeStartsInt;
+        document.getElementById("endHourInput").value = timeEndsInt;
+    });
+
 </script>
 
