@@ -50,17 +50,14 @@
     </div>
 </body>
 
+<script src="~/js/signInPage.js" asp-append-version="true"></script>
 
 <!--Script for pop up success registration message starts here-->
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         if (@(contextAccessor?.HttpContext?.Session.GetString("Registered") == null ? "false" : contextAccessor?.HttpContext?.Session.GetString("Registered"))) {
-            Swal.fire({
-                title: "Success!",
-                text: "You have registered successfully. Please, Sign In with your credentials.",
-                icon: 'success',
-                confirmButtonColor: '#007aff'
-            });
+
+            ThrowRegistrationSuccessMessage();
 
             @{contextAccessor?.HttpContext?.Session.Remove("Registered");}
         }
@@ -73,24 +70,11 @@
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         if (@(contextAccessor?.HttpContext?.Session.GetString("AuthorizationFailed") == null ? "false" : contextAccessor?.HttpContext?.Session.GetString("AuthorizationFailed"))) {
-            Swal.fire({
-                title: "Authorization Failed!",
-                text: "You have provided wrong credentials. Check and try again.",
-                icon: 'error',
-                confirmButtonColor: '#007aff'
-            });
+
+            ThrowSignInErrorMessage();
 
             @{contextAccessor?.HttpContext?.Session.Remove("AuthorizationFailed");}
         }
     });
 </script>
 <!--Script for pop up sign in error message ends here-->
-
-<!--Script for hiding error message starts here-->
-<script>
-    function HideErrorSpan(componentId) {
-        var component = document.getElementById(componentId);
-        component.textContent = "";
-    }
-</script>
-<!--Script for hiding error message ends here-->

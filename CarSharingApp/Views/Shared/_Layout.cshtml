@@ -139,212 +139,70 @@
 </html>
 
 
-
-
-
-<!--Script for showing the alert when user click on logout button starts here-->
-<script>
-    function ShowLogoutConfirmationAlert()
-    {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You will need to Sign In again!",
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#4FA64F',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes'
-        }).then((result) => {
-            if (result.isConfirmed) {
-
-                $.ajax({
-                    url: "/SignIn/Logout",
-                    method: "POST"
-                });
-           
-                window.location.reload(true);
-            }
-        });
-    }
-</script>
-<!--Script for showing the alert when user click on logout button ends here-->
-
-<!--Script for showing the alert when user logged in starts here-->
 <script>
     window.addEventListener("DOMContentLoaded", () => {
 
+        // User logged in
         if ("@currentUserStatusProvider.HasUserSignedIn()" === "True" ) {
 
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-start',
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                    toast.addEventListener('mouseleave', Swal.resumeTimer)
-                }
-            });
-
-            Toast.fire({
-                icon: 'success',
-                title: 'Signed in successfully'
-            });
+            ShowSuccessfulMessageAfterLogIn();
 
             @{currentUserStatusProvider.ChangeSignedInState(false);}
+
+            return;
         }
-    });
-</script>
-<!--Script for showing the alert when user logged in ends here-->
 
-<!--Script for showing the alert when user changed account data starts here-->
-<script>
-    window.addEventListener("DOMContentLoaded", () => {
-
-        if ("@currentUserStatusProvider.HasChangedAccountData()" === "True") {
-
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-start',
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                    toast.addEventListener('mouseleave', Swal.resumeTimer)
-                }
-            });
-
-            Toast.fire({
-                icon: 'success',
-                title: 'Account data was changed successfully'
-            });
-
-            @{currentUserStatusProvider.ChangeAccountDataHasChangedState(false);}
-        }
-    });
-</script>
-<!--Script for showing the alert when user changed account data ends here-->
-
-<!--Script for showing the alert when user changed vehicle data starts here-->
-<script>
-    window.addEventListener("DOMContentLoaded", () => {
-
-        if ("@currentUserStatusProvider.HasChangedVehicleData()" === "True") {
-
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-start',
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                    toast.addEventListener('mouseleave', Swal.resumeTimer)
-                }
-            });
-
-            Toast.fire({
-                icon: 'success',
-                title: 'Vehicle data was changed successfully'
-            });
-
-            @{currentUserStatusProvider.ChangeVehicleDataHasChangedState(false);}
-        }
-    });
-</script>
-<!--Script for showing the alert when user changed vehicle data ends here-->
-
-<!--Script for showing the alert when user changed password starts here-->
-<script>
-    window.addEventListener("DOMContentLoaded", () => {
-
-        if ("@currentUserStatusProvider.HasChangedPasswordData()" === "True") {
-
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-start',
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                    toast.addEventListener('mouseleave', Swal.resumeTimer)
-                }
-            });
-
-            Toast.fire({
-                icon: 'success',
-                title: 'Password was changed successfully'
-            });
-
-            @{currentUserStatusProvider.ChangePasswordDataHasChangedState(false);}
-        }
-    });
-</script>
-<!--Script for showing the alert when user changed password ends here-->
-
-<!--Script for showing the alert when user logged out starts here-->
-<script>
-    window.addEventListener("DOMContentLoaded", () => {
+        // User logged out
         if ("@currentUserStatusProvider.HasUserLoggedOut()" === "True") {
 
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-start',
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                    toast.addEventListener('mouseleave', Swal.resumeTimer)
-                }
-            });
-
-            Toast.fire({
-                icon: 'success',
-                title: 'Logged out successfully'
-            });
+            ShowSuccessfulMessageAfterLogout();
 
             @{currentUserStatusProvider.ChangeLoggedOutState(false);}
+
+            return;
         }
-    });
-</script>
-<!--Script for showing the alert when user logged out ends here-->
+        
+        // User changed account data
+        if ("@currentUserStatusProvider.HasChangedAccountData()" === "True") {
 
-<!--Script for showing the alert when user trying to get access to the functionality when he's not authorized starts here-->
-<script>
-    window.addEventListener("DOMContentLoaded", () => {
+            ShowSuccessfulMessageAfterUserHasChangedAccountData();
 
+            @{currentUserStatusProvider.ChangeAccountDataHasChangedState(false);}
+
+            return;
+        }
+
+        // User changed vehicle data
+        if ("@currentUserStatusProvider.HasChangedVehicleData()" === "True") {
+
+            ShowSuccessfulMessageAfterUserHasChangedVehicleData();  
+
+            @{currentUserStatusProvider.ChangeVehicleDataHasChangedState(false);}
+
+            return;
+        }
+
+        // User changed password
+        if ("@currentUserStatusProvider.HasChangedPasswordData()" === "True") {
+
+            ShowSuccessfulMessageAfterUserHasChangedPassword();
+
+            @{currentUserStatusProvider.ChangePasswordDataHasChangedState(false);}
+
+            return;
+        }
+
+        // Unauthorized access attempt
         if ("@currentUserStatusProvider.HasTriedToGetUnauthorizedAccess()" === "True") {
 
             @{currentUserStatusProvider.ChangeUnauthorizedAccessState(false);}
 
-            const swalWithBootstrapButtons = Swal.mixin({
-                customClass: {
-                    confirmButton: 'btn btn-success',
-                    cancelButton: 'btn btn-danger'
-                }
-            })
+            ShowUnauthorizedAccessAttemptMessage();
 
-            swalWithBootstrapButtons.fire({
-                title: 'Sorry, authentication required',
-                text: "You won't be able to use this function unless you sign in!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#007aff',
-                confirmButtonText: 'Sign in',
-                cancelButtonText: 'Close',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = '/SignIn/';
-                } 
-            })
+            return;
         }
+
     });
 </script>
-<!--Script for showing the alert when user trying to get access to the functionality when he's not authorized ends here-->
 
 
