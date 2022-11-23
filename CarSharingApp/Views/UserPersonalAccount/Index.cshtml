@@ -130,7 +130,7 @@
                         <td class="">@(timeLeft / 1440 > 0 ? timeLeft / 1440 : "0") days @(timeLeft % 1440 / 60 > 0 ? timeLeft % 1440 / 60 : "0") hours @(timeLeft % 1440 % 60 > 0 ? timeLeft % 1440 % 60 : "0") min</td>
                         <td class="">@(order.OrderMadeTime.AddMinutes(order.PaidTimeInMinutes))</td>
                         <td>
-                            <button type="button" class="btn btn-outline-primary mt-1 mb-1">Finish</button>
+                            <button type="button" class="btn btn-outline-primary mt-1 mb-1" onclick="ShowFinishOrderConfirmationAlert(@order.Id)">Finish</button>
                         </td>
                     </tr>
                 }

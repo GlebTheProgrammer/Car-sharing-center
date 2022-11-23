@@ -15,7 +15,7 @@
     "DriverLicenseNumber": "621",
     "IsAcceptedNewsSharing": true,
     "VehiclesOrdered": 0,
-    "VehiclesShared": 0,
+    "VehiclesShared": 1,
     "AccountDescription": "No description yet",
     "UserImage": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTdmrjoiXGVFEcd1cX9Arb1itXTr2u8EKNpw\u0026usqp=CAU"
   },
@@ -34,7 +34,7 @@
     "Password": "A665A45920422F9D417E4867EFDC4FB8A04A1F3FFF1FA07E998E86F7F7A27AE3",
     "DriverLicenseNumber": "765",
     "IsAcceptedNewsSharing": true,
-    "VehiclesOrdered": 0,
+    "VehiclesOrdered": 1,
     "VehiclesShared": 0,
     "AccountDescription": "Im very tastyyyyy",
     "UserImage": "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"

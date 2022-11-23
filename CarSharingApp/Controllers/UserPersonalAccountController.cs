@@ -84,5 +84,13 @@ namespace CarSharingApp.Controllers
             ratingRepository.DeleteVehicleRating(vehiclesRepository.GetVehicleById(vehicleId).RatingId);
             vehiclesRepository.DeleteVehicle(vehicleId);
         }
+
+        public void FinishOrder(int orderId)
+        {
+            var order = ordersRepository.GetOrderById(orderId);
+
+            vehiclesRepository.ChangeVehicleIsOrderedState(order.OrderedVehicleId, false);
+            ordersRepository.FinishOrder(orderId);
+        }
     }
 }

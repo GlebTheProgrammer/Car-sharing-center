@@ -74,5 +74,22 @@ namespace CarSharingApp.Repository.LocalRepository
             await JsonSerializer.SerializeAsync(createStream, orders, options);
             await createStream.DisposeAsync();
         }
+
+        public OrderModel GetOrderById(int orderId)
+        {
+            if (orders == null)
+                SetUpLocalRepository();
+
+            return orders.First(order => order.Id == orderId);
+        }
+
+        public async void FinishOrder(int orderId)
+        {
+            int replaceIndex = orders.IndexOf(orders.First(order => order.Id == orderId));
+
+            orders[replaceIndex].IsActive = false;
+
+            await SaveChanges();
+        }
     }
 }

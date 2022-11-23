@@ -1,0 +1,13 @@
+[
+  {
+    "IsActive": false,
+    "Id": 0,
+    "OrderedUserId": 1,
+    "OrderedVehicleId": 0,
+    "VehicleOwnerId": 0,
+    "Price": 40,
+    "OrderMadeTime": "2022-11-23T21:00:00",
+    "ExpiredTime": "2022-11-23T23:00:00",
+    "PaidTimeInMinutes": 120
+  }
+]
