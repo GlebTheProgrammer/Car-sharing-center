@@ -134,5 +134,16 @@ namespace CarSharingApp.Repository.LocalRepository
 
             await SaveChanges();
         }
+
+        public async void IncreaseClientsVehiclesSharedAndOrderedCount(int clientId, int orderedCarOwnerId)
+        {
+            int carOwnerIndex = clients.IndexOf(clients.First(client => client.Id == orderedCarOwnerId));
+            int orderedClientIndex = clients.IndexOf(clients.First(client => client.Id == clientId));
+
+            clients[carOwnerIndex].VehiclesShared += 1;
+            clients[orderedClientIndex].VehiclesOrdered += 1;
+
+            await SaveChanges();
+        }
     }
 }

@@ -122,8 +122,12 @@
                     <tr class="text-center">
                         <th scope="row" class="">@order.Id</th>
                         <td class="">@order.VehicleName</td>
-                        <td class="">@(order.PaidTimeInMinutes / 1440 > 0 ? order.PaidTimeInMinutes / 1440 : "") days @(order.PaidTimeInMinutes % 1440 / 60) hours @(order.PaidTimeInMinutes % 1440 % 60)</td>
-                        <td class="">@(DateTime.Now - order.OrderMadeTime) hours</td>
+                        <td class="">@(order.PaidTimeInMinutes / 1440 > 0 ? order.PaidTimeInMinutes / 1440 : "0") days @(order.PaidTimeInMinutes % 1440 / 60 > 0 ? order.PaidTimeInMinutes % 1440 / 60 : "0") hours @(order.PaidTimeInMinutes % 1440 % 60 > 0 ? order.PaidTimeInMinutes % 1440 % 60 : "0") min</td>
+                        @{
+                            TimeSpan ts = DateTime.Now - order.OrderMadeTime;
+                            var timeLeft = order.PaidTimeInMinutes - Convert.ToInt32(ts.TotalMinutes);
+                        }
+                        <td class="">@(timeLeft / 1440 > 0 ? timeLeft / 1440 : "0") days @(timeLeft % 1440 / 60 > 0 ? timeLeft % 1440 / 60 : "0") hours @(timeLeft % 1440 % 60 > 0 ? timeLeft % 1440 % 60 : "0") min</td>
                         <td class="">@(order.OrderMadeTime.AddMinutes(order.PaidTimeInMinutes))</td>
                         <td>
                             <button type="button" class="btn btn-outline-primary mt-1 mb-1">Finish</button>

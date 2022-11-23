@@ -39,16 +39,16 @@ function CalculateVehicleUsagePeriodAndSetUpAllInputs(datetimesStartsStr, dateti
 
         if (dayEndsInt < dayStartsInt && timeStartsInt > timeEndsInt) // 28 23:00 -> 1 1:00
         {
-            totalDailyPrice = (GetDaysInCurrentMonth() - dayEndsInt - 1 + dayStartsInt) * vehicleDailyTariff;
+            totalDailyPrice = (GetDaysInCurrentMonth() - dayStartsInt - 1 + dayEndsInt) * vehicleDailyTariff;
             totalHourlyPrice = (24 - timeStartsInt + timeEndsInt) * vehicleHourlyTariff;
         }
         else {
             if (dayEndsInt < dayStartsInt && timeStartsInt <= timeEndsInt) // 28 1:00 -> 1 23:00
             {
-                totalDailyPrice = (GetDaysInCurrentMonth() - dayEndsInt + dayStartsInt) * vehicleDailyTariff;
+                totalDailyPrice = (GetDaysInCurrentMonth() - dayStartsInt + dayEndsInt) * vehicleDailyTariff;
                 totalHourlyPrice = (timeEndsInt - timeStartsInt) * vehicleHourlyTariff;
             }
-            else {
+            else { // 28 1:00 -> 30 23:00
                 totalDailyPrice = (dayEndsInt - dayStartsInt) * vehicleDailyTariff;
                 totalHourlyPrice = (timeEndsInt - timeStartsInt) * vehicleHourlyTariff;
             }

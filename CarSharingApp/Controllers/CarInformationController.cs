@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CarSharingApp.Models.OrderData;
 using CarSharingApp.Models.RatingData;
 using CarSharingApp.Models.VehicleData;
 using CarSharingApp.Repository.Interfaces;
@@ -48,13 +49,13 @@ namespace CarSharingApp.Controllers
 
             vehicleViewModel.OwnerUsername = clientsRepository.GetClientUsername(vehicle.OwnerId);
             vehicleViewModel.Rating = mapper.Map<VehicleRatingViewModel>(ratingRepository.GetVehicleRatingById(vehicle.RatingId));
-            vehicleViewModel.TimesOrdered = ordersRepository.GetNumberOfVehicleOrders(vehicleId);
 
             return View(vehicleViewModel);
         }
 
         [HttpPost]
-        public ActionResult CreateCheckoutSession(string amount, string vehicleName, string startMonth, string endMonth, string startDay, string endDay, string startHour, string endHour)
+        public ActionResult CreateCheckoutSession(string amount, string vehicleName, string startMonth, string endMonth, 
+                                                  string startDay, string endDay, string startHour, string endHour, int vehicleId)
         {
 
             var options = new Stripe.Checkout.SessionCreateOptions
@@ -78,8 +79,8 @@ namespace CarSharingApp.Controllers
                     },
                 },
                 Mode = "payment",
-                SuccessUrl = "https://localhost:44362/CarInformation/SuccessfulPayment",
-                CancelUrl = $"https://localhost:44362/CarInformation/CancelledPayment",
+                SuccessUrl = $"https://localhost:44362/CarInformation/SuccessfulPayment?vehicleId={vehicleId}&orderPrice={amount}&startDay={startDay}&startHour={startHour}&endDay={endDay}&endHour={endHour}",
+                CancelUrl = $"https://localhost:44362/CarInformation/CancelledPayment?vehicleId={vehicleId}",
 
             };
 
@@ -90,14 +91,104 @@ namespace CarSharingApp.Controllers
             return Redirect(session.Url);
         }
 
-        public IActionResult SuccessfulPayment()
+        public IActionResult SuccessfulPayment(int vehicleId, string orderPrice, string startDay, string startHour, string endDay, string endHour)
         {
-            return View();
+            DateTime orderMadeTime = CalculateOrderMadeTime(startDay, startHour);
+            int paidTimeInMinutes = CalculatePaidTimeInMinutes(orderMadeTime, int.Parse(endDay), int.Parse(endHour));
+
+            OrderModel newOrder = new OrderModel()
+            {
+                IsActive = true,
+
+                OrderedUserId = (int)userStatusProvider.GetUserId(),
+                OrderedVehicleId = vehicleId,
+                VehicleOwnerId = vehiclesRepository.GetVehicleById(vehicleId).OwnerId,
+
+                Price = decimal.Parse(orderPrice),
+
+                OrderMadeTime = orderMadeTime,
+                PaidTimeInMinutes = paidTimeInMinutes,
+                ExpiredTime = CalculateOrderExpiredTime(orderMadeTime, paidTimeInMinutes)
+            };
+
+            // Добавляем новый заказ в список
+            ordersRepository.AddNewOrder(newOrder);
+
+            // Меняем состояние автомобиля в списке и файле ( Меняем состояние IsOrdered на True и количество заказов на автомобиль в случае передачи true)
+            vehiclesRepository.ChangeVehicleIsOrderedState(vehicleId, true);
+
+            // Статус в True для отправки пользователю соотвтствующее сообщение 
+            userStatusProvider.ChangeCompletedPaymentProcessState(true);
+
+            clientsRepository.IncreaseClientsVehiclesSharedAndOrderedCount((int)userStatusProvider.GetUserId(), vehiclesRepository.GetVehicleById(vehicleId).OwnerId);
+
+            return RedirectToAction("Index", "CarSharing");
         }
 
-        public IActionResult CancelledPayment()
+        public IActionResult CancelledPayment(int vehicleId)
         {
-            return View();
+            userStatusProvider.ChangeCanceledPaymentProcessState(true);
+
+            return RedirectToAction("Index", vehicleId);
+        }
+
+        public DateTime CalculateOrderMadeTime(string startDay, string startHour)
+        {
+            // Заказ пользователь сделал: 23:59 31 декабря 2022 -> Нам придёт следующая дата: 00:00 1 января 2023  
+            // Если делать влоб, и назначить Year как Datetime.now.Year - получим ошибку, тк дата будет
+            // взята как 00:00 1 января 2022. Чтобы избежать ошибки - проверяем на час вперед, какой год
+            // и если он равен тому, который показывает Datetime.now - берём его. Если же не равен - берём 
+            // datetime.now + 1 год
+
+            DateTime now = DateTime.Now;
+
+            int year;
+            int month;
+
+            if (now.Year == now.AddHours(1).Year)
+                year = now.Year;
+            else
+                year = now.AddHours(1).Year;
+
+            if (now.Month == now.AddHours(1).Month)
+                month = now.Month;
+            else
+                month = now.AddHours(1).Month;
+
+            return new DateTime(year, month, int.Parse(startDay), int.Parse(startHour), 0, 0);
+        }
+
+        public int CalculatePaidTimeInMinutes(DateTime orderMadeTime, int endDay, int endHour)
+        {
+            int resultMinutes;
+
+            if (endDay > orderMadeTime.Day && orderMadeTime.Hour > endHour) // 28 23:00 -> 30 1:00
+            {
+                resultMinutes = (endDay - orderMadeTime.Day - 1) * 24 * 60 + (24 - orderMadeTime.Hour + endHour) * 60;
+                return resultMinutes;
+            }
+
+            if (endDay < orderMadeTime.Day && orderMadeTime.Hour > endHour) // 28 23:00 -> 1 1:00
+            {
+                resultMinutes = (DateTime.DaysInMonth(orderMadeTime.Year, orderMadeTime.Month) - orderMadeTime.Day - 1 + endDay) * 24 * 60 + (24 - orderMadeTime.Hour + endHour) * 60;
+                return resultMinutes;
+            }
+
+            if (endDay < orderMadeTime.Day && orderMadeTime.Hour <= endHour) // 28 1:00 -> 1 23:00
+            {
+                resultMinutes = (DateTime.DaysInMonth(orderMadeTime.Year, orderMadeTime.Month) - orderMadeTime.Day + endDay) * 24 * 60 + (endHour - orderMadeTime.Hour) * 60;
+                return resultMinutes;
+            }
+            else // 28 1:00 -> 30 23:00
+            {
+                resultMinutes = (endDay - orderMadeTime.Day) * 24 * 60 + (endHour - orderMadeTime.Hour) * 60;
+                return resultMinutes;
+            }
+        }
+
+        public DateTime CalculateOrderExpiredTime(DateTime orderStartTime, int paidTimeInMinutes)
+        {
+            return orderStartTime.AddMinutes(paidTimeInMinutes);
         }
     }
 }

@@ -13,5 +13,6 @@ namespace CarSharingApp.Repository.Interfaces
         public ClientModel TrySignIn(string email, string password);
         public void UpdateClient(ClientModel client);
         public void UpdateClientPassword(int clientId, string clientNewPassword);
+        public void IncreaseClientsVehiclesSharedAndOrderedCount(int clientId, int orderedCarOwnerId);
     }
 }

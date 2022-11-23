@@ -14,6 +14,7 @@ function ThrowSignInErrorMessage() {
     });
 }
 
+// Function for showing message after successful registration
 function ThrowRegistrationSuccessMessage() {
     Swal.fire({
         title: "Success!",

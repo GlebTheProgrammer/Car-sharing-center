@@ -145,3 +145,23 @@ function ShowUnauthorizedAccessAttemptMessage() {
         }
     })
 }
+
+// Function to show message about uncompleted order payment process
+function ShowPurchaseCancelledMessage() {
+    Swal.fire({
+        title: "Payment has been canceled!",
+        text: "The order has not been completed. If you haven't canceled your order, please try again...",
+        icon: 'error',
+        confirmButtonColor: '#007aff'
+    });
+}
+
+// Function to show message about completed order payment process
+function ShowPurchaseCompletedMessage() {
+    Swal.fire({
+        title: "Congratulations!",
+        text: "You have successfully completed payment process. Check new order in your Account.",
+        icon: 'success',
+        confirmButtonColor: '#007aff'
+    });
+}

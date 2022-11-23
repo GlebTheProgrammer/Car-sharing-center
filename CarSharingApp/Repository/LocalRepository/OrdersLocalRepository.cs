@@ -1,5 +1,6 @@
 ﻿using CarSharingApp.Models.OrderData;
 using CarSharingApp.Models.RatingData;
+using CarSharingApp.Models.VehicleData;
 using CarSharingApp.Repository.Interfaces;
 using System.Text.Json;
 
@@ -46,6 +47,32 @@ namespace CarSharingApp.Repository.LocalRepository
                 SetUpLocalRepository();
 
             return orders.Where(order => order.IsActive && order.OrderedUserId == userId).ToList();
+        }
+
+        public async void AddNewOrder(OrderModel newOrder)
+        {
+            if (orders == null)
+                SetUpLocalRepository();
+
+            if (orders.Count == 0)
+                newOrder.Id = 0;
+            else
+                newOrder.Id = orders.Max(order => order.Id) + 1;
+
+            orders.Add(newOrder);
+
+            await SaveChanges();
+        }
+
+        public async Task SaveChanges()
+        {
+            string filePath = "~/../Repository/LocalRepository/Data/OrdersData.json";
+
+            var options = new JsonSerializerOptions { WriteIndented = true };
+
+            using FileStream createStream = File.Create(filePath);
+            await JsonSerializer.SerializeAsync(createStream, orders, options);
+            await createStream.DisposeAsync();
         }
     }
 }

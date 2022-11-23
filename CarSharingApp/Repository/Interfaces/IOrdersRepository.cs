@@ -7,5 +7,7 @@ namespace CarSharingApp.Repository.Interfaces
         public int GetNumberOfVehicleOrders(int vehicleId);
         public int GetNumberOfActiveOrdersForAUser(int userId);
         public List<OrderModel> GetActiveOrdersForAUser(int userId);
+        public void AddNewOrder(OrderModel newOrder);
+        public Task SaveChanges();
     }
 }

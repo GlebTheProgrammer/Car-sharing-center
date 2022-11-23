@@ -44,10 +44,10 @@
                                 });
 
                                 var marker = new google.maps.Marker(
-                                    {
-                                        position: new google.maps.LatLng(latSerialized, longSerialized),
-                                        map: map
-                                    });
+                                {
+                                    position: new google.maps.LatLng(latSerialized, longSerialized),
+                                    map: map
+                                });
                             }
                         </script>
                         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9AIXs7jB_3r8oRc1zd0i9p0nanEH5Q6M&callback=initMap" async defer></script>
@@ -382,6 +382,8 @@
                     <div class="d-flex justify-content-between">
                         <p class="fw-bold">Total</p>
                         <p id="totalPrice" class="fw-bold" style="color: #35558a;">$@(Model.Tariff.TariffPerHour).00</p>
+
+                        <input class="visually-hidden" type="number" id="vehicleIdInput" value="@Model.Id" name="vehicleId" readonly />
 
                         <input class="visually-hidden" type="text" id="totalPriceInput" placeholder="amount" value="@Model.Tariff.TariffPerHour" name="amount" readonly />
                         <input class="visually-hidden" type="text" value="@Model.Name" name="vehicleName" readonly />

@@ -12,6 +12,8 @@ namespace CarSharingApp.Models.VehicleData
 
         public DateTime PublishedTime { get; set; }
 
+        public int TimesOrdered { get; set; }
+
         // Заполняется на странице
         public string Name { get; set; }
         public string BriefDescription { get; set; }
@@ -32,5 +34,6 @@ namespace CarSharingApp.Models.VehicleData
         // Активна ли техника или нет (меняется пользователем в личном кабинете)
         public bool IsPublished { get; set; }
         public bool IsOrdered { get; set; }
+        
     }
 }

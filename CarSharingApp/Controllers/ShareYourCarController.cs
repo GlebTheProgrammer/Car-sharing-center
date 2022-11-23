@@ -81,6 +81,7 @@ namespace CarSharingApp.Controllers
             vehicleModel.PublishedTime = DateTime.Now;
             vehicleModel.IsPublished = false;
             vehicleModel.IsOrdered = false;
+            vehicleModel.TimesOrdered = 0;
 
             vehiclesRepository.ShareNewVehicle(vehicleModel);
 

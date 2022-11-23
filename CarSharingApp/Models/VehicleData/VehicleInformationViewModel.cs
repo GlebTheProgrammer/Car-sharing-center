@@ -5,6 +5,8 @@ namespace CarSharingApp.Models.VehicleData
 {
     public class VehicleInformationViewModel
     {
+        public int Id { get; set; }
+
         public string OwnerUsername { get; set; }
         public int OwnerId { get; set; }
 

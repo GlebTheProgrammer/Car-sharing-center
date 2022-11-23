@@ -14,5 +14,6 @@ namespace CarSharingApp.Repository.Interfaces
         public void RemoveVehicleFromTheCatalog(int vehicleId);
         public void DeleteVehicle(int vehicleId);
         public void UpdateVehicle(VehicleModel vehicle);
+        public void ChangeVehicleIsOrderedState(int vehicleId, bool state);
     }
 }
