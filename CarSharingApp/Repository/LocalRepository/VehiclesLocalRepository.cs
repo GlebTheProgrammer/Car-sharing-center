@@ -129,5 +129,18 @@ namespace CarSharingApp.Repository.LocalRepository
 
             await SaveChanges();
         }
+
+        public async void ChangeVehiclesIsOrderedState(List<int> vehicleIds, bool state)
+        {
+            if (vehicles == null)
+                SetUpLocalRepository();
+
+            for (int i = 0; i < vehicleIds.Count; i++)
+            {
+                vehicles[vehicles.IndexOf(vehicles.First(vehicle => vehicle.Id == vehicleIds[i]))].IsOrdered = false;
+            }
+
+            await SaveChanges();
+        }
     }
 }

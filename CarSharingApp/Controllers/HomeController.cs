@@ -9,14 +9,21 @@ namespace CarSharingApp.Controllers
     public class HomeController : Controller
     {
         private readonly IVehiclesRepository vehiclesRepository;
+        private readonly IOrdersRepository ordersRepository;
 
-        public HomeController(ICurrentUserStatusProvider currentUserStatusProvider, IVehiclesRepository vehiclesRepository, IHttpContextAccessor httpContextAccessor)
+        public HomeController(IVehiclesRepository vehiclesRepository, IOrdersRepository ordersRepository)
         {
             this.vehiclesRepository = vehiclesRepository;
+            this.ordersRepository = ordersRepository;
         }
 
         public IActionResult Index()
         {
+            // Проверка заказов на просроченное время
+            var vehiclesIds = ordersRepository.CheckExpiredOrdersAndGetVehiclesId().Result;
+            if (vehiclesIds.Count > 0)
+                vehiclesRepository.ChangeVehiclesIsOrderedState(vehiclesIds, false);
+
             int vehiclesCount = vehiclesRepository.GetAllVehiclesForCatalog().Count();
 
             float[][] array = new float[vehiclesCount][];

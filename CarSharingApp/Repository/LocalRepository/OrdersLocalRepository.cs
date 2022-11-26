@@ -91,5 +91,32 @@ namespace CarSharingApp.Repository.LocalRepository
 
             await SaveChanges();
         }
+
+        public async Task<List<int>> CheckExpiredOrdersAndGetVehiclesId()
+        {
+            if (orders == null)
+                SetUpLocalRepository();
+
+            List<int> result = new List<int>();
+            DateTime now = DateTime.Now;
+
+            var activeOrders = orders.Where(order => order.IsActive).ToList();
+
+            foreach (var order in activeOrders)
+            {
+                if (order.ExpiredTime < now)
+                {
+                    int orderIndex = orders.IndexOf(orders.First(listOrder => listOrder == order));
+
+                    result.Add(orders[orderIndex].OrderedVehicleId);
+                    orders[orderIndex].IsActive = false;
+                }
+            }
+
+            if (result.Count != 0)
+                await SaveChanges();
+
+            return result;
+        }
     }
 }

@@ -16,20 +16,27 @@ namespace CarSharingApp.Controllers
         private readonly IMapper mapper;
         private readonly ICurrentUserStatusProvider currentUserStatusProvider;
         private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IOrdersRepository ordersRepository;
 
 
-        public CarSharingController(IVehiclesRepository vehiclesRepository, IMapper mapper, ICurrentUserStatusProvider currentUserStatusProvider, IHttpContextAccessor httpContextAccessor)
+        public CarSharingController(IVehiclesRepository vehiclesRepository, IMapper mapper, ICurrentUserStatusProvider currentUserStatusProvider, IHttpContextAccessor httpContextAccessor, IOrdersRepository ordersRepository)
         {
             this.vehiclesRepository = vehiclesRepository;
             this.mapper = mapper;
             this.currentUserStatusProvider = currentUserStatusProvider;
             this.httpContextAccessor = httpContextAccessor;
+            this.ordersRepository = ordersRepository;
         }
 
 
 
         public IActionResult Index(int page = 1, string pageSizeStr = "3")
         {
+            // Проверка заказов на просроченное время
+            var vehiclesIds = ordersRepository.CheckExpiredOrdersAndGetVehiclesId().Result;
+            if (vehiclesIds.Count > 0)
+                vehiclesRepository.ChangeVehiclesIsOrderedState(vehiclesIds, false);
+
             // Получаем только те модельки, которые не относятся к текущему пользователю
             var vehicleViewModels = mapper.Map<IEnumerable<VehicleViewModel>>(vehiclesRepository.GetAllVehiclesForCatalog().Where(vehicle => vehicle.OwnerId != currentUserStatusProvider.GetUserId())).ToList();
 

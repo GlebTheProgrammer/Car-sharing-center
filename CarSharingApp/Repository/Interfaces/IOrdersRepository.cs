@@ -11,5 +11,6 @@ namespace CarSharingApp.Repository.Interfaces
         public Task SaveChanges();
         public OrderModel GetOrderById(int orderId);
         public void FinishOrder(int orderId);
+        public Task<List<int>> CheckExpiredOrdersAndGetVehiclesId();
     }
 }

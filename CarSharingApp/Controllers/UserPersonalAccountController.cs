@@ -41,6 +41,11 @@ namespace CarSharingApp.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
+            // Проверка заказов на просроченное время
+            var vehiclesIds = ordersRepository.CheckExpiredOrdersAndGetVehiclesId().Result;
+            if (vehiclesIds.Count > 0)
+                vehiclesRepository.ChangeVehiclesIsOrderedState(vehiclesIds, false);
+
             int userId = (int)currentUserStatusProvider.GetUserId();
 
             // Создние объекта заказов
