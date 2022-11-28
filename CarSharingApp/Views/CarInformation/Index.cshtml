@@ -14,7 +14,7 @@
 
             <article class="blog-post mt-2">
                 <h2 class="blog-post-title">@Model.Name</h2>
-                <p class="blog-post-meta">Published: @(Model.PublishedTime.Month) @(Model.PublishedTime.Day), @(Model.PublishedTime.Year) by <a href="@Url.Action("Index", "ClientProfile", new {id = Model.OwnerId})">@Model.OwnerUsername</a></p>
+                <p class="blog-post-meta">Published: @(Model.PublishedTime.Month) @(Model.PublishedTime.Day), @(Model.PublishedTime.Year) by <a href="@Url.Action("Index", "ClientProfile", new {vehicleId = Model.Id})">@Model.OwnerUsername</a></p>
 
                 <p>@Model.Description</p>
                 <hr>

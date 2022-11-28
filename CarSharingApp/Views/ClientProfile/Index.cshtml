@@ -1,0 +1,40 @@
+﻿@using CarSharingApp.Models.ClientData
+@model ClientProfileViewModel
+
+<section>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-5">
+                <div class="card mb-4 mt-3">
+                    <div class="card-body text-center">
+                        <img src="@Model.UserImage" alt="avatar"
+                             class="rounded-circle img-fluid" style="width: 150px;">
+                        <h5 class="my-3">@Model.Username</h5>
+                        <p class="text-muted mb-1">@Model.AccountDescription</p>
+                        <p class="text-muted mb-4">@Model.Address, @Model.City, @Model.Country</p>
+                        <p class="text-muted mb-1">Email: @Model.Email</p>
+                        <p class="text-muted mb-4">Phone: @Model.PhoneNumber</p>
+                        <div class="d-flex justify-content-center mb-2">
+                            <a type="button" href="@Url.Action("Index", "CarInformation", new {vehicleId = Model.VehicleId})" class="btn btn-outline-info w-50">Get Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="featurette-divider mb-4">
+
+        <div class="row justify-content-center mt-2">
+            <div class="col-lg-2 text-center">
+                <p class="mb-2 h5">@Model.VehiclesOrdered</p>
+                <p class="text-muted mb-3">Vehicles ordered</p>
+            </div>
+            <div class="col-lg-2 text-center">
+                <p class="mb-2 h5">@Model.VehiclesShared</p>
+                <p class="text-muted mb-3">Vehicles shared</p>
+            </div>
+        </div>
+
+        <hr class="featurette-divider mt-1">
+    </div>
+</section>
