@@ -118,5 +118,28 @@ namespace CarSharingApp.Repository.LocalRepository
 
             return result;
         }
+
+        public DateTime GetLastOrderExpiredDate(int orderedVehicleId)
+        {
+            if (orders == null)
+                SetUpLocalRepository();
+
+            // Проверка на возможность вывода времени производится по числу заказов на автомобиль. Возвращая DateTime.Now мы можем быть уверены, что эти данные нигде не будут выведены
+
+            if (orders.FirstOrDefault(order => order.OrderedVehicleId == orderedVehicleId) == null)
+                return DateTime.Now;
+            else
+                return orders.Where(order => order.OrderedVehicleId == orderedVehicleId).Max(order => order.ExpiredTime);
+        }
+
+        public async void DeleteAllVehicleOrders(int vehicleId)
+        {
+            if (orders == null)
+                SetUpLocalRepository();
+
+            orders.RemoveAll(order => order.OrderedVehicleId == vehicleId);
+
+            await SaveChanges();
+        }
     }
 }

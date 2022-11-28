@@ -52,6 +52,11 @@ namespace CarSharingApp.Controllers
 
             var vehiclesData = vehicleViewModels.Skip(vehiclesSkip).Take(pager.PageSize).ToList();
 
+            foreach (var vehicle in vehiclesData)
+            {
+                vehicle.LastTimeOrdered = ordersRepository.GetLastOrderExpiredDate(vehicle.Id);
+            }
+
             this.ViewBag.Pager = pager;
 
             CarSharingDataViewModel model = new CarSharingDataViewModel

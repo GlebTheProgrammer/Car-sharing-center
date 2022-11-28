@@ -65,7 +65,19 @@
                             <h4 class="card-text">@vehicle.Tariff.TariffPerHour $<span class="text-muted h5">/hr - </span>@vehicle.Tariff.TariffPerDay $<span class="text-muted h5">/day</span></h4>
                             <a href="@Url.Action("Index", "CarInformation", new {vehicleId = vehicle.Id})" class="btn btn-info mt-2" style="width:max-content">Information</a>
                             <p></p>
-                            <p class="card-text"><small class="text-muted">Last taken 3 mins ago</small></p>
+
+                            @if(vehicle.TimesOrdered == 0)
+                            {
+                                <p class="card-text"><small class="text-muted">New vehicle!</small></p>
+                            }
+                            else
+                            {
+                                int timeDaysDifference = Convert.ToInt32((DateTime.Now - vehicle.LastTimeOrdered).TotalDays);
+                                int timeHoursDifference = Convert.ToInt32((DateTime.Now - vehicle.LastTimeOrdered).TotalHours % 24);
+                                int timeMinutesDifference = Convert.ToInt32((DateTime.Now - vehicle.LastTimeOrdered).TotalMinutes % 24 % 60) + 1;
+
+                                <p class="card-text"><small class="text-muted">Last taken @(timeDaysDifference > 0 ? $"{timeDaysDifference} days " : "")@(timeHoursDifference > 0 ? $"{timeHoursDifference} hours " : "")@($"{timeMinutesDifference} mins") ago</small></p>
+                            }
                         </div>
                     </div>
                 }
@@ -85,7 +97,19 @@
                             <h4 class="card-text">@vehicle.Tariff.TariffPerHour $<span class="text-muted h5">/hr - </span>@vehicle.Tariff.TariffPerDay $<span class="text-muted h5">/day</span></h4>
                             <a href="@Url.Action("Index", "CarInformation", new {vehicleId = vehicle.Id})" class="btn btn-info mt-2" style="width:max-content">Information</a>
                             <p></p>
-                            <p class="card-text"><small class="text-muted">Last taken 3 mins ago</small></p>
+
+                            @if (vehicle.TimesOrdered == 0)
+                            {
+                                <p class="card-text"><small class="text-muted">New vehicle!</small></p>
+                            }
+                            else
+                            {
+                                int timeDaysDifference = Convert.ToInt32((DateTime.Now - vehicle.LastTimeOrdered).TotalDays);
+                                int timeHoursDifference = Convert.ToInt32((DateTime.Now - vehicle.LastTimeOrdered).TotalHours % 24);
+                                int timeMinutesDifference = Convert.ToInt32((DateTime.Now - vehicle.LastTimeOrdered).TotalMinutes % 24 % 60) + 1;
+
+                                <p class="card-text"><small class="text-muted">Last taken @(timeDaysDifference > 0 ? $"{timeDaysDifference} days " : "")@(timeHoursDifference > 0 ? $"{timeHoursDifference} hours " : "")@($"{timeMinutesDifference} mins") ago</small></p>
+                            }
                         </div>
                     </div>
                 }
@@ -105,7 +129,19 @@
                             <h4 class="card-text">@vehicle.Tariff.TariffPerHour $<span class="text-muted h5">/hr - </span>@vehicle.Tariff.TariffPerDay $<span class="text-muted h5">/day</span></h4>
                             <a href="@Url.Action("Index", "CarInformation", new {vehicleId = vehicle.Id})" class="btn btn-info mt-2" style="width:max-content">Information</a>
                             <p></p>
-                            <p class="card-text"><small class="text-muted">Last taken 3 mins ago</small></p>
+
+                            @if (vehicle.TimesOrdered == 0)
+                            {
+                                <p class="card-text"><small class="text-muted">New vehicle!</small></p>
+                            }
+                            else
+                            {
+                                int timeDaysDifference = Convert.ToInt32((DateTime.Now - vehicle.LastTimeOrdered).TotalDays);
+                                int timeHoursDifference = Convert.ToInt32((DateTime.Now - vehicle.LastTimeOrdered).TotalHours % 24);
+                                int timeMinutesDifference = Convert.ToInt32((DateTime.Now - vehicle.LastTimeOrdered).TotalMinutes % 24 % 60) + 1;
+
+                                <p class="card-text"><small class="text-muted">Last taken @(timeDaysDifference > 0 ? $"{timeDaysDifference} days " : "")@(timeHoursDifference > 0 ? $"{timeHoursDifference} hours " : "")@($"{timeMinutesDifference} mins") ago</small></p>
+                            }
                         </div>
                     </div>
                 }

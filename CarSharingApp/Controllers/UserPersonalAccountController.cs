@@ -88,6 +88,7 @@ namespace CarSharingApp.Controllers
         {
             ratingRepository.DeleteVehicleRating(vehiclesRepository.GetVehicleById(vehicleId).RatingId);
             vehiclesRepository.DeleteVehicle(vehicleId);
+            ordersRepository.DeleteAllVehicleOrders(vehicleId);
         }
 
         public void FinishOrder(int orderId)

@@ -12,5 +12,7 @@ namespace CarSharingApp.Repository.Interfaces
         public OrderModel GetOrderById(int orderId);
         public void FinishOrder(int orderId);
         public Task<List<int>> CheckExpiredOrdersAndGetVehiclesId();
+        public DateTime GetLastOrderExpiredDate(int orderedVehicleId);
+        public void DeleteAllVehicleOrders(int vehicleId);
     }
 }

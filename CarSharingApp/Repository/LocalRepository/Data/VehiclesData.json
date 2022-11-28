@@ -29,5 +29,36 @@
     },
     "IsPublished": true,
     "IsOrdered": false
+  },
+  {
+    "Id": 1,
+    "OwnerId": 0,
+    "RatingId": 1,
+    "PublishedTime": "2022-11-28T16:23:20.2843574+03:00",
+    "TimesOrdered": 0,
+    "Name": "Volvo Coupe",
+    "BriefDescription": "This is not my car",
+    "Description": "This page is wrong. I dont know how it was created. Please, leave this page asap",
+    "Tariff": {
+      "TariffPerHour": 6,
+      "TariffPerDay": 100
+    },
+    "Image": "/vehicleImages/16_23_20_car3.jpg",
+    "ProductionYear": 2009,
+    "MaxSpeed": 200,
+    "ExteriorColor": "black",
+    "InteriorColor": "white",
+    "Drivetrain": 2,
+    "FuelType": 2,
+    "Transmission": 4,
+    "Engine": 3,
+    "VIN": "12345678910987654",
+    "Location": {
+      "Address": "\u0441\u043E\u0432\u0435\u0442\u0441\u043A\u0438\u0439 \u0440\u0430\u0439\u043E\u043D",
+      "Latitude": "53.95539340000001",
+      "Longitude": "27.5958775"
+    },
+    "IsPublished": true,
+    "IsOrdered": false
   }
 ]

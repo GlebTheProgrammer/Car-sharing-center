@@ -10,5 +10,8 @@ namespace CarSharingApp.Models.VehicleData
         public string BriefDescription { get; set; }
         public Tariff Tariff { get; set; }
         public string Image { get; set; }
+
+        public DateTime LastTimeOrdered { get; set; }
+        public int TimesOrdered { get; set; }
     }
 }
