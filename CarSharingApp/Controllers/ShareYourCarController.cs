@@ -85,6 +85,8 @@ namespace CarSharingApp.Controllers
 
             vehiclesRepository.ShareNewVehicle(vehicleModel);
 
+            currentUserStatusProvider.ChangeSharedNewVehicleState(true);
+
             return RedirectToAction("Index", "CarSharing");
         }
     }

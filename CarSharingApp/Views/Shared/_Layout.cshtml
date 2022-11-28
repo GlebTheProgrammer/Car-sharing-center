@@ -161,6 +161,15 @@
 
             return;
         }
+
+        if ("@currentUserStatusProvider.HasSharedNewVehicle()" === "True") {
+
+            ShowSuccessfulCarSharingMessage();
+
+            @{currentUserStatusProvider.ChangeSharedNewVehicleState(false);}
+
+            return;
+        }
         
         // User changed account data
         if ("@currentUserStatusProvider.HasChangedAccountData()" === "True") {

@@ -15,6 +15,7 @@ namespace CarSharingApp.Services
         public bool HasChangedUserVehicleData { get; set; } = false;
         public bool HasCancelledPayment { get; set; } = false;
         public bool HasCompletedPayment { get; set; } = false;
+        public bool HasSharedVehicle { get; set; } = false;
 
         public int? GetUserId()
         {
@@ -110,6 +111,16 @@ namespace CarSharingApp.Services
         public void ChangeCompletedPaymentProcessState(bool state)
         {
             HasCompletedPayment = state;
+        }
+
+        public void ChangeSharedNewVehicleState(bool state)
+        {
+            HasSharedVehicle = state;
+        }
+
+        public bool HasSharedNewVehicle()
+        {
+            return HasSharedVehicle;
         }
     }
 }

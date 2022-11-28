@@ -146,6 +146,31 @@ function ShowUnauthorizedAccessAttemptMessage() {
     })
 }
 
+// Function to show message about unauthorized access attempt
+function ShowSuccessfulCarSharingMessage() {
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-primary',
+            cancelButton: 'btn btn-secondary'
+        }
+    })
+
+    swalWithBootstrapButtons.fire({
+        title: 'Successfuly shared!',
+        text: "Vehicle was added to your personal account page. Go there and activate it right now!",
+        icon: 'success',
+        showCancelButton: true,
+        confirmButtonColor: '#007aff',
+        confirmButtonText: 'Activate',
+        cancelButtonText: 'Later',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = '/UserPersonalAccount/';
+        }
+    })
+}
+
 // Function to show message about uncompleted order payment process
 function ShowPurchaseCancelledMessage() {
     Swal.fire({

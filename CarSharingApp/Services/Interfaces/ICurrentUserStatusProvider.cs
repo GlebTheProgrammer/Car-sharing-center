@@ -16,6 +16,7 @@ namespace CarSharingApp.Services.Interfaces
         public bool HasChangedVehicleData();
         public bool HasCanceledPaymentProcess();
         public bool HasCompletedPaymentProcess();
+        public bool HasSharedNewVehicle();
 
         public void ChangeSignedInState(bool state);
         public void ChangeLoggedOutState(bool state);
@@ -25,5 +26,6 @@ namespace CarSharingApp.Services.Interfaces
         public void ChangeVehicleDataHasChangedState(bool state);
         public void ChangeCanceledPaymentProcessState(bool state);
         public void ChangeCompletedPaymentProcessState(bool state);
+        public void ChangeSharedNewVehicleState(bool state);
     }
 }
