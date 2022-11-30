@@ -28,36 +28,6 @@ function ShowDeleteVehicleConfirmationAlert(deleteVehicleId) {
     });
 }
 
-// Function for showing alert when user try to finish an existing order
-function ShowFinishOrderConfirmationAlert(orderId) {
-    Swal.fire({
-        title: 'Are you sure you want to finish order?',
-        text: "All unused time you have now will disapperar!",
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#4FA64F',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes'
-    }).then((result) => {
-        if (result.isConfirmed) {
-
-            $.ajax({
-                url: "/UserPersonalAccount/FinishOrder/",
-                data: {
-                    orderId: orderId
-                },
-                method: "POST"
-            });
-
-            localStorage.setItem("HasFinishedOrder", "True");
-
-            // Sometimes window location reload works, sometimes not, so I've putted both to be sure that page will be reloaded successfully
-            window.location.reload(true);
-            document.location.reload(true);
-        }
-    });
-}
-
 // Event listener for showing successful message after vehicle was deleted
 window.addEventListener("DOMContentLoaded", () => {
 
@@ -84,29 +54,57 @@ window.addEventListener("DOMContentLoaded", () => {
 
         return;
     }
-
-    if (localStorage.getItem("HasFinishedOrder") === "True") {
-
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 1500,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer)
-                toast.addEventListener('mouseleave', Swal.resumeTimer)
-            }
-        });
-
-        Toast.fire({
-            icon: 'success',
-            title: 'Order was finished successfully'
-        });
-
-        localStorage.removeItem("HasFinishedOrder");
-
-        return;
-    }
 });
+
+// Function for checking the submit form (that all the ratings were set, if user submits )
+function SubmitFinishOrderForm(e, submitRating) {
+    e.preventDefault();
+
+    if (submitRating === "True") {
+        var errorsCounter = 0;
+
+        if (document.getElementById("TotalConditionStars").textContent === "0") {
+            document.getElementById("ConditionErrorSpan").setAttribute("class", "text-danger text-center");
+            errorsCounter = errorsCounter + 1;
+        }
+        if (document.getElementById("TotalFuelConsumptionStars").textContent === "0") {
+            document.getElementById("FuelConsumptionErrorSpan").setAttribute("class", "text-danger text-center");
+            errorsCounter = errorsCounter + 1;
+        }
+        if (document.getElementById("TotalEasyToDriveStars").textContent === "0") {
+            document.getElementById("EasyToDriveErrorSpan").setAttribute("class", "text-danger text-center");
+            errorsCounter = errorsCounter + 1;
+        }
+        if (document.getElementById("TotalFamilyFriendlyStars").textContent === "0") {
+            document.getElementById("FamilyFriendlyErrorSpan").setAttribute("class", "text-danger text-center");
+            errorsCounter = errorsCounter + 1;
+        }
+        if (document.getElementById("TotalSUVStars").textContent === "0") {
+            document.getElementById("SUVErrorSpan").setAttribute("class", "text-danger text-center");
+            errorsCounter = errorsCounter + 1;
+        }
+
+        if (errorsCounter === 0) {
+            document.getElementById("hasSubmittedRating").checked = true;
+            document.getElementById("hasSubmittedRating").value = true;
+            document.getElementById("FinishOrderForm").submit();
+        }
+    }
+    else {
+        document.getElementById("hasSubmittedRating").checked = false;
+        document.getElementById("hasSubmittedRating").value = false;
+        document.getElementById("FinishOrderForm").submit();
+    }
+}
+
+// Function to hide all error spans connected with rating 
+function SetTotalStarsValueAndHideErrorSpan(componentId, starsValue) {
+
+    var errorSpan = document.getElementById(componentId + "ErrorSpan");
+    errorSpan.setAttribute("class", "visually-hidden");
+
+    var totalAmountSpan = document.getElementById("Total" + componentId + "Stars");
+    totalAmountSpan.textContent = starsValue;
+
+}
 

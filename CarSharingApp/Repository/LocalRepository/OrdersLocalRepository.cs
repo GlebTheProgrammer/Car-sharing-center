@@ -129,7 +129,7 @@ namespace CarSharingApp.Repository.LocalRepository
             if (orders.FirstOrDefault(order => order.OrderedVehicleId == orderedVehicleId) == null)
                 return DateTime.Now;
             else
-                return orders.Where(order => order.OrderedVehicleId == orderedVehicleId).Max(order => order.ExpiredTime);
+                return orders.Where(order => order.OrderedVehicleId == orderedVehicleId).Max(order => order.OrderMadeTime);
         }
 
         public async void DeleteAllVehicleOrders(int vehicleId)

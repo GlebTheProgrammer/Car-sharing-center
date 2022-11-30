@@ -35,7 +35,7 @@
     "OwnerId": 0,
     "RatingId": 1,
     "PublishedTime": "2022-11-28T16:23:20.2843574+03:00",
-    "TimesOrdered": 0,
+    "TimesOrdered": 1,
     "Name": "Volvo Coupe",
     "BriefDescription": "This is not my car",
     "Description": "This page is wrong. I dont know how it was created. Please, leave this page asap",
@@ -59,7 +59,7 @@
       "Longitude": "27.5958775"
     },
     "IsPublished": true,
-    "IsOrdered": false
+    "IsOrdered": true
   },
   {
     "Id": 2,

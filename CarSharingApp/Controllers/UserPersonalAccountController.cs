@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CarSharingApp.Models.ClientData;
 using CarSharingApp.Models.OrderData;
+using CarSharingApp.Models.RatingData;
 using CarSharingApp.Models.VehicleData;
 using CarSharingApp.Repository.Interfaces;
 using CarSharingApp.Services.Includes;
@@ -91,12 +92,33 @@ namespace CarSharingApp.Controllers
             ordersRepository.DeleteAllVehicleOrders(vehicleId);
         }
 
-        public void FinishOrder(int orderId)
+        [HttpPost]
+        public IActionResult FinishOrder(int orderId, int conditionRating, int fuelConsumptionRating, int easyToDriveRating, int familyFriendlyRating, int suvRating, bool hasSubmittedRating)
         {
             var order = ordersRepository.GetOrderById(orderId);
 
+            if (hasSubmittedRating)
+            {
+                var vehicle = vehiclesRepository.GetVehicleById(order.OrderedVehicleId);
+
+                ProvideRatingViewModel userRating = new ProvideRatingViewModel()
+                {
+                    Condition = conditionRating,
+                    FuelConsumption = fuelConsumptionRating,
+                    EasyToDrive = easyToDriveRating,
+                    FamilyFriendly = familyFriendlyRating,
+                    SUV = suvRating
+                };
+
+                ratingRepository.UpdateVehicleRating(vehicle.RatingId, userRating);
+            }
+
             vehiclesRepository.ChangeVehicleIsOrderedState(order.OrderedVehicleId, false);
             ordersRepository.FinishOrder(orderId);
+
+            currentUserStatusProvider.ChangeFinishedActiveOrderState(true);
+
+            return RedirectToAction("Index");
         }
     }
 }

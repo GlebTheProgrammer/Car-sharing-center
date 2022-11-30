@@ -162,6 +162,7 @@
             return;
         }
 
+        // User shared new car
         if ("@currentUserStatusProvider.HasSharedNewVehicle()" === "True") {
 
             ShowSuccessfulCarSharingMessage();
@@ -226,7 +227,17 @@
 
             @{currentUserStatusProvider.ChangeCompletedPaymentProcessState(false);}
 
-                ShowPurchaseCompletedMessage();
+            ShowPurchaseCompletedMessage();
+
+            return;
+        }
+
+        // Finished order from account page
+        if("@currentUserStatusProvider.HasFinishedActiveOrder()" === "True") {
+
+            @{currentUserStatusProvider.ChangeFinishedActiveOrderState(false);}
+
+            ShowSuccessfulOrderFinishedMessage();
 
             return;
         }

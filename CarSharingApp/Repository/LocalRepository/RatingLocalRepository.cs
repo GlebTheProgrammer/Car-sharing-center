@@ -52,18 +52,23 @@ namespace CarSharingApp.Repository.LocalRepository
             return ratings.First(rating => rating.Id == id);
         }
 
-        public async Task UpdateVehicleRating(int ratingId, ProvideRatingViewModel userVehicleRating)
+        public async void UpdateVehicleRating(int ratingId, ProvideRatingViewModel userVehicleRating)
         {
-            var currentRating = ratings.First(rating => rating.Id == ratingId);
+            if (ratings == null)
+                SetUpLocalRepository();
+
+            int replaceIndex = ratings.IndexOf(ratings.First(rating => rating.Id == ratingId));
 
             // Here can be a mistake. Create new object or not??? (Mostly not)
-            currentRating.SUV = (currentRating.SUV * currentRating.ReviewsCount + userVehicleRating.SUV) / (currentRating.ReviewsCount + 1);
-            currentRating.Condition = (currentRating.Condition * currentRating.Condition + userVehicleRating.Condition) / (currentRating.ReviewsCount + 1);
-            currentRating.FuelConsumption = (currentRating.FuelConsumption * currentRating.FuelConsumption + userVehicleRating.FuelConsumption) / (currentRating.ReviewsCount + 1);
-            currentRating.FamilyFriendly = (currentRating.FamilyFriendly * currentRating.FamilyFriendly + userVehicleRating.FamilyFriendly) / (currentRating.ReviewsCount + 1);
-            currentRating.EasyToDrive = (currentRating.EasyToDrive * currentRating.EasyToDrive + userVehicleRating.EasyToDrive) / (currentRating.ReviewsCount + 1);
+            ratings[replaceIndex].SUV = (ratings[replaceIndex].SUV * ratings[replaceIndex].ReviewsCount + userVehicleRating.SUV) / (ratings[replaceIndex].ReviewsCount + 1);
+            ratings[replaceIndex].Condition = (ratings[replaceIndex].Condition * ratings[replaceIndex].ReviewsCount + userVehicleRating.Condition) / (ratings[replaceIndex].ReviewsCount + 1);
+            ratings[replaceIndex].FuelConsumption = (ratings[replaceIndex].FuelConsumption * ratings[replaceIndex].ReviewsCount + userVehicleRating.FuelConsumption) / (ratings[replaceIndex].ReviewsCount + 1);
+            ratings[replaceIndex].FamilyFriendly = (ratings[replaceIndex].FamilyFriendly * ratings[replaceIndex].ReviewsCount + userVehicleRating.FamilyFriendly) / (ratings[replaceIndex].ReviewsCount + 1);
+            ratings[replaceIndex].EasyToDrive = (ratings[replaceIndex].EasyToDrive * ratings[replaceIndex].ReviewsCount + userVehicleRating.EasyToDrive) / (ratings[replaceIndex].ReviewsCount + 1);
 
-            currentRating.Overall = (currentRating.SUV + currentRating.Condition + currentRating.FuelConsumption + currentRating.FamilyFriendly + currentRating.EasyToDrive) / 5;
+            ratings[replaceIndex].Overall = (ratings[replaceIndex].SUV + ratings[replaceIndex].Condition + ratings[replaceIndex].FuelConsumption + ratings[replaceIndex].FamilyFriendly + ratings[replaceIndex].EasyToDrive) / 5;
+
+            ratings[replaceIndex].ReviewsCount += 1;
 
             await SaveChanges();
         }
@@ -81,6 +86,9 @@ namespace CarSharingApp.Repository.LocalRepository
 
         public async void DeleteVehicleRating(int ratingId)
         {
+            if (ratings == null)
+                SetUpLocalRepository();
+
             ratings.Remove(ratings.First(rating => rating.Id == ratingId));
 
             await SaveChanges();

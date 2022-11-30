@@ -130,8 +130,139 @@
                         <td class="">@(timeLeft / 1440 > 0 ? timeLeft / 1440 : "0") days @(timeLeft % 1440 / 60 > 0 ? timeLeft % 1440 / 60 : "0") hours @(timeLeft % 1440 % 60 > 0 ? timeLeft % 1440 % 60 : "0") min</td>
                         <td class="">@(order.OrderMadeTime.AddMinutes(order.PaidTimeInMinutes))</td>
                         <td>
-                            <button type="button" class="btn btn-outline-primary mt-1 mb-1" onclick="ShowFinishOrderConfirmationAlert(@order.Id)">Finish</button>
+                            <button type="button" class="btn btn-outline-primary mt-1 mb-1" data-toggle="modal" data-target="#finishOrderModal">Finish</button>
+
+                            <div class="modal fade" id="finishOrderModal" tabindex="-1" role="dialog" aria-labelledby="finishOrderModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="finishOrderModalLabel">Share your rating with us!</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <form id="FinishOrderForm" asp-controller="UserPersonalAccount" asp-action="FinishOrder" method="post" enctype="multipart/form-data">
+
+                                            <input class="visually-hidden" name="orderId" value="@order.Id" readonly>
+                                            <input id="hasSubmittedRating" class="visually-hidden" type="checkbox" name="hasSubmittedRating" value="false">
+
+                                            <div class="modal-body">
+
+                                                <p>It's important for us to know your opinion about other person's vehicle. Your rating will not only help us to ensure that vehicle is real, but at the same time it will help other users to make a decision about taking this one or not.</p>
+
+                                                @*Section for Condition rating starts here*@
+                                                <span id="ConditionErrorSpan" class="text-danger text-center visually-hidden">Condition rating must be set before submitting</span>
+                                                <div class="form-group d-flex justify-content-left align-items-center mb-0">
+                                                    <span class="mr-2" style="font-size: 20px;">Condition: </span>
+                                                    <div class="stars">
+                                                        <input class="star star-5" id="star-5-Condition" type="radio" name="conditionRating" value="5" onclick="SetTotalStarsValueAndHideErrorSpan('Condition', '5')"/>
+                                                        <label class="star star-5" for="star-5-Condition"></label>
+                                                        <input class="star star-4" id="star-4-Condition" type="radio" name="conditionRating" value="4" onclick="SetTotalStarsValueAndHideErrorSpan('Condition', '4')" />
+                                                        <label class="star star-4" for="star-4-Condition"></label>
+                                                        <input class="star star-3" id="star-3-Condition" type="radio" name="conditionRating" value="3" onclick="SetTotalStarsValueAndHideErrorSpan('Condition', '3')" />
+                                                        <label class="star star-3" for="star-3-Condition"></label>
+                                                        <input class="star star-2" id="star-2-Condition" type="radio" name="conditionRating" value="2" onclick="SetTotalStarsValueAndHideErrorSpan('Condition', '2')" />
+                                                        <label class="star star-2" for="star-2-Condition"></label>
+                                                        <input class="star star-1" id="star-1-Condition" type="radio" name="conditionRating" value="1" onclick="SetTotalStarsValueAndHideErrorSpan('Condition', '1')" />
+                                                        <label class="star star-1" for="star-1-Condition"></label>
+                                                    </div>
+                                                    <span class="ml-2" style="font-size: 17px;">Total: <span id="TotalConditionStars">0</span></span>
+                                                </div>
+                                                @*Section for Condition rating ends here*@
+
+                                                @*Section for Fuel Consumption rating starts here*@
+                                                <span id="FuelConsumptionErrorSpan" class="text-danger text-center visually-hidden">Fuel consumption rating must be set before submitting</span>
+                                                <div class="form-group d-flex justify-content-left align-items-center mb-0">
+                                                    <span class="mr-2" style="font-size: 20px;">Fuel Consumpt.: </span>
+                                                    <div class="stars">
+                                                        <input class="star star-5" id="star-5-FuelConsumption" type="radio" name="fuelConsumptionRating" value="5" onclick="SetTotalStarsValueAndHideErrorSpan('FuelConsumption', '5')" />
+                                                        <label class="star star-5" for="star-5-FuelConsumption"></label>
+                                                        <input class="star star-4" id="star-4-FuelConsumption" type="radio" name="fuelConsumptionRating" value="4" onclick="SetTotalStarsValueAndHideErrorSpan('FuelConsumption', '4')" />
+                                                        <label class="star star-4" for="star-4-FuelConsumption"></label>
+                                                        <input class="star star-3" id="star-3-FuelConsumption" type="radio" name="fuelConsumptionRating" value="3" onclick="SetTotalStarsValueAndHideErrorSpan('FuelConsumption', '3')" />
+                                                        <label class="star star-3" for="star-3-FuelConsumption"></label>
+                                                        <input class="star star-2" id="star-2-FuelConsumption" type="radio" name="fuelConsumptionRating" value="2" onclick="SetTotalStarsValueAndHideErrorSpan('FuelConsumption', '2')" />
+                                                        <label class="star star-2" for="star-2-FuelConsumption"></label>
+                                                        <input class="star star-1" id="star-1-FuelConsumption" type="radio" name="fuelConsumptionRating" value="1" onclick="SetTotalStarsValueAndHideErrorSpan('FuelConsumption', '1')" />
+                                                        <label class="star star-1" for="star-1-FuelConsumption"></label>
+                                                    </div>
+                                                    <span class="ml-2" style="font-size: 17px;">Total: <span id="TotalFuelConsumptionStars">0</span></span>
+                                                </div>
+                                                @*Section for Fuel Consumption rating ends here*@
+
+                                                @*Section for Easy-to-drive rating starts here*@
+                                                <span id="EasyToDriveErrorSpan" class="text-danger text-center visually-hidden">Easy To Drive rating must be set before submitting</span>
+                                                <div class="form-group d-flex justify-content-left align-items-center mb-0">
+                                                    <span class="mr-2" style="font-size: 20px;">Easy to drive: </span>
+                                                    <div class="stars">
+                                                        <input class="star star-5" id="star-5-EasyToDrive" type="radio" name="easyToDriveRating" value="5" onclick="SetTotalStarsValueAndHideErrorSpan('EasyToDrive', '5')" />
+                                                        <label class="star star-5" for="star-5-EasyToDrive"></label>
+                                                        <input class="star star-4" id="star-4-EasyToDrive" type="radio" name="easyToDriveRating" value="4" onclick="SetTotalStarsValueAndHideErrorSpan('EasyToDrive', '4')" />
+                                                        <label class="star star-4" for="star-4-EasyToDrive"></label>
+                                                        <input class="star star-3" id="star-3-EasyToDrive" type="radio" name="easyToDriveRating" value="3" onclick="SetTotalStarsValueAndHideErrorSpan('EasyToDrive', '3')" />
+                                                        <label class="star star-3" for="star-3-EasyToDrive"></label>
+                                                        <input class="star star-2" id="star-2-EasyToDrive" type="radio" name="easyToDriveRating" value="2" onclick="SetTotalStarsValueAndHideErrorSpan('EasyToDrive', '2')" />
+                                                        <label class="star star-2" for="star-2-EasyToDrive"></label>
+                                                        <input class="star star-1" id="star-1-EasyToDrive" type="radio" name="easyToDriveRating" value="1" onclick="SetTotalStarsValueAndHideErrorSpan('EasyToDrive', '1')" />
+                                                        <label class="star star-1" for="star-1-EasyToDrive"></label>
+                                                    </div>
+                                                    <span class="ml-2" style="font-size: 17px;">Total: <span id="TotalEasyToDriveStars">0</span></span>
+                                                </div>
+                                                @*Section for Easy-to-drive rating ends here*@
+
+                                                @*Section for Family Friendly rating starts here*@
+                                                <span id="FamilyFriendlyErrorSpan" class="text-danger text-center visually-hidden">Family friendly rating must be set before submitting</span>
+                                                <div class="form-group d-flex justify-content-left align-items-center mb-0">
+                                                    <span class="mr-2" style="font-size: 20px;">Family friendly: </span>
+                                                    <div class="stars">
+                                                        <input class="star star-5" id="star-5-FamilyFriendly" type="radio" name="familyFriendlyRating" value="5" onclick="SetTotalStarsValueAndHideErrorSpan('FamilyFriendly', '5')" />
+                                                        <label class="star star-5" for="star-5-FamilyFriendly"></label>
+                                                        <input class="star star-4" id="star-4-FamilyFriendly" type="radio" name="familyFriendlyRating" value="4" onclick="SetTotalStarsValueAndHideErrorSpan('FamilyFriendly', '4')" />
+                                                        <label class="star star-4" for="star-4-FamilyFriendly"></label>
+                                                        <input class="star star-3" id="star-3-FamilyFriendly" type="radio" name="familyFriendlyRating" value="3" onclick="SetTotalStarsValueAndHideErrorSpan('FamilyFriendly', '3')" />
+                                                        <label class="star star-3" for="star-3-FamilyFriendly"></label>
+                                                        <input class="star star-2" id="star-2-FamilyFriendly" type="radio" name="familyFriendlyRating" value="2" onclick="SetTotalStarsValueAndHideErrorSpan('FamilyFriendly', '2')" />
+                                                        <label class="star star-2" for="star-2-FamilyFriendly"></label>
+                                                        <input class="star star-1" id="star-1-FamilyFriendly" type="radio" name="familyFriendlyRating" value="1" onclick="SetTotalStarsValueAndHideErrorSpan('FamilyFriendly', '1')" />
+                                                        <label class="star star-1" for="star-1-FamilyFriendly"></label>
+                                                    </div>
+                                                    <span class="ml-2" style="font-size: 17px;">Total: <span id="TotalFamilyFriendlyStars">0</span></span>
+                                                </div>
+                                                @*Section for Family Friendly rating ends here*@
+
+                                                @*Section for suv rating starts here*@
+                                                <span id="SUVErrorSpan" class="text-danger text-center visually-hidden">SUV rating must be set before submitting</span>
+                                                <div class="form-group d-flex justify-content-left align-items-center mb-0">
+                                                    <span class="mr-2" style="font-size: 20px;">SUV: </span>
+                                                    <div class="stars">
+                                                        <input class="star star-5" id="star-5-SUV" type="radio" name="suvRating" value="5" onclick="SetTotalStarsValueAndHideErrorSpan('SUV', '5')" />
+                                                        <label class="star star-5" for="star-5-SUV"></label>
+                                                        <input class="star star-4" id="star-4-SUV" type="radio" name="suvRating" value="4" onclick="SetTotalStarsValueAndHideErrorSpan('SUV', '4')" />
+                                                        <label class="star star-4" for="star-4-SUV"></label>
+                                                        <input class="star star-3" id="star-3-SUV" type="radio" name="suvRating" value="3" onclick="SetTotalStarsValueAndHideErrorSpan('SUV', '3')" />
+                                                        <label class="star star-3" for="star-3-SUV"></label>
+                                                        <input class="star star-2" id="star-2-SUV" type="radio" name="suvRating" value="2" onclick="SetTotalStarsValueAndHideErrorSpan('SUV', '2')" />
+                                                        <label class="star star-2" for="star-2-SUV"></label>
+                                                        <input class="star star-1" id="star-1-SUV" type="radio" name="suvRating" value="1" onclick="SetTotalStarsValueAndHideErrorSpan('SUV', '1')" />
+                                                        <label class="star star-1" for="star-1-SUV"></label>
+                                                    </div>
+                                                    <span class="ml-2" style="font-size: 17px;">Total: <span id="TotalSUVStars">0</span></span>
+                                                </div>
+                                                @*Section for suv rating ends here*@
+
+                                            </div>
+
+                                            <div class="modal-footer justify-content-center">
+                                                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cancel</button>
+                                                <button type="button" class="btn btn-outline-info" onclick="SubmitFinishOrderForm(event, 'False')">Finish and not Submit</button>
+                                                <button type="button" class="btn btn-outline-success" onclick="SubmitFinishOrderForm(event, 'True')">Submit and Finish</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </td>
+
                     </tr>
                 }
             </tbody>
