@@ -1,6 +1,6 @@
 ﻿using CarSharingApp.Models.OrderData;
 
-namespace CarSharingApp.Repository.Interfaces
+namespace CarSharingApp.Repository.Interfaces.Includes
 {
     public interface IOrdersRepository
     {

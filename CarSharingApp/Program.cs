@@ -6,24 +6,19 @@ using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 
 // Sessions setting
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(60); // Session time regulates here
+    options.IdleTimeout = TimeSpan.FromMinutes(60);
 });
 
-// Connect AutoMapper in the program
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Dependency injection is here
-builder.Services.AddSingleton<IVehiclesRepository, VehiclesLocalRepository>();
-builder.Services.AddSingleton<IClientsRepository, ClientsLocalRepository>();
-builder.Services.AddSingleton<IOrdersRepository, OrdersLocalRepository>();
-builder.Services.AddSingleton<IRatingRepository, RatingLocalRepository>();
+builder.Services.AddSingleton<IRepositoryManager, LocalRepositoryManager>();
 
 builder.Services.AddScoped<IFileUploadService, LocalFileUploadService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -35,7 +30,7 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+
     app.UseHsts();
 }
 
@@ -49,7 +44,6 @@ app.UseAuthorization();
 
 StripeConfiguration.ApiKey = "sk_test_51M6B0AGBXizEWSwDh5mkyk4o3DvKzmywGwJh7Fg2cpd9mxmhLiIPkARsFcvN3Yov0Qyshlqu8gITm3NGPPReXtbW00dvIu6aGa";
 
-// Here we can specify the start page wich is shown to the user
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

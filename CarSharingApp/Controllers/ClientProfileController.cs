@@ -9,35 +9,33 @@ namespace CarSharingApp.Controllers
 {
     public class ClientProfileController : Controller
     {
-        private readonly IVehiclesRepository vehiclesRepository;
-        private readonly IClientsRepository clientsRepository;
-        private readonly IMapper mapper;
-        private readonly ICurrentUserStatusProvider userStatusProvider;
+        private readonly IRepositoryManager _repositoryManager;
+        private readonly IMapper _mapper;
+        private readonly ICurrentUserStatusProvider _userStatusProvider;
 
-        public ClientProfileController(IVehiclesRepository vehiclesRepository, IClientsRepository clientsRepository, IMapper mapper, ICurrentUserStatusProvider userStatusProvider)
+        public ClientProfileController(IRepositoryManager repositoryManager, IMapper mapper, ICurrentUserStatusProvider userStatusProvider)
         {
-            this.vehiclesRepository = vehiclesRepository;
-            this.clientsRepository = clientsRepository;
-            this.mapper = mapper;
-            this.userStatusProvider = userStatusProvider;
+            _repositoryManager = repositoryManager;
+            _mapper = mapper;
+            _userStatusProvider = userStatusProvider;
         }
 
         public IActionResult Index(int vehicleId)
         {
-            if (userStatusProvider.HasUserLoggedOut())
+            if (_userStatusProvider.HasUserLoggedOut())
                 return RedirectToAction("Index", "Home");
 
-            if (userStatusProvider.GetUserRole() != UserRole.Client)
+            if (_userStatusProvider.GetUserRole() != UserRole.Client)
             {
-                userStatusProvider.ChangeUnauthorizedAccessState(true);
+                _userStatusProvider.ChangeUnauthorizedAccessState(true);
                 return RedirectToAction("Index", "Home");
             }
 
-            var vehicle = vehiclesRepository.GetVehicleById(vehicleId);
+            var vehicle = _repositoryManager.VehiclesRepository.GetVehicleById(vehicleId);
 
-            var client = clientsRepository.GetClientById(vehicle.OwnerId);
+            var client = _repositoryManager.ClientsRepository.GetClientById(vehicle.OwnerId);
 
-            var viewModel = mapper.Map<ClientProfileViewModel>(client);
+            var viewModel = _mapper.Map<ClientProfileViewModel>(client);
             viewModel.VehicleId = vehicleId;
 
             return View(viewModel);

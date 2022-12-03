@@ -1,7 +1,7 @@
 ﻿using CarSharingApp.Models.ClientData;
 using CarSharingApp.Models.VehicleData;
 
-namespace CarSharingApp.Repository.Interfaces
+namespace CarSharingApp.Repository.Interfaces.Includes
 {
     public interface IClientsRepository
     {

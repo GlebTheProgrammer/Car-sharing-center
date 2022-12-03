@@ -4,10 +4,6 @@
 @using CarSharingApp.Views.CarSharing
 @model CarSharingDataViewModel
 
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-
 @{
     Pager pager = new Pager();
 
@@ -33,7 +29,7 @@
 <div class="d-flex flex-row col-sm-12 ">
     <label class="mr-2">Show</label>
     <form asp-controller="CarSharing" asp-action="Index" method="post" >
-        <select name="pageSizeStr" id="totalVehiclesDisplayedSelect" class="custom-select custom-select-sm form-control form-control-sm">
+        <select name="pageSize" id="totalVehiclesDisplayedSelect" class="custom-select custom-select-sm form-control form-control-sm">
             <option value="3">3</option>
             <option value="6">6</option>
             <option value="9">9</option>
@@ -57,7 +53,7 @@
                 foreach (var vehicle in vehiclesForFirstColumn)
                 {
                     <div class="card mb-4">
-                        <img class="card-img-top" src="@vehicle.Image">
+                        <img class="card-img-top" src="~/vehicleImages/@vehicle.Image">
 
                         <div class="card-body">
                             <h3 class="card-title">@vehicle.Name</h3>
@@ -89,7 +85,7 @@
                 foreach (var vehicle in vehiclesForSecondColumn)
                 {
                     <div class="card mb-4">
-                        <img class="card-img-top" src="@vehicle.Image">
+                        <img class="card-img-top" src="~/vehicleImages/@vehicle.Image">
 
                         <div class="card-body">
                             <h3 class="card-title">@vehicle.Name</h3>
@@ -121,7 +117,7 @@
                 foreach (var vehicle in vehiclesForThirdColumn)
                 {
                     <div class="card mb-4">
-                        <img class="card-img-top" src="@vehicle.Image">
+                        <img class="card-img-top" src="~/vehicleImages/@vehicle.Image">
 
                         <div class="card-body">
                             <h3 class="card-title">@vehicle.Name</h3>

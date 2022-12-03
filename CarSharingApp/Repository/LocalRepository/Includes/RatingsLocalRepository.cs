@@ -1,17 +1,17 @@
 ﻿using CarSharingApp.Models.RatingData;
-using CarSharingApp.Repository.Interfaces;
+using CarSharingApp.Repository.Interfaces.Includes;
 using System.Text.Json;
 
-namespace CarSharingApp.Repository.LocalRepository
+namespace CarSharingApp.Repository.LocalRepository.Includes
 {
-    public class RatingLocalRepository : IRatingRepository
+    public sealed class RatingsLocalRepository : IRatingsRepository
     {
+        private const string filePath = "~/../Repository/LocalRepository/Data/RatingData.json";
+
         private List<RatingModel> ratings;
 
-        private void SetUpLocalRepository()
+        public RatingsLocalRepository()
         {
-            string filePath = "~/../Repository/LocalRepository/Data/RatingData.json";
-
             if (File.Exists(filePath))
             {
                 string jsonString = File.ReadAllText(filePath);
@@ -25,19 +25,12 @@ namespace CarSharingApp.Repository.LocalRepository
 
         public async Task<int> CreateNewVehicleRating()
         {
-            if (ratings == null)
-                SetUpLocalRepository();
-
             var newRating = new RatingModel();
 
             if (ratings.Count == 0)
-            {
                 newRating.Id = 0;
-            }
             else
-            {
                 newRating.Id = ratings.Max(vehicle => vehicle.Id) + 1;
-            }
 
             ratings.Add(newRating);
             await SaveChanges();
@@ -46,20 +39,13 @@ namespace CarSharingApp.Repository.LocalRepository
 
         public RatingModel GetVehicleRatingById(int id)
         {
-            if (ratings == null)
-                SetUpLocalRepository();
-
             return ratings.First(rating => rating.Id == id);
         }
 
         public async void UpdateVehicleRating(int ratingId, ProvideRatingViewModel userVehicleRating)
         {
-            if (ratings == null)
-                SetUpLocalRepository();
-
             int replaceIndex = ratings.IndexOf(ratings.First(rating => rating.Id == ratingId));
 
-            // Here can be a mistake. Create new object or not??? (Mostly not)
             ratings[replaceIndex].SUV = (ratings[replaceIndex].SUV * ratings[replaceIndex].ReviewsCount + userVehicleRating.SUV) / (ratings[replaceIndex].ReviewsCount + 1);
             ratings[replaceIndex].Condition = (ratings[replaceIndex].Condition * ratings[replaceIndex].ReviewsCount + userVehicleRating.Condition) / (ratings[replaceIndex].ReviewsCount + 1);
             ratings[replaceIndex].FuelConsumption = (ratings[replaceIndex].FuelConsumption * ratings[replaceIndex].ReviewsCount + userVehicleRating.FuelConsumption) / (ratings[replaceIndex].ReviewsCount + 1);
@@ -75,8 +61,6 @@ namespace CarSharingApp.Repository.LocalRepository
 
         public async Task SaveChanges()
         {
-            string filePath = "~/../Repository/LocalRepository/Data/RatingData.json";
-
             var options = new JsonSerializerOptions { WriteIndented = true };
 
             using FileStream createStream = File.Create(filePath);
@@ -86,9 +70,6 @@ namespace CarSharingApp.Repository.LocalRepository
 
         public async void DeleteVehicleRating(int ratingId)
         {
-            if (ratings == null)
-                SetUpLocalRepository();
-
             ratings.Remove(ratings.First(rating => rating.Id == ratingId));
 
             await SaveChanges();

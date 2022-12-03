@@ -11,7 +11,7 @@
     "PaidTimeInMinutes": 120
   },
   {
-    "IsActive": true,
+    "IsActive": false,
     "Id": 1,
     "OrderedUserId": 1,
     "OrderedVehicleId": 1,

@@ -1,19 +1,18 @@
 ﻿using CarSharingApp.Models.ClientData;
 using CarSharingApp.Models.ClientData.Includes;
-using CarSharingApp.Models.VehicleData;
-using CarSharingApp.Repository.Interfaces;
+using CarSharingApp.Repository.Interfaces.Includes;
 using System.Text.Json;
 
-namespace CarSharingApp.Repository.LocalRepository
+namespace CarSharingApp.Repository.LocalRepository.Includes
 {
-    public class ClientsLocalRepository : IClientsRepository
+    public sealed class ClientsLocalRepository : IClientsRepository
     {
+        private const string filePath = "~/../Repository/LocalRepository/Data/ClientsData.json";
+
         private List<ClientModel> clients;
 
-        private void SetUpLocalRepository()
+        public ClientsLocalRepository()
         {
-            string filePath = "~/../Repository/LocalRepository/Data/ClientsData.json";
-
             if (File.Exists(filePath))
             {
                 string jsonString = File.ReadAllText(filePath);
@@ -25,36 +24,8 @@ namespace CarSharingApp.Repository.LocalRepository
             }
         }
 
-        private string GetPasswordHash(string password, string salt = "")
-        {
-            if (string.IsNullOrEmpty(password))
-            {
-                return string.Empty;
-            }
-
-            using(var sha = new System.Security.Cryptography.SHA256Managed())
-            {
-                byte[] passwordBytes = System.Text.Encoding.UTF8.GetBytes(password + salt);
-
-                byte[] hashBytes = sha.ComputeHash(passwordBytes);
-
-                string hash = BitConverter.ToString(hashBytes).Replace("-", string.Empty);
-
-                return hash;
-            }
-        }
-
-
-
-
-
-
-
         public async void AddNewClient(ClientModel client)
         {
-            if (clients == null)
-                SetUpLocalRepository();
-
             if (clients.Count == 0)
                 client.Id = 0;
             else
@@ -69,24 +40,16 @@ namespace CarSharingApp.Repository.LocalRepository
 
         public IEnumerable<ClientModel> GetAllClients()
         {
-            if (clients == null)
-                SetUpLocalRepository();
-
             return clients;
         }
 
         public ClientModel GetClientById(int id)
         {
-            if (clients == null)
-                SetUpLocalRepository();
-
             return clients.First(vehicle => vehicle.Id == id);
         }
 
         public async Task SaveChanges()
         {
-            string filePath = "~/../Repository/LocalRepository/Data/ClientsData.json";
-
             var options = new JsonSerializerOptions { WriteIndented = true };
 
             using FileStream createStream = File.Create(filePath);
@@ -96,11 +59,7 @@ namespace CarSharingApp.Repository.LocalRepository
 
         public ClientModel TrySignIn(string email, string password)
         {
-            if (clients == null)
-                SetUpLocalRepository();
-
             string hashPassword = GetPasswordHash(password);
-
 
             var signInUser = clients.FirstOrDefault(client => client.Email == email && client.Password == hashPassword);
 
@@ -109,9 +68,6 @@ namespace CarSharingApp.Repository.LocalRepository
 
         public string GetClientUsername(int id)
         {
-            if (clients == null)
-                SetUpLocalRepository();
-
             return clients.First(client => client.Id == id).Username;
         }
 
@@ -144,6 +100,27 @@ namespace CarSharingApp.Repository.LocalRepository
             clients[orderedClientIndex].VehiclesOrdered += 1;
 
             await SaveChanges();
+        }
+
+
+
+
+
+        private string GetPasswordHash(string password, string salt = "")
+        {
+            if (string.IsNullOrEmpty(password))
+                return string.Empty;
+
+            using (var sha = new System.Security.Cryptography.SHA256Managed())
+            {
+                byte[] passwordBytes = System.Text.Encoding.UTF8.GetBytes(password + salt);
+
+                byte[] hashBytes = sha.ComputeHash(passwordBytes);
+
+                string hash = BitConverter.ToString(hashBytes).Replace("-", string.Empty);
+
+                return hash;
+            }
         }
     }
 }

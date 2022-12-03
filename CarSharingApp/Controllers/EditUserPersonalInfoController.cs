@@ -2,6 +2,7 @@
 using CarSharingApp.Models.ClientData;
 using CarSharingApp.Models.VehicleData;
 using CarSharingApp.Repository.Interfaces;
+using CarSharingApp.Repository.Interfaces.Includes;
 using CarSharingApp.Services.Includes;
 using CarSharingApp.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -10,48 +11,47 @@ namespace CarSharingApp.Controllers
 {
     public class EditUserPersonalInfoController : Controller
     {
-        private readonly IClientsRepository clientsRepository;
-        private readonly IMapper mapper;
-        private readonly ICurrentUserStatusProvider currentUserStatusProvider;
+        private readonly IRepositoryManager _repositoryManager;
+        private readonly IMapper _mapper;
+        private readonly ICurrentUserStatusProvider _currentUserStatusProvider;
 
-        public EditUserPersonalInfoController(IClientsRepository clientsRepository, IMapper mapper, ICurrentUserStatusProvider currentUserStatusProvider)
+        public EditUserPersonalInfoController(IRepositoryManager repositoryManager, IMapper mapper, ICurrentUserStatusProvider currentUserStatusProvider)
         {
-            this.clientsRepository = clientsRepository;
-            this.mapper = mapper;
-            this.currentUserStatusProvider = currentUserStatusProvider;
+            _repositoryManager = repositoryManager;
+            _mapper = mapper;
+            _currentUserStatusProvider = currentUserStatusProvider;
         }
 
         public IActionResult Index()
         {
-            if (currentUserStatusProvider.HasUserLoggedOut())
+            if (_currentUserStatusProvider.HasUserLoggedOut())
                 return RedirectToAction("Index", "Home");
 
-            if (currentUserStatusProvider.GetUserRole() != UserRole.Client)
+            if (_currentUserStatusProvider.GetUserRole() != UserRole.Client)
             {
-                currentUserStatusProvider.ChangeUnauthorizedAccessState(true);
+                _currentUserStatusProvider.ChangeUnauthorizedAccessState(true);
                 return RedirectToAction("Index", "Home");
             }
 
-            var viewModel = mapper.Map<ClientEditInfoViewModel>(clientsRepository.GetClientById((int)currentUserStatusProvider.GetUserId()));
+            var viewModel = _mapper.Map<ClientEditInfoViewModel>(_repositoryManager.ClientsRepository.GetClientById((int)_currentUserStatusProvider.GetUserId()));
 
             return View(viewModel);
         }
 
         public IActionResult ChangeUserPersonalInfo(ClientEditInfoViewModel viewModel)
         {
-            // If validation error occured -> return same view with errors and current model
             if (!ModelState.IsValid)
             {
                 return View("Index", viewModel);
             }
 
-            var userModel = clientsRepository.GetClientById(viewModel.Id);
+            var userModel = _repositoryManager.ClientsRepository.GetClientById(viewModel.Id);
 
             Merge<ClientEditInfoViewModel>(userModel, viewModel);
 
-            clientsRepository.UpdateClient(userModel);
+            _repositoryManager.ClientsRepository.UpdateClient(userModel);
 
-            currentUserStatusProvider.ChangeAccountDataHasChangedState(true);
+            _currentUserStatusProvider.ChangeAccountDataHasChangedState(true);
 
             return RedirectToAction("Index");
         }
@@ -60,9 +60,9 @@ namespace CarSharingApp.Controllers
         public IActionResult ChangeUserPassword(string newPassword)
         {
 
-            clientsRepository.UpdateClientPassword((int)currentUserStatusProvider.GetUserId(), newPassword);
+            _repositoryManager.ClientsRepository.UpdateClientPassword((int)_currentUserStatusProvider.GetUserId(), newPassword);
 
-            currentUserStatusProvider.ChangePasswordDataHasChangedState(true);
+            _currentUserStatusProvider.ChangePasswordDataHasChangedState(true);
 
             return RedirectToAction("Index");
         }

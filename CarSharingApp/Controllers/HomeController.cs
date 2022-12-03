@@ -1,6 +1,5 @@
 ﻿using CarSharingApp.Models;
 using CarSharingApp.Repository.Interfaces;
-using CarSharingApp.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -8,28 +7,25 @@ namespace CarSharingApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IVehiclesRepository vehiclesRepository;
-        private readonly IOrdersRepository ordersRepository;
+        private readonly IRepositoryManager _repositoryManager;
 
-        public HomeController(IVehiclesRepository vehiclesRepository, IOrdersRepository ordersRepository)
+        public HomeController(IRepositoryManager repositoryManager)
         {
-            this.vehiclesRepository = vehiclesRepository;
-            this.ordersRepository = ordersRepository;
+            _repositoryManager= repositoryManager;
         }
 
         public IActionResult Index()
         {
-            // Проверка заказов на просроченное время
-            var vehiclesIds = ordersRepository.CheckExpiredOrdersAndGetVehiclesId().Result;
+            var vehiclesIds = _repositoryManager.OrdersRepository.CheckExpiredOrdersAndGetVehiclesId().Result;
             if (vehiclesIds.Count > 0)
-                vehiclesRepository.ChangeVehiclesIsOrderedState(vehiclesIds, false);
+                _repositoryManager.VehiclesRepository.ChangeVehiclesIsOrderedState(vehiclesIds, false);
 
-            int vehiclesCount = vehiclesRepository.GetAllVehiclesForCatalog().Count();
+            int vehiclesCount = _repositoryManager.VehiclesRepository.GetAllVehiclesForCatalog().Count();
 
             float[][] array = new float[vehiclesCount][];
 
             int i = 0;
-            foreach (var vehicle in vehiclesRepository.GetAllVehiclesForCatalog())
+            foreach (var vehicle in _repositoryManager.VehiclesRepository.GetAllVehiclesForCatalog())
             {
                 string latitude = vehicle.Location.Latitude.Replace('.', ',');
                 string longitude = vehicle.Location.Longitude.Replace('.', ',');
@@ -38,11 +34,6 @@ namespace CarSharingApp.Controllers
             }
 
             return View(array);
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

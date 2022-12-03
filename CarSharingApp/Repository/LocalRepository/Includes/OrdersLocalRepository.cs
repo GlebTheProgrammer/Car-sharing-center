@@ -1,19 +1,17 @@
 ﻿using CarSharingApp.Models.OrderData;
-using CarSharingApp.Models.RatingData;
-using CarSharingApp.Models.VehicleData;
-using CarSharingApp.Repository.Interfaces;
+using CarSharingApp.Repository.Interfaces.Includes;
 using System.Text.Json;
 
-namespace CarSharingApp.Repository.LocalRepository
+namespace CarSharingApp.Repository.LocalRepository.Includes
 {
-    public class OrdersLocalRepository : IOrdersRepository
+    public sealed class OrdersLocalRepository : IOrdersRepository
     {
+        private const string filePath = "~/../Repository/LocalRepository/Data/OrdersData.json";
+
         private List<OrderModel> orders;
 
-        private void SetUpLocalRepository()
+        public OrdersLocalRepository()
         {
-            string filePath = "~/../Repository/LocalRepository/Data/OrdersData.json";
-
             if (File.Exists(filePath))
             {
                 string jsonString = File.ReadAllText(filePath);
@@ -27,33 +25,21 @@ namespace CarSharingApp.Repository.LocalRepository
 
         public int GetNumberOfVehicleOrders(int vehicleId)
         {
-            if (orders == null)
-                SetUpLocalRepository();
-
             return orders.Where(order => order.OrderedVehicleId == vehicleId).Count();
         }
 
         public int GetNumberOfActiveOrdersForAUser(int userId)
         {
-            if (orders == null)
-                SetUpLocalRepository();
-
             return orders.Where(order => order.IsActive && order.OrderedUserId == userId).Count();
         }
 
         public List<OrderModel> GetActiveOrdersForAUser(int userId)
         {
-            if (orders == null)
-                SetUpLocalRepository();
-
             return orders.Where(order => order.IsActive && order.OrderedUserId == userId).ToList();
         }
 
         public async void AddNewOrder(OrderModel newOrder)
         {
-            if (orders == null)
-                SetUpLocalRepository();
-
             if (orders.Count == 0)
                 newOrder.Id = 0;
             else
@@ -66,8 +52,6 @@ namespace CarSharingApp.Repository.LocalRepository
 
         public async Task SaveChanges()
         {
-            string filePath = "~/../Repository/LocalRepository/Data/OrdersData.json";
-
             var options = new JsonSerializerOptions { WriteIndented = true };
 
             using FileStream createStream = File.Create(filePath);
@@ -77,9 +61,6 @@ namespace CarSharingApp.Repository.LocalRepository
 
         public OrderModel GetOrderById(int orderId)
         {
-            if (orders == null)
-                SetUpLocalRepository();
-
             return orders.First(order => order.Id == orderId);
         }
 
@@ -94,9 +75,6 @@ namespace CarSharingApp.Repository.LocalRepository
 
         public async Task<List<int>> CheckExpiredOrdersAndGetVehiclesId()
         {
-            if (orders == null)
-                SetUpLocalRepository();
-
             List<int> result = new List<int>();
             DateTime now = DateTime.Now;
 
@@ -121,11 +99,6 @@ namespace CarSharingApp.Repository.LocalRepository
 
         public DateTime GetLastOrderExpiredDate(int orderedVehicleId)
         {
-            if (orders == null)
-                SetUpLocalRepository();
-
-            // Проверка на возможность вывода времени производится по числу заказов на автомобиль. Возвращая DateTime.Now мы можем быть уверены, что эти данные нигде не будут выведены
-
             if (orders.FirstOrDefault(order => order.OrderedVehicleId == orderedVehicleId) == null)
                 return DateTime.Now;
             else
@@ -134,9 +107,6 @@ namespace CarSharingApp.Repository.LocalRepository
 
         public async void DeleteAllVehicleOrders(int vehicleId)
         {
-            if (orders == null)
-                SetUpLocalRepository();
-
             orders.RemoveAll(order => order.OrderedVehicleId == vehicleId);
 
             await SaveChanges();

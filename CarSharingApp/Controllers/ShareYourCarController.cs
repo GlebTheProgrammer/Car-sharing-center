@@ -1,41 +1,36 @@
 ﻿using AutoMapper;
 using CarSharingApp.Models.VehicleData;
-using CarSharingApp.Repository.Interfaces;
 using CarSharingApp.Services.Interfaces;
 using CarSharingApp.Services.Includes;
 using Microsoft.AspNetCore.Mvc;
+using CarSharingApp.Repository.Interfaces;
 
 namespace CarSharingApp.Controllers
 {
     public class ShareYourCarController : Controller
     {
-
-        private readonly IVehiclesRepository vehiclesRepository;
-        private readonly IMapper mapper;
-        private readonly IFileUploadService fileUploadService;
-        private readonly ICurrentUserStatusProvider currentUserStatusProvider;
-        private readonly IRatingRepository ratingRepository;
+        private readonly IRepositoryManager _repositoryManager;
+        private readonly IMapper _mapper;
+        private readonly IFileUploadService _fileUploadService;
+        private readonly ICurrentUserStatusProvider _currentUserStatusProvider;
 
 
-        public ShareYourCarController(IVehiclesRepository vehiclesRepository, IMapper mapper, IFileUploadService fileUploadService, ICurrentUserStatusProvider currentUserStatusProvider, 
-                                      IRatingRepository ratingRepository)
+        public ShareYourCarController(IRepositoryManager repositoryManager, IMapper mapper, IFileUploadService fileUploadService, ICurrentUserStatusProvider currentUserStatusProvider)
         {
-            this.vehiclesRepository = vehiclesRepository;
-            this.mapper = mapper;
-            this.fileUploadService = fileUploadService;
-            this.currentUserStatusProvider = currentUserStatusProvider;
-            this.ratingRepository = ratingRepository;
+            _repositoryManager = repositoryManager;
+            _mapper = mapper;
+            _fileUploadService = fileUploadService;
+            _currentUserStatusProvider = currentUserStatusProvider;
         }
 
-        // Return basic view with page
         public IActionResult Index()
         {
-            if (currentUserStatusProvider.HasUserLoggedOut())
+            if (_currentUserStatusProvider.HasUserLoggedOut())
                 return RedirectToAction("Index", "Home");
 
-            if (currentUserStatusProvider.GetUserRole() != UserRole.Client)
+            if (_currentUserStatusProvider.GetUserRole() != UserRole.Client)
             {
-                currentUserStatusProvider.ChangeUnauthorizedAccessState(true);
+                _currentUserStatusProvider.ChangeUnauthorizedAccessState(true);
                 return RedirectToAction("Index", "Home");
             }
 
@@ -49,11 +44,9 @@ namespace CarSharingApp.Controllers
             });
         }
 
-        // When user submit his information about car to share with (model and car image selected in input tag)
         [HttpPost]
         public async Task<IActionResult> SaveSharedCar(VehicleShareModel vehicleShareModel, IFormFile file)
         {
-            // Check whether latitude and longitude have any letters. If so -> change location to null
             if (vehicleShareModel.Location.Latitude != null && vehicleShareModel.Location.Latitude.Any(x => char.IsLetter(x)))
             {
                 vehicleShareModel.Location = new Models.VehicleData.Includes.Location
@@ -63,29 +56,28 @@ namespace CarSharingApp.Controllers
                 };
             }
 
-            // If validation error occured -> return same view with errors and current model
             if (!ModelState.IsValid)
             {
                 return View("Index", vehicleShareModel);
             }    
 
             if (file != null)
-                vehicleShareModel.Image = await fileUploadService.UploadFileAsync(file);
+                vehicleShareModel.Image = await _fileUploadService.UploadFileAsync(file);
 
-            var vehicleModel = mapper.Map<VehicleModel>(vehicleShareModel);
+            var vehicleModel = _mapper.Map<VehicleModel>(vehicleShareModel);
 
-            if(currentUserStatusProvider.GetUserId() != null)
-                vehicleModel.OwnerId = (int)currentUserStatusProvider.GetUserId();
+            if(_currentUserStatusProvider.GetUserId() != null)
+                vehicleModel.OwnerId = (int)_currentUserStatusProvider.GetUserId();
 
-            vehicleModel.RatingId = ratingRepository.CreateNewVehicleRating().Result;
+            vehicleModel.RatingId = _repositoryManager.RatingRepository.CreateNewVehicleRating().Result;
             vehicleModel.PublishedTime = DateTime.Now;
             vehicleModel.IsPublished = false;
             vehicleModel.IsOrdered = false;
             vehicleModel.TimesOrdered = 0;
 
-            vehiclesRepository.ShareNewVehicle(vehicleModel);
+            _repositoryManager.VehiclesRepository.ShareNewVehicle(vehicleModel);
 
-            currentUserStatusProvider.ChangeSharedNewVehicleState(true);
+            _currentUserStatusProvider.ChangeSharedNewVehicleState(true);
 
             return RedirectToAction("Index", "CarSharing");
         }

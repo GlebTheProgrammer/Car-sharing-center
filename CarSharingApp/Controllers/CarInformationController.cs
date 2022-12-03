@@ -14,41 +14,34 @@ namespace CarSharingApp.Controllers
 {
     public class CarInformationController : Controller
     {
-        private readonly IVehiclesRepository vehiclesRepository;
-        private readonly IMapper mapper;
-        private readonly IClientsRepository clientsRepository;
-        private readonly IRatingRepository ratingRepository;
-        private readonly IOrdersRepository ordersRepository;
-        private readonly ICurrentUserStatusProvider userStatusProvider;
+        private readonly IRepositoryManager _repositoryManager;
+        private readonly IMapper _mapper;
+        private readonly ICurrentUserStatusProvider _userStatusProvider;
 
-        public CarInformationController(IVehiclesRepository vehiclesRepository, IMapper mapper, IClientsRepository clientsRepository, IRatingRepository ratingRepository, 
-                                        IOrdersRepository ordersRepository, ICurrentUserStatusProvider userStatusProvider)
+        public CarInformationController(IRepositoryManager repositoryManager, IMapper mapper, ICurrentUserStatusProvider userStatusProvider)
         {
-            this.vehiclesRepository = vehiclesRepository;
-            this.mapper = mapper;
-            this.clientsRepository = clientsRepository;
-            this.ratingRepository = ratingRepository;
-            this.ordersRepository = ordersRepository;
-            this.userStatusProvider = userStatusProvider;
+            _repositoryManager = repositoryManager;
+            _mapper = mapper;
+            _userStatusProvider = userStatusProvider;
         }
 
         public IActionResult Index(int vehicleId)
         {
-            if(userStatusProvider.HasUserLoggedOut())
+            if(_userStatusProvider.HasUserLoggedOut())
                 return RedirectToAction("Index", "Home");
 
-            if (userStatusProvider.GetUserRole() != UserRole.Client)
+            if (_userStatusProvider.GetUserRole() != UserRole.Client)
             {
-                userStatusProvider.ChangeUnauthorizedAccessState(true);
+                _userStatusProvider.ChangeUnauthorizedAccessState(true);
                 return RedirectToAction("Index", "Home");
             }
 
-            VehicleModel vehicle = vehiclesRepository.GetVehicleById(vehicleId);
+            VehicleModel vehicle = _repositoryManager.VehiclesRepository.GetVehicleById(vehicleId);
 
-            var vehicleViewModel = mapper.Map<VehicleInformationViewModel>(vehicle);
+            var vehicleViewModel = _mapper.Map<VehicleInformationViewModel>(vehicle);
 
-            vehicleViewModel.OwnerUsername = clientsRepository.GetClientUsername(vehicle.OwnerId);
-            vehicleViewModel.Rating = mapper.Map<VehicleRatingViewModel>(ratingRepository.GetVehicleRatingById(vehicle.RatingId));
+            vehicleViewModel.OwnerUsername = _repositoryManager.ClientsRepository.GetClientUsername(vehicle.OwnerId);
+            vehicleViewModel.Rating = _mapper.Map<VehicleRatingViewModel>(_repositoryManager.RatingRepository.GetVehicleRatingById(vehicle.RatingId));
 
             return View(vehicleViewModel);
         }
@@ -100,9 +93,9 @@ namespace CarSharingApp.Controllers
             {
                 IsActive = true,
 
-                OrderedUserId = (int)userStatusProvider.GetUserId(),
+                OrderedUserId = (int)_userStatusProvider.GetUserId(),
                 OrderedVehicleId = vehicleId,
-                VehicleOwnerId = vehiclesRepository.GetVehicleById(vehicleId).OwnerId,
+                VehicleOwnerId = _repositoryManager.VehiclesRepository.GetVehicleById(vehicleId).OwnerId,
 
                 Price = decimal.Parse(orderPrice),
 
@@ -111,23 +104,21 @@ namespace CarSharingApp.Controllers
                 ExpiredTime = CalculateOrderExpiredTime(orderMadeTime, paidTimeInMinutes)
             };
 
-            // Добавляем новый заказ в список
-            ordersRepository.AddNewOrder(newOrder);
 
-            // Меняем состояние автомобиля в списке и файле ( Меняем состояние IsOrdered на True и количество заказов на автомобиль в случае передачи true)
-            vehiclesRepository.ChangeVehicleIsOrderedState(vehicleId, true);
+            _repositoryManager.OrdersRepository.AddNewOrder(newOrder);
 
-            // Статус в True для отправки пользователю соотвтствующее сообщение 
-            userStatusProvider.ChangeCompletedPaymentProcessState(true);
+            _repositoryManager.VehiclesRepository.ChangeVehicleIsOrderedState(vehicleId, true);
 
-            clientsRepository.IncreaseClientsVehiclesSharedAndOrderedCount((int)userStatusProvider.GetUserId(), vehiclesRepository.GetVehicleById(vehicleId).OwnerId);
+            _userStatusProvider.ChangeCompletedPaymentProcessState(true);
+
+            _repositoryManager.ClientsRepository.IncreaseClientsVehiclesSharedAndOrderedCount((int)_userStatusProvider.GetUserId(), _repositoryManager.VehiclesRepository.GetVehicleById(vehicleId).OwnerId);
 
             return RedirectToAction("Index", "CarSharing");
         }
 
         public IActionResult CancelledPayment(int vehicleId)
         {
-            userStatusProvider.ChangeCanceledPaymentProcessState(true);
+            _userStatusProvider.ChangeCanceledPaymentProcessState(true);
 
             return RedirectToAction("Index", vehicleId);
         }

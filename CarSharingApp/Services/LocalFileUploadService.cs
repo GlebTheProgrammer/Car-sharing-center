@@ -20,7 +20,7 @@ namespace CarSharingApp.Services
 
             using var fileStream = new FileStream(filePath, FileMode.Create);
             await file.CopyToAsync(fileStream);
-            return Path.Combine("/vehicleImages/", newFileName);
+            return newFileName;
         }
     }
 }

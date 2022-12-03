@@ -9,15 +9,15 @@ namespace CarSharingApp.Controllers
 {
     public class SignInController : Controller
     {
-        private readonly IClientsRepository clientsRepository;
-        private readonly IHttpContextAccessor httpContextAccessor;
-        private readonly ICurrentUserStatusProvider currentUserStatusProvider;
+        private readonly IRepositoryManager _repositoryManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ICurrentUserStatusProvider _currentUserStatusProvider;
 
-        public SignInController(IClientsRepository clientsRepository, IHttpContextAccessor httpContextAccessor, ICurrentUserStatusProvider currentUserStatusProvider)
+        public SignInController(IRepositoryManager repositoryManager, IHttpContextAccessor httpContextAccessor, ICurrentUserStatusProvider currentUserStatusProvider)
         {
-            this.clientsRepository = clientsRepository;
-            this.httpContextAccessor = httpContextAccessor;
-            this.currentUserStatusProvider = currentUserStatusProvider;
+            _repositoryManager = repositoryManager;
+            _httpContextAccessor = httpContextAccessor;
+            _currentUserStatusProvider = currentUserStatusProvider;
         }
 
         public IActionResult Index()
@@ -33,29 +33,28 @@ namespace CarSharingApp.Controllers
                 return View("Index", clientSignInViewModel);
             }
 
-            var signedUser = clientsRepository.TrySignIn(clientSignInViewModel.Email, clientSignInViewModel.Password);
+            var signedUser = _repositoryManager.ClientsRepository.TrySignIn(clientSignInViewModel.Email, clientSignInViewModel.Password);
 
             if (signedUser == null)
             {
-                httpContextAccessor.HttpContext.Session.SetString("AuthorizationFailed", "true");
+                _httpContextAccessor.HttpContext.Session.SetString("AuthorizationFailed", "true");
 
                 return RedirectToAction("Index");
             }
 
-            // Set signedUser credentials as client (passing role and id)
             if(signedUser.Role == Role.Client)
             {
-                currentUserStatusProvider.SetUserCredentials(signedUser.Id, UserRole.Client);
+                _currentUserStatusProvider.SetUserCredentials(signedUser.Id, UserRole.Client);
             }
-            currentUserStatusProvider.ChangeSignedInState(true);
+            _currentUserStatusProvider.ChangeSignedInState(true);
 
             return RedirectToAction("Index", "Home");
         }
 
         public void Logout()
         {
-            currentUserStatusProvider.SetUserCredentials(null, UserRole.Unauthorized);
-            currentUserStatusProvider.ChangeLoggedOutState(true);
+            _currentUserStatusProvider.SetUserCredentials(null, UserRole.Unauthorized);
+            _currentUserStatusProvider.ChangeLoggedOutState(true);
         }
     }
 }

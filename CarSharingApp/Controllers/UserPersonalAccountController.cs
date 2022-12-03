@@ -13,58 +13,49 @@ namespace CarSharingApp.Controllers
 {
     public class UserPersonalAccountController : Controller
     {
-        private readonly IClientsRepository clientsRepository;
-        private readonly IVehiclesRepository vehiclesRepository;
-        private readonly IMapper mapper;
-        private readonly ICurrentUserStatusProvider currentUserStatusProvider;
-        private readonly IOrdersRepository ordersRepository;
-        private readonly IRatingRepository ratingRepository;
+        private readonly IRepositoryManager _repositoryManager;
+        private readonly IMapper _mapper;
+        private readonly ICurrentUserStatusProvider _currentUserStatusProvider;
 
-        public UserPersonalAccountController(IVehiclesRepository vehiclesRepository, IMapper mapper, ICurrentUserStatusProvider currentUserStatusProvider, 
-                                             IOrdersRepository ordersRepository, IClientsRepository clientsRepository, IRatingRepository ratingRepository)
+        public UserPersonalAccountController(IRepositoryManager repositoryManager, IMapper mapper, ICurrentUserStatusProvider currentUserStatusProvider)
         {
-            this.vehiclesRepository = vehiclesRepository;
-            this.mapper = mapper;
-            this.currentUserStatusProvider = currentUserStatusProvider;
-            this.ordersRepository = ordersRepository;
-            this.clientsRepository = clientsRepository;
-            this.ratingRepository = ratingRepository;
+            _repositoryManager = repositoryManager;
+            _mapper = mapper;
+            _currentUserStatusProvider = currentUserStatusProvider;
         }
 
         public IActionResult Index()
         {
-            if (currentUserStatusProvider.HasUserLoggedOut())
+            if (_currentUserStatusProvider.HasUserLoggedOut())
                 return RedirectToAction("Index", "Home");
 
-            if (currentUserStatusProvider.GetUserRole() != UserRole.Client)
+            if (_currentUserStatusProvider.GetUserRole() != UserRole.Client)
             {
-                currentUserStatusProvider.ChangeUnauthorizedAccessState(true);
+                _currentUserStatusProvider.ChangeUnauthorizedAccessState(true);
                 return RedirectToAction("Index", "Home");
             }
 
-            // Проверка заказов на просроченное время
-            var vehiclesIds = ordersRepository.CheckExpiredOrdersAndGetVehiclesId().Result;
+            var vehiclesIds = _repositoryManager.OrdersRepository.CheckExpiredOrdersAndGetVehiclesId().Result;
             if (vehiclesIds.Count > 0)
-                vehiclesRepository.ChangeVehiclesIsOrderedState(vehiclesIds, false);
+                _repositoryManager.VehiclesRepository.ChangeVehiclesIsOrderedState(vehiclesIds, false);
 
-            int userId = (int)currentUserStatusProvider.GetUserId();
+            int userId = (int)_currentUserStatusProvider.GetUserId();
 
-            // Создние объекта заказов
-            List<OrderInUserAccountViewModel> activeOrders = mapper.Map<List<OrderInUserAccountViewModel>>(ordersRepository.GetActiveOrdersForAUser(userId));
+            List<OrderInUserAccountViewModel> activeOrders = _mapper.Map<List<OrderInUserAccountViewModel>>(_repositoryManager.OrdersRepository.GetActiveOrdersForAUser(userId));
             foreach (var activeOrder in activeOrders)
             {
-                activeOrder.VehicleName = vehiclesRepository.GetVehicleById(activeOrder.OrderedVehicleId).Name;
+                activeOrder.VehicleName = _repositoryManager.VehiclesRepository.GetVehicleById(activeOrder.OrderedVehicleId).Name;
             }
 
-            List<VehicleAccountViewModel> userVehicles = mapper.Map<List<VehicleAccountViewModel>>(vehiclesRepository.GetAllUserVehicles(userId));
+            List<VehicleAccountViewModel> userVehicles = _mapper.Map<List<VehicleAccountViewModel>>(_repositoryManager.VehiclesRepository.GetAllUserVehicles(userId));
 
             UserPersonalInformationDataViewModel viewModel = new UserPersonalInformationDataViewModel()
             {
-                ClientAccountViewModel = mapper.Map<ClientAccountViewModel>(clientsRepository.GetClientById(userId)),
+                ClientAccountViewModel = _mapper.Map<ClientAccountViewModel>(_repositoryManager.ClientsRepository.GetClientById(userId)),
 
-                VehiclesAdded = vehiclesRepository.GetAllUserVehicles(userId).Count(),
-                ActiveVehicles = vehiclesRepository.GetAllActiveUserVehicles(userId).Count(),
-                ActiveOrdersCount = ordersRepository.GetNumberOfActiveOrdersForAUser(userId),
+                VehiclesAdded = _repositoryManager.VehiclesRepository.GetAllUserVehicles(userId).Count(),
+                ActiveVehicles = _repositoryManager.VehiclesRepository.GetAllActiveUserVehicles(userId).Count(),
+                ActiveOrdersCount = _repositoryManager.OrdersRepository.GetNumberOfActiveOrdersForAUser(userId),
 
                 ActveOrders = activeOrders,
                 UserVehicles = userVehicles
@@ -75,31 +66,31 @@ namespace CarSharingApp.Controllers
 
         public IActionResult PublishVehicleInTheCatalog(int vehicleId)
         {
-            vehiclesRepository.PublishVehicleInTheCatalog(vehicleId);
+            _repositoryManager.VehiclesRepository.PublishVehicleInTheCatalog(vehicleId);
             return RedirectToAction("Index");
         }
 
         public IActionResult RemoveVehicleFromTheCatalog(int vehicleId)
         {
-            vehiclesRepository.RemoveVehicleFromTheCatalog(vehicleId);
+            _repositoryManager.VehiclesRepository.RemoveVehicleFromTheCatalog(vehicleId);
             return RedirectToAction("Index");
         }
 
         public void DeleteVehicle(int vehicleId)
         {
-            ratingRepository.DeleteVehicleRating(vehiclesRepository.GetVehicleById(vehicleId).RatingId);
-            vehiclesRepository.DeleteVehicle(vehicleId);
-            ordersRepository.DeleteAllVehicleOrders(vehicleId);
+            _repositoryManager.RatingRepository.DeleteVehicleRating(_repositoryManager.VehiclesRepository.GetVehicleById(vehicleId).RatingId);
+            _repositoryManager.VehiclesRepository.DeleteVehicle(vehicleId);
+            _repositoryManager.OrdersRepository.DeleteAllVehicleOrders(vehicleId);
         }
 
         [HttpPost]
         public IActionResult FinishOrder(int orderId, int conditionRating, int fuelConsumptionRating, int easyToDriveRating, int familyFriendlyRating, int suvRating, bool hasSubmittedRating)
         {
-            var order = ordersRepository.GetOrderById(orderId);
+            var order = _repositoryManager.OrdersRepository.GetOrderById(orderId);
 
             if (hasSubmittedRating)
             {
-                var vehicle = vehiclesRepository.GetVehicleById(order.OrderedVehicleId);
+                var vehicle = _repositoryManager.VehiclesRepository.GetVehicleById(order.OrderedVehicleId);
 
                 ProvideRatingViewModel userRating = new ProvideRatingViewModel()
                 {
@@ -110,13 +101,13 @@ namespace CarSharingApp.Controllers
                     SUV = suvRating
                 };
 
-                ratingRepository.UpdateVehicleRating(vehicle.RatingId, userRating);
+                _repositoryManager.RatingRepository.UpdateVehicleRating(vehicle.RatingId, userRating);
             }
 
-            vehiclesRepository.ChangeVehicleIsOrderedState(order.OrderedVehicleId, false);
-            ordersRepository.FinishOrder(orderId);
+            _repositoryManager.VehiclesRepository.ChangeVehicleIsOrderedState(order.OrderedVehicleId, false);
+            _repositoryManager.OrdersRepository.FinishOrder(orderId);
 
-            currentUserStatusProvider.ChangeFinishedActiveOrderState(true);
+            _currentUserStatusProvider.ChangeFinishedActiveOrderState(true);
 
             return RedirectToAction("Index");
         }

@@ -12,7 +12,7 @@
       "TariffPerHour": 20,
       "TariffPerDay": 200
     },
-    "Image": "/vehicleImages/15_33_15_car1.jpg",
+    "Image": "15_33_15_car1.jpg",
     "ProductionYear": 2012,
     "MaxSpeed": 320,
     "ExteriorColor": "White",
@@ -43,7 +43,7 @@
       "TariffPerHour": 6,
       "TariffPerDay": 100
     },
-    "Image": "/vehicleImages/16_23_20_car3.jpg",
+    "Image": "16_23_20_car3.jpg",
     "ProductionYear": 2009,
     "MaxSpeed": 200,
     "ExteriorColor": "black",
@@ -59,7 +59,7 @@
       "Longitude": "27.5958775"
     },
     "IsPublished": true,
-    "IsOrdered": true
+    "IsOrdered": false
   },
   {
     "Id": 2,
@@ -74,7 +74,7 @@
       "TariffPerHour": 88,
       "TariffPerDay": 17
     },
-    "Image": "/vehicleImages/17_40_13_car2.jpg",
+    "Image": "17_40_13_car2.jpg",
     "ProductionYear": 2012,
     "MaxSpeed": 220,
     "ExteriorColor": "white",
@@ -105,7 +105,7 @@
       "TariffPerHour": 19,
       "TariffPerDay": 199
     },
-    "Image": "/vehicleImages/17_43_55_car1.jpg",
+    "Image": "17_43_55_car1.jpg",
     "ProductionYear": 2020,
     "MaxSpeed": 330,
     "ExteriorColor": "white",
