@@ -1,7 +1,9 @@
+using CarSharingApp.OptionsSetup;
 using CarSharingApp.Repository.Interfaces;
 using CarSharingApp.Repository.LocalRepository;
 using CarSharingApp.Services;
 using CarSharingApp.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +26,10 @@ builder.Services.AddScoped<IFileUploadService, LocalFileUploadService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddSingleton<ICurrentUserStatusProvider, CurrentUserStatusProviderService>();
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+builder.Services.ConfigureOptions<JwtOptionsSetup>();
+builder.Services.ConfigureOptions<JwtBearerOptionsSetup>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -39,6 +45,8 @@ app.UseStaticFiles();
 app.UseSession();
 
 app.UseRouting();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

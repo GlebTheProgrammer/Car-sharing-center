@@ -10,7 +10,7 @@ namespace CarSharingApp.Repository.Interfaces.Includes
         public string GetClientUsername(int id);
         public void AddNewClient(ClientModel client);
         public Task SaveChanges();
-        public ClientModel TrySignIn(string email, string password);
+        public ClientModel? TrySignIn(string email, string password);
         public void UpdateClient(ClientModel client);
         public void UpdateClientPassword(int clientId, string clientNewPassword);
         public void IncreaseClientsVehiclesSharedAndOrderedCount(int clientId, int orderedCarOwnerId);

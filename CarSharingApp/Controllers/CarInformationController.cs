@@ -50,7 +50,6 @@ namespace CarSharingApp.Controllers
         public ActionResult CreateCheckoutSession(string amount, string vehicleName, string startMonth, string endMonth, 
                                                   string startDay, string endDay, string startHour, string endHour, int vehicleId)
         {
-
             var options = new Stripe.Checkout.SessionCreateOptions
             {
                 LineItems = new List<SessionLineItemOptions>

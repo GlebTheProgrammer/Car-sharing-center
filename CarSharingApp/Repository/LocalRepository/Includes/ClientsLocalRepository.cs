@@ -57,7 +57,7 @@ namespace CarSharingApp.Repository.LocalRepository.Includes
             await createStream.DisposeAsync();
         }
 
-        public ClientModel TrySignIn(string email, string password)
+        public ClientModel? TrySignIn(string email, string password)
         {
             string hashPassword = GetPasswordHash(password);
 

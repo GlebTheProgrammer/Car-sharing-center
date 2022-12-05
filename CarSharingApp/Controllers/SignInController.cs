@@ -1,4 +1,5 @@
-﻿using CarSharingApp.Models.ClientData;
+﻿using CarSharingApp.Login;
+using CarSharingApp.Models.ClientData;
 using CarSharingApp.Models.ClientData.Includes;
 using CarSharingApp.Repository.Interfaces;
 using CarSharingApp.Services.Includes;
@@ -28,6 +29,15 @@ namespace CarSharingApp.Controllers
 
         public IActionResult TrySignIn(ClientSignInViewModel clientSignInViewModel)
         {
+            //var command = new LoginCommand(request.email, request.password);
+
+            //Results tokenResult = "";
+
+            //if (tokenResult.IsFailure)
+            //    return ;
+
+            //return Ok(tokenResult.Value);
+
             if (!ModelState.IsValid)
             {
                 return View("Index", clientSignInViewModel);
@@ -42,7 +52,7 @@ namespace CarSharingApp.Controllers
                 return RedirectToAction("Index");
             }
 
-            if(signedUser.Role == Role.Client)
+            if (signedUser.Role == Role.Client)
             {
                 _currentUserStatusProvider.SetUserCredentials(signedUser.Id, UserRole.Client);
             }
