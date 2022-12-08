@@ -7,7 +7,7 @@ using CarSharingApp.Repository.Interfaces;
 
 namespace CarSharingApp.Controllers
 {
-    public class ShareYourCarController : Controller
+    public class AddVehicleController : Controller
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
@@ -15,7 +15,7 @@ namespace CarSharingApp.Controllers
         private readonly ICurrentUserStatusProvider _currentUserStatusProvider;
 
 
-        public ShareYourCarController(IRepositoryManager repositoryManager, IMapper mapper, IFileUploadService fileUploadService, ICurrentUserStatusProvider currentUserStatusProvider)
+        public AddVehicleController(IRepositoryManager repositoryManager, IMapper mapper, IFileUploadService fileUploadService, ICurrentUserStatusProvider currentUserStatusProvider)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
@@ -45,7 +45,7 @@ namespace CarSharingApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveSharedCar(VehicleShareModel vehicleShareModel, IFormFile file)
+        public async Task<IActionResult> AddVehicle(VehicleShareModel vehicleShareModel, IFormFile file)
         {
             if (vehicleShareModel.Location.Latitude != null && vehicleShareModel.Location.Latitude.Any(x => char.IsLetter(x)))
             {
@@ -79,7 +79,7 @@ namespace CarSharingApp.Controllers
 
             _currentUserStatusProvider.ChangeSharedNewVehicleState(true);
 
-            return RedirectToAction("Index", "CarSharing");
+            return RedirectToAction("Index", "Catalog");
         }
     }
 }

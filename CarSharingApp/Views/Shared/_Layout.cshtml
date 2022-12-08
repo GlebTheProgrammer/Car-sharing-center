@@ -32,12 +32,12 @@
                             <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">About Us</a>
                         </li>
                         <li class="nav-item mr-3">
-                            <a class="nav-link text-white" asp-area="" asp-controller="CarSharing" asp-action="Index">Catalog and Pricing</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Catalog" asp-action="Index">Catalog and Pricing</a>
                         </li>
                         @if (currentUserStatusProvider.GetUserRole() == CarSharingApp.Services.Includes.UserRole.Client)
                         {
                             <li class="nav-item">
-                                <a id="ShareYourCarBtn" class="nav-link text-white" asp-area="" asp-controller="ShareYourCar" asp-action="Index">Share your car</a>
+                                <a id="ShareYourCarBtn" class="nav-link text-white" asp-area="" asp-controller="AddVehicle" asp-action="Index">Share your car</a>
                             </li>
                         }
                     </ul>
@@ -45,7 +45,7 @@
                     @if(currentUserStatusProvider.GetUserRole() == CarSharingApp.Services.Includes.UserRole.Client)
                     {
                         <button id="LogoutBtn" class="btn btn-outline-warning my-2 my-sm-0 mr-3" onclick="ShowLogoutConfirmationAlert()">Logout</button>
-                        <button id="UserAccountBtn" type="button" class="btn btn-outline-info" onclick="location.href='@Url.Action("Index", "UserPersonalAccount")'"><i class="far fa-user pr-2"></i>My Account</button>
+                        <button id="UserAccountBtn" type="button" class="btn btn-outline-info" onclick="location.href='@Url.Action("Index", "ClientPersonalAccount")'"><i class="far fa-user pr-2"></i>My Account</button>
                     }
                     else
                     {

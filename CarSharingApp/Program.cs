@@ -1,6 +1,10 @@
 using CarSharingApp.OptionsSetup;
+using CarSharingApp.Order;
+using CarSharingApp.Payment;
+using CarSharingApp.Payment.StripeService;
 using CarSharingApp.Repository.Interfaces;
 using CarSharingApp.Repository.LocalRepository;
+using CarSharingApp.Repository.LocalRepository.Includes;
 using CarSharingApp.Services;
 using CarSharingApp.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -21,6 +25,8 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Dependency injection is here
 builder.Services.AddSingleton<IRepositoryManager, LocalRepositoryManager>();
+builder.Services.AddSingleton<IPaymentSessionProvider, StripeSessionProvider>();
+builder.Services.AddSingleton<IOrderProvider, CompleatedOrderProvider>();
 
 builder.Services.AddScoped<IFileUploadService, LocalFileUploadService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

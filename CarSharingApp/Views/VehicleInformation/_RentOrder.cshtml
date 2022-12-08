@@ -1,0 +1,119 @@
+﻿@using CarSharingApp.Payment;
+@model PaymentModel
+
+<form asp-controller="VehicleInformation" asp-action="CreateCheckoutSession" method="post">
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header border-bottom-0">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-start text-black p-4">
+                    <h3 class="mb-4" style="color: #35558a;">Order Details</h3>
+                    <h5 class="modal-title mb-2" id="exampleModalLabel">Your order Starts from</h5>
+
+                    <div class="md-form md-outline datepicker mb-4" id="customDays">
+                        <input type="text" id="datetimesStarts" class="form-control" name="datetimesStarts" disabled>
+                    </div>
+
+                    <h5 class="modal-title mb-2" id="exampleModalLabel">Your order Ends at</h5>
+
+                    <div class="md-form md-outline datepicker mb-5" id="customDays">
+                        <input placeholder="Select date" type="text" id="datetimesEnds" class="form-control" name="datetimesEnds">
+                    </div>
+
+                    <script>
+                        $(function () {
+                            $('input[name="datetimesStarts"]').daterangepicker({
+                                timePicker: true,
+                                startDate: moment().startOf('hour').add(1, 'hour'), // Time for automatic input (From ...)
+                                timePicker24Hour: true,
+                                singleDatePicker: true,
+                                locale: {
+                                    format: 'HH:mm DD MMMM YYYY'
+                                }
+                            });
+                        });
+
+                        $(function () {
+                            $('input[name="datetimesEnds"]').daterangepicker({
+                                timePicker: true, // Is there an opportunity to set up time in hours and minutes
+                                minDate: moment().startOf('hour').add(2, 'hour'), // Min date that can be set
+                                maxDate: moment().startOf('hour').add(7, 'day').add(1, 'hour'), // Max date that can be set
+                                startDate: moment().startOf('hour').add(2, 'hour'), // Time for automatic input (From ...)
+                                timePicker24Hour: true, // 24-hours time zone
+                                timePickerIncrement: 60, // We can edit only hours (minutes are always 00)
+                                singleDatePicker: true, // DatePicker for only one date (ranged date is not possible)
+                                locale: {
+                                    format: 'HH:mm DD MMMM YYYY'
+                                },
+
+                                onselect: function () {
+                                    var dateObj = $(this).daterangepicker('getDate');
+                                    alert(dateObj);
+                                }
+                            });
+                        });
+                    </script>
+
+                    <p class="mb-0" style="color: #35558a;">Payment summary</p>
+                    <hr class="mt-2 mb-4"
+                        style="height: 0; background-color: transparent; opacity: .75; border-top: 2px dashed #9e9e9e;">
+
+                    <div class="d-flex justify-content-between">
+                        <p class="fw-bold mb-0">@Model.VehicleName (Daily payment)</p>
+                        <p id="totalDailyPrice" class="text-muted mb-0">$0.00</p>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <p class="small mb-0">Hourly payment</p>
+                        <p id="totalHourlyPrice" class="small mb-0">$@(Model.Tariff.TariffPerHour).00</p>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <p class="fw-bold">Total</p>
+                        <p id="totalPrice" class="fw-bold" style="color: #35558a;">$@(Model.Tariff.TariffPerHour).00</p>
+
+                        <input asp-for="VehicleId" class="visually-hidden" type="number" id="vehicleIdInput" value="@Model.VehicleId" readonly />
+
+                        <input asp-for="Amount" class="visually-hidden" type="text" id="totalPriceInput" placeholder="amount" value="@Model.Tariff.TariffPerHour" readonly />
+                        <input asp-for="VehicleName" class="visually-hidden" type="text" value="@Model.VehicleName" readonly />
+
+                        <input asp-for="StartMonth" class="visually-hidden" type="text" id="startMonthInput" value="@DateTime.Now.AddMinutes(60).ToString("MMMM")" readonly />
+                        <input asp-for="EndMonth" class="visually-hidden" type="text" id="endMonthInput" value="@DateTime.Now.AddMinutes(120).ToString("MMMM")" readonly />
+                        <input asp-for="StartDay" class="visually-hidden" type="text" id="startDayInput" value="@DateTime.Now.AddMinutes(60).Day" readonly />
+                        <input asp-for="EndDay" class="visually-hidden" type="text" id="endDayInput" value="@DateTime.Now.AddMinutes(120).Day" readonly />
+                        <input asp-for="StartHour" class="visually-hidden" type="text" id="startHourInput" value="@DateTime.Now.AddMinutes(60).Hour" readonly />
+                        <input asp-for="EndHour" class="visually-hidden" type="text" id="endHourInput" value="@DateTime.Now.AddMinutes(120).Hour" readonly />
+
+                        <input asp-for="Tariff.TariffPerHour" class="visually-hidden" type="number" id="tariffHourInput" value="@Model.Tariff.TariffPerHour" readonly />
+                        <input asp-for="Tariff.TariffPerDay" class="visually-hidden" type="number" id="tariffDayInput" value="@Model.Tariff.TariffPerDay" readonly />
+
+                    </div>
+
+                </div>
+                <div class="modal-footer d-flex justify-content-center border-top-0 py-4">
+                    <button type="submit" class="btn btn-outline-primary btn-lg mb-1">
+                        Pay for the order
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script src="~/js/Partials/rentOrder.js" asp-append-version="true"></script>
+
+<script>
+    $('#datetimesEnds').on('hide.daterangepicker', function (ev, picker) {
+
+        var datetimesStartsStr = $('#datetimesStarts').data('daterangepicker').startDate.toString();
+        var datetimesEndsStr = $('#datetimesEnds').data('daterangepicker').startDate.toString();
+        var vehicleHourlyTariff = parseInt("@Model.Tariff.TariffPerHour");
+        var vehicleDailyTariff = parseInt("@Model.Tariff.TariffPerDay");
+
+        CalculateVehicleUsagePeriodAndSetUpAllInputs(datetimesStartsStr, datetimesEndsStr, vehicleHourlyTariff, vehicleDailyTariff);
+    });
+</script>

@@ -166,7 +166,7 @@ function ShowSuccessfulCarSharingMessage() {
         reverseButtons: true
     }).then((result) => {
         if (result.isConfirmed) {
-            window.location.href = '/UserPersonalAccount/';
+            window.location.href = '/ClientPersonalAccount/';
         }
     })
 }

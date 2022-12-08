@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CarSharingApp.Controllers
 {
-    public class CarSharingController : Controller
+    public class CatalogController : Controller
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
@@ -16,7 +16,7 @@ namespace CarSharingApp.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
 
 
-        public CarSharingController(IRepositoryManager repositoryManager, IMapper mapper, ICurrentUserStatusProvider currentUserStatusProvider, IHttpContextAccessor httpContextAccessor)
+        public CatalogController(IRepositoryManager repositoryManager, IMapper mapper, ICurrentUserStatusProvider currentUserStatusProvider, IHttpContextAccessor httpContextAccessor)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
@@ -52,7 +52,7 @@ namespace CarSharingApp.Controllers
 
             this.ViewBag.Pager = pager;
 
-            CarSharingDataViewModel model = new CarSharingDataViewModel
+            CatalogDataViewModel model = new CatalogDataViewModel
             {
                 Vehicles = vehiclesData,
                 NumberOfVehicles = vehicleViewModels.Count,
@@ -71,7 +71,7 @@ namespace CarSharingApp.Controllers
             int numberOfVehiclesToDisplay = int.Parse(data);
             var vehicleViewModels = _mapper.Map<IEnumerable<VehicleViewModel>>(_repositoryManager.VehiclesRepository.GetAllVehiclesForCatalog()).ToList();
 
-            CarSharingDataViewModel model = new CarSharingDataViewModel
+            CatalogDataViewModel model = new CatalogDataViewModel
             {
                 Vehicles = vehicleViewModels.Take(numberOfVehiclesToDisplay).ToList(),
                 NumberOfVehicles = vehicleViewModels.Count,

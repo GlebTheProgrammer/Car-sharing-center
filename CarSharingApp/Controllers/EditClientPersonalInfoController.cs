@@ -9,13 +9,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CarSharingApp.Controllers
 {
-    public class EditUserPersonalInfoController : Controller
+    public class EditClientPersonalInfoController : Controller
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
         private readonly ICurrentUserStatusProvider _currentUserStatusProvider;
 
-        public EditUserPersonalInfoController(IRepositoryManager repositoryManager, IMapper mapper, ICurrentUserStatusProvider currentUserStatusProvider)
+        public EditClientPersonalInfoController(IRepositoryManager repositoryManager, IMapper mapper, ICurrentUserStatusProvider currentUserStatusProvider)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
@@ -38,18 +38,18 @@ namespace CarSharingApp.Controllers
             return View(viewModel);
         }
 
-        public IActionResult ChangeUserPersonalInfo(ClientEditInfoViewModel viewModel)
+        public IActionResult ChangeClientPersonalInfo(ClientEditInfoViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
                 return View("Index", viewModel);
             }
 
-            var userModel = _repositoryManager.ClientsRepository.GetClientById(viewModel.Id);
+            var clientModel = _repositoryManager.ClientsRepository.GetClientById(viewModel.Id);
 
-            Merge<ClientEditInfoViewModel>(userModel, viewModel);
+            Merge<ClientEditInfoViewModel>(clientModel, viewModel);
 
-            _repositoryManager.ClientsRepository.UpdateClient(userModel);
+            _repositoryManager.ClientsRepository.UpdateClient(clientModel);
 
             _currentUserStatusProvider.ChangeAccountDataHasChangedState(true);
 
@@ -57,7 +57,7 @@ namespace CarSharingApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult ChangeUserPassword(string newPassword)
+        public IActionResult ChangeClientPassword(string newPassword)
         {
 
             _repositoryManager.ClientsRepository.UpdateClientPassword((int)_currentUserStatusProvider.GetUserId(), newPassword);

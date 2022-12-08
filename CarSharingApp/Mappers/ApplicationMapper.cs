@@ -3,6 +3,7 @@ using CarSharingApp.Models.ClientData;
 using CarSharingApp.Models.OrderData;
 using CarSharingApp.Models.RatingData;
 using CarSharingApp.Models.VehicleData;
+using CarSharingApp.Payment;
 
 namespace CarSharingApp.Mappers
 {
@@ -10,8 +11,6 @@ namespace CarSharingApp.Mappers
     {
         public ApplicationMapper()
         {
-            // Add models mapping here
-
             // From -> Into
             CreateMap<VehicleShareModel, VehicleModel>();
             CreateMap<VehicleModel, VehicleViewModel>();
@@ -25,6 +24,7 @@ namespace CarSharingApp.Mappers
             CreateMap<ClientEditInfoViewModel, ClientModel>();
             CreateMap<VehicleModel, VehicleEditInfoViewModel>();
             CreateMap<ClientModel, ClientProfileViewModel>();
+            CreateMap<PaymentModel, PaymentUrlModel>();
         }
     }
 }

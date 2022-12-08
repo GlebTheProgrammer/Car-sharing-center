@@ -12,7 +12,7 @@ function ShowDeleteVehicleConfirmationAlert(deleteVehicleId) {
         if (result.isConfirmed) {
 
             $.ajax({
-                url: "/UserPersonalAccount/DeleteVehicle/",
+                url: "/ClientPersonalAccount/DeleteVehicle/",
                 data: {
                     vehicleId: deleteVehicleId
                 },

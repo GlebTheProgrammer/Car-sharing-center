@@ -43,18 +43,18 @@ namespace CarSharingApp.Controllers
                 return View("Index", clientSignInViewModel);
             }
 
-            var signedUser = _repositoryManager.ClientsRepository.TrySignIn(clientSignInViewModel.Email, clientSignInViewModel.Password);
+            var signedClient = _repositoryManager.ClientsRepository.TrySignIn(clientSignInViewModel.Email, clientSignInViewModel.Password);
 
-            if (signedUser == null)
+            if (signedClient == null)
             {
                 _httpContextAccessor.HttpContext.Session.SetString("AuthorizationFailed", "true");
 
                 return RedirectToAction("Index");
             }
 
-            if (signedUser.Role == Role.Client)
+            if (signedClient.Role == Role.Client)
             {
-                _currentUserStatusProvider.SetUserCredentials(signedUser.Id, UserRole.Client);
+                _currentUserStatusProvider.SetUserCredentials(signedClient.Id, UserRole.Client);
             }
             _currentUserStatusProvider.ChangeSignedInState(true);
 

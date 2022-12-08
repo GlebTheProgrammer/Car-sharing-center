@@ -19,7 +19,7 @@
                         <div class="d-flex justify-content-center flex-column mb-2">
                             <button type="submit" form="vehicleEditedDataForm" value="Submit" class="btn btn-outline-success mb-3">Save Changes</button>
                             <buton type="button" class="btn btn-outline-danger mb-3" onclick="ShowCancelChangesConfirmationAlert()">Cancel Changes</buton>
-                            <a asp-action="Index" asp-controller="UserPersonalAccount" type="button" class="btn btn-outline-secondary">Get Back</a>
+                            <a asp-action="Index" asp-controller="ClientPersonalAccount" type="button" class="btn btn-outline-secondary">Get Back</a>
                         </div>
                     </div>
                 </div>
@@ -235,7 +235,7 @@
                     <input id="ModelLocationLatitude" asp-for="Location.Latitude" value="@Model.Location.Latitude" class="form-control" readonly="readonly" />
                     <input id="ModelLocationLongitude" asp-for="Location.Longitude" value="@Model.Location.Longitude" class="form-control" readonly="readonly" />
 
-                    <!-- User can't changethis fields -->
+                    <!-- User can't change this fields -->
                     <input id="ModelId" asp-for="Id" value="@Model.Id" class="form-control" readonly="readonly" />
                     <input id="ModelName" asp-for="Name" value="@Model.Name" class="form-control" readonly="readonly" />
                     <input id="ModelImage" asp-for="Image" value="@Model.Image" class="form-control" readonly="readonly" />

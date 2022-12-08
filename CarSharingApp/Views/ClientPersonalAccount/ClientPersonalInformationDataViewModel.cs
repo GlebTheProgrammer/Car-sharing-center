@@ -4,7 +4,7 @@ using CarSharingApp.Models.VehicleData;
 
 namespace CarSharingApp.Views.UserPersonalAccount
 {
-    public class UserPersonalInformationDataViewModel
+    public class ClientPersonalInformationDataViewModel
     {
         public ClientAccountViewModel ClientAccountViewModel { get; set; }
 
@@ -13,6 +13,6 @@ namespace CarSharingApp.Views.UserPersonalAccount
         public int ActiveOrdersCount { get; set; }
 
         public List<OrderInUserAccountViewModel> ActveOrders { get; set; }
-        public List<VehicleAccountViewModel> UserVehicles { get; set; }
+        public List<VehicleAccountViewModel> ClientVehicles { get; set; }
     }
 }

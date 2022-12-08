@@ -24,7 +24,7 @@ namespace CarSharingApp.Controllers
             return View(user);
         }
 
-        public IActionResult SaveNewAuthorizedUser(ClientRegistrationViewModel clientViewModel)
+        public IActionResult Register(ClientRegistrationViewModel clientViewModel)
         {
             if (!ModelState.IsValid)
                 return View("Index", clientViewModel);

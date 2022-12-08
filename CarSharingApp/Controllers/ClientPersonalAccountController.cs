@@ -11,13 +11,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CarSharingApp.Controllers
 {
-    public class UserPersonalAccountController : Controller
+    public class ClientPersonalAccountController : Controller
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
         private readonly ICurrentUserStatusProvider _currentUserStatusProvider;
 
-        public UserPersonalAccountController(IRepositoryManager repositoryManager, IMapper mapper, ICurrentUserStatusProvider currentUserStatusProvider)
+        public ClientPersonalAccountController(IRepositoryManager repositoryManager, IMapper mapper, ICurrentUserStatusProvider currentUserStatusProvider)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
@@ -49,7 +49,7 @@ namespace CarSharingApp.Controllers
 
             List<VehicleAccountViewModel> userVehicles = _mapper.Map<List<VehicleAccountViewModel>>(_repositoryManager.VehiclesRepository.GetAllUserVehicles(userId));
 
-            UserPersonalInformationDataViewModel viewModel = new UserPersonalInformationDataViewModel()
+            ClientPersonalInformationDataViewModel viewModel = new ClientPersonalInformationDataViewModel()
             {
                 ClientAccountViewModel = _mapper.Map<ClientAccountViewModel>(_repositoryManager.ClientsRepository.GetClientById(userId)),
 
@@ -58,7 +58,7 @@ namespace CarSharingApp.Controllers
                 ActiveOrdersCount = _repositoryManager.OrdersRepository.GetNumberOfActiveOrdersForAUser(userId),
 
                 ActveOrders = activeOrders,
-                UserVehicles = userVehicles
+                ClientVehicles = userVehicles
             };
 
             return View(viewModel);

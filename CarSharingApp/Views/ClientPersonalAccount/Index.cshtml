@@ -1,5 +1,5 @@
 ﻿@using CarSharingApp.Views.UserPersonalAccount
-@model UserPersonalInformationDataViewModel
+@model ClientPersonalInformationDataViewModel
 
 
 <section>
@@ -15,7 +15,7 @@
                         <p class="text-muted mb-4">@Model.ClientAccountViewModel.Address, @Model.ClientAccountViewModel.City, @Model.ClientAccountViewModel.Country</p>
                         <div class="d-flex justify-content-center mb-2">
                             <a asp-action="Index" asp-controller="Home" type="button" class="btn btn-outline-secondary mr-3">Homepage</a>
-                            <a asp-action="Index" asp-controller="EditUserPersonalInfo" type="button" class="btn btn-outline-info mr-3">Edit Profile</a>
+                            <a asp-action="Index" asp-controller="EditClientPersonalInfo" type="button" class="btn btn-outline-info mr-3">Edit Profile</a>
                         </div>
                     </div>
                 </div>
@@ -141,7 +141,7 @@
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
-                                        <form id="FinishOrderForm" asp-controller="UserPersonalAccount" asp-action="FinishOrder" method="post" enctype="multipart/form-data">
+                                        <form id="FinishOrderForm" asp-controller="ClientPersonalAccount" asp-action="FinishOrder" method="post" enctype="multipart/form-data">
 
                                             <input class="visually-hidden" name="orderId" value="@order.Id" readonly>
                                             <input id="hasSubmittedRating" class="visually-hidden" type="checkbox" name="hasSubmittedRating" value="false">
@@ -285,7 +285,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var vehicle in Model.UserVehicles)
+                @foreach (var vehicle in Model.ClientVehicles)
                 {
                     if (!vehicle.IsPublished)
                     {
@@ -298,7 +298,7 @@
                             <td class="table-warning">@(vehicle.IsOrdered ? "Yes" : "No")</td>
                             <td>
 
-                                <button type="button" class="btn btn-outline-success mt-1 mb-1" onclick="location.href='@Url.Action("PublishVehicleInTheCatalog","UserPersonalAccount", new {vehicleId = vehicle.Id})'">Publish</button>
+                                <button type="button" class="btn btn-outline-success mt-1 mb-1" onclick="location.href='@Url.Action("PublishVehicleInTheCatalog","ClientPersonalAccount", new {vehicleId = vehicle.Id})'">Publish</button>
                                 <button type="button" class="btn btn-outline-primary mt-1 mb-1" onclick="location.href='@Url.Action("Index", "EditVehicleInfo", new {vehicleId = vehicle.Id})'">Edit</button>
                                 <button type="button" class="btn btn-outline-danger mt-1 mb-1" onclick="ShowDeleteVehicleConfirmationAlert(@vehicle.Id)">Delete</button>
                             </td>
@@ -317,7 +317,7 @@
                             <td class="">@vehicle.TimesOrdered</td>
                             <td class="">No</td>
                             <td>
-                                <button type="button" class="btn btn-outline-warning mt-1 mb-1" onclick="location.href='@Url.Action("RemoveVehicleFromTheCatalog","UserPersonalAccount", new {vehicleId = vehicle.Id})'">Hide</button>
+                                <button type="button" class="btn btn-outline-warning mt-1 mb-1" onclick="location.href='@Url.Action("RemoveVehicleFromTheCatalog","ClientPersonalAccount", new {vehicleId = vehicle.Id})'">Hide</button>
                                 <button type="button" class="btn btn-outline-primary mt-1 mb-1" onclick="location.href='@Url.Action("Index","EditVehicleInfo", new {vehicleId = vehicle.Id})'">Edit</button>
                                 <button type="button" class="btn btn-outline-danger mt-1 mb-1" onclick="ShowDeleteVehicleConfirmationAlert(@vehicle.Id)">Delete</button>
                             </td>
@@ -349,4 +349,4 @@
     </div>
 </section>
 
-<script src="~/js/userPersonalAccountPage.js" asp-append-version="true"></script>
+<script src="~/js/clientPersonalAccountPage.js" asp-append-version="true"></script>

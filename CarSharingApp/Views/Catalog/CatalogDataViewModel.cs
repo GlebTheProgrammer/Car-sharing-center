@@ -3,7 +3,7 @@ using CarSharingApp.Services.Includes;
 
 namespace CarSharingApp.Views.CarSharing
 {
-    public class CarSharingDataViewModel
+    public class CatalogDataViewModel
     {
         // Vehicles data
         public List<VehicleViewModel> Vehicles { get; set; }

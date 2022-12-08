@@ -2,7 +2,7 @@
 @using CarSharingApp.Models.VehicleData
 
 @using CarSharingApp.Views.CarSharing
-@model CarSharingDataViewModel
+@model CatalogDataViewModel
 
 @{
     Pager pager = new Pager();
@@ -28,7 +28,7 @@
 
 <div class="d-flex flex-row col-sm-12 ">
     <label class="mr-2">Show</label>
-    <form asp-controller="CarSharing" asp-action="Index" method="post" >
+    <form asp-controller="Catalog" asp-action="Index" method="post" >
         <select name="pageSize" id="totalVehiclesDisplayedSelect" class="custom-select custom-select-sm form-control form-control-sm">
             <option value="3">3</option>
             <option value="6">6</option>
@@ -46,7 +46,7 @@
 </div>
 
 <div class="container">
-    <div class="row mt-4" vehicle-Card-Div>
+    <div class="row mt-4">
 
         <div class="col">
             @{
@@ -59,7 +59,7 @@
                             <h3 class="card-title">@vehicle.Name</h3>
                             <p class="card-text">@vehicle.BriefDescription</p>
                             <h4 class="card-text">@vehicle.Tariff.TariffPerHour $<span class="text-muted h5">/hr - </span>@vehicle.Tariff.TariffPerDay $<span class="text-muted h5">/day</span></h4>
-                            <a href="@Url.Action("Index", "CarInformation", new {vehicleId = vehicle.Id})" class="btn btn-info mt-2" style="width:max-content">Information</a>
+                            <a href="@Url.Action("Index", "VehicleInformation", new {vehicleId = vehicle.Id})" class="btn btn-info mt-2" style="width:max-content">Information</a>
                             <p></p>
 
                             @if (vehicle.TimesOrdered == 0)
@@ -91,7 +91,7 @@
                             <h3 class="card-title">@vehicle.Name</h3>
                             <p class="card-text">@vehicle.BriefDescription</p>
                             <h4 class="card-text">@vehicle.Tariff.TariffPerHour $<span class="text-muted h5">/hr - </span>@vehicle.Tariff.TariffPerDay $<span class="text-muted h5">/day</span></h4>
-                            <a href="@Url.Action("Index", "CarInformation", new {vehicleId = vehicle.Id})" class="btn btn-info mt-2" style="width:max-content">Information</a>
+                            <a href="@Url.Action("Index", "VehicleInformation", new {vehicleId = vehicle.Id})" class="btn btn-info mt-2" style="width:max-content">Information</a>
                             <p></p>
 
                             @if (vehicle.TimesOrdered == 0)
@@ -123,7 +123,7 @@
                             <h3 class="card-title">@vehicle.Name</h3>
                             <p class="card-text">@vehicle.BriefDescription</p>
                             <h4 class="card-text">@vehicle.Tariff.TariffPerHour $<span class="text-muted h5">/hr - </span>@vehicle.Tariff.TariffPerDay $<span class="text-muted h5">/day</span></h4>
-                            <a href="@Url.Action("Index", "CarInformation", new {vehicleId = vehicle.Id})" class="btn btn-info mt-2" style="width:max-content">Information</a>
+                            <a href="@Url.Action("Index", "VehicleInformation", new {vehicleId = vehicle.Id})" class="btn btn-info mt-2" style="width:max-content">Information</a>
                             <p></p>
 
                             @if (vehicle.TimesOrdered == 0)
@@ -160,27 +160,27 @@
                     @if (pager.CurrentPage > 1)
                     {
                         <li class="page-item">
-                            <a class="page-link" asp-controller="CarSharing" asp-action="Index" asp-route-page="1">First</a>
+                            <a class="page-link" asp-controller="Catalog" asp-action="Index" asp-route-page="1">First</a>
                         </li>
                         <li class="page-item">
-                            <a class="page-link" asp-controller="CarSharing" asp-action="Index" asp-route-page="@(pager.CurrentPage - 1)">Previous</a>
+                            <a class="page-link" asp-controller="Catalog" asp-action="Index" asp-route-page="@(pager.CurrentPage - 1)">Previous</a>
                         </li>
                     }
 
                     @for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
                     {
                         <li class="page-item @(pge == pager.CurrentPage ? "active" : "")">
-                            <a class="page-link" asp-controller="CarSharing" asp-action="Index" asp-route-page="@pge">@pge</a>
+                            <a class="page-link" asp-controller="Catalog" asp-action="Index" asp-route-page="@pge">@pge</a>
                         </li>
                     }
 
                     @if (pager.CurrentPage < pager.TotalPages)
                     {
                         <li class="page-item">
-                            <a class="page-link" asp-controller="CarSharing" asp-action="Index" asp-route-page="@(pager.CurrentPage + 1)">Next</a>
+                            <a class="page-link" asp-controller="Catalog" asp-action="Index" asp-route-page="@(pager.CurrentPage + 1)">Next</a>
                         </li>
                         <li class="page-item">
-                            <a class="page-link" asp-controller="CarSharing" asp-action="Index" asp-route-page="@(pager.TotalPages)">Last</a>
+                            <a class="page-link" asp-controller="Catalog" asp-action="Index" asp-route-page="@(pager.TotalPages)">Last</a>
                         </li>
                     }
 
@@ -190,7 +190,7 @@
     </div>
 </div>
 
-<script src="~/js/carSharingPage.js" asp-append-version="true"></script>
+<script src="~/js/catalogPage.js" asp-append-version="true"></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -199,28 +199,5 @@
         const options = Array.from(selectTag.options);
         const optionToSelect = options.find(item => item.text === "@Model.NumberOfVehiclesDisplayed");
         selectTag.value = optionToSelect.value;
-    });
-</script>
-
-<script>
-    const searchInput = document.getElementById("searchCarInput");
-    const vehicleCards = document.querySelector("[vehicle-Card-Div]");
-
-    let vehicles = [];
-
-    searchInput.addEventListener("input", e => {
-
-
-        const vehiclesMainDiv = vehicleCards.cloneNode(true).childNodes.forEach(childCol => {
-            childCol.cloneNode(true).childNodes.forEach(vehicleCard => {
-                console.log(vehicleCard.);
-            });
-        });
-
-        //const card = vehicleCards.cloneNode(true).children[0];
-        //console.log(card);
-
-        var inputValue = e.target.value;
-        console.log(inputValue);
     });
 </script>

@@ -116,7 +116,7 @@
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
-                                        <form id="ChangePasswordForm" asp-controller="EditUserPersonalInfo" asp-action="ChangeUserPassword" method="post" enctype="multipart/form-data" onsubmit="SubmitChangePasswordForm(event)">
+                                        <form id="ChangePasswordForm" asp-controller="EditClientPersonalInfo" asp-action="ChangeClientPassword" method="post" enctype="multipart/form-data" onsubmit="SubmitChangePasswordForm(event)">
                                             <div class="modal-body">
                                                     <div class="form-group">
                                                         <label class="col-form-label d-flex justify-content-start">New password:</label>
@@ -139,7 +139,7 @@
 
                             <buton type="button" class="btn btn-outline-danger mb-3" onclick="ShowCancelChangesConfirmationAlert()">Cancel Changes</buton>
                             <button type="submit" form="userEditedDataForm" value="Submit" class="btn btn-outline-success mb-3">Save Changes</button>
-                            <a asp-action="Index" asp-controller="UserPersonalAccount" type="button" class="btn btn-outline-secondary">Get Back</a>
+                            <a asp-action="Index" asp-controller="ClientPersonalAccount" type="button" class="btn btn-outline-secondary">Get Back</a>
                         </div>
                     </div>
                 </div>
@@ -301,7 +301,7 @@
                     </div>
                 </div>
 
-                <form id="userEditedDataForm" asp-controller="EditUserPersonalInfo" asp-action="ChangeUserPersonalInfo" method="post" enctype="multipart/form-data" class="visually-hidden">
+                <form id="userEditedDataForm" asp-controller="EditClientPersonalInfo" asp-action="ChangeClientPersonalInfo" method="post" enctype="multipart/form-data" class="visually-hidden">
                     <input id="ModelFirstName" asp-for="FirstName" value="@Model.FirstName" class="form-control" readonly="readonly"/>
                     <input id="ModelLastName" asp-for="LastName" value="@Model.LastName" class="form-control" readonly="readonly" />
                     <input id="ModelUsername" asp-for="Username" value="@Model.Username" class="form-control" readonly="readonly" />
@@ -319,7 +319,7 @@
     </div>
 </section>
 
-<script src="~/js/editUserPersonalInfoPage.js" asp-append-version="true"></script>
+<script src="~/js/editClientPersonalInfoPage.js" asp-append-version="true"></script>
 
 <script>
     function ApplyImageChanges () {
