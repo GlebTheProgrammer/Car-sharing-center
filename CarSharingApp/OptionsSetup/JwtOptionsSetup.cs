@@ -7,16 +7,16 @@ namespace CarSharingApp.OptionsSetup
     {
         private const string SectionName = "Jwt";
 
-        private readonly IConfiguration _configurations;
+        private readonly IConfiguration _configuration;
 
         public JwtOptionsSetup(IConfiguration configurations)
         {
-            _configurations = configurations;
+            _configuration = configurations;
         }
 
         public void Configure(JwtOptions options)
         {
-            _configurations.GetSection(SectionName).Bind(options);
+            _configuration.GetSection(SectionName).Bind(options);
         }
     }
 }

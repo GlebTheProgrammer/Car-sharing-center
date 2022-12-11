@@ -1,4 +1,5 @@
 ﻿using CarSharingApp.Models.ClientData;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -24,18 +25,15 @@ namespace CarSharingApp.Login.Authentication
                 new Claim(JwtRegisteredClaimNames.Email, client.Email)
             };
 
-            var signingCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(_options.SecretKey)),
-                SecurityAlgorithms.HmacSha256);
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey));
+            var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
                 _options.Issuer,
                 _options.Audience,
                 claims,
-                null,
-                DateTime.UtcNow.AddHours(1),
-                signingCredentials);
+                expires: DateTime.UtcNow.AddMinutes(1),
+                signingCredentials: signingCredentials);
 
             string tokenValue = new JwtSecurityTokenHandler().WriteToken(token);
 

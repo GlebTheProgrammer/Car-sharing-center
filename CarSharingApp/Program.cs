@@ -1,14 +1,22 @@
+﻿using CarSharingApp.Login;
+using CarSharingApp.Login.Authentication;
 using CarSharingApp.OptionsSetup;
 using CarSharingApp.Order;
 using CarSharingApp.Payment;
 using CarSharingApp.Payment.StripeService;
 using CarSharingApp.Repository.Interfaces;
 using CarSharingApp.Repository.LocalRepository;
-using CarSharingApp.Repository.LocalRepository.Includes;
 using CarSharingApp.Services;
 using CarSharingApp.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Stripe;
+using Microsoft.AspNetCore.Session;
+using Newtonsoft.Json.Linq;
+using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Authorization;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using CarSharingApp.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,13 +40,39 @@ builder.Services.AddScoped<IFileUploadService, LocalFileUploadService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddSingleton<ICurrentUserStatusProvider, CurrentUserStatusProviderService>();
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+builder.Services.AddTransient<IJwtProvider, JwtProvider>();
+
+// JWT options configuration setup is here
 builder.Services.ConfigureOptions<JwtOptionsSetup>();
-builder.Services.ConfigureOptions<JwtBearerOptionsSetup>();
+
+var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]);
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(opt =>
+{
+    opt.RequireHttpsMetadata = false;
+    opt.SaveToken = true;
+    opt.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidIssuers = new string[] { builder.Configuration["Jwt:Issuer"] },
+        ValidAudiences = new string[] { builder.Configuration["Jwt:Audience"] },
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero
+    };
+});
+
+// DB configuration section
+builder.Services.Configure<CarSharingDatabaseSettings>(
+    builder.Configuration.GetSection("CarSharingLocalDB"));
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -47,13 +81,22 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+
 app.UseSession();
 
+app.Use(async (context, next) =>
+{
+    var JWToken = context.Session.GetString("JWToken");
+    if (!string.IsNullOrEmpty(JWToken))
+    {
+        context.Request.Headers.Add("Authorization", "Bearer " + JWToken);
+    }
+    await next();
+});
+app.UseStaticFiles();
 app.UseRouting();
-
 app.UseAuthentication();
-
+app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 app.UseAuthorization();
 
 StripeConfiguration.ApiKey = "sk_test_51M6B0AGBXizEWSwDh5mkyk4o3DvKzmywGwJh7Fg2cpd9mxmhLiIPkARsFcvN3Yov0Qyshlqu8gITm3NGPPReXtbW00dvIu6aGa";

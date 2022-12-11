@@ -13,12 +13,15 @@ namespace CarSharingApp.Controllers
         private readonly IRepositoryManager _repositoryManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ICurrentUserStatusProvider _currentUserStatusProvider;
+        private readonly IJwtProvider _jwtProvider;
 
-        public SignInController(IRepositoryManager repositoryManager, IHttpContextAccessor httpContextAccessor, ICurrentUserStatusProvider currentUserStatusProvider)
+        public SignInController(IRepositoryManager repositoryManager, IHttpContextAccessor httpContextAccessor, 
+                                ICurrentUserStatusProvider currentUserStatusProvider, IJwtProvider jwtProvider)
         {
             _repositoryManager = repositoryManager;
             _httpContextAccessor = httpContextAccessor;
             _currentUserStatusProvider = currentUserStatusProvider;
+            _jwtProvider = jwtProvider;
         }
 
         public IActionResult Index()
@@ -29,15 +32,6 @@ namespace CarSharingApp.Controllers
 
         public IActionResult TrySignIn(ClientSignInViewModel clientSignInViewModel)
         {
-            //var command = new LoginCommand(request.email, request.password);
-
-            //Results tokenResult = "";
-
-            //if (tokenResult.IsFailure)
-            //    return ;
-
-            //return Ok(tokenResult.Value);
-
             if (!ModelState.IsValid)
             {
                 return View("Index", clientSignInViewModel);
@@ -57,6 +51,15 @@ namespace CarSharingApp.Controllers
                 _currentUserStatusProvider.SetUserCredentials(signedClient.Id, UserRole.Client);
             }
             _currentUserStatusProvider.ChangeSignedInState(true);
+
+            var tokenResult = _jwtProvider.Generate(signedClient);
+
+            if (tokenResult == null)
+            {
+                throw new Exception("Token can not be generated");
+            }
+
+            HttpContext.Session.SetString("JWToken", tokenResult);
 
             return RedirectToAction("Index", "Home");
         }

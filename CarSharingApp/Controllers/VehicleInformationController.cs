@@ -6,6 +6,8 @@ using CarSharingApp.Payment;
 using CarSharingApp.Repository.Interfaces;
 using CarSharingApp.Services.Includes;
 using CarSharingApp.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarSharingApp.Controllers
@@ -28,6 +30,7 @@ namespace CarSharingApp.Controllers
             _orderProvider = orderProvider;
         }
 
+        [Authorize]
         public IActionResult Index(int vehicleId)
         {
             if(_userStatusProvider.HasUserLoggedOut())
