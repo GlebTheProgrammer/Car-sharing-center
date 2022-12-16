@@ -1,9 +1,9 @@
-﻿using CarSharingApp.Models.ClientData;
+﻿using CarSharingApp.Models.Mongo;
 
 namespace CarSharingApp.Login
 {
     public interface IJwtProvider
     {
-        string Generate(ClientModel client);
+        string Generate(Customer customer, Credentials credentials);
     }
 }

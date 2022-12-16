@@ -6,6 +6,7 @@
 
         public string DatabaseName { get; set; } = null!;
 
+        public string AccountsCollectionName { get; set; } = null!;
         public string AdminsCollectionName { get; set; } = null!;
         public string CredentialsCollectionName { get; set; } = null!;
         public string CustomersCollectionName { get; set; } = null!;

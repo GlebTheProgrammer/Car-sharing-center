@@ -1,5 +1,6 @@
 ﻿using CarSharingApp.Models;
-using CarSharingApp.Repository.Interfaces;
+using CarSharingApp.Models.Mongo;
+using CarSharingApp.Repository.MongoDbRepository;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -7,25 +8,26 @@ namespace CarSharingApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IRepositoryManager _repositoryManager;
+        private readonly MongoDbService _mongoDbService;
 
-        public HomeController(IRepositoryManager repositoryManager)
+        public HomeController(MongoDbService mongoDbService)
         {
-            _repositoryManager= repositoryManager;
+            _mongoDbService = mongoDbService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var vehiclesIds = _repositoryManager.OrdersRepository.CheckExpiredOrdersAndGetVehiclesId().Result;
-            if (vehiclesIds.Count > 0)
-                _repositoryManager.VehiclesRepository.ChangeVehiclesIsOrderedState(vehiclesIds, false);
+            //var vehiclesIds = _repositoryManager.OrdersRepository.CheckExpiredOrdersAndGetVehiclesId().Result;
+            //if (vehiclesIds.Count > 0)
+            //    _repositoryManager.VehiclesRepository.ChangeVehiclesIsOrderedState(vehiclesIds, false);
 
-            int vehiclesCount = _repositoryManager.VehiclesRepository.GetAllVehiclesForCatalog().Count();
+            List<Vehicle> activeNotOrderedVehicles = await _mongoDbService.GetPublishedAndNotOrderedVehicles();
+            int vehiclesCount = activeNotOrderedVehicles.Count;
 
             float[][] array = new float[vehiclesCount][];
 
             int i = 0;
-            foreach (var vehicle in _repositoryManager.VehiclesRepository.GetAllVehiclesForCatalog())
+            foreach (Vehicle vehicle in activeNotOrderedVehicles)
             {
                 string latitude = vehicle.Location.Latitude.Replace('.', ',');
                 string longitude = vehicle.Location.Longitude.Replace('.', ',');

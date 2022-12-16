@@ -1,8 +1,7 @@
 ﻿@using CarSharingApp.Models.ApplicationData
-@using CarSharingApp.Models.VehicleData
+@using CarSharingApp.Models.MongoView;
 
-@using CarSharingApp.Views.CarSharing
-@model CatalogDataViewModel
+@model CarSharingApp.Models.MongoView.VehiclesCatalogDataViewModel
 
 @{
     Pager pager = new Pager();
@@ -17,9 +16,9 @@
 }
 
 @{
-    List<VehicleViewModel> vehiclesForFirstColumn = Model.Vehicles.Where((vehicle, index) => index % 3 == 0).ToList();
-    List<VehicleViewModel> vehiclesForSecondColumn = Model.Vehicles.Where((vehicle, index) => index % 3 == 1).ToList();
-    List<VehicleViewModel> vehiclesForThirdColumn = Model.Vehicles.Where((vehicle, index) => index % 3 == 2).ToList();
+    List<VehicleCatalogModel> vehiclesForFirstColumn = Model.Vehicles.Where((vehicle, index) => index % 3 == 0).ToList();
+    List<VehicleCatalogModel> vehiclesForSecondColumn = Model.Vehicles.Where((vehicle, index) => index % 3 == 1).ToList();
+    List<VehicleCatalogModel> vehiclesForThirdColumn = Model.Vehicles.Where((vehicle, index) => index % 3 == 2).ToList();
 }
 
 <h1 class="pt-5 mb-4" style="color:black; text-align:center">Explore Sam Car's Prices for Daily and Hourly Car Rental</h1>
@@ -68,9 +67,9 @@
                             }
                             else
                             {
-                                int timeDaysDifference = Convert.ToInt32((DateTime.Now - vehicle.LastTimeOrdered).TotalDays);
-                                int timeHoursDifference = Convert.ToInt32((DateTime.Now - vehicle.LastTimeOrdered).TotalHours % 24);
-                                int timeMinutesDifference = Convert.ToInt32((DateTime.Now - vehicle.LastTimeOrdered).TotalMinutes % 24 % 60) + 1;
+                                int timeDaysDifference = Convert.ToInt32((DateTime.Now - (DateTime)vehicle.LastTimeOrdered).TotalDays);
+                                int timeHoursDifference = Convert.ToInt32((DateTime.Now - (DateTime)vehicle.LastTimeOrdered).TotalHours % 24);
+                                int timeMinutesDifference = Convert.ToInt32((DateTime.Now - (DateTime)vehicle.LastTimeOrdered).TotalMinutes % 24 % 60) + 1;
 
                                 <p class="card-text"><small class="text-muted">Last taken @(timeDaysDifference > 0 ? $"{timeDaysDifference} days " : "")@(timeHoursDifference > 0 ? $"{timeHoursDifference} hours " : "")@($"{timeMinutesDifference} mins") ago</small></p>
                             }
@@ -100,9 +99,9 @@
                             }
                             else
                             {
-                                int timeDaysDifference = Convert.ToInt32((DateTime.Now - vehicle.LastTimeOrdered).TotalDays);
-                                int timeHoursDifference = Convert.ToInt32((DateTime.Now - vehicle.LastTimeOrdered).TotalHours % 24);
-                                int timeMinutesDifference = Convert.ToInt32((DateTime.Now - vehicle.LastTimeOrdered).TotalMinutes % 24 % 60) + 1;
+                                int timeDaysDifference = Convert.ToInt32((DateTime.Now - (DateTime)vehicle.LastTimeOrdered).TotalDays);
+                                int timeHoursDifference = Convert.ToInt32((DateTime.Now - (DateTime)vehicle.LastTimeOrdered).TotalHours % 24);
+                                int timeMinutesDifference = Convert.ToInt32((DateTime.Now - (DateTime)vehicle.LastTimeOrdered).TotalMinutes % 24 % 60) + 1;
 
                                 <p class="card-text"><small class="text-muted">Last taken @(timeDaysDifference > 0 ? $"{timeDaysDifference} days " : "")@(timeHoursDifference > 0 ? $"{timeHoursDifference} hours " : "")@($"{timeMinutesDifference} mins") ago</small></p>
                             }
@@ -132,9 +131,9 @@
                             }
                             else
                             {
-                                int timeDaysDifference = Convert.ToInt32((DateTime.Now - vehicle.LastTimeOrdered).TotalDays);
-                                int timeHoursDifference = Convert.ToInt32((DateTime.Now - vehicle.LastTimeOrdered).TotalHours % 24);
-                                int timeMinutesDifference = Convert.ToInt32((DateTime.Now - vehicle.LastTimeOrdered).TotalMinutes % 24 % 60) + 1;
+                                int timeDaysDifference = Convert.ToInt32((DateTime.Now - (DateTime)vehicle.LastTimeOrdered).TotalDays);
+                                int timeHoursDifference = Convert.ToInt32((DateTime.Now - (DateTime)vehicle.LastTimeOrdered).TotalHours % 24);
+                                int timeMinutesDifference = Convert.ToInt32((DateTime.Now - (DateTime)vehicle.LastTimeOrdered).TotalMinutes % 24 % 60) + 1;
 
                                 <p class="card-text"><small class="text-muted">Last taken @(timeDaysDifference > 0 ? $"{timeDaysDifference} days " : "")@(timeHoursDifference > 0 ? $"{timeHoursDifference} hours " : "")@($"{timeMinutesDifference} mins") ago</small></p>
                             }
@@ -149,7 +148,7 @@
 
 <div class="d-flex flex-row col-sm-12 ">
     <div class="">
-        <div class="dataTables_info" id="dtOrderExample_info" role="status" aria-live="polite">Showing @Model.StartVehiclesIndex to @Model.EndVehiclesIndex of @Model.NumberOfVehicles vehicles</div>
+        <div class="dataTables_info" id="dtOrderExample_info" role="status" aria-live="polite">Showing @Model.IndexOfFirstVehicleInTheList to @Model.IndexOfLastVehicleInTheList of @Model.NumberOfNotOrderedVehicles vehicles</div>
     </div>
     <div class="ml-auto">
         <div class="dataTables_paginate paging_simple_numbers" id="dtOrderExample_paginate">
@@ -197,7 +196,7 @@
 
         var selectTag = document.getElementById("totalVehiclesDisplayedSelect");
         const options = Array.from(selectTag.options);
-        const optionToSelect = options.find(item => item.text === "@Model.NumberOfVehiclesDisplayed");
+        const optionToSelect = options.find(item => item.text === "@Model.NumberOfVehiclesToBeDisplayed");
         selectTag.value = optionToSelect.value;
     });
 </script>

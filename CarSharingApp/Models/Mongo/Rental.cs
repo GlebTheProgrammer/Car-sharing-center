@@ -16,6 +16,7 @@ namespace CarSharingApp.Models.Mongo
         [BsonRepresentation(BsonType.ObjectId)]
         public string? VehicleOwnerId { get; set; }
 
+        [BsonRequired] public string? RentedVehicleName { get; set; } = null!;
         [BsonRequired] public DateTime RentalDate { get; set; } = DateTime.Now;
         [BsonRequired] public int RentalTimeInMinutes { get; set; }
         [BsonRequired] public DateTime ReturnDate { get; set; }

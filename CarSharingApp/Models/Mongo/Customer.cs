@@ -1,6 +1,6 @@
-﻿using CarSharingApp.Models.ClientData.Includes;
-using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
+using CarSharingApp.Models.Mongo.Enums;
 
 namespace CarSharingApp.Models.Mongo
 {

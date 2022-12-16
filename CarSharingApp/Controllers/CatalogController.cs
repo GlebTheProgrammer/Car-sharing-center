@@ -1,64 +1,43 @@
-﻿using AutoMapper;
-using CarSharingApp.Models.ApplicationData;
-using CarSharingApp.Models.VehicleData;
-using CarSharingApp.Repository.Interfaces;
-using CarSharingApp.Services.Interfaces;
-using CarSharingApp.Views.CarSharing;
+﻿using CarSharingApp.Models.ApplicationData;
+using CarSharingApp.Models.MongoView;
+using CarSharingApp.Repository.MongoDbRepository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarSharingApp.Controllers
 {
     public class CatalogController : Controller
     {
-        private readonly IRepositoryManager _repositoryManager;
-        private readonly IMapper _mapper;
-        private readonly ICurrentUserStatusProvider _currentUserStatusProvider;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly MongoDbService _mongoDbService;
 
-
-        public CatalogController(IRepositoryManager repositoryManager, IMapper mapper, ICurrentUserStatusProvider currentUserStatusProvider, IHttpContextAccessor httpContextAccessor)
+        public CatalogController(MongoDbService mongoDbService)
         {
-            _repositoryManager = repositoryManager;
-            _mapper = mapper;
-            _currentUserStatusProvider = currentUserStatusProvider;
-            _httpContextAccessor = httpContextAccessor;
+            _mongoDbService = mongoDbService;
         }
 
-
-
-        public IActionResult Index(int page = 1, int pageSize = 3)
+        public async Task<IActionResult> Index(int page = 1, int pageSize = 3)
         {
-            var vehiclesIds = _repositoryManager.OrdersRepository.CheckExpiredOrdersAndGetVehiclesId().Result;
-            if (vehiclesIds.Count > 0)
-                _repositoryManager.VehiclesRepository.ChangeVehiclesIsOrderedState(vehiclesIds, false);
+            //var vehiclesIds = _repositoryManager.OrdersRepository.CheckExpiredOrdersAndGetVehiclesId().Result;
+            //if (vehiclesIds.Count > 0)
+            //    _repositoryManager.VehiclesRepository.ChangeVehiclesIsOrderedState(vehiclesIds, false);
 
-            var vehicleViewModels = _mapper.Map<IEnumerable<VehicleViewModel>>(_repositoryManager.VehiclesRepository.GetAllVehiclesForCatalog().Where(vehicle => vehicle.OwnerId != _currentUserStatusProvider.GetUserId())).ToList();
+            List<VehicleCatalogModel> vehicles_CatalogRepresentation = await _mongoDbService.GetAllPublishedAndNotOrderedVehicles_CatalogRepresentation();
+            int notOrderedPublishedVehiclesCount = vehicles_CatalogRepresentation.Count();
 
             if (page < 1)
                 page = 1;
-
-            int vehiclesCount = vehicleViewModels.Count();
-
-            var pager = new Pager(vehiclesCount, page, pageSize);
+            Pager pager = new Pager(notOrderedPublishedVehiclesCount, page, pageSize);
 
             int vehiclesSkip = (page - 1) * pageSize;
+            List<VehicleCatalogModel> vehiclesToDisplay_CatalogRepresentation = vehicles_CatalogRepresentation.Skip(vehiclesSkip).Take(pager.PageSize).ToList();
 
-            var vehiclesData = vehicleViewModels.Skip(vehiclesSkip).Take(pager.PageSize).ToList();
-
-            foreach (var vehicle in vehiclesData)
+            ViewBag.Pager = pager;
+            VehiclesCatalogDataViewModel model = new VehiclesCatalogDataViewModel()
             {
-                vehicle.LastTimeOrdered = _repositoryManager.OrdersRepository.GetLastOrderExpiredDate(vehicle.Id);
-            }
-
-            this.ViewBag.Pager = pager;
-
-            CatalogDataViewModel model = new CatalogDataViewModel
-            {
-                Vehicles = vehiclesData,
-                NumberOfVehicles = vehicleViewModels.Count,
-                NumberOfVehiclesDisplayed = pageSize,
-                StartVehiclesIndex = vehicleViewModels.Count == 0 ? 0 : vehiclesSkip + 1,
-                EndVehiclesIndex = vehiclesSkip + pageSize > vehicleViewModels.Count ? vehicleViewModels.Count : vehiclesSkip + pageSize,
+                Vehicles = vehiclesToDisplay_CatalogRepresentation,
+                NumberOfVehiclesToBeDisplayed = pageSize,
+                NumberOfNotOrderedVehicles = notOrderedPublishedVehiclesCount,
+                IndexOfFirstVehicleInTheList = vehiclesToDisplay_CatalogRepresentation.Count == 0 ? 0 : vehiclesSkip + 1,
+                IndexOfLastVehicleInTheList = vehiclesSkip + pageSize > vehiclesToDisplay_CatalogRepresentation.Count ? vehiclesToDisplay_CatalogRepresentation.Count : vehiclesSkip + pageSize,
             };
 
             return View(model);
@@ -66,18 +45,19 @@ namespace CarSharingApp.Controllers
 
 
         [HttpPost]
-        public IActionResult ChangeDisplayedVehiclesCount(string data)
+        public async Task<IActionResult> ChangeDisplayedVehiclesCount(string data)
         {
             int numberOfVehiclesToDisplay = int.Parse(data);
-            var vehicleViewModels = _mapper.Map<IEnumerable<VehicleViewModel>>(_repositoryManager.VehiclesRepository.GetAllVehiclesForCatalog()).ToList();
 
-            CatalogDataViewModel model = new CatalogDataViewModel
+            List<VehicleCatalogModel> vehicles_CatalogRepresentation = await _mongoDbService.GetAllPublishedAndNotOrderedVehicles_CatalogRepresentation();
+
+            VehiclesCatalogDataViewModel model = new VehiclesCatalogDataViewModel
             {
-                Vehicles = vehicleViewModels.Take(numberOfVehiclesToDisplay).ToList(),
-                NumberOfVehicles = vehicleViewModels.Count,
-                NumberOfVehiclesDisplayed = numberOfVehiclesToDisplay,
-                StartVehiclesIndex = vehicleViewModels.Count == 0 ? 0 : 1,
-                EndVehiclesIndex = vehicleViewModels.Count
+                Vehicles = vehicles_CatalogRepresentation.Take(numberOfVehiclesToDisplay).ToList(),
+                NumberOfNotOrderedVehicles = vehicles_CatalogRepresentation.Count(),
+                NumberOfVehiclesToBeDisplayed = numberOfVehiclesToDisplay,
+                IndexOfFirstVehicleInTheList = vehicles_CatalogRepresentation.Count == 0 ? 0 : 1,
+                IndexOfLastVehicleInTheList = vehicles_CatalogRepresentation.Count
             };
 
             return View("Index", model);

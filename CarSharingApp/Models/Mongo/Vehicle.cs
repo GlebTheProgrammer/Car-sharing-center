@@ -1,6 +1,6 @@
-﻿using CarSharingApp.Models.VehicleData.Includes;
-using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
+using CarSharingApp.Models.Mongo.Includes;
 
 namespace CarSharingApp.Models.Mongo
 {
@@ -21,6 +21,7 @@ namespace CarSharingApp.Models.Mongo
         [BsonRequired] public Location Location { get; set; } = null!;
         [BsonRequired] public int TimesOrdered { get; set; } = 0;
         [BsonRequired] public DateTime PublishedTime { get; set; } = DateTime.Now;
+        [BsonRequired] public DateTime? LastTimeOrdered = null!;
         [BsonRequired] public bool IsPublished { get; set; } = false;
         [BsonRequired] public bool IsOrdered { get; set; } = false;
     }

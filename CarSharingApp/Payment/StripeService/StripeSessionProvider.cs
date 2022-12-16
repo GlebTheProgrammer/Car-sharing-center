@@ -1,5 +1,4 @@
 ﻿using Stripe.Checkout;
-using Stripe;
 
 namespace CarSharingApp.Payment.StripeService
 {

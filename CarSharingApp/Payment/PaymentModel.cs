@@ -1,21 +1,21 @@
-﻿using CarSharingApp.Models.VehicleData.Includes;
+﻿using CarSharingApp.Models.Mongo.Includes;
 
 namespace CarSharingApp.Payment
 {
     public class PaymentModel
     {
-        public int VehicleId { get; set; }
+        public string VehicleId { get; set; } = null!;
 
-        public Tariff Tariff { get; set; }
+        public string VehicleName { get; set; } = null!;
+        public string Amount { get; set; } = null!;
+        public Tariff Tariff { get; set; } = new Tariff();
 
-        public string Amount { get; set; }
-        public string VehicleName { get; set; }
-        public string StartMonth { get; set; }
-        public string EndMonth { get; set; }
-        public string StartDay { get; set; }
-        public string EndDay { get; set; }
-        public string StartHour { get; set; }
-        public string EndHour { get; set; }
-       
+        public string StartHour { get; set; } = null!;
+        public string StartDay { get; set; } = null!;
+        public string StartMonth { get; set; } = null!;
+
+        public string EndHour { get; set; } = null!;
+        public string EndDay { get; set; } = null!;
+        public string EndMonth { get; set; } = null!;
     }
 }

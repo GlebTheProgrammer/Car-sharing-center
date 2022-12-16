@@ -1,5 +1,4 @@
-﻿@using CarSharingApp.Models.ClientData
-@model ClientRegistrationViewModel
+﻿@model CarSharingApp.Models.MongoView.CustomerRegisterModel
 
 <div class="container">
     <div class="py-5 text-center">
@@ -112,10 +111,10 @@
 
                 <div class="mb-3">
                     <label>Series and Number of the driver's license</label>
-                    <input asp-for="DriverLicenseNumber" type="text" class="form-control" placeholder="5AA000031" onfocus="HideErrorSpan('DriverLicenseNumberError')">
+                    <input asp-for="DriverLicenseIdentifier" type="text" class="form-control" placeholder="5AA000031" onfocus="HideErrorSpan('DriverLicenseNumberError')">
                 </div>
                 <div class="mb-3">
-                    <span asp-validation-for="DriverLicenseNumber" id="DriverLicenseNumberError" class="text-danger text-center"></span>
+                    <span asp-validation-for="DriverLicenseIdentifier" id="DriverLicenseNumberError" class="text-danger text-center"></span>
                 </div>
 
                 <hr class="mb-4">

@@ -1,5 +1,4 @@
-﻿using CarSharingApp.Models.ClientData;
-using Microsoft.AspNetCore.DataProtection.KeyManagement;
+﻿using CarSharingApp.Models.Mongo;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -17,12 +16,12 @@ namespace CarSharingApp.Login.Authentication
             _options = options.Value;
         }
 
-        public string Generate(ClientModel client)
+        public string Generate(Customer customer, Credentials credentials)
         {
             var claims = new Claim[] 
             {
-                new Claim(JwtRegisteredClaimNames.Sub, client.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, client.Email)
+                new Claim(JwtRegisteredClaimNames.Sub, customer?.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, credentials.Email)
             };
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey));

@@ -1,4 +1,4 @@
-﻿using CarSharingApp.Models.VehicleData.Includes;
+﻿using CarSharingApp.Models.Mongo.Enums;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 

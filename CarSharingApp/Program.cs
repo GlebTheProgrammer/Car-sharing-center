@@ -1,11 +1,8 @@
 ﻿using CarSharingApp.Login;
 using CarSharingApp.Login.Authentication;
 using CarSharingApp.OptionsSetup;
-using CarSharingApp.Order;
 using CarSharingApp.Payment;
 using CarSharingApp.Payment.StripeService;
-using CarSharingApp.Repository.Interfaces;
-using CarSharingApp.Repository.LocalRepository;
 using CarSharingApp.Services;
 using CarSharingApp.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -17,6 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using CarSharingApp.Middlewares;
+using CarSharingApp.Repository.MongoDbRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,13 +30,10 @@ builder.Services.AddSession(options =>
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Dependency injection is here
-builder.Services.AddSingleton<IRepositoryManager, LocalRepositoryManager>();
 builder.Services.AddSingleton<IPaymentSessionProvider, StripeSessionProvider>();
-builder.Services.AddSingleton<IOrderProvider, CompleatedOrderProvider>();
 
 builder.Services.AddScoped<IFileUploadService, LocalFileUploadService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-builder.Services.AddSingleton<ICurrentUserStatusProvider, CurrentUserStatusProviderService>();
 
 builder.Services.AddTransient<IJwtProvider, JwtProvider>();
 
@@ -70,6 +65,7 @@ builder.Services.AddAuthentication(options =>
 // DB configuration section
 builder.Services.Configure<CarSharingDatabaseSettings>(
     builder.Configuration.GetSection("CarSharingLocalDB"));
+builder.Services.AddSingleton<MongoDbService>();
 
 var app = builder.Build();
 

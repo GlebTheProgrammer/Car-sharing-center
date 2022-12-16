@@ -1,4 +1,24 @@
-﻿// Function to show user an alert press logout button
+﻿// Function to show message about successful logout 
+function ShowSuccessfulMessageAfterLogout() {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-start',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    });
+
+    Toast.fire({
+        icon: 'success',
+        title: 'Logged out successfully'
+    });
+}
+
+// Function to show user an alert press logout button
 function ShowLogoutConfirmationAlert() {
     Swal.fire({
         title: 'Are you sure?',
@@ -10,13 +30,7 @@ function ShowLogoutConfirmationAlert() {
         confirmButtonText: 'Yes'
     }).then((result) => {
         if (result.isConfirmed) {
-
-            $.ajax({
-                url: "/SignIn/Logout",
-                method: "POST"
-            });
-           
-            window.location.reload(true);
+            window.location.href = '/SignIn/Logout'
         }
     });
 }
@@ -38,26 +52,6 @@ function ShowSuccessfulMessageAfterLogIn() {
     Toast.fire({
         icon: 'success',
         title: 'Signed in successfully'
-    });
-}
-
-// Function to show message about successful logout 
-function ShowSuccessfulMessageAfterLogout() {
-    const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-start',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-            toast.addEventListener('mouseenter', Swal.stopTimer)
-            toast.addEventListener('mouseleave', Swal.resumeTimer)
-        }
-    });
-
-    Toast.fire({
-        icon: 'success',
-        title: 'Logged out successfully'
     });
 }
 
@@ -122,31 +116,6 @@ function ShowSuccessfulMessageAfterUserHasChangedPassword() {
 }
 
 // Function to show message about unauthorized access attempt
-function ShowUnauthorizedAccessAttemptMessage() {
-    const swalWithBootstrapButtons = Swal.mixin({
-        customClass: {
-            confirmButton: 'btn btn-success',
-            cancelButton: 'btn btn-danger'
-        }
-    })
-
-    swalWithBootstrapButtons.fire({
-        title: 'Sorry, authentication required',
-        text: "You won't be able to use this function unless you sign in!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#007aff',
-        confirmButtonText: 'Sign in',
-        cancelButtonText: 'Close',
-        reverseButtons: true
-    }).then((result) => {
-        if (result.isConfirmed) {
-            window.location.href = '/SignIn/';
-        }
-    })
-}
-
-// Function to show message about unauthorized access attempt
 function ShowSuccessfulCarSharingMessage() {
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
@@ -191,6 +160,7 @@ function ShowPurchaseCompletedMessage() {
     });
 }
 
+// Function to show message about successful rental finish
 function ShowSuccessfulOrderFinishedMessage() {
 
     const Toast = Swal.mixin({
@@ -209,5 +179,24 @@ function ShowSuccessfulOrderFinishedMessage() {
         icon: 'success',
         title: 'Order was finished successfully'
     });
+}
 
+// Function for showing message after successful registration
+function ThrowRegistrationSuccessMessage() {
+    Swal.fire({
+        title: "Success!",
+        text: "You have registered successfully. Please, Sign In with your credentials.",
+        icon: 'success',
+        confirmButtonColor: '#007aff'
+    });
+}
+
+// Function for showing an error when sign in failed
+function ThrowSignInErrorMessage() {
+    Swal.fire({
+        title: "Authorization Failed!",
+        text: "You have provided wrong credentials. Check and try again.",
+        icon: 'error',
+        confirmButtonColor: '#007aff'
+    });
 }

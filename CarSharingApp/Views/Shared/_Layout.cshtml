@@ -1,5 +1,5 @@
-﻿@using CarSharingApp.Services.Interfaces
-@inject ICurrentUserStatusProvider currentUserStatusProvider
+﻿@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor Accessor;
 
 <!DOCTYPE html>
 <html lang="en">
@@ -17,11 +17,8 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
-
-
-
-
 </head>
+
 <body style="background-color: rgb(246, 246, 246)">
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3 fixed-top">
@@ -29,23 +26,23 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item mr-3">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">About Us</a>
+                            <a class="nav-link text-white" asp-controller="Home" asp-action="Index">About Us</a>
                         </li>
                         <li class="nav-item mr-3">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Catalog" asp-action="Index">Catalog and Pricing</a>
+                            <a class="nav-link text-white" asp-controller="Catalog" asp-action="Index">Catalog and Pricing</a>
                         </li>
-                        @if (currentUserStatusProvider.GetUserRole() == CarSharingApp.Services.Includes.UserRole.Client)
+                        @if (Accessor.HttpContext?.Session.GetString("JWToken") != null)
                         {
                             <li class="nav-item">
-                                <a id="ShareYourCarBtn" class="nav-link text-white" asp-area="" asp-controller="AddVehicle" asp-action="Index">Share your car</a>
+                                <a id="ShareYourCarBtn" class="nav-link text-white" asp-controller="AddVehicle" asp-action="Index">Share your car</a>
                             </li>
                         }
                     </ul>
 
-                    @if(currentUserStatusProvider.GetUserRole() == CarSharingApp.Services.Includes.UserRole.Client)
+                    @if (Accessor.HttpContext?.Session.GetString("JWToken") != null)
                     {
                         <button id="LogoutBtn" class="btn btn-outline-warning my-2 my-sm-0 mr-3" onclick="ShowLogoutConfirmationAlert()">Logout</button>
-                        <button id="UserAccountBtn" type="button" class="btn btn-outline-info" onclick="location.href='@Url.Action("Index", "ClientPersonalAccount")'"><i class="far fa-user pr-2"></i>My Account</button>
+                        <button id="UserAccountBtn" type="button" class="btn btn-outline-info" onclick="location.href='@Url.Action("Index", "CustomerPersonalAccount")'"><i class="far fa-user pr-2"></i>My Account</button>
                     }
                     else
                     {
@@ -63,11 +60,11 @@
     </div>
 
     <footer class="text-center text-white" style="background-color: #f1f1f1;">
-        <!-- Grid container -->
+
         <div class="container pt-4">
-            <!-- Section: Social media -->
+
             <section class="mb-4">
-                <!-- Facebook -->
+
                 <a class="btn btn-link btn-floating btn-lg text-dark m-1"
                    href="https://www.facebook.com/gleb.sukristik"
                    role="button"
@@ -75,7 +72,6 @@
                     <i class="fab fa-facebook-f"></i>
                 </a>
 
-                <!-- Twitter -->
                 <a class="btn btn-link btn-floating btn-lg text-dark m-1"
                    href="https://twitter.com/Glebyyyyyshka"
                    role="button"
@@ -83,7 +79,6 @@
                     <i class="fab fa-twitter"></i>
                 </a>
 
-                <!-- Google -->
                 <a class="btn btn-link btn-floating btn-lg text-dark m-1"
                    href="https://gleb15a@gmail.com"
                    role="button"
@@ -91,7 +86,6 @@
                     <i class="fab fa-google"></i>
                 </a>
 
-                <!-- Instagram -->
                 <a class="btn btn-link btn-floating btn-lg text-dark m-1"
                    href="https://Sorry/But/I/Dont/Have/Instagram"
                    role="button"
@@ -99,14 +93,13 @@
                     <i class="fab fa-instagram"></i>
                 </a>
 
-                <!-- Linkedin -->
                 <a class="btn btn-link btn-floating btn-lg text-dark m-1"
                    href="https://www.linkedin.com/in/glebyshka/"
                    role="button"
                    data-mdb-ripple-color="dark">
                     <i class="fab fa-linkedin"></i>
                 </a>
-                <!-- Github -->
+
                 <a class="btn btn-link btn-floating btn-lg text-dark m-1"
                    href="https://github.com/GlebTheProgrammer"
                    role="button"
@@ -114,15 +107,13 @@
                     <i class="fab fa-github"></i>
                 </a>
             </section>
-            <!-- Section: Social media -->
+
         </div>
-        <!-- Grid container -->
-        <!-- Copyright -->
+
         <div class="text-center text-dark p-3" style="background-color: rgba(0, 0, 0, 0.2);">
             © 2022 Made By:
             <a class="text-dark" href="https://www.linkedin.com/in/glebyshka/">Gleb Sukristik</a>
         </div>
-        <!-- Copyright -->
     </footer>
 
 
@@ -136,83 +127,58 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
-</html>
 
+</html>
 
 <script>
     window.addEventListener("DOMContentLoaded", () => {
-
-        // User logged in
-        if ("@currentUserStatusProvider.HasUserSignedIn()" === "True" ) {
-
-            ShowSuccessfulMessageAfterLogIn();
-
-            @{currentUserStatusProvider.ChangeSignedInState(false);}
-
-            return;
-        }
-
-        // User logged out
-        if ("@currentUserStatusProvider.HasUserLoggedOut()" === "True") {
-
+        if (@(Accessor?.HttpContext?.Session.GetString("LoggedOut") == null ? "false" : "true")) {
             ShowSuccessfulMessageAfterLogout();
-
-            @{currentUserStatusProvider.ChangeLoggedOutState(false);}
-
-            return;
+            @{Accessor?.HttpContext?.Session.Remove("LoggedOut");}
         }
-
-        // User shared new car
-        if ("@currentUserStatusProvider.HasSharedNewVehicle()" === "True") {
-
+        if (@(Accessor?.HttpContext?.Session.GetString("AddedNewVehicle") == null ? "false" : "true")) {
             ShowSuccessfulCarSharingMessage();
-
-            @{currentUserStatusProvider.ChangeSharedNewVehicleState(false);}
-
-            return;
+            @{Accessor?.HttpContext?.Session.Remove("AddedNewVehicle");}
         }
-        
-        // User changed account data
-        if ("@currentUserStatusProvider.HasChangedAccountData()" === "True") {
-
+        if (@(Accessor?.HttpContext?.Session.GetString("FinishedActiveRental") == null ? "false" : "true")) {
+            ShowSuccessfulOrderFinishedMessage();
+            @{Accessor?.HttpContext?.Session.Remove("FinishedActiveRental");}
+        }
+        if (@(Accessor?.HttpContext?.Session.GetString("ChangedAccountData") == null ? "false" : "true")) {
             ShowSuccessfulMessageAfterUserHasChangedAccountData();
-
-            @{currentUserStatusProvider.ChangeAccountDataHasChangedState(false);}
-
-            return;
+            @{Accessor?.HttpContext?.Session.Remove("ChangedAccountData");}
         }
-
-        // User changed vehicle data
-        if ("@currentUserStatusProvider.HasChangedVehicleData()" === "True") {
-
-            ShowSuccessfulMessageAfterUserHasChangedVehicleData();  
-
-            @{currentUserStatusProvider.ChangeVehicleDataHasChangedState(false);}
-
-            return;
-        }
-
-        // User changed password
-        if ("@currentUserStatusProvider.HasChangedPasswordData()" === "True") {
-
+        if (@(Accessor?.HttpContext?.Session.GetString("ChangedPassword") == null ? "false" : "true")) {
             ShowSuccessfulMessageAfterUserHasChangedPassword();
-
-            @{currentUserStatusProvider.ChangePasswordDataHasChangedState(false);}
-
-            return;
+            @{Accessor?.HttpContext?.Session.Remove("ChangedPassword");}
         }
-
-        // Unauthorized access attempt
-        if ("@currentUserStatusProvider.HasTriedToGetUnauthorizedAccess()" === "True") {
-
-            @{currentUserStatusProvider.ChangeUnauthorizedAccessState(false);}
-
-            ShowUnauthorizedAccessAttemptMessage();
-
-            return;
+        if (@(Accessor?.HttpContext?.Session.GetString("ChangedVehicleData") == null ? "false" : "true")) {
+            ShowSuccessfulMessageAfterUserHasChangedVehicleData();
+            @{Accessor?.HttpContext?.Session.Remove("ChangedVehicleData");}
         }
+        if (@(Accessor?.HttpContext?.Session.GetString("Registered") == null ? "false" : "true")) {
+            ThrowRegistrationSuccessMessage();
+            @{Accessor?.HttpContext?.Session.Remove("Registered");}
+        }
+        if (@(Accessor?.HttpContext?.Session.GetString("AuthorizationFailed") == null ? "false" : "true")) {
+            ThrowSignInErrorMessage();
+            @{Accessor?.HttpContext?.Session.Remove("AuthorizationFailed");}
+        }
+        if (@(Accessor?.HttpContext?.Session.GetString("SignedIn") == null ? "false" : "true")) {
+            ShowSuccessfulMessageAfterLogIn();
+            @{Accessor?.HttpContext?.Session.Remove("SignedIn");}
+        }
+        if (@(Accessor?.HttpContext?.Session.GetString("CancelledPayment") == null ? "false" : "true")) {
+            ShowSuccessfulMessageAfterLogIn();
+            @{Accessor?.HttpContext?.Session.Remove("CancelledPayment");}
+        }
+    });
+</script>
 
-        // Cancelled payment process
+@*
+<script>
+    window.addEventListener("DOMContentLoaded", () => {
+         Cancelled payment process
         if ("@currentUserStatusProvider.HasCanceledPaymentProcess()" === "True") {
 
             @{currentUserStatusProvider.ChangeCanceledPaymentProcessState(false);}
@@ -221,28 +187,6 @@
 
             return;
         }
-
-        // Cancelled payment process
-        if ("@currentUserStatusProvider.HasCompletedPaymentProcess()" === "True") {
-
-            @{currentUserStatusProvider.ChangeCompletedPaymentProcessState(false);}
-
-            ShowPurchaseCompletedMessage();
-
-            return;
-        }
-
-        // Finished order from account page
-        if("@currentUserStatusProvider.HasFinishedActiveOrder()" === "True") {
-
-            @{currentUserStatusProvider.ChangeFinishedActiveOrderState(false);}
-
-            ShowSuccessfulOrderFinishedMessage();
-
-            return;
-        }
-
     });
 </script>
-
-
+*@
