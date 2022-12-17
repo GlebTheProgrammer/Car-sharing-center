@@ -8,7 +8,7 @@ namespace CarSharingApp.Models.MongoView
         public string VehicleId { get; set; } = null!;
 
         public string OwnerUsername { get; set; } = null!;
-        public int OwnerId { get; set; }
+        public string OwnerId { get; set; } = null!;
 
         public string Name { get; set; } = null!; 
         public string BriefDescription { get; set; } = null!;

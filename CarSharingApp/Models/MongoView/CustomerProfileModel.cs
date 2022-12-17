@@ -4,7 +4,7 @@ namespace CarSharingApp.Models.MongoView
 {
     public class CustomerProfileModel
     {
-        public string VehicleId { get; set; }
+        public string VehicleId { get; set; } = null!;
 
         public string Username { get; set; } = null!;
         public Country Country { get; set; }
@@ -15,6 +15,6 @@ namespace CarSharingApp.Models.MongoView
         public int VehiclesOrdered { get; set; }
         public int VehiclesShared { get; set; }
         public string AccountDescription { get; set; } = null!;
-        public string UserImage { get; set; } = null!;
+        public string CustomerImage { get; set; } = null!;
     }
 }

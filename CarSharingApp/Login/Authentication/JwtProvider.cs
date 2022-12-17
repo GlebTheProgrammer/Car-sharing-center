@@ -31,7 +31,7 @@ namespace CarSharingApp.Login.Authentication
                 _options.Issuer,
                 _options.Audience,
                 claims,
-                expires: DateTime.UtcNow.AddMinutes(1),
+                expires: DateTime.UtcNow.AddMinutes(60),
                 signingCredentials: signingCredentials);
 
             string tokenValue = new JwtSecurityTokenHandler().WriteToken(token);

@@ -102,7 +102,7 @@
 
         <hr class="featurette-divider mt-1 mb-4">
 
-        <h2 class="text-center mt-4 mb-4">My orders</h2>
+        <h2 class="text-center mt-4 mb-4">My Rentals</h2>
 
         <table class="table">
             <thead class="thead-dark text-center">
@@ -116,10 +116,11 @@
                 </tr>
             </thead>
             <tbody>
+                @{int counter = 1;}
                 @foreach(var rental in Model.ActiveRentals)
                 {
                     <tr class="text-center">
-                        <th scope="row" class="">@rental.Id</th>
+                        <th scope="row" class="">@(counter++)</th>
                         <td class="">@rental.RentedVehicleName</td>
                         <td class="">@(rental.RentalTimeInMinutes / 1440 > 0 ? rental.RentalTimeInMinutes / 1440 : "0") days @(rental.RentalTimeInMinutes % 1440 / 60 > 0 ? rental.RentalTimeInMinutes % 1440 / 60 : "0") hours @(rental.RentalTimeInMinutes % 1440 % 60 > 0 ? rental.RentalTimeInMinutes % 1440 % 60 : "0") min</td>
                         @{
@@ -284,14 +285,15 @@
                 </tr>
             </thead>
             <tbody>
+                @{counter = 1;}
                 @foreach (var vehicle in Model.CustomerVehicles)
                 {
                     if (!vehicle.IsPublished)
                     {
                         <tr class="text-center">
-                            <th scope="row" class="table-warning">@vehicle.Id</th>
+                            <th scope="row" class="table-warning">@(counter++)</th>
                             <td class="table-warning">@vehicle.Name</td>
-                            <td class="table-warning">@(vehicle.Tariff.TariffPerHour)/h - @(vehicle.Tariff.TariffPerDay)/d</td>
+                            <td class="table-warning">@(vehicle.Tariff.TariffPerHour)$/h - @(vehicle.Tariff.TariffPerDay)$/d</td>
                             <td class="table-warning">@vehicle.PublishedTime.ToShortDateString() @vehicle.PublishedTime.ToShortTimeString()</td>
                             <td class="table-warning">@vehicle.TimesOrdered</td>
                             <td class="table-warning">@(vehicle.IsOrdered ? "Yes" : "No")</td>
@@ -309,9 +311,9 @@
                     if (vehicle.IsPublished && !vehicle.IsOrdered)
                     {
                         <tr class="text-center">
-                            <th scope="row" class="">@vehicle.Id</th>
+                            <th scope="row" class="">@(counter++)</th>
                             <td class="">@vehicle.Name</td>
-                            <td class="">@(vehicle.Tariff.TariffPerHour)/h - @(vehicle.Tariff.TariffPerDay)/d</td>
+                            <td class="">@(vehicle.Tariff.TariffPerHour)$/h - @(vehicle.Tariff.TariffPerDay)$/d</td>
                             <td class="">@vehicle.PublishedTime.ToShortDateString() @vehicle.PublishedTime.ToShortTimeString()</td>
                             <td class="">@vehicle.TimesOrdered</td>
                             <td class="">No</td>
@@ -328,9 +330,9 @@
                     if (vehicle.IsPublished && vehicle.IsOrdered)
                     {
                         <tr class="text-center">
-                            <th scope="row" class="table-success">@vehicle.Id</th>
+                            <th scope="row" class="table-success">@(counter++)</th>
                             <td class="table-success">@vehicle.Name</td>
-                            <td class="table-success">@(vehicle.Tariff.TariffPerHour)/h - @(vehicle.Tariff.TariffPerDay)/d</td>
+                            <td class="table-success">@(vehicle.Tariff.TariffPerHour)$/h - @(vehicle.Tariff.TariffPerDay)$/d</td>
                             <td class="table-success">@vehicle.PublishedTime.ToShortDateString() @vehicle.PublishedTime.ToShortTimeString()</td>
                             <td class="table-success">@vehicle.TimesOrdered</td>
                             <td class="table-success">Yes</td>

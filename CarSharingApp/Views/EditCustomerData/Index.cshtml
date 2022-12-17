@@ -7,7 +7,7 @@
             <div class="col-lg-4">
                 <div class="card mb-4 mt-3">
                     <div class="card-body text-center">
-                        <img id="UserImage" src="@Model.UserImage" alt="avatar"
+                        <img id="UserImage" src="@Model.CustomerImage" alt="avatar"
                              class="rounded-circle img-fluid" style="width: 150px;">
                         <h5 class="mt-2 mb-3">Account Image</h5>
                         <div class="d-flex justify-content-center flex-column mb-2">
@@ -115,7 +115,7 @@
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
-                                        <form id="ChangePasswordForm" asp-controller="EditClientPersonalInfo" asp-action="ChangeClientPassword" method="post" enctype="multipart/form-data" onsubmit="SubmitChangePasswordForm(event)">
+                                        <form id="ChangePasswordForm" asp-controller="EditCustomerData" asp-action="ChangePassword" method="post" enctype="multipart/form-data" onsubmit="SubmitChangePasswordForm(event)">
                                             <div class="modal-body">
                                                     <div class="form-group">
                                                         <label class="col-form-label d-flex justify-content-start">New password:</label>
@@ -138,7 +138,7 @@
 
                             <buton type="button" class="btn btn-outline-danger mb-3" onclick="ShowCancelChangesConfirmationAlert()">Cancel Changes</buton>
                             <button type="submit" form="userEditedDataForm" value="Submit" class="btn btn-outline-success mb-3">Save Changes</button>
-                            <a asp-action="Index" asp-controller="ClientPersonalAccount" type="button" class="btn btn-outline-secondary">Get Back</a>
+                            <a asp-action="Index" asp-controller="CustomerPersonalAccount" type="button" class="btn btn-outline-secondary">Get Back</a>
                         </div>
                     </div>
                 </div>
@@ -242,8 +242,8 @@
                                 <p class="mb-0">Driver's License</p>
                             </div>
                             <div class="col-sm-6 d-flex flex-column justify-content-center">
-                                <span asp-validation-for="DriverLicenseNumber" id="DriverLicenseError" class="text-danger text-center flex-column"></span>
-                                <label id="DriverLicenseText" class="text-muted mb-0">@Model.DriverLicenseNumber</label>
+                                <span asp-validation-for="DriverLicenseIdentifier" id="DriverLicenseError" class="text-danger text-center flex-column"></span>
+                                <label id="DriverLicenseText" class="text-muted mb-0">@Model.DriverLicenseIdentifier</label>
                                 <input id="DriverLicenseInput" type="text" class="form-control visually-hidden" required maxlength="12" pattern="[a-zA-Z0-9]{4,12}" onfocus="HideErrorSpan('DriverLicenseError')">
                             </div>
                             <div class="col-sm-3 d-flex align-items-center justify-content-center">
@@ -300,16 +300,16 @@
                     </div>
                 </div>
 
-                <form id="userEditedDataForm" asp-controller="EditClientPersonalInfo" asp-action="ChangeClientPersonalInfo" method="post" enctype="multipart/form-data" class="visually-hidden">
+                <form id="userEditedDataForm" asp-controller="EditCustomerData" asp-action="EditCustomerData" method="post" enctype="multipart/form-data" class="visually-hidden">
                     <input id="ModelFirstName" asp-for="FirstName" value="@Model.FirstName" class="form-control" readonly="readonly"/>
                     <input id="ModelLastName" asp-for="LastName" value="@Model.LastName" class="form-control" readonly="readonly" />
                     <input id="ModelUsername" asp-for="Username" value="@Model.Username" class="form-control" readonly="readonly" />
                     <input id="ModelEmail" asp-for="Email" value="@Model.Email" class="form-control" readonly="readonly" />
                     <input id="ModelPhoneNumber" asp-for="PhoneNumber" value="@Model.PhoneNumber" class="form-control" readonly="readonly" />
-                    <input id="ModelDriverLicense" asp-for="DriverLicenseNumber" value="@Model.DriverLicenseNumber" class="form-control" readonly="readonly" />
+                    <input id="ModelDriverLicense" asp-for="DriverLicenseIdentifier" value="@Model.DriverLicenseIdentifier" class="form-control" readonly="readonly" />
                     <input id="ModelIsAcceptedNewsSharing" asp-for="IsAcceptedNewsSharing" type="checkbox" class="custom-control-input" readonly="readonly" >
                     <input id="ModelAccountDescription" asp-for="AccountDescription" value="@Model.AccountDescription" class="form-control" readonly="readonly" />
-                    <input id="ModelUserImage" asp-for="UserImage" value="@Model.UserImage" class="form-control" readonly="readonly" />
+                    <input id="ModelUserImage" asp-for="CustomerImage" value="@Model.CustomerImage" class="form-control" readonly="readonly" />
                     <input id="ModelId" asp-for="CustomerId" value="@Model.CustomerId" class="form-control" readonly="readonly" />
                 </form>
 

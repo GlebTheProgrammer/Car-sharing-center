@@ -29,7 +29,7 @@ namespace CarSharingApp.Controllers
 
             HttpContext.Session.SetString("ChangedVehicleData", "true");
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { vehicleId = vehicleEditModel.VehicleId });
         }
     }
 }

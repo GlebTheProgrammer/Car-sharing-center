@@ -7,10 +7,6 @@ using CarSharingApp.Services;
 using CarSharingApp.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Stripe;
-using Microsoft.AspNetCore.Session;
-using Newtonsoft.Json.Linq;
-using System.Net.Http.Headers;
-using Microsoft.AspNetCore.Authorization;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using CarSharingApp.Middlewares;
@@ -90,8 +86,8 @@ app.Use(async (context, next) =>
     await next();
 });
 app.UseStaticFiles();
-app.UseRouting();
 app.UseAuthentication();
+app.UseRouting();
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 app.UseAuthorization();
 

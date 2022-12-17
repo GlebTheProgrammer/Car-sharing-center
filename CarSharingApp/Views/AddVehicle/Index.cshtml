@@ -110,7 +110,7 @@
                         </select>
                     </div>
                 </div>
-                <!--Идентификационный номер транспортного средства (17 цифр и букв в сумме)-->
+
                 <div>
                     <span asp-validation-for="VIN" id="VINError" class="text-danger text-center" style="margin-left:45px;"></span>
                     <div class="d-flex flex-row">
@@ -173,9 +173,9 @@
                 <div class="mt-4">
                     <div class="d-flex flex-row visually-hidden">
                         <span class="text-muted h5 mt-2 mr-2">Latitude: </span>
-                        <input asp-for="Location.Latitude" type="text" class="form-control text-center" style="width: 15%" id="latit" placeholder="">
+                        <input asp-for="Location.Latitude" type="text" class="form-control text-center" style="width: 15%" id="latit" readonly>
                         <span class="text-muted h5 ml-4 mt-2">Longitude: </span>
-                        <input asp-for="Location.Longitude" type="text" class="form-control text-center ml-2" style="width: 15%" id="longit" placeholder="">
+                        <input asp-for="Location.Longitude" type="text" class="form-control text-center ml-2" style="width: 15%" id="longit" readonly>
                     </div>
                 </div>
 

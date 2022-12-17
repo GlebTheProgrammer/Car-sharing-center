@@ -18,7 +18,7 @@
                         <div class="d-flex justify-content-center flex-column mb-2">
                             <button type="submit" form="vehicleEditedDataForm" value="Submit" class="btn btn-outline-success mb-3">Save Changes</button>
                             <buton type="button" class="btn btn-outline-danger mb-3" onclick="ShowCancelChangesConfirmationAlert()">Cancel Changes</buton>
-                            <a asp-action="Index" asp-controller="ClientPersonalAccount" type="button" class="btn btn-outline-secondary">Get Back</a>
+                            <a asp-action="Index" asp-controller="CustomerPersonalAccount" type="button" class="btn btn-outline-secondary">Get Back</a>
                         </div>
                     </div>
                 </div>
@@ -34,42 +34,34 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <!--Год выуска-->
                                     <td>Production year</td>
                                     <td class="text-center">@Model.ProductionYear</td>
                                 </tr>
                                 <tr>
-                                    <!--Скорость автомобиля-->
                                     <td>Max speed</td>
                                     <td class="text-center">@Model.MaxSpeed</td>
                                 </tr>
                                 <tr>
-                                    <!--Внешний цвет автомобиля-->
                                     <td>Exterior color</td>
                                     <td class="text-center">@Model.ExteriorColor</td>
                                 </tr>
                                 <tr>
-                                    <!--Цвет салона-->
                                     <td>Interior color</td>
                                     <td class="text-center">@Model.InteriorColor</td>
                                 </tr>
                                 <tr>
-                                    <!--Трансмиссия-->
                                     <td>Drivetrain</td>
                                     <td class="text-center">@Model.Drivetrain</td>
                                 </tr>
                                 <tr>
-                                    <!--Тип топлива-->
                                     <td>Fuel type</td>
                                     <td class="text-center">@Model.FuelType</td>
                                 </tr>
                                 <tr>
-                                    <!--Коробка передач-->
                                     <td>Transmission</td>
                                     <td class="text-center">@Model.Transmission</td>
                                 </tr>
                                 <tr>
-                                    <!--Тип двигателя-->
                                     <td>Engine</td>
                                     <td class="text-center">@Model.Engine</td>
                                 </tr>
@@ -225,7 +217,7 @@
                     </div>
                 </div>
 
-                <form id="vehicleEditedDataForm" asp-controller="EditVehicleInfo" asp-action="UpdateVehicle" method="post" enctype="multipart/form-data" class="visually-hidden" >
+                <form id="vehicleEditedDataForm" asp-controller="EditVehicleData" asp-action="EditVehicleData" method="post" enctype="multipart/form-data" class="visually-hidden">
                     <input id="ModelBriefDescription" asp-for="BriefDescription" value="@Model.BriefDescription" class="form-control" readonly="readonly" />
                     <input id="ModelDescription" asp-for="Description" value="@Model.Description" class="form-control" readonly="readonly" />
                     <input id="ModelHourTariff" asp-for="Tariff.TariffPerHour" value="@Model.Tariff.TariffPerHour" class="form-control" readonly="readonly" />

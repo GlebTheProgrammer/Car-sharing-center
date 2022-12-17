@@ -12,6 +12,8 @@ namespace CarSharingApp.Repository.MongoDbRepository
 {
     public class MongoDbService : IMongoDbRepository
     {
+        private const string atlasConnectionString = "mongodb+srv://Its_Glebyshka:15042003april@carsharingcluster.fezrpoe.mongodb.net/?retryWrites=true&w=majority";
+
         private readonly IMongoCollection<Admin> _adminsCollection;
         private readonly IMongoCollection<Credentials> _credentialsCollection;
         private readonly IMongoCollection<Customer> _customersCollection;
@@ -26,6 +28,7 @@ namespace CarSharingApp.Repository.MongoDbRepository
 
         public MongoDbService(IOptions<CarSharingDatabaseSettings> carSharingDatabaseSettings, IMapper mapper)
         {
+            //carSharingDatabaseSettings.Value.ConnectionString = atlasConnectionString;
             var mongoClient = new MongoClient(carSharingDatabaseSettings.Value.ConnectionString);
 
             var mongoDatabase = mongoClient.GetDatabase(carSharingDatabaseSettings.Value.DatabaseName);
@@ -55,6 +58,12 @@ namespace CarSharingApp.Repository.MongoDbRepository
             Specifications specifications = _mapper.Map<Specifications>(vehicleCreateModel);
             specifications.VehicleId = vehicle.Id;
             await _specificationsCollection.InsertOneAsync(specifications);
+
+            Rating rating = new Rating()
+            {
+                VehicleId = vehicle.Id,
+            };
+            await _ratingsCollection.InsertOneAsync(rating);
         }
 
         public async Task<Credentials> GetCredetnialsByUserId(string ownerId)
@@ -263,7 +272,7 @@ namespace CarSharingApp.Repository.MongoDbRepository
             Specifications vehicleSpecifications = await _specificationsCollection.Find(s => s.VehicleId == vehicleEditModel.VehicleId).FirstOrDefaultAsync();
 
             _mapper.Map(vehicleEditModel, vehicle);
-            _mapper.Map(vehicleSpecifications, vehicle);
+            _mapper.Map(vehicleEditModel, vehicleSpecifications);
 
             await _vehiclesCollection.ReplaceOneAsync(v => v.Id == vehicle.Id, vehicle);
             await _specificationsCollection.ReplaceOneAsync(s => s.Id == vehicleSpecifications.Id, vehicleSpecifications);

@@ -68,7 +68,7 @@ namespace CarSharingApp.Models.MongoView
 
         public Location Location { get; set; } = new Location() 
         { 
-            Address = null!, 
+            Address = null!,
             Latitude = null!, 
             Longitude = null!
         };

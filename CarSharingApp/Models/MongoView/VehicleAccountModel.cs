@@ -4,7 +4,7 @@ namespace CarSharingApp.Models.MongoView
 {
     public class VehicleAccountModel
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public DateTime PublishedTime { get; set; }
 

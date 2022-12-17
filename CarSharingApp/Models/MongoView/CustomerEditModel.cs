@@ -28,7 +28,7 @@ namespace CarSharingApp.Models.MongoView
 
         [Required(ErrorMessage = "Valid Driver License Number is required")]
         [MaxLength(20, ErrorMessage = "Wrong Driver License Number")]
-        public string DriverLicenseNumber { get; set; } = null!;
+        public string DriverLicenseIdentifier { get; set; } = null!;
 
         [Required]
         public bool IsAcceptedNewsSharing { get; set; }
@@ -39,6 +39,6 @@ namespace CarSharingApp.Models.MongoView
         public string AccountDescription { get; set; } = null!;
 
         [Required(ErrorMessage = "Image can't be empty")]
-        public string UserImage { get; set; } = null!;
+        public string CustomerImage { get; set; } = null!;
     }
 }
