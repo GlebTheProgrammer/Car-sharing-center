@@ -188,7 +188,11 @@
                                             var marker = new google.maps.Marker(
                                             {
                                                 position: new google.maps.LatLng(latSerialized, longSerialized),
-                                                map: map
+                                                map: map,
+                                                icon: {
+                                                    url: "/Icons/vehicleIcon.png",
+                                                    scaledSize: new google.maps.Size(40, 40)
+                                                }
                                             });
 
                                             markersArray.push(marker);

@@ -3,7 +3,7 @@
 
 <form asp-controller="VehicleInformation" asp-action="CreateCheckoutSession" method="post">
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" id="rentalModal" tabindex="-1" aria-labelledby="rentalModalLabel"
          aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -12,13 +12,13 @@
                 </div>
                 <div class="modal-body text-start text-black p-4">
                     <h3 class="mb-4" style="color: #35558a;">Order Details</h3>
-                    <h5 class="modal-title mb-2" id="exampleModalLabel">Your order Starts from</h5>
+                    <h5 class="modal-title mb-2" id="rentalModalLabel">Your order Starts from</h5>
 
                     <div class="md-form md-outline datepicker mb-4" id="customDays">
                         <input type="text" id="datetimesStarts" class="form-control" name="datetimesStarts" disabled>
                     </div>
 
-                    <h5 class="modal-title mb-2" id="exampleModalLabel">Your order Ends at</h5>
+                    <h5 class="modal-title mb-2" id="rentalModalLabel">Your order Ends at</h5>
 
                     <div class="md-form md-outline datepicker mb-5" id="customDays">
                         <input placeholder="Select date" type="text" id="datetimesEnds" class="form-control" name="datetimesEnds">

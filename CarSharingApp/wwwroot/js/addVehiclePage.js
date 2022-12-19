@@ -63,7 +63,11 @@ function setUpTheMarker() {
             var marker = new google.maps.Marker(
                 {
                     position: new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng()),
-                    map: map
+                    map: map,
+                    icon: {
+                        url: "/Icons/vehicleIcon.png",
+                        scaledSize: new google.maps.Size(40, 40)
+                    }
                 });
 
             markersArray.push(marker);
@@ -106,7 +110,11 @@ window.addEventListener("load", () => {
                 lat: latit,
                 lng: long
             },
-            map: map
+            map: map,
+            icon: {
+                url: "/Icons/vehicleIcon.png",
+                scaledSize: new google.maps.Size(40, 40)
+            }
         });
 
         document.getElementById('latit').value = latit;

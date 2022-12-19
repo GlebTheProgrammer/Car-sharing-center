@@ -1,12 +1,20 @@
-﻿@model CarSharingApp.Models.MongoView.VehicleInformationModel;
+﻿@using System.IdentityModel.Tokens.Jwt;
+@inject IHttpContextAccessor Accessor;
+@model CarSharingApp.Models.MongoView.VehicleInformationModel;
 
 <main class="container mt-5">
 
+    @if (Model.OwnerId == new JwtSecurityTokenHandler().ReadJwtToken(Accessor.HttpContext.Session.GetString("JWToken")).Claims.First(c => c.Type == JwtRegisteredClaimNames.Sub).Value)
+    {
+        <div class="alert alert-info position-sticky" role="alert">
+            This is your vehicle. You can't rent your own vehicle, but you can still check its profile.
+        </div>
+    }
 
     <div class="row g-5">
         <div class="col-md-8">
             <h3 class="pb-2 mb-4 fst-italic border-bottom text-center">
-                About Car Page
+                Vehicle Details
             </h3>
 
             <img class="img-fluid mt-3 mx-auto d-block rounded" style="height: auto" src="~/vehicleImages/@Model.Image">
@@ -45,7 +53,11 @@
                                 var marker = new google.maps.Marker(
                                 {
                                     position: new google.maps.LatLng(latSerialized, longSerialized),
-                                    map: map
+                                    map: map,
+                                    icon: {
+                                        url: "/Icons/vehicleIcon.png",
+                                        scaledSize: new google.maps.Size(40, 40)
+                                    }
                                 });
                             }
                         </script>
@@ -283,10 +295,12 @@
                 <nav class="blog-pagination ml-4 mt-4" aria-label="Pagination">
 
                     <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-outline-primary mr-2" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal">
-                        Order
-                    </button>
+                    @if (Model.OwnerId != new JwtSecurityTokenHandler().ReadJwtToken(Accessor.HttpContext.Session.GetString("JWToken")).Claims.First(c => c.Type == JwtRegisteredClaimNames.Sub).Value)
+                    {
+                        <button type="button" class="btn btn-outline-primary mr-2" data-bs-toggle="modal" data-bs-target="#rentalModal">
+                            Order
+                        </button>
+                    }
 
                     <a class="btn btn-outline-secondary" asp-controller="Catalog" asp-action="Index">Get back</a>
                 </nav>

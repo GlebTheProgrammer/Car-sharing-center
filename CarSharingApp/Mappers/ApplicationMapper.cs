@@ -37,6 +37,7 @@ namespace CarSharingApp.Mappers
             CreateMap<CustomerEditModel, Credentials>();
             CreateMap<VehicleEditModel, Vehicle>();
             CreateMap<VehicleEditModel, Specifications>();
+            CreateMap<Vehicle, VehicleHomeModel>();
         }
     }
 }

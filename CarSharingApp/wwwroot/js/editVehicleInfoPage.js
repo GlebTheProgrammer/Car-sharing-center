@@ -95,7 +95,11 @@ function setUpTheMarker() {
             var marker = new google.maps.Marker(
                 {
                     position: new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng()),
-                    map: map
+                    map: map,
+                    icon: {
+                        url: "/Icons/vehicleIcon.png",
+                        scaledSize: new google.maps.Size(40, 40)
+                    }
                 });
 
             markersArray.push(marker);
@@ -126,7 +130,11 @@ function CancelMapChanges(target) {
     var marker = new google.maps.Marker(
         {
             position: new google.maps.LatLng(latSerialized, longSerialized),
-            map: map
+            map: map,
+            icon: {
+                url: "/Icons/vehicleIcon.png",
+                scaledSize: new google.maps.Size(40, 40)
+            }
         });
 
     markersArray.push(marker);

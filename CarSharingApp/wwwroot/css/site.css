@@ -62,3 +62,25 @@ label.star:before {
     font-family: FontAwesome;
 }
 /*Star rating css ends here*/
+
+/*Dropdown css starts here*/
+@media (min-width: 576px){
+
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-menu {
+        display: block; 
+        z-index: 1;
+        opacity: 0;    
+        transition: all 1s;
+        -webkit-transition: all 1s;
+    }
+
+    .dropdown:hover > .dropdown-menu {
+        opacity: 1;
+    }
+}
+/*Dropdown css ends here*/

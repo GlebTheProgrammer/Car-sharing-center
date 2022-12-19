@@ -1,6 +1,4 @@
-﻿@inject IHttpContextAccessor httpContextAccessor
-
-@model float[][]
+﻿@model CarSharingApp.Models.MongoView.VehiclesHomeDataViewModel;
 
 <div class="container-fluid p-0 mt-3">
     <section class="row no-gutters align-items-center">
@@ -60,16 +58,47 @@
                     zoom : 11
                 });
 
-                var model = '@Html.Raw(Json.Serialize(Model))';
+                var model = '@Html.Raw(Json.Serialize(Model.VehiclesLocation))';
                 var data = JSON.parse(model);
 
+                var vehiclesData = JSON.parse('@Html.Raw(Json.Serialize(Model.Vehicles))');
 
-                for (i = 0; i < data.length; i++) {
-                    var marker = new google.maps.Marker(
+                const infos = [];
+
+                for (let i = 0; i < data.length; i++) {
+                    var contentString = '<div>' +
+                        '<h5 class="card-title">' + vehiclesData[i]['name'] + '</h5>' +
+                        '<img src="/vehicleImages/' + vehiclesData[i]['image'] + '" style="max-width: 150px;">' +
+                        '</div>';
+
+                    infos.push(contentString);
+                }
+
+                var infoWindow = new google.maps.InfoWindow({
+                    disableAutoPan: true
+                });
+
+                for (let i = 0; i < data.length; i++) {
+                    const marker = new google.maps.Marker(
                     {
                         position: new google.maps.LatLng(data[i][0], data[i][1]),
-                        map: map
+                        map: map,
+                        title: vehiclesData[i]['name'],
+                        icon: {
+                            url: "/Icons/vehicleIcon.png",
+                            scaledSize: new google.maps.Size(40, 40)
+                        },
+                        animation: google.maps.Animation.DROP
                     });
+
+                    google.maps.event.addListener(marker, 'mouseover', function () {
+                        infoWindow.setContent(infos[i]),
+                        infoWindow.open(map, marker)
+                    });
+                    google.maps.event.addListener(marker, 'mouseout', function () {
+                        infoWindow.close()
+                    });
+
                 }
             }
         </script>
