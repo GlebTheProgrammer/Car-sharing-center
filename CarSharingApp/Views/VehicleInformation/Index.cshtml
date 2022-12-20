@@ -1,0 +1,322 @@
+﻿@using System.IdentityModel.Tokens.Jwt;
+@inject IHttpContextAccessor Accessor;
+@model CarSharingApp.Models.MongoView.VehicleInformationModel;
+
+<main class="container mt-5">
+
+    @if (Model.OwnerId == new JwtSecurityTokenHandler().ReadJwtToken(Accessor.HttpContext.Session.GetString("JWToken")).Claims.First(c => c.Type == JwtRegisteredClaimNames.Sub).Value)
+    {
+        <div class="alert alert-info position-sticky" role="alert">
+            This is your vehicle. You can't rent your own vehicle, but you can still check its profile.
+        </div>
+    }
+
+    <div class="row g-5">
+        <div class="col-md-8">
+            <h3 class="pb-2 mb-4 fst-italic border-bottom text-center">
+                Vehicle Details
+            </h3>
+
+            <img class="img-fluid mt-3 mx-auto d-block rounded" style="height: auto" src="~/vehicleImages/@Model.Image">
+
+            <article class="blog-post mt-2">
+                <h2 class="blog-post-title">@Model.Name</h2>
+                <p class="blog-post-meta">Published: @(Model.PublishedTime.Month) @(Model.PublishedTime.Day), @(Model.PublishedTime.Year) by <a href="@Url.Action("Index", "CustomerProfile", new {vehicleId = Model.VehicleId})">@Model.OwnerUsername</a></p>
+
+                <p>@Model.Description</p>
+                <hr>
+            </article>
+            @{
+                var latModel = float.Parse(Model.Location.Latitude.Replace('.', ','));
+                var longModel = float.Parse(Model.Location.Longitude.Replace('.', ','));
+            }
+            <article class="blog-post">
+                <h3>Vehicle location</h3>
+                <p>You can see vehicle location (@Model.Location.Address) on the map and check if it suits you:</p>
+                <div class="mt-4 mb-2">
+                    <div class="container-fluid">
+                        <div id="map" class="text-center" style="height: 400px; width: 100%;"></div>
+                        <script>
+                            var map;
+                            function initMap() {
+                                var latitude = '@Html.Raw(Json.Serialize(latModel))';
+                                var longitude = '@Html.Raw(Json.Serialize(longModel))';
+
+                                var latSerialized = JSON.parse(latitude);
+                                var longSerialized = JSON.parse(longitude);
+
+                                map = new google.maps.Map(document.getElementById('map'), {
+                                    center: { lat: latSerialized, lng: longSerialized },
+                                    zoom: 11
+                                });
+
+                                var marker = new google.maps.Marker(
+                                {
+                                    position: new google.maps.LatLng(latSerialized, longSerialized),
+                                    map: map,
+                                    icon: {
+                                        url: "/Icons/vehicleIcon.png",
+                                        scaledSize: new google.maps.Size(40, 40)
+                                    }
+                                });
+                            }
+                        </script>
+                        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9AIXs7jB_3r8oRc1zd0i9p0nanEH5Q6M&callback=initMap" async defer></script>
+                    </div>
+                </div>
+                <hr>
+            </article>
+
+            <article class="blog-post">
+                <h3>Information table</h3>
+                <p>Here you can see all the detailed information about the vehicle:</p>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th class="text-center">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Production year</td>
+                            <td class="text-center">@Model.ProductionYear</td>
+                        </tr>
+                        <tr>
+                            <td>Max speed</td>
+                            <td class="text-center">@Model.MaxSpeed</td>
+                        </tr>
+                        <tr>
+                            <td>Exterior color</td>
+                            <td class="text-center">@Model.ExteriorColor</td>
+                        </tr>
+                        <tr>
+                            <td>Interior color</td>
+                            <td class="text-center">@Model.InteriorColor</td>
+                        </tr>
+                        <tr>
+                            <td>Drivetrain</td>
+                            <td class="text-center">@Model.Drivetrain</td>
+                        </tr>
+                        <tr>
+                            <td>Fuel type</td>
+                            <td class="text-center">@Model.FuelType</td>
+                        </tr>
+                        <tr>
+                            <td>Transmission</td>
+                            <td class="text-center">@Model.Transmission</td>
+                        </tr>
+                        <tr>
+                            <td>Engine</td>
+                            <td class="text-center">@Model.Engine</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>Times ordered</td>
+                            <td class="text-center">@Model.TimesOrdered</td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <p class="mt-4">This data was provided by the user who posted it. Our company is not responsible for the information you can see on this page.</p>
+            </article>
+        </div>
+
+        <div class="col-md-4">
+            <div class="position-sticky" style="top: 4rem;">
+                <div class="p-4 mb-3 bg-light rounded">
+                    <h4 class="fst-italic">Description</h4>
+                    <p class="mb-0">@Model.BriefDescription</p>
+                </div>
+
+                <div class="ml-4 mt-4">
+                    <h4 class="fst-italic mb-3">Rating (@(Model.Rating.ReviewsCount) reviews)</h4>
+                    <span class="h6 mr-1">Condition:</span>
+                    <span class="card-text">@Math.Round(Model.Rating.Condition, 1) </span>
+                    @{
+                        double rating = Math.Round(Model.Rating.Condition, 1);
+                        for (int i = 0; i < 5; i++)
+                        {
+                            if (rating > i && rating >= i + 1)
+                            {
+                                    <span class="fa fa-star checked" style="color: orange"></span>
+                            }
+                            else
+                            {
+                                if (rating > i && rating < i + 1)
+                                {
+                                        <span class="fa fa-star-half-stroke" style="color: orange"></span>
+                                }
+                                else
+                                {
+                                        <span class="fa fa-star"></span>
+                                }
+                            }
+                        }
+                    }
+                </div>
+
+                <div class="ml-4 mt-1">
+                    <span class="h6 mr-1">Fuel consumption:</span>
+                    <span class="card-text">@Math.Round(Model.Rating.FuelConsumption, 1) </span>
+                    @{
+                        rating = Math.Round(Model.Rating.FuelConsumption, 1);
+                        for (int i = 0; i < 5; i++)
+                        {
+                            if (rating > i && rating >= i + 1)
+                            {
+                                    <span class="fa fa-star checked" style="color: orange"></span>
+                            }
+                            else
+                            {
+                                if (rating > i && rating < i + 1)
+                                {
+                                        <span class="fa fa-star-half-stroke" style="color: orange"></span>
+                                }
+                                else
+                                {
+                                        <span class="fa fa-star"></span>
+                                }
+                            }
+                        }
+                    }
+                </div>
+
+                <div class="ml-4 mt-1">
+                    <span class="h6 mr-1">Easy to drive:</span>
+                    <span class="card-text">@Math.Round(Model.Rating.EasyToDrive, 1) </span>
+                    @{
+                        rating = Math.Round(Model.Rating.EasyToDrive, 1);
+                        for (int i = 0; i < 5; i++)
+                        {
+                            if (rating > i && rating >= i + 1)
+                            {
+                                    <span class="fa fa-star checked" style="color: orange"></span>
+                            }
+                            else
+                            {
+                                if (rating > i && rating < i + 1)
+                                {
+                                        <span class="fa fa-star-half-stroke" style="color: orange"></span>
+                                }
+                                else
+                                {
+                                        <span class="fa fa-star"></span>
+                                }
+                            }
+                        }
+                    }
+                </div>
+
+                <div class="ml-4 mt-1">
+                    <span class="h6 mr-1">Family-friendly:</span>
+                    <span class="card-text">@Math.Round(Model.Rating.FamilyFriendly, 1) </span>
+                    @{
+                        rating = Math.Round(Model.Rating.FamilyFriendly, 1);
+                        for (int i = 0; i < 5; i++)
+                        {
+                            if (rating > i && rating >= i + 1)
+                            {
+                                    <span class="fa fa-star checked" style="color: orange"></span>
+                            }
+                            else
+                            {
+                                if (rating > i && rating < i + 1)
+                                {
+                                        <span class="fa fa-star-half-stroke" style="color: orange"></span>
+                                }
+                                else
+                                {
+                                        <span class="fa fa-star"></span>
+                                }
+                            }
+                        }
+                    }
+                </div>
+
+                <div class="ml-4 mt-1">
+                    <span class="h6 mr-1">SUV:</span>
+                    <span class="card-text">@Math.Round(Model.Rating.SUV, 1) </span>
+                    @{
+                        rating = Math.Round(Model.Rating.SUV, 1);
+                        for (int i = 0; i < 5; i++)
+                        {
+                            if (rating > i && rating >= i + 1)
+                            {
+                                    <span class="fa fa-star checked" style="color: orange"></span>
+                            }
+                            else
+                            {
+                                if (rating > i && rating < i + 1)
+                                {
+                                        <span class="fa fa-star-half-stroke" style="color: orange"></span>
+                                }
+                                else
+                                {
+                                        <span class="fa fa-star"></span>
+                                }
+                            }
+                        }
+                    }
+                </div>
+
+                <div class="ml-4 mt-4">
+                    <span class="h4 mr-1">Overall:</span>
+                    <span class="card-text">@Math.Round(Model.Rating.Overall, 1) </span>
+                    @{
+                        rating = Math.Round(Model.Rating.Overall, 1);
+                        for (int i = 0; i < 5; i++)
+                        {
+                            if (rating > i && rating >= i + 1)
+                            {
+                                    <span class="fa fa-star checked" style="color: orange"></span>
+                            }
+                            else
+                            {
+                                if (rating > i && rating < i + 1)
+                                {
+                                        <span class="fa fa-star-half-stroke" style="color: orange"></span>
+                                }
+                                else
+                                {
+                                        <span class="fa fa-star"></span>
+                                }
+                            }
+                        }
+                    }
+                </div>
+
+                <div class="ml-4 mt-4">
+                    <h4 class="fst-italic">Price</h4>
+                    <h4 class="card-text">@Model.Tariff.TariffPerHour $<span class="text-muted h5">/hr - </span>@Model.Tariff.TariffPerDay $<span class="text-muted h5">/day</span></h4>
+                </div>
+
+                <nav class="blog-pagination ml-4 mt-4" aria-label="Pagination">
+
+                    <!-- Button trigger modal -->
+                    @if (Model.OwnerId != new JwtSecurityTokenHandler().ReadJwtToken(Accessor.HttpContext.Session.GetString("JWToken")).Claims.First(c => c.Type == JwtRegisteredClaimNames.Sub).Value)
+                    {
+                        <button type="button" class="btn btn-outline-primary mr-2" data-bs-toggle="modal" data-bs-target="#rentalModal">
+                            Order
+                        </button>
+                    }
+
+                    <a class="btn btn-outline-secondary" asp-controller="Catalog" asp-action="Index">Get back</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<div id="partialZone_PaymentModal">
+
+</div>
+
+<script>
+    $('#partialZone_PaymentModal').load("/VehicleInformation/RentOrderPartial", { vehicleId: "@Model.VehicleId", vehicleName: "@Model.Name", tariffPerHour: "@Model.Tariff.TariffPerHour", tariffPerDay: "@Model.Tariff.TariffPerDay" });
+</script>
+
+
+

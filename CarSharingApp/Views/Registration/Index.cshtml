@@ -1,5 +1,4 @@
-﻿@using CarSharingApp.Models.ClientData
-@model ClientRegistrationViewModel
+﻿@model CarSharingApp.Models.MongoView.CustomerRegisterModel
 
 <div class="container">
     <div class="py-5 text-center">
@@ -10,7 +9,7 @@
 
     <div class="row">
         <div class="d-flex order-md-1 justify-content-center align-content-center">
-            <form asp-controller="Registration" asp-action="SaveNewAuthorizedUser" method="post">
+            <form asp-controller="Registration" asp-action="Register" method="post">
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label>First name</label>
@@ -112,10 +111,10 @@
 
                 <div class="mb-3">
                     <label>Series and Number of the driver's license</label>
-                    <input asp-for="DriverLicenseNumber" type="text" class="form-control" placeholder="5AA000031" onfocus="HideErrorSpan('DriverLicenseNumberError')">
+                    <input asp-for="DriverLicenseIdentifier" type="text" class="form-control" placeholder="5AA000031" onfocus="HideErrorSpan('DriverLicenseNumberError')">
                 </div>
                 <div class="mb-3">
-                    <span asp-validation-for="DriverLicenseNumber" id="DriverLicenseNumberError" class="text-danger text-center"></span>
+                    <span asp-validation-for="DriverLicenseIdentifier" id="DriverLicenseNumberError" class="text-danger text-center"></span>
                 </div>
 
                 <hr class="mb-4">
@@ -141,13 +140,4 @@
 
 </div>
 
-
-
-<!--Script for hiding error message starts here-->
-<script>
-    function HideErrorSpan(componentId) {
-        var component = document.getElementById(componentId);
-        component.textContent = "";
-    }
-</script>
-<!--Script for hiding error message ends here-->
+<script src="~/js/registrationPage.js" asp-append-version="true"></script>

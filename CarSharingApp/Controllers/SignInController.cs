@@ -1,61 +1,63 @@
-﻿using CarSharingApp.Models.ClientData;
-using CarSharingApp.Models.ClientData.Includes;
-using CarSharingApp.Repository.Interfaces;
-using CarSharingApp.Services.Includes;
-using CarSharingApp.Services.Interfaces;
+﻿using CarSharingApp.Login;
+using CarSharingApp.Models.Mongo;
+using CarSharingApp.Models.MongoView;
+using CarSharingApp.Repository.MongoDbRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarSharingApp.Controllers
 {
     public class SignInController : Controller
     {
-        private readonly IClientsRepository clientsRepository;
-        private readonly IHttpContextAccessor httpContextAccessor;
-        private readonly ICurrentUserStatusProvider currentUserStatusProvider;
+        private readonly MongoDbService _mongoDbService;
+        private readonly IJwtProvider _jwtProvider;
 
-        public SignInController(IClientsRepository clientsRepository, IHttpContextAccessor httpContextAccessor, ICurrentUserStatusProvider currentUserStatusProvider)
+        public SignInController(MongoDbService mongoDbService, IJwtProvider jwtProvider)
         {
-            this.clientsRepository = clientsRepository;
-            this.httpContextAccessor = httpContextAccessor;
-            this.currentUserStatusProvider = currentUserStatusProvider;
+            _jwtProvider = jwtProvider;
+            _mongoDbService= mongoDbService;
         }
 
         public IActionResult Index()
         {
-            var user = new ClientSignInViewModel();
-            return View(user);
+            var unsignedUser = new UserSignInModel();
+
+            return View(unsignedUser);
         }
 
-        public IActionResult TrySignIn(ClientSignInViewModel clientSignInViewModel)
+        public async Task<IActionResult> TrySignIn(UserSignInModel signedUser)
         {
             if (!ModelState.IsValid)
+                return View("Index", signedUser);
+
+            Customer customer = await _mongoDbService.TrySignIn(signedUser);
+
+            if (customer == null)
             {
-                return View("Index", clientSignInViewModel);
-            }
-
-            var signedUser = clientsRepository.TrySignIn(clientSignInViewModel.Email, clientSignInViewModel.Password);
-
-            if (signedUser == null)
-            {
-                httpContextAccessor.HttpContext.Session.SetString("AuthorizationFailed", "true");
-
+                HttpContext.Session.SetString("AuthorizationFailed", "true");
                 return RedirectToAction("Index");
             }
 
-            // Set signedUser credentials as client (passing role and id)
-            if(signedUser.Role == Role.Client)
-            {
-                currentUserStatusProvider.SetUserCredentials(signedUser.Id, UserRole.Client);
-            }
-            currentUserStatusProvider.ChangeSignedInState(true);
+            Credentials credentials = await _mongoDbService.GetCredetnialsByUserId(customer.Id);
+
+            var tokenResult = _jwtProvider.Generate(customer, credentials);
+
+            if (tokenResult == null)
+                throw new Exception("Token can not be generated");
+
+            HttpContext.Session.SetString("JWToken", tokenResult);
+            HttpContext.Session.SetString("SignedIn", "true");
 
             return RedirectToAction("Index", "Home");
         }
 
-        public void Logout()
+        [Authorize]
+        public IActionResult Logout()
         {
-            currentUserStatusProvider.SetUserCredentials(null, UserRole.Unauthorized);
-            currentUserStatusProvider.ChangeLoggedOutState(true);
+            HttpContext.Session.Remove("JWToken");
+            HttpContext.Session.SetString("LoggedOut", "true");
+
+            return RedirectToAction("Index", "SignIn");
         }
     }
 }

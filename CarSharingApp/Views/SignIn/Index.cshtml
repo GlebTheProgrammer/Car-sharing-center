@@ -1,7 +1,6 @@
-﻿@using CarSharingApp.Models.ClientData
-@inject IHttpContextAccessor contextAccessor;
+﻿@inject IHttpContextAccessor Accessor;
 
-@model ClientSignInViewModel
+@model CarSharingApp.Models.MongoView.UserSignInModel;
 
 <head>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
@@ -45,52 +44,11 @@
     </div>
     <div class="mb-4">
         <div class="text-center">
-            <a class="link-primary nav-link" asp-area="" asp-controller="Registration" asp-action="Index">Don't have an account? Join us now</a>
+            <a class="link-primary nav-link" asp-controller="Registration" asp-action="Index">Don't have an account? Join us now</a>
         </div>
     </div>
 </body>
 
-
-<!--Script for pop up success registration message starts here-->
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        if (@(contextAccessor?.HttpContext?.Session.GetString("Registered") == null ? "false" : contextAccessor?.HttpContext?.Session.GetString("Registered"))) {
-            Swal.fire({
-                title: "Success!",
-                text: "You have registered successfully. Please, Sign In with your credentials.",
-                icon: 'success',
-                confirmButtonColor: '#007aff'
-            });
-
-            @{contextAccessor?.HttpContext?.Session.Remove("Registered");}
-        }
-    });
-</script>
-<!--Script for pop up success registration message ends here-->
+<script src="~/js/signInPage.js" asp-append-version="true"></script>
 
 
-<!--Script for pop up sign in error message starts here-->
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        if (@(contextAccessor?.HttpContext?.Session.GetString("AuthorizationFailed") == null ? "false" : contextAccessor?.HttpContext?.Session.GetString("AuthorizationFailed"))) {
-            Swal.fire({
-                title: "Authorization Failed!",
-                text: "You have provided wrong credentials. Check and try again.",
-                icon: 'error',
-                confirmButtonColor: '#007aff'
-            });
-
-            @{contextAccessor?.HttpContext?.Session.Remove("AuthorizationFailed");}
-        }
-    });
-</script>
-<!--Script for pop up sign in error message ends here-->
-
-<!--Script for hiding error message starts here-->
-<script>
-    function HideErrorSpan(componentId) {
-        var component = document.getElementById(componentId);
-        component.textContent = "";
-    }
-</script>
-<!--Script for hiding error message ends here-->

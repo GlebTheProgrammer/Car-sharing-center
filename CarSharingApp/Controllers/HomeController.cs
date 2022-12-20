@@ -1,6 +1,8 @@
-﻿using CarSharingApp.Models;
-using CarSharingApp.Repository.Interfaces;
-using CarSharingApp.Services.Interfaces;
+﻿using AutoMapper;
+using CarSharingApp.Models;
+using CarSharingApp.Models.Mongo;
+using CarSharingApp.Models.MongoView;
+using CarSharingApp.Repository.MongoDbRepository;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -8,34 +10,42 @@ namespace CarSharingApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IVehiclesRepository vehiclesRepository;
+        private readonly MongoDbService _mongoDbService;
+        private readonly IMapper _mapper; 
 
-        public HomeController(ICurrentUserStatusProvider currentUserStatusProvider, IVehiclesRepository vehiclesRepository, IHttpContextAccessor httpContextAccessor)
+        public HomeController(MongoDbService mongoDbService, IMapper mapper)
         {
-            this.vehiclesRepository = vehiclesRepository;
+            _mongoDbService = mongoDbService;
+            _mapper = mapper;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            int vehiclesCount = vehiclesRepository.GetAllVehiclesForCatalog().Count();
+            //var vehiclesIds = _repositoryManager.OrdersRepository.CheckExpiredOrdersAndGetVehiclesId().Result;
+            //if (vehiclesIds.Count > 0)
+            //    _repositoryManager.VehiclesRepository.ChangeVehiclesIsOrderedState(vehiclesIds, false);
 
-            float[][] array = new float[vehiclesCount][];
+            List<Vehicle> activeNotRentedVehicles = await _mongoDbService.GetPublishedAndNotOrderedVehicles();
+            int vehiclesCount = activeNotRentedVehicles.Count;
+
+            float[][] vehiclesLocation = new float[vehiclesCount][];
 
             int i = 0;
-            foreach (var vehicle in vehiclesRepository.GetAllVehiclesForCatalog())
+            foreach (Vehicle vehicle in activeNotRentedVehicles)
             {
                 string latitude = vehicle.Location.Latitude.Replace('.', ',');
                 string longitude = vehicle.Location.Longitude.Replace('.', ',');
-                array[i] = new float[2] {float.Parse(latitude), float.Parse(longitude)};
+                vehiclesLocation[i] = new float[2] {float.Parse(latitude), float.Parse(longitude)};
                 i += 1;
             }
 
-            return View(array);
-        }
+            VehiclesHomeDataViewModel viewModel = new VehiclesHomeDataViewModel()
+            {
+                Vehicles = _mapper.Map<List<VehicleHomeModel>>(activeNotRentedVehicles),
+                VehiclesLocation= vehiclesLocation
+            };
 
-        public IActionResult Privacy()
-        {
-            return View();
+            return View(viewModel);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

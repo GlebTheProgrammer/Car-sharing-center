@@ -1,46 +1,33 @@
-﻿using AutoMapper;
-using CarSharingApp.Models.ClientData;
-using CarSharingApp.Models.ClientData.Includes;
-using CarSharingApp.Models.VehicleData;
-using CarSharingApp.Repository.Interfaces;
-using Microsoft.AspNetCore.Identity;
+﻿using CarSharingApp.Models.MongoView;
+using CarSharingApp.Repository.MongoDbRepository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarSharingApp.Controllers
 {
     public class RegistrationController : Controller
     {
-        private readonly IClientsRepository clientsRepository;
-        private readonly IMapper mapper;
-        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly MongoDbService _mongoDbService;
 
-        public RegistrationController(IClientsRepository clientsRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+        public RegistrationController(MongoDbService mongoDbService)
         {
-            this.clientsRepository = clientsRepository;
-            this.mapper = mapper;
-            this.httpContextAccessor = httpContextAccessor;
+            _mongoDbService = mongoDbService;
         }
 
         public IActionResult Index()
         {
-            var user = new ClientRegistrationViewModel();
-            return View(user);
+            var unsignedUser = new CustomerRegisterModel();
+
+            return View(unsignedUser);
         }
 
-        public IActionResult SaveNewAuthorizedUser(ClientRegistrationViewModel clientViewModel)
+        public async Task<IActionResult> Register(CustomerRegisterModel newCustomerRegisterModel)
         {
             if (!ModelState.IsValid)
-                return View("Index", clientViewModel);
+                return View("Index", newCustomerRegisterModel);
 
-            var newClient = mapper.Map<ClientModel>(clientViewModel);
-            newClient.VehiclesOrdered = 0;
-            newClient.VehiclesShared = 0;
-            newClient.AccountDescription = "No description yet";
-            newClient.UserImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTdmrjoiXGVFEcd1cX9Arb1itXTr2u8EKNpw&usqp=CAU";
+            await _mongoDbService.RegisterNewCustomer(newCustomerRegisterModel);
 
-            clientsRepository.AddNewClient(newClient);
-
-            httpContextAccessor.HttpContext.Session.SetString("Registered", "true");
+            HttpContext.Session.SetString("Registered", "true");
 
             return RedirectToAction("Index", "SignIn");
         }

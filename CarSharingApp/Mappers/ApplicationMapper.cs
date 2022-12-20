@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
-using CarSharingApp.Models.ClientData;
-using CarSharingApp.Models.OrderData;
-using CarSharingApp.Models.RatingData;
-using CarSharingApp.Models.VehicleData;
+using CarSharingApp.Models.Mongo;
+using CarSharingApp.Models.MongoView;
+using CarSharingApp.Payment;
 
 namespace CarSharingApp.Mappers
 {
@@ -10,20 +9,35 @@ namespace CarSharingApp.Mappers
     {
         public ApplicationMapper()
         {
-            // Add models mapping here
-
             // From -> Into
-            CreateMap<VehicleShareModel, VehicleModel>();
-            CreateMap<VehicleModel, VehicleViewModel>();
-            CreateMap<ClientRegistrationViewModel, ClientModel>();
-            CreateMap<VehicleModel, VehicleInformationViewModel>();
-            CreateMap<RatingModel, VehicleRatingViewModel>();
-            CreateMap<ClientModel, ClientAccountViewModel>();
-            CreateMap<OrderModel, OrderInUserAccountViewModel>();
-            CreateMap<VehicleModel, VehicleAccountViewModel>();
-            CreateMap<ClientModel, ClientEditInfoViewModel>();
-            CreateMap<ClientEditInfoViewModel, ClientModel>();
-            CreateMap<VehicleModel, VehicleEditInfoViewModel>();
+            CreateMap<PaymentModel, PaymentUrlModel>();
+            CreateMap<VehicleCreateModel, Specifications>();
+            CreateMap<VehicleCreateModel, Vehicle>();
+            CreateMap<CustomerRegisterModel, Customer>();
+            CreateMap<CustomerRegisterModel, Credentials>();
+            CreateMap<Vehicle, VehicleCatalogModel>();
+            CreateMap<Rental, RentalAccountModel>();
+            CreateMap<Vehicle, VehicleAccountModel>();
+            CreateMap<Customer, CustomerAccountModel>();
+            CreateMap<Credentials, CustomerAccountModel>();
+            CreateMap<Account, CustomerAccountModel>();
+            CreateMap<Customer, CustomerProfileModel>();
+            CreateMap<Account, CustomerProfileModel>();
+            CreateMap<Credentials, CustomerProfileModel>();
+            CreateMap<Customer, CustomerEditModel>();
+            CreateMap<Account, CustomerEditModel>();
+            CreateMap<Credentials, CustomerEditModel>();
+            CreateMap<Vehicle, VehicleEditModel>();
+            CreateMap<Specifications, VehicleEditModel>();
+            CreateMap<Vehicle, VehicleInformationModel>();
+            CreateMap<Specifications, VehicleInformationModel>();
+            CreateMap<Rating, RatingInformationModel>();
+            CreateMap<CustomerEditModel, Customer>();
+            CreateMap<CustomerEditModel, Account>();
+            CreateMap<CustomerEditModel, Credentials>();
+            CreateMap<VehicleEditModel, Vehicle>();
+            CreateMap<VehicleEditModel, Specifications>();
+            CreateMap<Vehicle, VehicleHomeModel>();
         }
     }
 }
