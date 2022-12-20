@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarSharingApp", "CarSharingApp\CarSharingApp.csproj", "{037D0F4F-073D-42C6-8168-552E3BC346CC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarSharingApp.Web", "CarSharingApp.Web\CarSharingApp.Web.csproj", "{037D0F4F-073D-42C6-8168-552E3BC346CC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
