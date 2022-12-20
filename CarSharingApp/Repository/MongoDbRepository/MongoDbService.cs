@@ -28,7 +28,7 @@ namespace CarSharingApp.Repository.MongoDbRepository
 
         public MongoDbService(IOptions<CarSharingDatabaseSettings> carSharingDatabaseSettings, IMapper mapper)
         {
-            //carSharingDatabaseSettings.Value.ConnectionString = atlasConnectionString;
+            carSharingDatabaseSettings.Value.ConnectionString = atlasConnectionString;
             var mongoClient = new MongoClient(carSharingDatabaseSettings.Value.ConnectionString);
 
             var mongoDatabase = mongoClient.GetDatabase(carSharingDatabaseSettings.Value.DatabaseName);

@@ -2,6 +2,7 @@
 using CarSharingApp.Models.Mongo;
 using CarSharingApp.Models.MongoView;
 using CarSharingApp.Repository.MongoDbRepository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarSharingApp.Controllers
@@ -50,6 +51,7 @@ namespace CarSharingApp.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [Authorize]
         public IActionResult Logout()
         {
             HttpContext.Session.Remove("JWToken");

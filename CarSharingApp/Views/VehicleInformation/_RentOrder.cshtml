@@ -76,7 +76,7 @@
                         <p class="fw-bold">Total</p>
                         <p id="totalPrice" class="fw-bold" style="color: #35558a;">$@(Model.Tariff.TariffPerHour).00</p>
 
-                        <input asp-for="VehicleId" class="visually-hidden" type="number" id="vehicleIdInput" value="@Model.VehicleId" readonly />
+                        <input asp-for="VehicleId" class="visually-hidden" type="text" id="vehicleIdInput" value="@Model.VehicleId" readonly />
 
                         <input asp-for="Amount" class="visually-hidden" type="text" id="totalPriceInput" placeholder="amount" value="@Model.Tariff.TariffPerHour" readonly />
                         <input asp-for="VehicleName" class="visually-hidden" type="text" value="@Model.VehicleName" readonly />

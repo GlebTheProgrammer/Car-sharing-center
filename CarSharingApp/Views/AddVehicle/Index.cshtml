@@ -7,12 +7,12 @@
         <form class="row g-3" asp-controller="AddVehicle" asp-action="AddVehicle" method="post" enctype="multipart/form-data">
             <div class="col-md-8">
                 <h3 class="pb-2 mb-4 fst-italic border-bottom text-center">
-                    Share Your Car
+                    Share Your Vehicle
                 </h3>
 
 
                 <div class="justify-content-center" id="noCarImage" style="font-size: 35px; align-items: center; width: 100%; height: 400px; background-color: lightgrey; text-align: center; display: flex">
-                    Select Car Image
+                    Select Vehicle Image
                 </div>
 
 
@@ -127,11 +127,11 @@
                 <div>
                     <span asp-validation-for="Location.Address" id="LocationAddressError" class="text-danger text-center" style="margin-left: 175px;"></span>
                     <div class="d-flex flex-row">
-                        <label class="mt-2 mr-2" style="white-space: nowrap;">Car location (Address): </label>
+                        <label class="mt-2 mr-2" style="white-space: nowrap;">Location (Address): </label>
                         <input asp-for="Location.Address" type="text" id="carAddress" class="form-control mr-2" placeholder="" onfocus="HideErrorSpan('LocationAddressError'); HideErrorSpan('LocationLatitideError')">
                         <label class="btn btn-primary" onclick="setUpTheMarker()">Search</label>
                     </div>
-                    <label class="mt-2 mr-2">Note: Enter the current location of the car in the «Car location» field, then click the «Search» button. If the address was found, a marker will appear on the map. If error occured, you will see error message and marker will not be set. If so, please try again.</label>
+                    <label class="mt-2 mr-2">Note: Enter the current location of the vehicle in the «Location» field, then click the «Search» button. If the address was found, a marker will appear on the map. If error occured, you will see error message and marker will not be set. If so, please try again.</label>
                 </div>
 
 
@@ -179,23 +179,18 @@
                     </div>
                 </div>
 
-
                 <hr class="featurette-divider">
-
 
                 <nav class="blog-pagination mt-4" aria-label="Pagination">
                     <button type="submit" class="btn btn-outline-primary w-25">Share</button>
                 </nav>
-
-
-
 
             </div>
 
             <div class="col-md-4">
                 <div class="position-sticky" style="top: 3rem;">
                     <div class="mt-4">
-                        <label for="firstName" class="mt-4">Car name</label>
+                        <label for="firstName" class="mt-4">Vehicle name</label>
                         <input asp-for="Name" type="text" class="form-control" id="firstName" placeholder="" onfocus="HideErrorSpan('NameError')">
                         <span asp-validation-for="Name" id="NameError" class="text-danger"></span>
                     </div>
