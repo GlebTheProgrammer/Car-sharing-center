@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarSharingApp.Presentation"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A3160ACE-F358-4620-B6D2-D31CF9581E49}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarSharingApp.PublicApi", "CarSharingApp.PublicApi\CarSharingApp.PublicApi.csproj", "{A07A0236-20AE-423D-B9AF-4AA8919061D0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{652BF52A-2EDC-4DD6-AA64-B0ED4BA8C6DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{652BF52A-2EDC-4DD6-AA64-B0ED4BA8C6DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{652BF52A-2EDC-4DD6-AA64-B0ED4BA8C6DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A07A0236-20AE-423D-B9AF-4AA8919061D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A07A0236-20AE-423D-B9AF-4AA8919061D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A07A0236-20AE-423D-B9AF-4AA8919061D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A07A0236-20AE-423D-B9AF-4AA8919061D0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,6 +65,7 @@ Global
 		{A2AD5A8B-3FC4-4D30-81AC-665164497DE8} = {AAC849B5-3B2C-4844-A788-F43BD372E9E7}
 		{C2319056-B129-4470-B515-67416878E2AC} = {09163B37-0866-4FFF-987D-3A132174B08D}
 		{652BF52A-2EDC-4DD6-AA64-B0ED4BA8C6DA} = {09163B37-0866-4FFF-987D-3A132174B08D}
+		{A07A0236-20AE-423D-B9AF-4AA8919061D0} = {99A490E7-9C87-4774-9FD9-F718E54A6F7C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2960DF65-F957-481E-B90D-2B9D56A593D9}

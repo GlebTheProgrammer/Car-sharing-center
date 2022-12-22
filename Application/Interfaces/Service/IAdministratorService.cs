@@ -1,4 +1,4 @@
-﻿namespace CarSharingApp.Domain.Abstractions
+﻿namespace CarSharingApp.Application.Interfaces.Service
 {
     public interface IAdministratorService
     {

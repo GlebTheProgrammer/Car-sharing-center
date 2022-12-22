@@ -22,8 +22,7 @@ namespace CarSharingApp.Domain.Entities
         public Customer? Customer { get; private set; }
         public List<Review> Reviews { get; private set; } = new(); // 1:many
 
-        public Vehicle(Guid id, 
-            Guid customerId,
+        public Vehicle(Guid customerId,
             string name, 
             string image, 
             string briefDescription, 
@@ -36,7 +35,6 @@ namespace CarSharingApp.Domain.Entities
             bool isPublished, 
             bool isOrdered,
             Specifications specifications)
-            : base(id)
         {
             CustomerId = customerId;
 
