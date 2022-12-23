@@ -12,7 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\Domain\CarSharingApp.Domain.csproj" />
+    <ProjectReference Include="..\Infrastructure\CarSharingApp.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

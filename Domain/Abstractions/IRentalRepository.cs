@@ -1,6 +1,6 @@
 ﻿namespace CarSharingApp.Domain.Abstractions
 {
-    public interface IReviewService
+    public interface IRentalRepository
     {
     }
 }
