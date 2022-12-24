@@ -1,26 +1,16 @@
 ﻿using CarSharingApp.Application.Interfaces;
 using CarSharingApp.Domain.Abstractions;
 using CarSharingApp.Domain.Entities;
-using CarSharingApp.Domain.ValueObjects;
 
 namespace CarSharingApp.Application.Services
 {
     public class VehicleService : IVehicleService
     {
-        private readonly IVehicleRepository _vehicleRepository;
-        private readonly IReviewRepository _reviewRepository;
-        private readonly IRentalRepository _rentalRepository;
-        private readonly ICustomerRepository _customerRepository;
+        private readonly IRepository<Vehicle> _vehicleRepository;
 
-        public VehicleService(IVehicleRepository vehicleRepository, 
-            IReviewRepository reviewRepository, 
-            IRentalRepository rentalRepository, 
-            ICustomerRepository customerRepository)
+        public VehicleService(IRepository<Vehicle> vehicleRepository)
         {
             _vehicleRepository = vehicleRepository;
-            _reviewRepository = reviewRepository;
-            _rentalRepository = rentalRepository;
-            _customerRepository = customerRepository;
         }
 
         public async Task AddVehicleAsync(Vehicle vehicle)
@@ -28,17 +18,26 @@ namespace CarSharingApp.Application.Services
             await _vehicleRepository.CreateAsync(vehicle);
         }
 
-        public async Task<List<Vehicle>> GetAllAsync()
+        public async Task DeleteVehicleAsync(Guid id)
         {
-            //var result = await _vehicleRepository.GetAllAsync();
+            await _vehicleRepository.DeleteAsync(id);
+        }
 
-            //return result.ToList();
+        public async Task<IEnumerable<Vehicle>> GetAllAsync()
+        {
+            var result = await _vehicleRepository.GetAllAsync();
+            return result;
+        }
 
-            var spec = new Specifications(2002, 10, Colour.Black, Colour.Blue, Domain.Enums.Drivetrain.All_wheel_drive, Domain.Enums.FuelType.Gasoline, Domain.Enums.Transmission.Automatic, Domain.Enums.Engine.Physical, "123");
-            return new List<Vehicle>()
-            {
-                new Vehicle(new Guid(), "", "", "", "", new Domain.ValueObjects.Tariff(10, 20), new Domain.ValueObjects.Location("", "", ""), 0, DateTime.Now, DateTime.Now, false, false, spec)
-            };
+        public async Task<Vehicle> GetVehicleAsync(Guid id)
+        {
+            var result = await _vehicleRepository.GetAsync(id);
+            return result;
+        }
+
+        public async Task UpsertVehicleAsync(Vehicle vehicle)
+        {
+            await _vehicleRepository.UpdateAsync(vehicle);
         }
     }
 }

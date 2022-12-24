@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Application\CarSharingApp.Application.csproj" />
     <ProjectReference Include="..\Domain\CarSharingApp.Domain.csproj" />
     <ProjectReference Include="..\Infrastructure\CarSharingApp.Infrastructure.csproj" />
   </ItemGroup>

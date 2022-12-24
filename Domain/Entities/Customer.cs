@@ -23,7 +23,8 @@ namespace CarSharingApp.Domain.Entities
         public List<Vehicle> Vehicles { get; private set; } = new(); // 1:many
         public List<Review> Reviews { get; private set; } = new(); // 1:many
 
-        public Customer(string firstName,
+        public Customer(Guid id,
+            string firstName,
             string lastName,
             string country,
             string city,
@@ -37,6 +38,7 @@ namespace CarSharingApp.Domain.Entities
             int vehiclesShared,
             bool isAcceptedNewsSharing,
             bool isOnline)
+            : base(id)
         {
             FirstName = firstName;
             LastName = lastName;

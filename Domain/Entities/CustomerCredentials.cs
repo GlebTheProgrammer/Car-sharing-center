@@ -11,10 +11,12 @@ namespace CarSharingApp.Domain.Entities
         public Guid CustomerId { get; private set; } // 1:1
         public Customer? Customer { get; private set; }
 
-        public CustomerCredentials(Guid customerId, 
+        public CustomerCredentials(Guid id,
+            Guid customerId, 
             string login, 
             string email, 
             string password)
+            : base(id)
         {
             CustomerId = customerId;
             Login = login;

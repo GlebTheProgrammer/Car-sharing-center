@@ -13,11 +13,13 @@ namespace CarSharingApp.Domain.Entities
         public Guid VehicleId { get; private set; } // many:1
         public Vehicle? Vehicle { get; private set; }
 
-        public Review(string message, 
+        public Review(Guid id,
+            string message, 
             int reviewScore, 
             DateTime date, 
             Guid customerId, 
             Guid vehicleId)
+            : base(id)
         {
             Message = message;
             ReviewScore = reviewScore;

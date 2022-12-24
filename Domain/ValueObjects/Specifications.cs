@@ -13,8 +13,8 @@ namespace CarSharingApp.Domain.ValueObjects
 
         public int ProductionYear { get; private set; }
         public int MaxSpeedKph { get; private set; }
-        public Colour ExteriorColor { get; private set; }
-        public Colour InteriorColor { get; private set; }
+        public string ExteriorColor { get; private set; }
+        public string InteriorColor { get; private set; }
         public Drivetrain Drivetrain { get; private set; }
         public FuelType FuelType { get; private set; }
         public Transmission Transmission { get; private set; }
@@ -23,8 +23,8 @@ namespace CarSharingApp.Domain.ValueObjects
 
         public Specifications(int productionYear,
             int maxSpeedKph,
-            Colour exteriorColor,
-            Colour interiorColor,
+            string exteriorColor,
+            string interiorColor,
             Drivetrain drivetrain,
             FuelType fuelType,
             Transmission transmission,

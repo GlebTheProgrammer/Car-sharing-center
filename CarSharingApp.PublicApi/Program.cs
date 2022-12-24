@@ -22,6 +22,7 @@ builder.Services.AddMongo();
 //builder.Services.AddMongoRepository<Rental>(MongoDbConstants.RENTALS_COLLECTION_NAME);
 //builder.Services.AddMongoRepository<Review>(MongoDbConstants.REVIEWS_COLLECTION_NAME);
 builder.Services.AddMongoRepository<Vehicle>(MongoDbConstants.VEHICLES_COLLECTION_NAME);
+builder.Services.AddSingleton<IVehicleService, VehicleService>();
 
 //builder.Services.AddSingleton<IVehicleService, VehicleService>();
 

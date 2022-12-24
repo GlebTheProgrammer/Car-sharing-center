@@ -13,7 +13,7 @@ namespace CarSharingApp.Domain.Entities
         public Location Location { get; private set; }
         public int TimesOrdered { get; private set; }
         public DateTime PublishedTime { get; private set; }
-        public DateTime LastTimeOrdered { get; private set; }
+        public DateTime? LastTimeOrdered { get; private set; }
         public bool IsPublished { get; private set; }
         public bool IsOrdered { get; private set; }
         public Specifications Specifications { get; private set; }
@@ -22,7 +22,8 @@ namespace CarSharingApp.Domain.Entities
         public Customer? Customer { get; private set; }
         public List<Review> Reviews { get; private set; } = new(); // 1:many
 
-        public Vehicle(Guid customerId,
+        public Vehicle(Guid id,
+            Guid customerId,
             string name, 
             string image, 
             string briefDescription, 
@@ -31,10 +32,11 @@ namespace CarSharingApp.Domain.Entities
             Location location, 
             int timesOrdered, 
             DateTime publishedTime, 
-            DateTime lastTimeOrdered, 
+            DateTime? lastTimeOrdered, 
             bool isPublished, 
             bool isOrdered,
             Specifications specifications)
+            : base(id)
         {
             CustomerId = customerId;
 

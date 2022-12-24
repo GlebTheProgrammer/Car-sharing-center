@@ -12,13 +12,15 @@ namespace CarSharingApp.Domain.Entities
         public string Login { get; private set; }
         public string Password { get; private set; }
 
-        public Administrator(string firstName, 
+        public Administrator(Guid id,
+            string firstName, 
             string lastName, 
             string username,
             string phoneNumber, 
             string email, 
             string login, 
             string password)
+            : base(id)
         {
             FirstName = firstName;
             LastName = lastName;

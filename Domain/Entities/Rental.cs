@@ -18,7 +18,8 @@ namespace CarSharingApp.Domain.Entities
         public DateTime ReturnDate { get; private set; }
         public bool IsActive { get; private set; }
 
-        public Rental(Guid rentedCustomerId, 
+        public Rental(Guid id,
+            Guid rentedCustomerId, 
             Guid vehicleOwnerId,
             Guid vehicleId,
             Guid paymentId,
@@ -26,6 +27,7 @@ namespace CarSharingApp.Domain.Entities
             int rentalTimeInMinutes, 
             DateTime returnDate, 
             bool isActive)
+            : base(id)
         {
             RentedCustomerId = rentedCustomerId;
             VehicleOwnerId = vehicleOwnerId;

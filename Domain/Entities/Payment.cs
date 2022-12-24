@@ -10,9 +10,11 @@ namespace CarSharingApp.Domain.Entities
         public Guid RentalId { get; private set; } // 1:1
         public Rental? Rental { get; private set; }
 
-        public Payment(Guid rentalId,
+        public Payment(Guid id,
+            Guid rentalId,
             DateTime date, 
             decimal amount)
+            : base(id)
         {
             RentalId = rentalId;
             Date = date;

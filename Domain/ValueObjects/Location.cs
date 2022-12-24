@@ -14,7 +14,7 @@ namespace CarSharingApp.Domain.ValueObjects
 
         public Location(string address, string latitude, string longitude)
         {
-            if (Address == null || Latitude == null || Longitude == null)
+            if (address == null || latitude == null || longitude == null)
             {
                 throw new VehicleLocationNullArgumentsException();
             }
