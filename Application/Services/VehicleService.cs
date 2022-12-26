@@ -1,6 +1,9 @@
-﻿using CarSharingApp.Application.Interfaces;
+﻿using CarSharingApp.Application.Contracts.Vehicle;
+using CarSharingApp.Application.Interfaces;
+using CarSharingApp.Application.ServiceErrors;
 using CarSharingApp.Domain.Abstractions;
 using CarSharingApp.Domain.Entities;
+using ErrorOr;
 
 namespace CarSharingApp.Application.Services
 {
@@ -13,31 +16,92 @@ namespace CarSharingApp.Application.Services
             _vehicleRepository = vehicleRepository;
         }
 
-        public async Task AddVehicleAsync(Vehicle vehicle)
+        public async Task<ErrorOr<Created>> CreateVehicleAsync(Vehicle vehicle)
         {
             await _vehicleRepository.CreateAsync(vehicle);
+
+            return Result.Created;
         }
 
-        public async Task DeleteVehicleAsync(Guid id)
+        public async Task<ErrorOr<Deleted>> DeleteVehicleAsync(Guid id)
         {
             await _vehicleRepository.DeleteAsync(id);
+
+            return Result.Deleted;
         }
 
-        public async Task<IEnumerable<Vehicle>> GetAllAsync()
+        public async Task<ErrorOr<List<Vehicle>>> GetAllAsync()
         {
             var result = await _vehicleRepository.GetAllAsync();
-            return result;
+
+            return result.ToList();
         }
 
-        public async Task<Vehicle> GetVehicleAsync(Guid id)
+        public async Task<ErrorOr<Vehicle>> GetVehicleAsync(Guid id)
         {
             var result = await _vehicleRepository.GetAsync(id);
-            return result;
+
+            if (result != null)
+                return result;
+            else
+                return ApplicationErrors.Vehicle.NotFound;
+
         }
 
-        public async Task UpsertVehicleAsync(Vehicle vehicle)
+        public async Task<ErrorOr<Updated>> UpdateVehicleAsync(Vehicle vehicle)
         {
             await _vehicleRepository.UpdateAsync(vehicle);
+
+            return Result.Updated;
+        }
+
+        public ErrorOr<Vehicle> From(Guid customerId, CreateVehicleRequest request)
+        {
+            return Vehicle.Create(
+                customerId,
+                request.Name,
+                request.Image,
+                request.BriefDescription,
+                request.Description,
+                request.HourlyRentalPrice,
+                request.DailyRentalPrice,
+                request.Address,
+                request.Latitude,
+                request.Longitude,
+                request.ProductionYear,
+                request.MaxSpeedKph,
+                request.ExteriorColor,
+                request.InteriorColor,
+                request.Drivetrain,
+                request.FuelType,
+                request.Transmission,
+                request.Engine,
+                request.VIN);
+        }
+
+        public ErrorOr<Vehicle> From(Guid customerId, Guid id, UpdateVehicleRequest request)
+        {
+            return Vehicle.Create(
+                customerId,
+                request.Name,
+                request.Image,
+                request.BriefDescription,
+                request.Description,
+                request.HourlyRentalPrice,
+                request.DailyRentalPrice,
+                request.Address,
+                request.Latitude,
+                request.Longitude,
+                request.ProductionYear,
+                request.MaxSpeedKph,
+                request.ExteriorColor,
+                request.InteriorColor,
+                request.Drivetrain,
+                request.FuelType,
+                request.Transmission,
+                request.Engine,
+                request.VIN,
+                id);
         }
     }
 }

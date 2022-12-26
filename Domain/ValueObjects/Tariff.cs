@@ -1,34 +1,42 @@
-﻿using CarSharingApp.Domain.Exceptions;
-using CarSharingApp.Domain.Primitives;
+﻿using CarSharingApp.Domain.Primitives;
+using ErrorOr;
+using CarSharingApp.Domain.ValidationErrors;
 
 namespace CarSharingApp.Domain.ValueObjects
 {
     public sealed class Tariff : ValueObject
     {
-        public const int MaxPrice = 9999;
+        public const int MinPrice = 1;
+        public const int MaxPrice = 10000;
 
         public decimal HourlyRentalPrice { get; private set; }
         public decimal DailyRentalPrice { get; private set; }
 
-        public Tariff(decimal hourlyRentalPrice, decimal dailyRentalPrice)
+        private Tariff(decimal hourlyRentalPrice, decimal dailyRentalPrice)
         {
-            if (hourlyRentalPrice <= 0 || dailyRentalPrice <= 0)
-            {
-                throw new NegativeRentalPriceException();
-            }
+            HourlyRentalPrice = hourlyRentalPrice;
+            DailyRentalPrice = dailyRentalPrice;
+        }
+
+        public static ErrorOr<Tariff> Create(decimal hourlyRentalPrice, decimal dailyRentalPrice)
+        {
+            List<Error> errors = new();
 
             if (hourlyRentalPrice > dailyRentalPrice)
             {
-                throw new HourlyRentalPriceLargerThanDailyException();
+                errors.Add(DomainErrors.Vehicle.InvalidRentalPriceDifference);
             }
-
             if (hourlyRentalPrice > MaxPrice && dailyRentalPrice > MaxPrice)
             {
-                throw new TooHighRentalPriceException(MaxPrice);
+                errors.Add(DomainErrors.Vehicle.InvalidRentalPrice);
             }
 
-            HourlyRentalPrice = hourlyRentalPrice;
-            DailyRentalPrice = dailyRentalPrice;
+            if (errors.Count > 0)
+            {
+                return errors;
+            }
+
+            return new Tariff(hourlyRentalPrice, dailyRentalPrice);
         }
 
         public override IEnumerable<object> GetAtomicValues()

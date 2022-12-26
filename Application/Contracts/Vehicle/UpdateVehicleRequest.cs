@@ -2,8 +2,8 @@
 
 namespace CarSharingApp.Application.Contracts.Vehicle
 {
-    public record CreateVehicleRequest(
-        string Name, 
+    public record UpdateVehicleRequest(
+        string Name,
         string Image,
         string BriefDescription,
         string Description,
@@ -22,5 +22,4 @@ namespace CarSharingApp.Application.Contracts.Vehicle
         Engine Engine,
         string VIN
     );
-        
 }

@@ -11,11 +11,11 @@ namespace CarSharingApp.Application.Contracts.Vehicle
         string Description,
         Tariff Tariff,
         Location Location,
+        Specifications Specifications,
         int TimesOrdered,
         DateTime PublishedTime,
         DateTime? LastTimeOrdered,
         bool IsPublished,
-        bool IsOrdered,
-        Specifications Specifications
+        bool IsOrdered
     );
 }
