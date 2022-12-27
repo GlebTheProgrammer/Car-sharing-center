@@ -29,6 +29,12 @@ namespace CarSharingApp.PublicApi.Controllers
 
             var firstError = errors[0];
 
+            if (firstError.NumericType is 403)
+                return Problem(
+                 statusCode: StatusCodes.Status403Forbidden,
+                 title: firstError.Description);
+
+
             var statusCode = firstError.Type switch
             {
                 ErrorType.NotFound => StatusCodes.Status404NotFound,

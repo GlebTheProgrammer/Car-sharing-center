@@ -20,7 +20,7 @@ namespace CarSharingApp.Domain.ValidationErrors
 
             public static Error InvalidLocation => Error.Validation(
             code: "Vehicle.InvalidCoordinated",
-            description: $"Vehicle location variables must be fractional numbers, fractional part of which is separated by a dot.");
+            description: "Vehicle latitude and longitude variables (location) must be fractional numbers, fractional part of which is separated by a dot.");
 
             public static Error InvalidAddress => Error.Validation(
             code: "Vehicle.InvalidAddress",
@@ -28,7 +28,7 @@ namespace CarSharingApp.Domain.ValidationErrors
 
             public static Error InvalidRentalPriceDifference => Error.Validation(
             code: "Vehicle.InvalidRentalPriceDifference",
-            description: $"Vehicle hourly rental price must be less than daily rental price.");
+            description: "Vehicle hourly rental price must be less than daily rental price.");
 
             public static Error InvalidRentalPrice => Error.Validation(
             code: "Vehicle.InvalidRentalPrice",
@@ -44,7 +44,15 @@ namespace CarSharingApp.Domain.ValidationErrors
 
             public static Error InvalidVIN => Error.Validation(
             code: "Vehicle.InvalidVIN",
-            description: $"Provided VIN doesn't match international format.");
+            description: "Provided VIN doesn't match international format.");
+
+            public static Error InvalidInteriorColour => Error.Validation(
+            code: "Vehicle.InvalidInteriorColour",
+            description: $"Vehicle interior colour is not valid. List of possible colours: {string.Join(" ", "[" + ValueObjects.Specifications.AllowedColors + "]")}");
+
+            public static Error InvalidExteriorColour => Error.Validation(
+            code: "Vehicle.InvalidExteriorColour",
+            description: $"Vehicle exterior colour is not valid. List of possible colours: {string.Join(" ", "[" + ValueObjects.Specifications.AllowedColors + "]")}");
         }
     }
 }

@@ -13,6 +13,7 @@ namespace CarSharingApp.Domain.ValueObjects
         public const int MaxPossibleSpeed = 1000;
         public const int MinPossibleSpeed = 200;
         public static readonly Regex vinRegex = new Regex("^[A-HJ-NPR-Za-hj-npr-z\\d]{8}[\\dX][A-HJ-NPR-Za-hj-npr-z\\d]{2}\\d{6}$");
+        public static readonly string[] AllowedColors = new string[] { "White", "Black", "Gray", "Silver", "Blue", "Red", "Brown", "Green", "Orange", "Beige", "Other" };
 
         public int ProductionYear { get; private set; }
         public int MaxSpeedKph { get; private set; }
@@ -70,6 +71,14 @@ namespace CarSharingApp.Domain.ValueObjects
             if (!vinRegex.IsMatch(vin))
             {
                 errors.Add(DomainErrors.Vehicle.InvalidVIN);
+            }
+            if (!AllowedColors.Contains(exteriorColor))
+            {
+                errors.Add(DomainErrors.Vehicle.InvalidExteriorColour);
+            }
+            if (!AllowedColors.Contains(interiorColor))
+            {
+                errors.Add(DomainErrors.Vehicle.InvalidInteriorColour);
             }
 
             if (errors.Count > 0)

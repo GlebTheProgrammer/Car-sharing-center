@@ -9,7 +9,6 @@
 
         public const string ADMINS_COLLECTION_NAME = "Admins";
         public const string CUSTOMERS_COLLECTION_NAME = "Customers";
-        public const string CUSTOMERS_CREDENTIALS_COLLECTION_NAME = "CustomersCredentials";
         public const string PAYMENTS_COLLECTION_NAME = "Payments";
         public const string RENTALS_COLLECTION_NAME = "Rentals";
         public const string REVIEWS_COLLECTION_NAME = "Reviews";

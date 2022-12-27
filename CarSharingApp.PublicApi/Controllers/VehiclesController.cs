@@ -3,9 +3,11 @@ using CarSharingApp.Application.Interfaces;
 using CarSharingApp.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using ErrorOr;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CarSharingApp.PublicApi.Controllers
 {
+    [Authorize]
     public class VehiclesController : ApiController
     {
         private readonly IVehicleService _vehicleService;
@@ -76,9 +78,6 @@ namespace CarSharingApp.PublicApi.Controllers
                 deleted => NoContent(),
                 errors => Problem(errors));
         }
-
-
-
 
         private static VehicleResponse MapVehicleResponse(Vehicle vehicle)
         {
