@@ -17,7 +17,7 @@ namespace CarSharingApp.Infrastructure.MongoDB
 
             services.AddSingleton(s =>
             {
-                var mongoClient = new MongoClient(MongoDbConstants.LOCAL_CONNECTION_STRING);
+                var mongoClient = new MongoClient(MongoDbConstants.CLOUD_CONNECTION_STRING);
                 return mongoClient.GetDatabase(MongoDbConstants.DATABASE_NAME);
             });
 
