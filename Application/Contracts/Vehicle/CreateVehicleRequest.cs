@@ -20,7 +20,8 @@ namespace CarSharingApp.Application.Contracts.Vehicle
         FuelType FuelType,
         Transmission Transmission,
         Engine Engine,
-        string VIN
+        string VIN,
+        Category Category
     );
         
 }
