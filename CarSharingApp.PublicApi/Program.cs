@@ -1,12 +1,10 @@
 using CarSharingApp.Application.Interfaces;
-using CarSharingApp.Domain.Constants;
 using CarSharingApp.Application.Services;
 using CarSharingApp.Domain.Entities;
 using CarSharingApp.Infrastructure.Authentication;
 using CarSharingApp.Infrastructure.MongoDB;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
+using CarSharingApp.Infrastructure.AzureKeyVault;
+using CarSharingApp.Infrastructure.Options.Setup;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -14,36 +12,20 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 
-    builder.Services.AddMongo();
-    builder.Services.AddMongoRepository<Vehicle>(MongoDbConstants.VEHICLES_COLLECTION_NAME);
+    builder.Services.AddAzureKeyVaultAppsettingsValues(builder.Configuration);
+
+    builder.Services.ConfigureOptions<JwtOptionsSetup>();
+
+    builder.Services.AddMongo(builder.Configuration);
+    builder.Services.AddMongoRepository<Vehicle>(builder.Configuration["MongoDbConfig:Collections:VehiclesCollectionName"] ?? "");
     builder.Services.AddSingleton<IVehicleService, VehicleService>();
-    builder.Services.AddMongoRepository<Customer>(MongoDbConstants.CUSTOMERS_COLLECTION_NAME);
+    builder.Services.AddMongoRepository<Customer>(builder.Configuration["MongoDbConfig:Collections:CustomersCollectionName"] ?? "");
     builder.Services.AddSingleton<ICustomerService, CustomerService>();
 
     builder.Services.AddSingleton<IAuthorizationService, AuthorizationService>();
     builder.Services.AddTransient<IJwtProvider, JwtProvider>();
 
-    var key = Encoding.UTF8.GetBytes(JwtAuthorizationConstants.SECRET_KEY);
-    builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    }).AddJwtBearer(opt =>
-    {
-        opt.RequireHttpsMetadata = false;
-        opt.SaveToken = true;
-        opt.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(key),
-            ValidIssuers = new string[] { JwtAuthorizationConstants.ISSUER },
-            ValidAudiences = new string[] { JwtAuthorizationConstants.AUDIENCE },
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ClockSkew = TimeSpan.Zero
-        };
-    });
+    builder.Services.AddJwtBearerAuthentication(builder.Configuration);
 }
 
 var app = builder.Build();
