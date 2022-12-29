@@ -76,7 +76,8 @@ namespace CarSharingApp.Application.Services
                 request.FuelType,
                 request.Transmission,
                 request.Engine,
-                request.VIN);
+                request.VIN,
+                request.Category);
         }
 
         public ErrorOr<Vehicle> From(Guid customerId, Guid id, UpdateVehicleRequest request)
@@ -101,6 +102,7 @@ namespace CarSharingApp.Application.Services
                 request.Transmission,
                 request.Engine,
                 request.VIN,
+                request.Category,
                 id);
         }
     }

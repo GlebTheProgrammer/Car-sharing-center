@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CarSharingApp.PublicApi.Controllers
 {
+    [Authorize]
     public class CustomersController : ApiController
     {
         private readonly ICustomerService _customerService;
@@ -50,7 +51,6 @@ namespace CarSharingApp.PublicApi.Controllers
         }
         
         [HttpPut("{id:guid}")]
-        [Authorize]
         public async Task<IActionResult> UpdateCustomer(Guid id, UpdateCustomerRequest request)
         {
             ErrorOr<Customer> requestToCustomerResult = Error.Failure(); //_customerService.From(id, Credentials, request);
@@ -70,7 +70,6 @@ namespace CarSharingApp.PublicApi.Controllers
         }
 
         [HttpDelete("{id:guid}")]
-        [Authorize]
         public async Task<IActionResult> DeleteCustomer(Guid id)
         {
             ErrorOr<Deleted> deleteCustomerResult = await _customerService.DeleteCustomerAsync(id);

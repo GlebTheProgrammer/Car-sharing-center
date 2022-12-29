@@ -91,6 +91,7 @@ namespace CarSharingApp.PublicApi.Controllers
                 vehicle.Tariff,
                 vehicle.Location,
                 vehicle.Specifications,
+                vehicle.Category,
                 vehicle.TimesOrdered,
                 vehicle.PublishedTime,
                 vehicle.LastTimeOrdered,

@@ -3,22 +3,22 @@ using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using CarSharingApp.Domain.Constants;
 using CarSharingApp.Domain.Abstractions;
 using CarSharingApp.Domain.Primitives;
+using Microsoft.Extensions.Configuration;
 
 namespace CarSharingApp.Infrastructure.MongoDB
 {
     public static class Extensions
     {
-        public static IServiceCollection AddMongo(this IServiceCollection services)
+        public static IServiceCollection AddMongo(this IServiceCollection services, IConfiguration configuration)
         {
             BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
-
+            
             services.AddSingleton(s =>
             {
-                var mongoClient = new MongoClient(MongoDbConstants.LOCAL_CONNECTION_STRING);
-                return mongoClient.GetDatabase(MongoDbConstants.DATABASE_NAME);
+                var mongoClient = new MongoClient(configuration["ConnectionStrings:MongoDbLocal"]);
+                return mongoClient.GetDatabase(configuration["MongoDbConfig:DbName"]);
             });
 
             return services;
