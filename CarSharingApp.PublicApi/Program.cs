@@ -24,7 +24,6 @@ var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.AddSingleton<IAuthorizationService, AuthorizationService>();
     builder.Services.AddTransient<IJwtProvider, JwtProvider>();
-
     builder.Services.AddJwtBearerAuthentication(builder.Configuration);
 }
 

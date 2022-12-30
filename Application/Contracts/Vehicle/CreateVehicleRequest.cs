@@ -21,7 +21,7 @@ namespace CarSharingApp.Application.Contracts.Vehicle
         Transmission Transmission,
         Engine Engine,
         string VIN,
-        Category Category
+        Categories Category
     );
         
 }

@@ -1,7 +1,7 @@
 ﻿namespace CarSharingApp.Domain.Enums
 {
     [Flags]
-    public enum Category
+    public enum Categories
     {
         SUV = 0,
         CUV = 1,

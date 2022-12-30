@@ -1,14 +1,14 @@
 ﻿using CarSharingApp.Application.Contracts.Customer;
 using CarSharingApp.Application.Interfaces;
 using CarSharingApp.Domain.Entities;
+using CarSharingApp.Infrastructure.Authentication;
 using ErrorOr;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarSharingApp.PublicApi.Controllers
 {
-    [Authorize]
-    public class CustomersController : ApiController
+    public sealed class CustomersController : ApiController
     {
         private readonly ICustomerService _customerService;
 
@@ -18,6 +18,7 @@ namespace CarSharingApp.PublicApi.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> CreateCustomer(CreateCustomerRequest request)
         {
             ErrorOr<Customer> requestToCustomerResult = _customerService.From(request);
@@ -40,20 +41,40 @@ namespace CarSharingApp.PublicApi.Controllers
         }
 
         [HttpGet("{id:guid}")]
+        [Authorize(Roles = "Administrator, Customer")]
         public async Task<IActionResult> GetCustomer(Guid id)
         {
+            if (!IsRequestAllowed(id)) 
+            {
+                return Forbid();
+            }
+
             ErrorOr<Customer> getCustomerResult = await _customerService.GetCustomerAsync(id);
 
             return getCustomerResult.Match(
                 customer => Ok(MapCustomerResponse(customer)),
                 errors => Problem(errors));
-
         }
         
         [HttpPut("{id:guid}")]
+        [Authorize(Roles = "Administrator, Customer")]
         public async Task<IActionResult> UpdateCustomer(Guid id, UpdateCustomerRequest request)
         {
-            ErrorOr<Customer> requestToCustomerResult = Error.Failure(); //_customerService.From(id, Credentials, request);
+            if (!IsRequestAllowed(id))
+            {
+                return Forbid();
+            }
+
+            ErrorOr<Customer> getCustomerResult = await _customerService.GetCustomerAsync(id);
+
+            if (getCustomerResult.IsError)
+            {
+                return Problem(getCustomerResult.Errors);
+            }
+
+            Customer notUpdatedCustomerYet = getCustomerResult.Value;
+
+            ErrorOr<Customer> requestToCustomerResult = _customerService.From(id, request);
 
             if (requestToCustomerResult.IsError)
             {
@@ -70,8 +91,23 @@ namespace CarSharingApp.PublicApi.Controllers
         }
 
         [HttpDelete("{id:guid}")]
+        [Authorize(Roles = "Administrator, Customer")]
         public async Task<IActionResult> DeleteCustomer(Guid id)
         {
+            if (!IsRequestAllowed(id))
+            {
+                return Forbid();
+            }
+
+            ErrorOr<Customer> getCustomerResult = await _customerService.GetCustomerAsync(id);
+
+            if (getCustomerResult.IsError)
+            {
+                return Problem(getCustomerResult.Errors);
+            }
+
+            Customer notDeletedCustomerYet = getCustomerResult.Value;
+
             ErrorOr<Deleted> deleteCustomerResult = await _customerService.DeleteCustomerAsync(id);
 
             return deleteCustomerResult.Match(
@@ -98,6 +134,18 @@ namespace CarSharingApp.PublicApi.Controllers
                 customer.HasAcceptedNewsSharing,
                 customer.IsOnline,
                 customer.Credentials);
+        }
+
+        private bool IsRequestAllowed(Guid requestedId)
+        {
+            JwtClaims? jwtClaims = GetJwtClaims();
+
+            if (jwtClaims == null || (jwtClaims.Id != requestedId.ToString() && jwtClaims.Role != "Administrator"))
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

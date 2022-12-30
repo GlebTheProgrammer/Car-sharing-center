@@ -27,7 +27,7 @@ namespace CarSharingApp.Domain.Entities
         public bool IsPublished { get; private set; }
         public bool IsOrdered { get; private set; }
         public Specifications Specifications { get; private set; }
-        public Category Category { get; private set; }
+        public Categories Category { get; private set; }
 
         public Guid CustomerId { get; private set; } // many:1
         public Customer? Customer { get; private set; }
@@ -47,7 +47,7 @@ namespace CarSharingApp.Domain.Entities
             bool isPublished, 
             bool isOrdered,
             Specifications specifications,
-            Category category)
+            Categories category)
             : base(id)
         {
             CustomerId = customerId;
@@ -86,7 +86,7 @@ namespace CarSharingApp.Domain.Entities
             Transmission transmission,
             Engine engine,
             string vin,
-            Category category,
+            Categories category,
             Guid? id = null)
         {
             List<Error> errors = new();

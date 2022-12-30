@@ -14,6 +14,6 @@ namespace CarSharingApp.Application.Interfaces
         Task<ErrorOr<Deleted>> DeleteCustomerAsync(Guid id);
 
         ErrorOr<Customer> From(CreateCustomerRequest request);
-        ErrorOr<Customer> From(Guid id, Credentials credentials, UpdateCustomerRequest request);
+        ErrorOr<Customer> From(Guid id, UpdateCustomerRequest request);
     }
 }

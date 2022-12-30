@@ -72,7 +72,7 @@ namespace CarSharingApp.Application.Services
                 request.password);
         }
 
-        public ErrorOr<Customer> From(Guid id, Credentials credentials, UpdateCustomerRequest request)
+        public ErrorOr<Customer> From(Guid id, UpdateCustomerRequest request)
         {
             return Customer.Create(
                 request.FirstName,
@@ -84,15 +84,15 @@ namespace CarSharingApp.Application.Services
                 request.DriverLicenseIdentifier,
                 request.Postcode,
                 request.HasAcceptedNewsSharing,
-                credentials.Login,
-                credentials.Email,
-                credentials.Password,
+                request.Login,
+                request.Email,
+                request.Password,
                 id,
                 request.ProfileDescription,
                 request.ProfileImage,
                 request.VehiclesOrdered,
                 request.VehiclesShared,
-                request.isOnline);
+                request.IsOnline);
         }
     }
 }
