@@ -1,4 +1,5 @@
-﻿using CarSharingApp.Domain.ValueObjects;
+﻿using CarSharingApp.Domain.SmartEnums;
+using CarSharingApp.Domain.ValueObjects;
 
 namespace CarSharingApp.Application.Contracts.Customer
 {
@@ -6,7 +7,7 @@ namespace CarSharingApp.Application.Contracts.Customer
         Guid id,
         string FirstName,
         string LastName,
-        string Country,
+        Country Country,
         string City,
         string Address,
         string PhoneNumber,

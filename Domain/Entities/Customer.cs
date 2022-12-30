@@ -3,12 +3,13 @@ using CarSharingApp.Domain.ValueObjects;
 using ErrorOr;
 using System.Text.RegularExpressions;
 using CarSharingApp.Domain.ValidationErrors;
+using CarSharingApp.Domain.SmartEnums;
 
 namespace CarSharingApp.Domain.Entities
 {
     public sealed class Customer : Entity
     {
-        public static readonly string[] AllowedCountries = new[] { "Germany", "Latvia", "USA", "Netherlands", "Poland", "Cyprus", "Belarus", "Ukraine", "Lithuania" };
+        public static readonly Regex FirstLastNameRegex = new Regex("^[^±!@£$%^&*_+§¡€#¢§¶•ªº«\\/<>?:;|=.,]{1,20}$");
         public const int MinCityLength = 5;
         public const int MaxCityLength = 25;
         public const int MinAddressLength = 5;
@@ -24,7 +25,7 @@ namespace CarSharingApp.Domain.Entities
 
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
-        public string Country { get; private set; }
+        public Country Country { get; private set; }
         public string City { get; private set; }
         public string Address { get; private set; }
         public string PhoneNumber { get; private set; }
@@ -42,7 +43,7 @@ namespace CarSharingApp.Domain.Entities
             Guid id,
             string firstName,
             string lastName,
-            string country,
+            Country country,
             string city,
             string address,
             string phoneNumer,
@@ -96,15 +97,15 @@ namespace CarSharingApp.Domain.Entities
         {
             List<Error> errors = new();
 
-            if (firstName.Length is 0)
+            if (!FirstLastNameRegex.IsMatch(firstName))
             {
                 errors.Add(DomainErrors.Customer.InvalidFirstName);
             }
-            if (lastName.Length is 0)
+            if (!FirstLastNameRegex.IsMatch(lastName))
             {
                 errors.Add(DomainErrors.Customer.InvalidLastName);
             }
-            if (!AllowedCountries.Contains(country))
+            if (Country.FromName(country) is null)
             {
                 errors.Add(DomainErrors.Customer.NotSupportedCountry);
             }
@@ -144,7 +145,7 @@ namespace CarSharingApp.Domain.Entities
                 id ?? Guid.NewGuid(),
                 firstName,
                 lastName,
-                country,
+                Country.FromName(country) ?? throw new ArgumentNullException(nameof(country)),
                 city, 
                 address,
                 phoneNumber,

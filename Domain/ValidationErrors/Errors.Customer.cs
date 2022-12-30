@@ -1,4 +1,5 @@
-﻿using ErrorOr;
+﻿using CarSharingApp.Domain.SmartEnums;
+using ErrorOr;
 
 namespace CarSharingApp.Domain.ValidationErrors
 {
@@ -12,7 +13,7 @@ namespace CarSharingApp.Domain.ValidationErrors
 
             public static Error InvalidEmail => Error.Validation(
             code: "Customer.InvalidEmail",
-            description: "Customer email is not valid.");
+            description: "Customer email is not valid. Email must be real and starts with lowercase letter.");
 
             public static Error WeakPassword => Error.Validation(
             code: "Customer.WeakPassword",
@@ -28,7 +29,7 @@ namespace CarSharingApp.Domain.ValidationErrors
 
             public static Error NotSupportedCountry => Error.Validation(
             code: "Customer.NotSupportedCountry",
-            description: $"Sam Car Sharing service is not working in this country or temporarily suspended. List of supported countries: {string.Join(", ", Entities.Customer.AllowedCountries)}");
+            description: $"Sam Car Sharing service is not working in this country or temporarily suspended. List of supported countries: {string.Join(", ", Country.GetPossibleEnumerations())}");
 
             public static Error InvalidCity => Error.Validation(
             code: "Customer.InvalidCity",

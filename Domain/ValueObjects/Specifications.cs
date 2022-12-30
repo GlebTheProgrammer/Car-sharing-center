@@ -1,8 +1,8 @@
-﻿using CarSharingApp.Domain.Enums;
-using CarSharingApp.Domain.Primitives;
+﻿using CarSharingApp.Domain.Primitives;
 using ErrorOr;
 using System.Text.RegularExpressions;
 using CarSharingApp.Domain.ValidationErrors;
+using CarSharingApp.Domain.SmartEnums;
 
 namespace CarSharingApp.Domain.ValueObjects
 {
@@ -13,12 +13,11 @@ namespace CarSharingApp.Domain.ValueObjects
         public const int MaxPossibleSpeed = 1000;
         public const int MinPossibleSpeed = 200;
         public static readonly Regex vinRegex = new Regex("^[A-HJ-NPR-Za-hj-npr-z\\d]{8}[\\dX][A-HJ-NPR-Za-hj-npr-z\\d]{2}\\d{6}$");
-        public static readonly string[] AllowedColors = new string[] { "White", "Black", "Gray", "Silver", "Blue", "Red", "Brown", "Green", "Orange", "Beige", "Other" };
 
         public int ProductionYear { get; private set; }
         public int MaxSpeedKph { get; private set; }
-        public string ExteriorColor { get; private set; }
-        public string InteriorColor { get; private set; }
+        public Colour ExteriorColor { get; private set; }
+        public Colour InteriorColor { get; private set; }
         public Drivetrain Drivetrain { get; private set; }
         public FuelType FuelType { get; private set; }
         public Transmission Transmission { get; private set; }
@@ -28,8 +27,8 @@ namespace CarSharingApp.Domain.ValueObjects
         private Specifications(
             int productionYear,
             int maxSpeedKph,
-            string exteriorColor,
-            string interiorColor,
+            Colour exteriorColor,
+            Colour interiorColor,
             Drivetrain drivetrain,
             FuelType fuelType,
             Transmission transmission,
@@ -52,10 +51,10 @@ namespace CarSharingApp.Domain.ValueObjects
             int maxSpeedKph,
             string exteriorColor,
             string interiorColor,
-            Drivetrain drivetrain,
-            FuelType fuelType,
-            Transmission transmission,
-            Engine engine,
+            string drivetrain,
+            string fuelType,
+            string transmission,
+            string engine,
             string vin)
         {
             List<Error> errors = new();
@@ -72,13 +71,29 @@ namespace CarSharingApp.Domain.ValueObjects
             {
                 errors.Add(DomainErrors.Vehicle.InvalidVIN);
             }
-            if (!AllowedColors.Contains(exteriorColor))
+            if (Colour.FromName(exteriorColor) is null)
             {
                 errors.Add(DomainErrors.Vehicle.InvalidExteriorColour);
             }
-            if (!AllowedColors.Contains(interiorColor))
+            if (Colour.FromName(interiorColor) is null)
             {
                 errors.Add(DomainErrors.Vehicle.InvalidInteriorColour);
+            }
+            if (Drivetrain.FromName(drivetrain) is null) 
+            {
+                errors.Add(DomainErrors.Vehicle.InvalidDrivetrain);
+            }
+            if (Engine.FromName(engine) is null)
+            {
+                errors.Add(DomainErrors.Vehicle.InvalidEngine);
+            }
+            if (FuelType.FromName(fuelType) is null)
+            {
+                errors.Add(DomainErrors.Vehicle.InvalidFuelType);
+            }
+            if (Transmission.FromName(transmission) is null)
+            {
+                errors.Add(DomainErrors.Vehicle.InvalidTransmission);
             }
 
             if (errors.Count > 0)
@@ -89,12 +104,12 @@ namespace CarSharingApp.Domain.ValueObjects
             return new Specifications(
                 productionYear, 
                 maxSpeedKph, 
-                exteriorColor, 
-                interiorColor, 
-                drivetrain, 
-                fuelType, 
-                transmission, 
-                engine, 
+                Colour.FromName(exteriorColor) ?? throw new ArgumentNullException(nameof(exteriorColor)),
+                Colour.FromName(interiorColor) ?? throw new ArgumentNullException(nameof(interiorColor)),
+                Drivetrain.FromName(drivetrain) ?? throw new ArgumentNullException(nameof(drivetrain)),
+                FuelType.FromName(fuelType) ?? throw new ArgumentNullException(nameof(fuelType)),
+                Transmission.FromName(transmission) ?? throw new ArgumentNullException(nameof(transmission)),
+                Engine.FromName(engine) ?? throw new ArgumentNullException(nameof(engine)), 
                 vin);
         }
 

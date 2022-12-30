@@ -4,7 +4,6 @@ using CarSharingApp.Domain.Entities;
 using ErrorOr;
 using CarSharingApp.Application.ServiceErrors;
 using CarSharingApp.Application.Contracts.Customer;
-using CarSharingApp.Domain.ValueObjects;
 
 namespace CarSharingApp.Application.Services
 {
@@ -19,6 +18,24 @@ namespace CarSharingApp.Application.Services
 
         public async Task<ErrorOr<Created>> CreateCustomerAsync(Customer customer)
         {
+            Customer? customerWithSameLogin = await _customerRepository.GetAsync(c => c.Credentials.Login == customer.Credentials.Login);
+            Customer? customerWithSameEmail = await _customerRepository.GetAsync(c => c.Credentials.Email == customer.Credentials.Email);
+
+            switch (customerWithSameEmail, customerWithSameLogin)
+            {
+                case (customerWithSameEmail: not null, customerWithSameLogin: null):
+                    return ApplicationErrors.Customer.EmailHasAlreadyExist;
+
+                case (customerWithSameEmail: null, customerWithSameLogin: not null):
+                    return ApplicationErrors.Customer.UsernameHasAlreadyExist;
+
+                case (customerWithSameEmail: not null, customerWithSameLogin: not null):
+                    return ApplicationErrors.Customer.UsernameAndEmailHaveAlreadyExist;
+
+                default:
+                    break;
+            }
+
             await _customerRepository.CreateAsync(customer);
 
             return Result.Created;

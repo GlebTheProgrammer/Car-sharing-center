@@ -1,4 +1,5 @@
-﻿using ErrorOr;
+﻿using CarSharingApp.Domain.SmartEnums;
+using ErrorOr;
 
 namespace CarSharingApp.Domain.ValidationErrors
 {
@@ -48,11 +49,28 @@ namespace CarSharingApp.Domain.ValidationErrors
 
             public static Error InvalidInteriorColour => Error.Validation(
             code: "Vehicle.InvalidInteriorColour",
-            description: $"Vehicle interior colour is not valid. List of possible colours: {string.Join(" ", "[" + ValueObjects.Specifications.AllowedColors + "]")}");
+            description: $"Vehicle interior colour is not valid. List of possible colours: {string.Join(", ", Colour.GetPossibleEnumerations())}");
 
             public static Error InvalidExteriorColour => Error.Validation(
             code: "Vehicle.InvalidExteriorColour",
-            description: $"Vehicle exterior colour is not valid. List of possible colours: {string.Join(" ", "[" + ValueObjects.Specifications.AllowedColors + "]")}");
+            description: $"Vehicle exterior colour is not valid. List of possible colours: {string.Join(", ", Colour.GetPossibleEnumerations())}");
+
+            public static Error InvalidDrivetrain => Error.Validation(
+            code: "Vehicle.InvalidDrivetrain",
+            description: $"Vehicle drivetrain is not valid. List of possible drivetrains: {string.Join(", ", Drivetrain.GetPossibleEnumerations())}");
+
+            public static Error InvalidFuelType => Error.Validation(
+            code: "Vehicle.InvalidFuelType",
+            description: $"Vehicle fuel type is not valid. List of possible fuel types: {string.Join(", ", FuelType.GetPossibleEnumerations())}");
+
+            public static Error InvalidEngine => Error.Validation(
+            code: "Vehicle.InvalidEngine",
+            description: $"Vehicle engine is not valid. List of possible engines: {string.Join(", ", Engine.GetPossibleEnumerations())}");
+
+            public static Error InvalidTransmission => Error.Validation(
+            code: "Vehicle.InvalidTransmission",
+            description: $"Vehicle transmission is not valid. List of possible transmissions: {string.Join(", ", Transmission.GetPossibleEnumerations())}");
+
         }
     }
 }

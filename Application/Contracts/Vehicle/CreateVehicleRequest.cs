@@ -1,4 +1,5 @@
 ﻿using CarSharingApp.Domain.Enums;
+using CarSharingApp.Domain.SmartEnums;
 
 namespace CarSharingApp.Application.Contracts.Vehicle
 {
@@ -16,10 +17,10 @@ namespace CarSharingApp.Application.Contracts.Vehicle
         int MaxSpeedKph,
         string ExteriorColor,
         string InteriorColor,
-        Drivetrain Drivetrain,
-        FuelType FuelType,
-        Transmission Transmission,
-        Engine Engine,
+        string Drivetrain,
+        string FuelType,
+        string Transmission,
+        string Engine,
         string VIN,
         Categories Category
     );

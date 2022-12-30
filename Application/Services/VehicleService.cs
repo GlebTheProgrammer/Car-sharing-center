@@ -102,7 +102,7 @@ namespace CarSharingApp.Application.Services
                 request.Transmission,
                 request.Engine,
                 request.VIN,
-                request.Category,
+                request.Categories,
                 id);
         }
     }

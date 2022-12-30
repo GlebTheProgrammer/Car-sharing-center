@@ -76,5 +76,13 @@ namespace CarSharingApp.Domain.Primitives
 
             return fieldForType.ToDictionary(x => x.Value);
         }
+
+        public static IEnumerable<string> GetPossibleEnumerations()
+        {
+            foreach (KeyValuePair<int, TEnum> keyValuePair in Enumerations)
+            {
+                yield return keyValuePair.Value.Name;
+            }
+        }
     }
 }

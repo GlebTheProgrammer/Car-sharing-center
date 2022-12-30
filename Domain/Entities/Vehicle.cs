@@ -1,5 +1,6 @@
 ﻿using CarSharingApp.Domain.Enums;
 using CarSharingApp.Domain.Primitives;
+using CarSharingApp.Domain.SmartEnums;
 using CarSharingApp.Domain.ValidationErrors;
 using CarSharingApp.Domain.ValueObjects;
 using ErrorOr;
@@ -15,6 +16,7 @@ namespace CarSharingApp.Domain.Entities
         public const int MinDescriptionLength = 50;
         public const int MaxDescriptionLength = 300;
 
+        public Guid CustomerId { get; private set; }
         public string Name { get; private set; }
         public string Image { get; private set; }
         public string BriefDescription { get; private set; }
@@ -29,11 +31,8 @@ namespace CarSharingApp.Domain.Entities
         public Specifications Specifications { get; private set; }
         public Categories Category { get; private set; }
 
-        public Guid CustomerId { get; private set; } // many:1
-        public Customer? Customer { get; private set; }
-        public List<Review> Reviews { get; private set; } = new(); // 1:many
-
-        private Vehicle(Guid id,
+        private Vehicle(
+            Guid id,
             Guid customerId,
             string name, 
             string image, 
@@ -63,7 +62,8 @@ namespace CarSharingApp.Domain.Entities
             LastTimeOrdered = lastTimeOrdered;
             IsPublished = isPublished;
             IsOrdered = isOrdered;
-            Specifications = specifications;       
+            Specifications = specifications;  
+            Category = category;
         }
 
         public static ErrorOr<Vehicle> Create(
@@ -81,10 +81,10 @@ namespace CarSharingApp.Domain.Entities
             int maxSpeedKph,
             string exteriorColor,
             string interiorColor,
-            Drivetrain drivetrain,
-            FuelType fuelType,
-            Transmission transmission,
-            Engine engine,
+            string drivetrain,
+            string fuelType,
+            string transmission,
+            string engine,
             string vin,
             Categories category,
             Guid? id = null)
