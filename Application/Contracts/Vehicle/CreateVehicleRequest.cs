@@ -1,5 +1,4 @@
 ﻿using CarSharingApp.Domain.Enums;
-using CarSharingApp.Domain.SmartEnums;
 
 namespace CarSharingApp.Application.Contracts.Vehicle
 {
@@ -22,7 +21,7 @@ namespace CarSharingApp.Application.Contracts.Vehicle
         string Transmission,
         string Engine,
         string VIN,
-        Categories Category
+        Categories Categories
     );
         
 }

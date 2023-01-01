@@ -24,7 +24,7 @@ namespace CarSharingApp.Domain.ValidationErrors
             description: "Vehicle latitude and longitude variables (location) must be fractional numbers, fractional part of which is separated by a dot.");
 
             public static Error InvalidAddress => Error.Validation(
-            code: "Vehicle.InvalidAddress",
+            code: "Vehicle.InvalidStreetAddress",
             description: $"Vehicle address must be at least {ValueObjects.Location.MinAddressLength} characters long and at most {ValueObjects.Location.MaxAddressLength} characters long.");
 
             public static Error InvalidRentalPriceDifference => Error.Validation(

@@ -13,7 +13,7 @@ namespace CarSharingApp.Application.Contracts.Vehicle
         Tariff Tariff,
         Location Location,
         Specifications Specifications,
-        Categories Category,
+        Categories Categories,
         int TimesOrdered,
         DateTime PublishedTime,
         DateTime? LastTimeOrdered,

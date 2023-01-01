@@ -77,7 +77,7 @@ namespace CarSharingApp.Application.Services
                 request.Transmission,
                 request.Engine,
                 request.VIN,
-                request.Category);
+                request.Categories);
         }
 
         public ErrorOr<Vehicle> From(Guid customerId, Guid id, UpdateVehicleRequest request)

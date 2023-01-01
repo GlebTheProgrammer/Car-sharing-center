@@ -33,11 +33,15 @@ namespace CarSharingApp.Domain.ValidationErrors
 
             public static Error InvalidCity => Error.Validation(
             code: "Customer.InvalidCity",
-            description: $"Customer city must be at least {Entities.Customer.MinCityLength} characters long and at most {Entities.Customer.MaxCityLength} characters long.");
+            description: $"Customer city must be at least {ValueObjects.Address.MinCityLength} characters long and at most {ValueObjects.Address.MaxCityLength} characters long.");
 
-            public static Error InvalidAddress => Error.Validation(
-            code: "Customer.InvalidAddress",
-            description: $"Customer address must be at least {Entities.Customer.MinAddressLength} characters long and at most {Entities.Customer.MaxAddressLength} characters long.");
+            public static Error InvalidStreetAddress => Error.Validation(
+            code: "Customer.InvalidStreetAddress",
+            description: $"Customer street address must be at least {ValueObjects.Address.MinStreetAddressLength} characters long and at most {ValueObjects.Address.MaxStreetAddressLength} characters long.");
+
+            public static Error InvalidAptSuitEtc => Error.Validation(
+            code: "Customer.InvalidAptSuitEtc",
+            description: $"Customer apartment / suite number must be at least {ValueObjects.Address.MinAptSuitEtcLength} characters long and at most {ValueObjects.Address.MaxAptSuitEtcLength} characters long.");
 
             public static Error InvalidPhoneNumber => Error.Validation(
             code: "Customer.InvalidPhoneNumber",
@@ -47,9 +51,17 @@ namespace CarSharingApp.Domain.ValidationErrors
             code: "Customer.InvalidDriverLicenseIdentifier",
             description: $"Customer driver license identifier must be at least {Entities.Customer.MinDriverLicenseIdentifierLength} characters long and at most {Entities.Customer.MaxDriverLicenseIdentifierLength} characters long.");
 
-            public static Error InvalidPostcode => Error.Validation(
-            code: "Customer.InvalidPostcode",
-            description: $"Customer postcode must be at least {Entities.Customer.MinPostcodeLength} characters long and at most {Entities.Customer.MaxPostcodeLength} characters long.");
+            public static Error InvalidZipPostCode => Error.Validation(
+            code: "Customer.InvalidZipPostCode",
+            description: $"Customer ZIP / Postcode must be at least {ValueObjects.Address.MinZipPostCodeLength} characters long and at most {ValueObjects.Address.MaxZipPostCodeLength} characters long.");
+
+            public static Error InvalidProfileDescription => Error.Validation(
+            code: "Customer.InvalidProfileDescription",
+            description: $"Customer profile description must be at least {ValueObjects.Profile.MinDescriptionLength} characters long and at most {ValueObjects.Profile.MaxDescriptionLength} characters long.");
+
+            public static Error InvalidImageLength => Error.Validation(
+            code: "Customer.InvalidImageLength",
+            description: $"Image must be at least {ValueObjects.Profile.MinImageLength} characters long and at most {ValueObjects.Profile.MaxImageLength} characters long.");
         }
     }
 }

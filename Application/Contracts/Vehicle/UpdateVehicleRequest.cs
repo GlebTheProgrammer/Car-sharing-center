@@ -1,5 +1,4 @@
 ﻿using CarSharingApp.Domain.Enums;
-using CarSharingApp.Domain.SmartEnums;
 
 namespace CarSharingApp.Application.Contracts.Vehicle
 {

@@ -1,6 +1,6 @@
 ﻿namespace CarSharingApp.Application.Contracts.Customer
 {
-    public record CreateCustomerRequest(
+    public record UpdateCustomerInfoRequest(
         string FirstName,
         string LastName,
         string StreetAddress,
@@ -11,8 +11,7 @@
         string PhoneNumber,
         string DriverLicenseIdentifier,
         bool HasAcceptedNewsSharing,
-        string Login,
-        string Email,
-        string Password
+        string ProfileDescription,
+        string ProfileImage
     );
 }

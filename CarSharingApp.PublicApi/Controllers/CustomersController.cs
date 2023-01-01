@@ -56,9 +56,9 @@ namespace CarSharingApp.PublicApi.Controllers
                 errors => Problem(errors));
         }
         
-        [HttpPut("{id:guid}")]
+        [HttpPut("Info/{id:guid}")]
         [Authorize(Roles = "Administrator, Customer")]
-        public async Task<IActionResult> UpdateCustomer(Guid id, UpdateCustomerRequest request)
+        public async Task<IActionResult> UpdateCustomerInfo(Guid id, UpdateCustomerInfoRequest request)
         {
             if (!IsRequestAllowed(id))
             {
@@ -74,7 +74,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
             Customer notUpdatedCustomerYet = getCustomerResult.Value;
 
-            ErrorOr<Customer> requestToCustomerResult = _customerService.From(id, request);
+            ErrorOr<Customer> requestToCustomerResult = _customerService.From(notUpdatedCustomerYet, request);
 
             if (requestToCustomerResult.IsError)
             {
@@ -83,7 +83,80 @@ namespace CarSharingApp.PublicApi.Controllers
 
             Customer customer = requestToCustomerResult.Value;
 
-            ErrorOr<Updated> updateCustomerResult = await _customerService.UpdateCustomerAsync(customer);
+            ErrorOr<Updated> updateCustomerInfoResult = await _customerService.UpdateCustomerInfoAsync(customer);
+
+            return updateCustomerInfoResult.Match(
+                updated => NoContent(),
+                errors => Problem(errors));
+        }
+
+        [HttpPut("Credentials/{id:guid}")]
+        [Authorize(Roles = "Administrator, Customer")]
+        public async Task<IActionResult> UpdateCustomerCredentials(Guid id, UpdateCustomerCredentialsRequest request)
+        {
+            if (!IsRequestAllowed(id))
+            {
+                return Forbid();
+            }
+
+            ErrorOr<Customer> getCustomerResult = await _customerService.GetCustomerAsync(id);
+
+            if (getCustomerResult.IsError)
+            {
+                return Problem(getCustomerResult.Errors);
+            }
+
+            Customer notUpdatedCustomerYet = getCustomerResult.Value;
+
+            ErrorOr<Customer> requestToCustomerResult = _customerService.From(notUpdatedCustomerYet, request);
+
+            if (requestToCustomerResult.IsError)
+            {
+                return Problem(requestToCustomerResult.Errors);
+            }
+
+            Customer customer = requestToCustomerResult.Value;
+
+            ErrorOr<Updated> updateCustomerResult = await _customerService.UpdateCustomerPasswordAsync(customer);
+
+            return updateCustomerResult.Match(
+                updated => NoContent(),
+                errors => Problem(errors));
+        }
+
+        [HttpPut("Password/{id:guid}")]
+        [Authorize(Roles = "Administrator, Customer")]
+        public async Task<IActionResult> UpdateCustomerPassword(Guid id, UpdateCustomerPasswordRequest request)
+        {
+            if (!IsRequestAllowed(id))
+            {
+                return Forbid();
+            }
+
+            ErrorOr<Customer> getCustomerResult = await _customerService.GetCustomerAsync(id);
+
+            if (getCustomerResult.IsError)
+            {
+                return Problem(getCustomerResult.Errors);
+            }
+
+            Customer customerWithOldPassword = getCustomerResult.Value;
+
+            ErrorOr<Customer> requestToCustomerResult = _customerService.From(customerWithOldPassword, request);
+            if (requestToCustomerResult.IsError)
+            {
+                return Problem(requestToCustomerResult.Errors);
+            }
+
+            Customer customerWithUpdatedPassword = requestToCustomerResult.Value;
+
+            ErrorOr<Success> checkoutIfOldPasswordMatchResult = await _customerService.CompareCustomerOldPasswordWithExistingOne(id, request.currentPassword);
+            if (checkoutIfOldPasswordMatchResult.IsError)
+            {
+                return Problem(checkoutIfOldPasswordMatchResult.Errors);
+            }
+
+            ErrorOr<Updated> updateCustomerResult = await _customerService.UpdateCustomerPasswordAsync(customerWithUpdatedPassword);
 
             return updateCustomerResult.Match(
                 updated => NoContent(),
@@ -121,18 +194,12 @@ namespace CarSharingApp.PublicApi.Controllers
                 customer.Id,
                 customer.FirstName,
                 customer.LastName,
-                customer.Country,
-                customer.City,
                 customer.Address,
                 customer.PhoneNumber,
                 customer.DriverLicenseIdentifier,
-                customer.ProfileDescription,
-                customer.ProfileImage,
-                customer.Postcode,
-                customer.VehiclesOrdered,
-                customer.VehiclesShared,
+                customer.Profile,
+                customer.Statistics,
                 customer.HasAcceptedNewsSharing,
-                customer.IsOnline,
                 customer.Credentials);
         }
 

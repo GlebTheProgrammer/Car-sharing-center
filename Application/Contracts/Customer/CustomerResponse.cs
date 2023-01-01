@@ -1,23 +1,16 @@
-﻿using CarSharingApp.Domain.SmartEnums;
-using CarSharingApp.Domain.ValueObjects;
+﻿using CarSharingApp.Domain.ValueObjects;
 
 namespace CarSharingApp.Application.Contracts.Customer
 {
     public record CustomerResponse(
-        Guid id,
+        Guid Id,
         string FirstName,
         string LastName,
-        Country Country,
-        string City,
-        string Address,
+        Address Address,
         string PhoneNumber,
         string DriverLicenseIdentifier,
-        string ProfileDescription,
-        string ProfileImage,
-        string Postcode,
-        int VehiclesOrdered,
-        int VehiclesShared,
+        Profile Profile,
+        Statistics Statistics,
         bool HasAcceptedNewsSharing,
-        bool IsOnline,
         Credentials Credentials);
 }

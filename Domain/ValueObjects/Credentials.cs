@@ -60,6 +60,27 @@ namespace CarSharingApp.Domain.ValueObjects
             return new Credentials(login, email, GetPasswordHashRepresentation(password));
         }
 
+        public static ErrorOr<Credentials> CreateForUpdate(string login, string email, string password)
+        {
+            List<Error> errors = new();
+
+            if (login.Length is > MaxLoginLength or < MinLoginLength)
+            {
+                errors.Add(DomainErrors.Customer.InvalidUsername);
+            }
+            if (!EmailRegex.IsMatch(email))
+            {
+                errors.Add(DomainErrors.Customer.InvalidEmail);
+            }
+
+            if (errors.Count > 0)
+            {
+                return errors;
+            }
+
+            return new Credentials(login, email, password);
+        }
+
         public override IEnumerable<object> GetAtomicValues()
         {
             yield return Login;

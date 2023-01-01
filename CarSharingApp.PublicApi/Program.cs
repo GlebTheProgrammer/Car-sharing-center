@@ -5,9 +5,18 @@ using CarSharingApp.Infrastructure.Authentication;
 using CarSharingApp.Infrastructure.MongoDB;
 using CarSharingApp.Infrastructure.AzureKeyVault;
 using CarSharingApp.Infrastructure.Options.Setup;
+using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 {
+    builder.Host.ConfigureLogging((context, logging) =>
+    {
+        //logging.ClearProviders();
+        logging.AddConfiguration(context.Configuration.GetSection("Logging"));
+        logging.AddDebug();
+        //logging.AddConsole();
+    });
+
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
@@ -30,6 +39,7 @@ var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 {
     app.UseExceptionHandler("/error");
+
     if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();
