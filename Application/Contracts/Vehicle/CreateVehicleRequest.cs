@@ -1,6 +1,4 @@
-﻿using CarSharingApp.Domain.Enums;
-
-namespace CarSharingApp.Application.Contracts.Vehicle
+﻿namespace CarSharingApp.Application.Contracts.Vehicle
 {
     public record CreateVehicleRequest(
         string Name, 
@@ -9,7 +7,10 @@ namespace CarSharingApp.Application.Contracts.Vehicle
         string Description,
         decimal HourlyRentalPrice,
         decimal DailyRentalPrice,
-        string Address,
+        string StreetAddress,
+        string AptSuiteEtc,
+        string City,
+        string Country,
         string Latitude,
         string Longitude,
         int ProductionYear,
@@ -21,7 +22,7 @@ namespace CarSharingApp.Application.Contracts.Vehicle
         string Transmission,
         string Engine,
         string VIN,
-        Categories Categories
+        List<string> Categories
     );
         
 }

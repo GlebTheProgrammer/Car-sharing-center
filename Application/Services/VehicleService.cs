@@ -65,7 +65,10 @@ namespace CarSharingApp.Application.Services
                 request.Description,
                 request.HourlyRentalPrice,
                 request.DailyRentalPrice,
-                request.Address,
+                request.StreetAddress,
+                request.AptSuiteEtc,
+                request.City,
+                request.Country,
                 request.Latitude,
                 request.Longitude,
                 request.ProductionYear,
@@ -80,30 +83,39 @@ namespace CarSharingApp.Application.Services
                 request.Categories);
         }
 
-        public ErrorOr<Vehicle> From(Guid customerId, Guid id, UpdateVehicleRequest request)
+        public ErrorOr<Vehicle> From(Vehicle vehicle, UpdateVehicleInfoRequest request)
         {
             return Vehicle.Create(
-                customerId,
-                request.Name,
-                request.Image,
+                vehicle.CustomerId,
+                vehicle.Name,
+                vehicle.Image,
                 request.BriefDescription,
                 request.Description,
                 request.HourlyRentalPrice,
                 request.DailyRentalPrice,
-                request.Address,
+                request.StreetAddress,
+                request.AptSuiteEtc,
+                request.City,
+                request.Country,
                 request.Latitude,
                 request.Longitude,
-                request.ProductionYear,
-                request.MaxSpeedKph,
-                request.ExteriorColor,
-                request.InteriorColor,
-                request.Drivetrain,
-                request.FuelType,
-                request.Transmission,
-                request.Engine,
-                request.VIN,
+                vehicle.Specifications.ProductionYear,
+                vehicle.Specifications.MaxSpeedKph,
+                vehicle.Specifications.ExteriorColor.ToString(),
+                vehicle.Specifications.InteriorColor.ToString(),
+                vehicle.Specifications.Drivetrain.ToString(),
+                vehicle.Specifications.FuelType.ToString(),
+                vehicle.Specifications.Transmission.ToString(),
+                vehicle.Specifications.Engine.ToString(),
+                vehicle.Specifications.VIN,
                 request.Categories,
-                id);
+                vehicle.Id,
+                vehicle.Status.IsPublished,
+                vehicle.Status.IsOrdered,
+                vehicle.Status.IsConfirmedByAdmin,
+                vehicle.TimesOrdered,
+                vehicle.PublishedTime,
+                vehicle.LastTimeOrdered);
         }
     }
 }

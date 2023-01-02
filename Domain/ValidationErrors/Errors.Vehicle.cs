@@ -19,13 +19,9 @@ namespace CarSharingApp.Domain.ValidationErrors
             code: "Vehicle.InvalidDescription",
             description: $"Vehicle description must be at least {Entities.Vehicle.MinDescriptionLength} characters long and at most {Entities.Vehicle.MaxDescriptionLength} characters long.");
 
-            public static Error InvalidLocation => Error.Validation(
-            code: "Vehicle.InvalidCoordinated",
+            public static Error InvalidLatitudeLongitude => Error.Validation(
+            code: "Vehicle.InvalidLatitudeLongitude",
             description: "Vehicle latitude and longitude variables (location) must be fractional numbers, fractional part of which is separated by a dot.");
-
-            public static Error InvalidAddress => Error.Validation(
-            code: "Vehicle.InvalidStreetAddress",
-            description: $"Vehicle address must be at least {ValueObjects.Location.MinAddressLength} characters long and at most {ValueObjects.Location.MaxAddressLength} characters long.");
 
             public static Error InvalidRentalPriceDifference => Error.Validation(
             code: "Vehicle.InvalidRentalPriceDifference",
@@ -70,6 +66,26 @@ namespace CarSharingApp.Domain.ValidationErrors
             public static Error InvalidTransmission => Error.Validation(
             code: "Vehicle.InvalidTransmission",
             description: $"Vehicle transmission is not valid. List of possible transmissions: {string.Join(", ", Transmission.GetPossibleEnumerations())}");
+
+            public static Error InvalidCategories => Error.Validation(
+            code: "Vehicle.InvalidCategories",
+            description: "One of the provided categories is not allowed.");
+
+            public static Error NotSupportedCountry => Error.Validation(
+            code: "Vehicle.NotSupportedCountry",
+            description: $"Sam Car Sharing service is not working in this country or temporarily suspended. List of supported countries: {string.Join(", ", Country.GetPossibleEnumerations())}");
+
+            public static Error InvalidCity => Error.Validation(
+            code: "Vehicle.InvalidCity",
+            description: $"Vehicle city must be at least {ValueObjects.Location.MinCityLength} characters long and at most {ValueObjects.Location.MaxCityLength} characters long.");
+
+            public static Error InvalidStreetAddress => Error.Validation(
+            code: "Vehicle.InvalidStreetAddress",
+            description: $"Vehicle street address must be at least {ValueObjects.Location.MinStreetAddressLength} characters long and at most {ValueObjects.Location.MaxStreetAddressLength} characters long.");
+
+            public static Error InvalidAptSuitEtc => Error.Validation(
+            code: "Vehicle.InvalidAptSuitEtc",
+            description: $"Vehicle nearby apartment / suite number must be at least {ValueObjects.Location.MinAptSuitEtcLength} characters long and at most {ValueObjects.Location.MaxAptSuitEtcLength} characters long.");
 
         }
     }

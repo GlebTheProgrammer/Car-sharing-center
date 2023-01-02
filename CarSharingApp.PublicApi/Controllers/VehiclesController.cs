@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using ErrorOr;
 using Microsoft.AspNetCore.Authorization;
 using CarSharingApp.Infrastructure.Authentication;
+using CarSharingApp.Domain.Enums;
 
 namespace CarSharingApp.PublicApi.Controllers
 {
@@ -60,7 +61,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [HttpPut("{id:guid}")]
         [Authorize(Roles = "Administrator, Customer")]
-        public async Task<IActionResult> UpdateVehicle(Guid id, UpdateVehicleRequest request)
+        public async Task<IActionResult> UpdateVehicleInfo(Guid id, UpdateVehicleInfoRequest request)
         {
             ErrorOr<Vehicle> getVehicleResult = await _vehicleService.GetVehicleAsync(id);
 
@@ -76,7 +77,7 @@ namespace CarSharingApp.PublicApi.Controllers
                 return Forbid();
             }
 
-            ErrorOr<Vehicle> requestToVehicleResult = _vehicleService.From(notUpdatedVehicle.CustomerId, id, request);
+            ErrorOr<Vehicle> requestToVehicleResult = _vehicleService.From(notUpdatedVehicle, request);
 
             if (requestToVehicleResult.IsError)
             {
@@ -128,12 +129,11 @@ namespace CarSharingApp.PublicApi.Controllers
                 vehicle.Tariff,
                 vehicle.Location,
                 vehicle.Specifications,
-                vehicle.Category,
+                FlagEnums.GetListFromCategories(vehicle.Categories),
                 vehicle.TimesOrdered,
                 vehicle.PublishedTime,
                 vehicle.LastTimeOrdered,
-                vehicle.IsPublished,
-                vehicle.IsOrdered);
+                vehicle.Status);
         }
 
         private bool IsRequestAllowed(Guid requestedId)

@@ -1,5 +1,4 @@
-﻿using CarSharingApp.Domain.Enums;
-using CarSharingApp.Domain.ValueObjects;
+﻿using CarSharingApp.Domain.ValueObjects;
 
 namespace CarSharingApp.Application.Contracts.Vehicle
 {
@@ -13,11 +12,10 @@ namespace CarSharingApp.Application.Contracts.Vehicle
         Tariff Tariff,
         Location Location,
         Specifications Specifications,
-        Categories Categories,
+        List<string> Categories,
         int TimesOrdered,
         DateTime PublishedTime,
         DateTime? LastTimeOrdered,
-        bool IsPublished,
-        bool IsOrdered
+        Status Status
     );
 }
