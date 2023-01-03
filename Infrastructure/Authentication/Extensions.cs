@@ -10,7 +10,9 @@ namespace CarSharingApp.Infrastructure.Authentication
     {
         public static IServiceCollection AddJwtBearerAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
-            var key = Encoding.UTF8.GetBytes(configuration["JwtBearer:SecretKey"] ?? "");
+            var key = Encoding.UTF8.GetBytes(configuration["JwtBearer:SecretKey"] 
+                ?? throw new ArgumentNullException("SecretKey"));
+
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -23,8 +25,10 @@ namespace CarSharingApp.Infrastructure.Authentication
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidIssuers = new string[] { configuration["JwtBearer:Issuer"] ?? "" },
-                    ValidAudiences = new string[] { configuration["JwtBearer:Audience"] ?? "" },
+                    ValidIssuers = new string[] { configuration["JwtBearer:Issuer"] 
+                    ?? throw new ArgumentNullException("Issuer") },
+                    ValidAudiences = new string[] { configuration["JwtBearer:Audience"] 
+                    ?? throw new ArgumentNullException("Audience") },
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,

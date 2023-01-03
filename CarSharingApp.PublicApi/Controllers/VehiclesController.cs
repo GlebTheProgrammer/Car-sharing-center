@@ -4,11 +4,12 @@ using CarSharingApp.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using ErrorOr;
 using Microsoft.AspNetCore.Authorization;
+using CarSharingApp.Infrastructure.Authentication;
+using CarSharingApp.Domain.Enums;
 
 namespace CarSharingApp.PublicApi.Controllers
 {
-    [Authorize]
-    public class VehiclesController : ApiController
+    public sealed class VehiclesController : ApiController
     {
         private readonly IVehicleService _vehicleService;
 
@@ -17,10 +18,18 @@ namespace CarSharingApp.PublicApi.Controllers
             _vehicleService = vehicleService;
         }
 
-        [HttpPost("{customerId:guid}")]
-        public async Task<IActionResult> CreateVehicle(Guid customerId, CreateVehicleRequest request)
+        [HttpPost]
+        [Authorize(Roles = "Customer")]
+        public async Task<IActionResult> CreateVehicle(CreateVehicleRequest request)
         {
-            ErrorOr<Vehicle> requestToVehicleResult = _vehicleService.From(customerId, request);
+            JwtClaims? jwtClaims = GetJwtClaims();
+
+            if (jwtClaims is null)
+            {
+                return Forbid();
+            }
+
+            ErrorOr<Vehicle> requestToVehicleResult = _vehicleService.From(Guid.Parse(jwtClaims.Id), request);
 
             if (requestToVehicleResult.IsError)
             {
@@ -40,6 +49,7 @@ namespace CarSharingApp.PublicApi.Controllers
         }
 
         [HttpGet("{id:guid}")]
+        [Authorize(Roles = "Administrator, Customer")]
         public async Task<IActionResult> GetVehicle(Guid id)
         {
             ErrorOr<Vehicle> getVehicleResult = await _vehicleService.GetVehicleAsync(id);
@@ -47,13 +57,27 @@ namespace CarSharingApp.PublicApi.Controllers
             return getVehicleResult.Match(
                 vehicle => Ok(MapVehicleResponse(vehicle)),
                 errors => Problem(errors));
-
         }
 
-        [HttpPut("{customerId:guid}/{id:guid}")]
-        public async Task<IActionResult> UpdateVehicle(Guid customerId, Guid id, UpdateVehicleRequest request)
+        [HttpPut("{id:guid}")]
+        [Authorize(Roles = "Administrator, Customer")]
+        public async Task<IActionResult> UpdateVehicleInfo(Guid id, UpdateVehicleInfoRequest request)
         {
-            ErrorOr<Vehicle> requestToVehicleResult = _vehicleService.From(customerId, id, request);
+            ErrorOr<Vehicle> getVehicleResult = await _vehicleService.GetVehicleAsync(id);
+
+            if (getVehicleResult.IsError)
+            {
+                return Problem(getVehicleResult.Errors);
+            }
+
+            Vehicle notUpdatedVehicle = getVehicleResult.Value;
+
+            if (!IsRequestAllowed(notUpdatedVehicle.CustomerId))
+            {
+                return Forbid();
+            }
+
+            ErrorOr<Vehicle> requestToVehicleResult = _vehicleService.From(notUpdatedVehicle, request);
 
             if (requestToVehicleResult.IsError)
             {
@@ -69,9 +93,23 @@ namespace CarSharingApp.PublicApi.Controllers
                 errors => Problem(errors));
         }
 
-        [HttpDelete("{customerId:guid}/{id:guid}")]
+        [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteVehicle(Guid id)
         {
+            ErrorOr<Vehicle> getVehicleResult = await _vehicleService.GetVehicleAsync(id);
+
+            if (getVehicleResult.IsError)
+            {
+                return Problem(getVehicleResult.Errors);
+            }
+
+            Vehicle notDeletedVehicleYet = getVehicleResult.Value;
+
+            if (!IsRequestAllowed(notDeletedVehicleYet.CustomerId))
+            {
+                return Forbid();
+            }
+
             ErrorOr<Deleted> deleteVehicleResult = await _vehicleService.DeleteVehicleAsync(id);
 
             return deleteVehicleResult.Match(
@@ -91,12 +129,23 @@ namespace CarSharingApp.PublicApi.Controllers
                 vehicle.Tariff,
                 vehicle.Location,
                 vehicle.Specifications,
-                vehicle.Category,
+                FlagEnums.GetListFromCategories(vehicle.Categories),
                 vehicle.TimesOrdered,
                 vehicle.PublishedTime,
                 vehicle.LastTimeOrdered,
-                vehicle.IsPublished,
-                vehicle.IsOrdered);
+                vehicle.Status);
+        }
+
+        private bool IsRequestAllowed(Guid requestedId)
+        {
+            JwtClaims? jwtClaims = GetJwtClaims();
+
+            if (jwtClaims == null || (jwtClaims.Id != requestedId.ToString() && jwtClaims.Role != "Administrator"))
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

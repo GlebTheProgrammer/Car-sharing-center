@@ -1,12 +1,11 @@
 ﻿using CarSharingApp.Domain.Primitives;
-using System.Text.RegularExpressions;
+using CarSharingApp.Domain.SmartEnums;
 using ErrorOr;
 using CarSharingApp.Domain.ValidationErrors;
-using CarSharingApp.Domain.SmartEnums;
 
 namespace CarSharingApp.Domain.ValueObjects
 {
-    public sealed class Location : ValueObject
+    public sealed class Address : ValueObject
     {
         public const int MinStreetAddressLength = 5;
         public const int MaxStreetAddressLength = 25;
@@ -14,60 +13,57 @@ namespace CarSharingApp.Domain.ValueObjects
         public const int MaxAptSuitEtcLength = 25;
         public const int MinCityLength = 5;
         public const int MaxCityLength = 25;
-        public static readonly Regex LatitudeLongitudeRegex = new Regex(@"^[0-9]*(?:\.[0-9]*)?$");
+        public const int MinZipPostCodeLength = 5;
+        public const int MaxZipPostCodeLength = 15;
 
         public string StreetAddress { get; private set; }
         public string AptSuiteEtc { get; private set; }
         public string City { get; private set; }
         public Country Country { get; private set; }
-        public string Latitude { get; private set; }
-        public string Longitude { get; private set; }
+        public string ZipPostCode { get; private set; }
 
-        private Location(
+        private Address(
             string streetAddress, 
-            string aptSuiteEtc, 
-            string city,
-            Country country,
-            string latitude,
-            string longitude)
+            string aptSuitEtc, 
+            string city, 
+            Country country, 
+            string zipPostCode)
         {
             StreetAddress = streetAddress;
-            AptSuiteEtc = aptSuiteEtc;
+            AptSuiteEtc = aptSuitEtc;
             City = city;
             Country = country;
-            Latitude = latitude;
-            Longitude = longitude;
+            ZipPostCode = zipPostCode;
         }
 
-        public static ErrorOr<Location> Create(
-            string streetAddress, 
+        public static ErrorOr<Address> Create(
+            string streetAddress,
             string aptSuiteEtc,
             string city,
             string country,
-            string latitude,
-            string longitude)
+            string zipPostCode)
         {
             List<Error> errors = new();
 
             if (streetAddress.Length is > MaxStreetAddressLength or < MinStreetAddressLength)
             {
-                errors.Add(DomainErrors.Vehicle.InvalidStreetAddress);
+                errors.Add(DomainErrors.Customer.InvalidStreetAddress);
             }
             if (aptSuiteEtc.Length is > MaxAptSuitEtcLength or < MinAptSuitEtcLength)
             {
-                errors.Add(DomainErrors.Vehicle.InvalidAptSuitEtc);
+                errors.Add(DomainErrors.Customer.InvalidAptSuitEtc);
             }
             if (city.Length is > MaxCityLength or < MinCityLength)
             {
-                errors.Add(DomainErrors.Vehicle.InvalidCity);
+                errors.Add(DomainErrors.Customer.InvalidCity);
             }
             if (Country.FromName(country) is null)
             {
-                errors.Add(DomainErrors.Vehicle.NotSupportedCountry);
+                errors.Add(DomainErrors.Customer.NotSupportedCountry);
             }
-            if (!LatitudeLongitudeRegex.IsMatch(latitude) || !LatitudeLongitudeRegex.IsMatch(longitude))
+            if (zipPostCode.Length is > MaxZipPostCodeLength or < MinZipPostCodeLength)
             {
-                errors.Add(DomainErrors.Vehicle.InvalidLatitudeLongitude);
+                errors.Add(DomainErrors.Customer.InvalidZipPostCode);
             }
 
             if (errors.Count > 0)
@@ -75,13 +71,12 @@ namespace CarSharingApp.Domain.ValueObjects
                 return errors;
             }
 
-            return new Location(
-                streetAddress,
-                aptSuiteEtc,
-                city,
-                Country.FromName(country) ?? throw new ArgumentNullException(nameof(country)),
-                latitude,
-                longitude);
+            return new Address(
+                streetAddress, 
+                aptSuiteEtc, 
+                city, 
+                Country.FromName(country) ?? throw new ArgumentNullException(nameof(country)), 
+                zipPostCode);
         }
 
         public override IEnumerable<object> GetAtomicValues()
@@ -89,9 +84,8 @@ namespace CarSharingApp.Domain.ValueObjects
             yield return StreetAddress;
             yield return AptSuiteEtc;
             yield return City;
-            yield return Country.Name;
-            yield return Latitude;
-            yield return Longitude;
+            yield return Country.ToString();
+            yield return ZipPostCode;
         }
     }
 }

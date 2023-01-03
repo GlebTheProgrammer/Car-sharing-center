@@ -2,7 +2,7 @@
 
 namespace CarSharingApp.PublicApi.Controllers
 {
-    public class ErrorsController : ControllerBase
+    public sealed class ErrorsController : ControllerBase
     {
         [Route("/error")]
         [ApiExplorerSettings(IgnoreApi = true)]

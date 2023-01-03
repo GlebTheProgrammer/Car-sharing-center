@@ -3,13 +3,12 @@ using CarSharingApp.Application.Interfaces;
 using CarSharingApp.Domain.Entities;
 using CarSharingApp.Domain.ValueObjects;
 using CarSharingApp.Infrastructure.Authentication;
-using CarSharingApp.Infrastructure.AzureKeyVault;
 using ErrorOr;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarSharingApp.PublicApi.Controllers
 {
-    public class AuthorizationController : ApiController
+    public sealed class AuthorizationController : ApiController
     {
         private readonly IJwtProvider _jwtProvider;
         private readonly IAuthorizationService _authorizationService;
@@ -21,6 +20,7 @@ namespace CarSharingApp.PublicApi.Controllers
         }
 
         [HttpPost]
+        [Microsoft.AspNetCore.Authorization.AllowAnonymous]
         public async Task<IActionResult> GenerateToken(AuthorizationRequest request)
         {
             ErrorOr<Credentials> requestToCredentialsResult = _authorizationService.From(request);

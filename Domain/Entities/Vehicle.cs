@@ -1,8 +1,8 @@
-﻿using CarSharingApp.Domain.Enums;
-using CarSharingApp.Domain.Primitives;
+﻿using CarSharingApp.Domain.Primitives;
 using CarSharingApp.Domain.ValidationErrors;
 using CarSharingApp.Domain.ValueObjects;
 using ErrorOr;
+using static CarSharingApp.Domain.Enums.FlagEnums;
 
 namespace CarSharingApp.Domain.Entities
 {
@@ -15,6 +15,7 @@ namespace CarSharingApp.Domain.Entities
         public const int MinDescriptionLength = 50;
         public const int MaxDescriptionLength = 300;
 
+        public Guid CustomerId { get; private set; }
         public string Name { get; private set; }
         public string Image { get; private set; }
         public string BriefDescription { get; private set; }
@@ -24,16 +25,12 @@ namespace CarSharingApp.Domain.Entities
         public int TimesOrdered { get; private set; }
         public DateTime PublishedTime { get; private set; }
         public DateTime? LastTimeOrdered { get; private set; }
-        public bool IsPublished { get; private set; }
-        public bool IsOrdered { get; private set; }
+        public Status Status { get; private set; }
         public Specifications Specifications { get; private set; }
-        public Category Category { get; private set; }
+        public Categories Categories { get; private set; }
 
-        public Guid CustomerId { get; private set; } // many:1
-        public Customer? Customer { get; private set; }
-        public List<Review> Reviews { get; private set; } = new(); // 1:many
-
-        private Vehicle(Guid id,
+        private Vehicle(
+            Guid id,
             Guid customerId,
             string name, 
             string image, 
@@ -44,10 +41,9 @@ namespace CarSharingApp.Domain.Entities
             int timesOrdered, 
             DateTime publishedTime, 
             DateTime? lastTimeOrdered, 
-            bool isPublished, 
-            bool isOrdered,
+            Status status,
             Specifications specifications,
-            Category category)
+            Categories category)
             : base(id)
         {
             CustomerId = customerId;
@@ -61,9 +57,9 @@ namespace CarSharingApp.Domain.Entities
             TimesOrdered = timesOrdered;
             PublishedTime = publishedTime;
             LastTimeOrdered = lastTimeOrdered;
-            IsPublished = isPublished;
-            IsOrdered = isOrdered;
-            Specifications = specifications;       
+            Status = status;
+            Specifications = specifications;  
+            Categories = category;
         }
 
         public static ErrorOr<Vehicle> Create(
@@ -74,20 +70,29 @@ namespace CarSharingApp.Domain.Entities
             string description,
             decimal hourlyRentalPrice,
             decimal dailyRentalPrice,
-            string address,
+            string streetAddress,
+            string aptSuiteEtc,
+            string city,
+            string country,
             string latitude,
             string longitude,
             int productionYear,
             int maxSpeedKph,
             string exteriorColor,
             string interiorColor,
-            Drivetrain drivetrain,
-            FuelType fuelType,
-            Transmission transmission,
-            Engine engine,
+            string drivetrain,
+            string fuelType,
+            string transmission,
+            string engine,
             string vin,
-            Category category,
-            Guid? id = null)
+            List<string> categories,
+            Guid? id = null,
+            bool isPublished = false,
+            bool isOrdered = false,
+            bool isConfirmedByAdmin = false,
+            int timesOrdered = 0,
+            DateTime? publishedTime = null,
+            DateTime? lastTimeOrdered = null)
         {
             List<Error> errors = new();
 
@@ -104,7 +109,7 @@ namespace CarSharingApp.Domain.Entities
                 errors.Add(DomainErrors.Vehicle.InvalidDescription);
             }
 
-            ErrorOr<Location> locationCreateRequest = Location.Create(address, latitude, longitude);
+            ErrorOr<Location> locationCreateRequest = Location.Create(streetAddress, aptSuiteEtc, city, country, latitude, longitude);
             if (locationCreateRequest.IsError) 
             {
                 errors.AddRange(locationCreateRequest.Errors); 
@@ -119,6 +124,16 @@ namespace CarSharingApp.Domain.Entities
             if (specificationsCreateRequest.IsError)
             {
                 errors.AddRange(specificationsCreateRequest.Errors);
+            }
+            ErrorOr<Status> statusCreateRequest = Status.Create(isConfirmedByAdmin, isPublished, isOrdered);
+            if (statusCreateRequest.IsError)
+            {
+                errors.AddRange(statusCreateRequest.Errors);
+            }
+            ErrorOr<Categories> categoriesCreateRequest = GetCategoriesFromList(categories);
+            if (categoriesCreateRequest.IsError)
+            {
+                errors.AddRange(categoriesCreateRequest.Errors);
             }
 
             if (errors.Count > 0)
@@ -135,13 +150,12 @@ namespace CarSharingApp.Domain.Entities
                 description,
                 tariffCreateRequest.Value,
                 locationCreateRequest.Value,
-                timesOrdered: 0,
-                publishedTime: DateTime.Now,
-                lastTimeOrdered: null,
-                isPublished: false,
-                isOrdered: false,
+                timesOrdered,
+                publishedTime ?? DateTime.Now,
+                lastTimeOrdered ?? null,
+                statusCreateRequest.Value,
                 specificationsCreateRequest.Value,
-                category);
+                categoriesCreateRequest.Value);
         }
     }
 }
