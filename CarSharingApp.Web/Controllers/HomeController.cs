@@ -1,6 +1,6 @@
 ﻿using CarSharingApp.Application.Contracts.Vehicle;
 using CarSharingApp.Models;
-using CarSharingApp.Web.Client;
+using CarSharingApp.Web.Clients;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Text.Json;
@@ -9,26 +9,35 @@ namespace CarSharingApp.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IVehicleServicePublicApiClient _vehicleServiceClient;
+
+        public HomeController(IVehicleServicePublicApiClient vehicleServiceClient)
+        {
+            _vehicleServiceClient = vehicleServiceClient;
+        }
+
         public async Task<IActionResult> Index()
         {
 
-            using(System.Net.Http.HttpClient client = HttpClientProvider.Configure())
-            {
-                var response = await client.GetAsync("https://localhost:44363/Vehicles/MapRepresentation");
-                response.EnsureSuccessStatusCode();
+            var response = await _vehicleServiceClient.GetAllApprovedAndPublishedVehiclesMapRepresentation();
 
-                if (response.IsSuccessStatusCode)
-                {
-                    var jsonString = await response.Content.ReadAsStringAsync();
+            //using(System.Net.Http.HttpClient client = HttpClientProvider.Configure())
+            //{
+            //    var response = await client.GetAsync("https://localhost:44363/Vehicles/MapRepresentation");
+            //    response.EnsureSuccessStatusCode();
 
-                    var responseDeserialized = JsonSerializer.Deserialize<VehiclesDisplayOnMapResponse>(jsonString);
-                    List<VehicleDisplayOnMap> list = responseDeserialized.vehicles;
-                }
-                else
-                {
+            //    if (response.IsSuccessStatusCode)
+            //    {
+            //        var jsonString = await response.Content.ReadAsStringAsync();
 
-                }
-            }
+            //        var responseDeserialized = JsonSerializer.Deserialize<VehiclesDisplayOnMapResponse>(jsonString);
+            //        List<VehicleDisplayOnMap> list = responseDeserialized.vehicles;
+            //    }
+            //    else
+            //    {
+
+            //    }
+            //}
 
             //List<Vehicle> activeNotRentedVehicles = await _mongoDbService.GetPublishedAndNotOrderedVehicles();
             //int vehiclesCount = activeNotRentedVehicles.Count;

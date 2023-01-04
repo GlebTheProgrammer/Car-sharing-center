@@ -11,10 +11,27 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using CarSharingApp.Middlewares;
 using CarSharingApp.Repository.MongoDbRepository;
+using CarSharingApp.Web.Clients;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+
+
+builder.Services.AddSingleton<IVehicleServicePublicApiClient, VehicleServicePublicApiClient>();
+
+builder.Services.AddHttpClient("vehiclesApi", client =>
+{
+    client.BaseAddress = new Uri("https://localhost:44363/Vehicles/");
+});
+
+
+
+
+
+
+
+
 
 // Sessions setting
 builder.Services.AddDistributedMemoryCache();
