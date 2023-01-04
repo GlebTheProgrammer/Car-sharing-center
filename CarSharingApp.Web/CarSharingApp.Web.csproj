@@ -18,6 +18,11 @@
     <PackageReference Include="Stripe.net" Version="41.2.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Application\CarSharingApp.Application.csproj" />
+    <ProjectReference Include="..\Domain\CarSharingApp.Domain.csproj" />
+  </ItemGroup>
+
   <ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>

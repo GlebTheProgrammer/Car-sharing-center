@@ -52,6 +52,16 @@ namespace CarSharingApp.Infrastructure.MongoDB
             return await collection.Find(filter).FirstOrDefaultAsync();
         }
 
+        public async Task<IReadOnlyCollection<T>> GetAsyncWithLimit(Expression<Func<T, bool>> filter, int skip, int limit)
+        {
+            return await collection.Find(filter).Skip(skip).Limit(limit).ToListAsync();
+        }
+
+        public async Task<IReadOnlyCollection<T>> GetAsyncWithLimit(int skip, int limit)
+        {
+            return await collection.Find(filterBuilder.Empty).Skip(skip).Limit(limit).ToListAsync();
+        }
+
         public async Task UpdateAsync(T entity)
         {
             if (entity is null)

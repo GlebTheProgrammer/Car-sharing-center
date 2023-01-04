@@ -59,6 +59,16 @@ namespace CarSharingApp.PublicApi.Controllers
                 errors => Problem(errors));
         }
 
+        [HttpGet("MapRepresentation")]
+        public async Task<IActionResult> GetVehiclesMapRepresentation()
+        {
+            ErrorOr<List<Vehicle>> getVehiclesResult = await _vehicleService.GetAllAsync();
+
+            return getVehiclesResult.Match(
+                vehicles => Ok(MapVehicleResponse(vehicles)),
+                errors => Problem(errors));
+        }
+
         [HttpPut("{id:guid}")]
         [Authorize(Roles = "Administrator, Customer")]
         public async Task<IActionResult> UpdateVehicleInfo(Guid id, UpdateVehicleInfoRequest request)
@@ -134,6 +144,22 @@ namespace CarSharingApp.PublicApi.Controllers
                 vehicle.PublishedTime,
                 vehicle.LastTimeOrdered,
                 vehicle.Status);
+        }
+
+        private static VehiclesDisplayOnMapResponse MapVehicleResponse(List<Vehicle> vehicles)
+        {
+            var resultList = new List<VehicleDisplayOnMap>();
+
+            foreach (var vehicle in vehicles)
+            {
+                resultList.Add(new VehicleDisplayOnMap(
+                    vehicle.Name,
+                    vehicle.Image,
+                    vehicle.Location.Latitude,
+                    vehicle.Location.Longitude));
+            }
+
+            return new VehiclesDisplayOnMapResponse(resultList);
         }
 
         private bool IsRequestAllowed(Guid requestedId)

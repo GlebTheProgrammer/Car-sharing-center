@@ -1,51 +1,56 @@
-﻿using AutoMapper;
+﻿using CarSharingApp.Application.Contracts.Vehicle;
 using CarSharingApp.Models;
-using CarSharingApp.Models.Mongo;
-using CarSharingApp.Models.MongoView;
-using CarSharingApp.Repository.MongoDbRepository;
+using CarSharingApp.Web.Client;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Text.Json;
 
 namespace CarSharingApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly MongoDbService _mongoDbService;
-        private readonly IMapper _mapper; 
-
-        public HomeController(MongoDbService mongoDbService, IMapper mapper)
-        {
-            _mongoDbService = mongoDbService;
-            _mapper = mapper;
-        }
-
         public async Task<IActionResult> Index()
         {
-            //var vehiclesIds = _repositoryManager.OrdersRepository.CheckExpiredOrdersAndGetVehiclesId().Result;
-            //if (vehiclesIds.Count > 0)
-            //    _repositoryManager.VehiclesRepository.ChangeVehiclesIsOrderedState(vehiclesIds, false);
 
-            List<Vehicle> activeNotRentedVehicles = await _mongoDbService.GetPublishedAndNotOrderedVehicles();
-            int vehiclesCount = activeNotRentedVehicles.Count;
-
-            float[][] vehiclesLocation = new float[vehiclesCount][];
-
-            int i = 0;
-            foreach (Vehicle vehicle in activeNotRentedVehicles)
+            using(System.Net.Http.HttpClient client = HttpClientProvider.Configure())
             {
-                string latitude = vehicle.Location.Latitude.Replace('.', ',');
-                string longitude = vehicle.Location.Longitude.Replace('.', ',');
-                vehiclesLocation[i] = new float[2] {float.Parse(latitude), float.Parse(longitude)};
-                i += 1;
+                var response = await client.GetAsync("https://localhost:44363/Vehicles/MapRepresentation");
+                response.EnsureSuccessStatusCode();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var jsonString = await response.Content.ReadAsStringAsync();
+
+                    var responseDeserialized = JsonSerializer.Deserialize<VehiclesDisplayOnMapResponse>(jsonString);
+                    List<VehicleDisplayOnMap> list = responseDeserialized.vehicles;
+                }
+                else
+                {
+
+                }
             }
 
-            VehiclesHomeDataViewModel viewModel = new VehiclesHomeDataViewModel()
-            {
-                Vehicles = _mapper.Map<List<VehicleHomeModel>>(activeNotRentedVehicles),
-                VehiclesLocation= vehiclesLocation
-            };
+            //List<Vehicle> activeNotRentedVehicles = await _mongoDbService.GetPublishedAndNotOrderedVehicles();
+            //int vehiclesCount = activeNotRentedVehicles.Count;
 
-            return View(viewModel);
+            //float[][] vehiclesLocation = new float[vehiclesCount][];
+
+            //int i = 0;
+            //foreach (Vehicle vehicle in activeNotRentedVehicles)
+            //{
+            //    string latitude = vehicle.Location.Latitude.Replace('.', ',');
+            //    string longitude = vehicle.Location.Longitude.Replace('.', ',');
+            //    vehiclesLocation[i] = new float[2] {float.Parse(latitude), float.Parse(longitude)};
+            //    i += 1;
+            //}
+
+            //VehiclesHomeDataViewModel viewModel = new VehiclesHomeDataViewModel()
+            //{
+            //    Vehicles = _mapper.Map<List<VehicleHomeModel>>(activeNotRentedVehicles),
+            //    VehiclesLocation= vehiclesLocation
+            //};
+
+            return View(/*viewModel*/);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
