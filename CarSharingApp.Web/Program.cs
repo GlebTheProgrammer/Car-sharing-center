@@ -19,11 +19,8 @@ builder.Services.AddControllersWithViews();
 
 
 builder.Services.AddSingleton<IVehicleServicePublicApiClient, VehicleServicePublicApiClient>();
+builder.Services.RegisterNewHttpClients("VehiclesAPI", builder.Configuration);
 
-builder.Services.AddHttpClient("vehiclesApi", client =>
-{
-    client.BaseAddress = new Uri("https://localhost:44363/Vehicles/");
-});
 
 
 
