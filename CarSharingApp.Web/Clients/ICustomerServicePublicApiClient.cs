@@ -4,6 +4,6 @@ namespace CarSharingApp.Web.Clients
 {
     public interface ICustomerServicePublicApiClient
     {
-        Task<CustomerResponse?> CreteNewCustomer(CreateCustomerRequest request);
+        Task<HttpResponseMessage> CreteNewCustomer(CreateCustomerRequest request);
     }
 }

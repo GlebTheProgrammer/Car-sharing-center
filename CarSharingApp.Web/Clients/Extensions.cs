@@ -16,7 +16,7 @@ namespace CarSharingApp.Web.Clients
             })
             .AddTransientHttpErrorPolicy(
             polictBuilder =>
-                polictBuilder.WaitAndRetryAsync(Backoff.DecorrelatedJitterBackoffV2(TimeSpan.FromSeconds(1), 5)));
+                polictBuilder.WaitAndRetryAsync(Backoff.DecorrelatedJitterBackoffV2(TimeSpan.FromSeconds(1), 4)));
 
             return services;
         }
