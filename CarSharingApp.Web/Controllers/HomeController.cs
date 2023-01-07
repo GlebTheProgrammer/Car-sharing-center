@@ -2,6 +2,7 @@
 using CarSharingApp.Web.Clients;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace CarSharingApp.Controllers
 {
@@ -19,13 +20,10 @@ namespace CarSharingApp.Controllers
 
             var response = await _vehicleServiceClient.GetAllApprovedAndPublishedVehiclesMapRepresentation();
 
+            if (response is null)
+                throw new ArgumentNullException(nameof(response));
 
-
-
-
-
-
-
+            var viewModel = response.Vehicles;
 
 
 
@@ -45,17 +43,17 @@ namespace CarSharingApp.Controllers
             //{
             //    string latitude = vehicle.Location.Latitude.Replace('.', ',');
             //    string longitude = vehicle.Location.Longitude.Replace('.', ',');
-            //    vehiclesLocation[i] = new float[2] {float.Parse(latitude), float.Parse(longitude)};
+            //    vehiclesLocation[i] = new float[2] { float.Parse(latitude), float.Parse(longitude) };
             //    i += 1;
             //}
 
             //VehiclesHomeDataViewModel viewModel = new VehiclesHomeDataViewModel()
             //{
             //    Vehicles = _mapper.Map<List<VehicleHomeModel>>(activeNotRentedVehicles),
-            //    VehiclesLocation= vehiclesLocation
+            //    VehiclesLocation = vehiclesLocation
             //};
 
-            return View(/*viewModel*/);
+            return View(viewModel);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -1,4 +1,4 @@
-﻿@model CarSharingApp.Models.MongoView.CustomerRegisterModel
+﻿@model CarSharingApp.Application.Contracts.Customer.CreateCustomerRequest;
 
 <div class="container">
     <div class="py-5 text-center">
@@ -26,16 +26,16 @@
                 </div>
 
                 <div class="mb-3">
-                    <label>Username</label>
+                    <label>Login</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text">@@</span>
                         </div>
-                        <input asp-for="Username" type="text" class="form-control" placeholder="Username" onfocus="HideErrorSpan('UsernameError')">
+                        <input asp-for="Login" type="text" class="form-control" placeholder="Username" onfocus="HideErrorSpan('UsernameError')">
                     </div>
                 </div>
                 <div class="mb-3">
-                    <span asp-validation-for="Username" id="UsernameError" class="text-danger text-center"></span>
+                    <span asp-validation-for="Login" id="LoginError" class="text-danger text-center"></span>
                 </div>
 
                 <div class="row">
@@ -59,22 +59,22 @@
                         </select>
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label>Postcode</label>
-                        <input asp-for="Postcode" type="number" class="form-control" onfocus="HideErrorSpan('PostcodeError')">
+                        <label>Zip/Postcode</label>
+                        <input asp-for="ZipPostCode" type="text" class="form-control" onfocus="HideErrorSpan('ZipPostcodeError')">
                     </div>
                 </div>
                 <div class="row">
                     <span asp-validation-for="Country" id="CountryError" class="text-danger text-center"></span>
                     <span asp-validation-for="City" id="BelarusCityError" class="text-danger text-center"></span>
-                    <span asp-validation-for="Postcode" id="PostcodeError" class="text-danger text-center"></span>
+                    <span asp-validation-for="ZipPostCode" id="ZipPostcodeError" class="text-danger text-center"></span>
                 </div>
 
                 <div class="mb-3">
                     <label>Address</label>
-                    <input asp-for="Address" type="text" class="form-control" placeholder="L.Bedy street, 29-97" onfocus="HideErrorSpan('AddressError')">
+                    <input asp-for="StreetAddress" type="text" class="form-control" placeholder="L.Bedy street, 29-97" onfocus="HideErrorSpan('AddressError')">
                 </div>
                 <div class="mb-3">
-                    <span asp-validation-for="Address" id="AddressError" class="text-danger text-center"></span>
+                    <span asp-validation-for="StreetAddress" id="AddressError" class="text-danger text-center"></span>
                 </div>
 
                 <div class="mb-3">
@@ -100,14 +100,14 @@
                 <div class="mb-3">
                     <span asp-validation-for="Password" id="PasswordError" class="text-danger text-center"></span>
                 </div>
-
+@*
                 <div class="mb-3">
                     <label>Repeat password</label>
                     <input asp-for="ConfirmPassword" type="password" class="form-control" onfocus="HideErrorSpan('ConfirmPasswordError')">
                 </div>
                 <div class="mb-3">
                     <span asp-validation-for="ConfirmPassword" id="ConfirmPasswordError" class="text-danger text-center"></span>
-                </div>
+                </div>*@
 
                 <div class="mb-3">
                     <label>Series and Number of the driver's license</label>
@@ -119,18 +119,18 @@
 
                 <hr class="mb-4">
 
-                <div class="custom-control custom-checkbox">
+@*                <div class="custom-control custom-checkbox">
                     <input asp-for="Is18YearsOld" type="checkbox" class="custom-control-input" id="Is18YearsOldCheckBox" onfocus="HideErrorSpan('AcceptingTermsError')">
                     <label class="custom-control-label" for="Is18YearsOldCheckBox">I am 18+ years old and I agree to the Terms of Service.</label>
-                </div>
+                </div>*@
                 <div class="custom-control custom-checkbox">
-                    <input asp-for="IsAcceptedNewsSharing" type="checkbox" class="custom-control-input" id="IsAcceptedNewsSharingCheckBox" onfocus="HideErrorSpan('NewsSharingError')">
+                    <input asp-for="HasAcceptedNewsSharing" type="checkbox" class="custom-control-input" id="IsAcceptedNewsSharingCheckBox" onfocus="HideErrorSpan('NewsSharingError')">
                     <label class="custom-control-label" for="IsAcceptedNewsSharingCheckBox">Send me Sam Car Sharing news.</label>
                 </div>
 
                 <div class="mt-3">
-                    <span asp-validation-for="Is18YearsOld" id="AcceptingTermsError" class="text-danger text-center"></span>
-                    <span asp-validation-for="IsAcceptedNewsSharing" id="NewsSharingError" class="text-danger text-center"></span>
+@*                    <span asp-validation-for="Is18YearsOld" id="AcceptingTermsError" class="text-danger text-center"></span>*@
+                    <span asp-validation-for="HasAcceptedNewsSharing" id="NewsSharingError" class="text-danger text-center"></span>
                 </div>
                 <hr class="mb-4">
                 <button class="btn btn-primary btn-lg btn-block" type="submit">Create new account</button>

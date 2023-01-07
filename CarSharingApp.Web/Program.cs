@@ -20,6 +20,8 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddSingleton<IVehicleServicePublicApiClient, VehicleServicePublicApiClient>();
 builder.Services.RegisterNewHttpClients("VehiclesAPI", builder.Configuration);
+builder.Services.AddSingleton<ICustomerServicePublicApiClient, CustomerServicePublicApiClient>();
+builder.Services.RegisterNewHttpClients("CustomersAPI", builder.Configuration);
 
 
 
