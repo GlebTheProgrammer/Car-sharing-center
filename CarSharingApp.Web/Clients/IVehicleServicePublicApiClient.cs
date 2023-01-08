@@ -4,6 +4,6 @@ namespace CarSharingApp.Web.Clients
 {
     public interface IVehicleServicePublicApiClient
     {
-        Task<VehiclesDisplayOnMapResponse?> GetAllApprovedAndPublishedVehiclesMapRepresentation();
+        Task<HttpResponseMessage> GetAllApprovedAndPublishedVehiclesMapRepresentation();
     }
 }

@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace CarSharingApp.Controllers
 {
-    public class RegistrationController : Controller
+    public sealed class RegistrationController : Controller
     {
         private readonly ICustomerServicePublicApiClient _customerServiceClient;
 
@@ -40,20 +40,29 @@ namespace CarSharingApp.Controllers
         {
             var response = await _customerServiceClient.CreteNewCustomer(createCustomerRequest);
 
+            string responseContent = await response.Content.ReadAsStringAsync();
+
             switch (response.StatusCode)
             {
                 case HttpStatusCode.BadRequest:
                     {
-                        string responseContent = await response.Content.ReadAsStringAsync();
-
                         ValidationError validationError = JsonSerializer.Deserialize<ValidationError>(responseContent) ?? new ValidationError();
 
                         foreach (var error in validationError.Errors)
                         {
-                            ModelState.AddModelError(error.Key, error.Value.FirstOrDefault() ?? string.Empty);
+                            ModelState.AddModelError(error.Key.Contains('.') ? error.Key.Substring(error.Key.LastIndexOf('.')) : error.Key, 
+                                error.Value.FirstOrDefault() ?? string.Empty);
                         }
 
-                        return View(createCustomerRequest);
+                        return View("Index", createCustomerRequest);
+                    }
+                case HttpStatusCode.Conflict:
+                    {
+                        ValidationError validationError = JsonSerializer.Deserialize<ValidationError>(responseContent) ?? new ValidationError();
+
+                        ViewBag.ConflictErrorMessage = validationError.Title;
+
+                        return View("Index", createCustomerRequest);
                     }
                 default:
                     break;

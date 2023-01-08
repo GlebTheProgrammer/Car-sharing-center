@@ -1,5 +1,4 @@
-﻿using CarSharingApp.Application.Contracts.Vehicle;
-using CarSharingApp.Web.Primitives;
+﻿using CarSharingApp.Web.Primitives;
 
 namespace CarSharingApp.Web.Clients
 {
@@ -16,13 +15,11 @@ namespace CarSharingApp.Web.Clients
             _configuration = configuration;
         }
 
-        public async Task<VehiclesDisplayOnMapResponse?> GetAllApprovedAndPublishedVehiclesMapRepresentation()
+        public async Task<HttpResponseMessage> GetAllApprovedAndPublishedVehiclesMapRepresentation()
         {
             var client = CreateNewClientInstance();
 
-            HttpResponseMessage response =  await client.GetAsync("MapRepresentation");
-
-            return await response.Content.ReadFromJsonAsync<VehiclesDisplayOnMapResponse>();
+            return await client.GetAsync("MapRepresentation");
         }
 
         protected override HttpClient CreateNewClientInstance()

@@ -1,8 +1,8 @@
-﻿using CarSharingApp.Models;
+﻿using CarSharingApp.Application.Contracts.Vehicle;
+using CarSharingApp.Models;
 using CarSharingApp.Web.Clients;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using System.Reflection;
 
 namespace CarSharingApp.Controllers
 {
@@ -20,12 +20,12 @@ namespace CarSharingApp.Controllers
 
             var response = await _vehicleServiceClient.GetAllApprovedAndPublishedVehiclesMapRepresentation();
 
-            if (response is null)
-                throw new ArgumentNullException(nameof(response));
+            response.EnsureSuccessStatusCode();
 
-            var viewModel = response.Vehicles;
+            VehiclesDisplayOnMapResponse responseModel = await response.Content.ReadFromJsonAsync<VehiclesDisplayOnMapResponse>() 
+                ?? throw new NullReferenceException(nameof(responseModel));
 
-
+            var viewModel = responseModel.Vehicles;
 
 
 

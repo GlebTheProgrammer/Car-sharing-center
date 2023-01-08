@@ -1,5 +1,12 @@
 ﻿@model CarSharingApp.Application.Contracts.Customer.CreateCustomerRequest;
 
+@if (ViewBag.ConflictErrorMessage is not null)
+{
+    <div class="alert alert-danger mt-5" role="alert">
+        @ViewBag.ConflictErrorMessage
+    </div>
+}
+
 <div class="container">
     <div class="py-5 text-center">
         <img class="d-block mx-auto mb-4" src="~/Images/RegistrationPage/samSolutionsLogo.png" alt="" width="72" height="72">
@@ -8,133 +15,142 @@
     </div>
 
     <div class="row">
-        <div class="d-flex order-md-1 justify-content-center align-content-center">
-            <form asp-controller="Registration" asp-action="Register" method="post">
+        <div class="d-flex justify-content-center align-content-center">
+            <form id="registrationForm" asp-controller="Registration" asp-action="Register" method="post" style="width: 600px;">
+
                 <div class="row">
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-6">
                         <label>First name</label>
-                        <input asp-for="FirstName" type="text" class="form-control" placeholder="Rayan" onfocus="HideErrorSpan('FirstNameError')">
+                        <input asp-for="FirstName" type="text" class="form-control" placeholder="Rayan" onfocus="HideErrorSpan('FirstNameError')" required>
+                        <span asp-validation-for="FirstName" id="FirstNameError" class="text-danger text-center mt-2 mb-2" style="display: block;"></span>
                     </div>
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-6">
                         <label>Last name</label>
-                        <input asp-for="LastName" type="text" class="form-control" placeholder="Amari" onfocus="HideErrorSpan('LastNameError')">
+                        <input asp-for="LastName" type="text" class="form-control" placeholder="Amari" onfocus="HideErrorSpan('LastNameError')" required>
+                        <span asp-validation-for="LastName" id="LastNameError" class="text-danger text-center mt-2 mb-2" style="display: block;"></span>
                     </div>
-                </div>
-                <div class="row">
-                    <span asp-validation-for="FirstName" id="FirstNameError" class="text-danger text-center"></span>
-                    <span asp-validation-for="LastName" id="LastNameError" class="text-danger text-center"></span>
                 </div>
 
-                <div class="mb-3">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label>Country</label>
+                        <select asp-for="Country" class="custom-select d-block w-100" onfocus="HideErrorSpan('CountryError')">
+                            <option value="0">Choose...</option>
+                            @foreach(var country in CarSharingApp.Domain.SmartEnums.Country.GetPossibleEnumerations())
+                            {
+                                <option value="@CarSharingApp.Domain.SmartEnums.Country.FromName(country)">@country</option>
+                            }
+                        </select>
+                        <span asp-validation-for="Country" id="CountryError" class="text-danger text-center mt-2 mb-2" style="display: block;"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label>City</label>
+                        <input asp-for="City" type="text" class="form-control" placeholder="City" onfocus="HideErrorSpan('CityError')" required>
+                        <span asp-validation-for="City" id="CityError" class="text-danger text-center mt-2 mb-2" style="display: block;"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label>ZIP/postcode</label>
+                        <input asp-for="ZipPostCode" type="text" class="form-control" placeholder="90210" onfocus="HideErrorSpan('ZipPostCodeError')" required>
+                        <span asp-validation-for="ZipPostCode" id="ZipPostCodeError" class="text-danger text-center mt-2 mb-2" style="display: block;"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Street address</label>
+                        <input asp-for="StreetAddress" type="text" class="form-control" placeholder="L.Bedy Str." onfocus="HideErrorSpan('StreetAddressError')" required>
+                        <span asp-validation-for="StreetAddress" id="StreetAddressError" class="text-danger text-center mt-2 mb-2" style="display: block;"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Apt, suite, etc.</label>
+                        <input asp-for="AptSuiteEtc" type="text" class="form-control" placeholder="29-97" onfocus="HideErrorSpan('AptSuiteEtcError')" required>
+                        <span asp-validation-for="AptSuiteEtc" id="AptSuiteEtcError" class="text-danger text-center mt-2 mb-2" style="display: block;"></span>
+                    </div>
+                </div>
+
+                <div>
+                    <label>Phone number</label>
+                    <input asp-for="PhoneNumber" type="text" class="form-control" placeholder="+375331234567" onfocus="HideErrorSpan('PhoneNumberError')" required>
+                    <span asp-validation-for="PhoneNumber" id="PhoneNumberError" class="text-danger text-center mt-2 mb-2" style="display: block;"></span>
+                </div>
+
+                <div>
+                    <label>Driver License Identifier</label>
+                    <input asp-for="DriverLicenseIdentifier" type="text" class="form-control" placeholder="5AA000031" onfocus="HideErrorSpan('DriverLicenseIdentifierError')">
+                    <span asp-validation-for="DriverLicenseIdentifier" id="DriverLicenseIdentifierError" class="text-danger text-center mt-2 mb-2" style="display: block;"></span>
+                </div>
+
+                <div>
                     <label>Login</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text">@@</span>
                         </div>
-                        <input asp-for="Login" type="text" class="form-control" placeholder="Username" onfocus="HideErrorSpan('UsernameError')">
+                        <input asp-for="Login" type="text" class="form-control" placeholder="MyUsername" onfocus="HideErrorSpan('LoginError')" required>
                     </div>
-                </div>
-                <div class="mb-3">
-                    <span asp-validation-for="Login" id="LoginError" class="text-danger text-center"></span>
+                    <span asp-validation-for="Login" id="LoginError" class="text-danger text-center mt-2 mb-2" style="display: block;"></span>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-5 mb-3">
-                        <label for="country">Country</label>
-                        <select asp-for="Country" class="custom-select d-block w-100" onfocus="HideErrorSpan('CountryError')">
-                            <option value="0">Choose...</option>
-                            <option value="1">Belarus</option>
-                        </select>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label>City</label>
-                        <select asp-for="City" class="custom-select d-block w-100" onfocus="HideErrorSpan('BelarusCityError')">
-                            <option value="0">Choose...</option>
-                            <option value="1">Minsk</option>
-                            <option value="2">Grodno</option>
-                            <option value="3">Vitebsk</option>
-                            <option value="4">Mogilev</option>
-                            <option value="5">Gomel</option>
-                            <option value="6">Brest</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <label>Zip/Postcode</label>
-                        <input asp-for="ZipPostCode" type="text" class="form-control" onfocus="HideErrorSpan('ZipPostcodeError')">
-                    </div>
-                </div>
-                <div class="row">
-                    <span asp-validation-for="Country" id="CountryError" class="text-danger text-center"></span>
-                    <span asp-validation-for="City" id="BelarusCityError" class="text-danger text-center"></span>
-                    <span asp-validation-for="ZipPostCode" id="ZipPostcodeError" class="text-danger text-center"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label>Address</label>
-                    <input asp-for="StreetAddress" type="text" class="form-control" placeholder="L.Bedy street, 29-97" onfocus="HideErrorSpan('AddressError')">
-                </div>
-                <div class="mb-3">
-                    <span asp-validation-for="StreetAddress" id="AddressError" class="text-danger text-center"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label>Phone number</label>
-                    <input asp-for="PhoneNumber" type="text" class="form-control" placeholder="+375331234567" onfocus="HideErrorSpan('PhoneNumberError')">
-                </div>
-                <div class="mb-3">
-                    <span asp-validation-for="PhoneNumber" id="PhoneNumberError" class="text-danger text-center"></span>
-                </div>
-
-                <div class="mb-3">
+                <div>
                     <label>Email</label>
-                    <input asp-for="Email" type="email" class="form-control" placeholder="yourEmail@example.com" onfocus="HideErrorSpan('EmailError')">
-                </div>
-                <div class="mb-3">
-                    <span asp-validation-for="Email" id="EmailError" class="text-danger text-center"></span>
+                    <input asp-for="Email" type="email" class="form-control" placeholder="yourEmail@example.com" onfocus="HideErrorSpan('EmailError')" required>
+                    <span asp-validation-for="Email" id="EmailError" class="text-danger text-center mt-2 mb-2" style="display: block;"></span>
                 </div>
 
-                <div class="mb-3">
+                <div>
                     <label>Password</label>
-                    <input asp-for="Password" type="password" class="form-control" onfocus="HideErrorSpan('PasswordError')">
+                    <input id="Password" asp-for="Password" type="password" value="@Model.Password" class="form-control" onfocus="HideErrorSpan('PasswordError')" required>
+                    <span asp-validation-for="Password" id="PasswordError" class="text-danger text-center mt-2 mb-2" style="display: block;"></span>
                 </div>
-                <div class="mb-3">
-                    <span asp-validation-for="Password" id="PasswordError" class="text-danger text-center"></span>
-                </div>
-@*
-                <div class="mb-3">
-                    <label>Repeat password</label>
-                    <input asp-for="ConfirmPassword" type="password" class="form-control" onfocus="HideErrorSpan('ConfirmPasswordError')">
-                </div>
-                <div class="mb-3">
-                    <span asp-validation-for="ConfirmPassword" id="ConfirmPasswordError" class="text-danger text-center"></span>
-                </div>*@
 
-                <div class="mb-3">
-                    <label>Series and Number of the driver's license</label>
-                    <input asp-for="DriverLicenseIdentifier" type="text" class="form-control" placeholder="5AA000031" onfocus="HideErrorSpan('DriverLicenseNumberError')">
-                </div>
-                <div class="mb-3">
-                    <span asp-validation-for="DriverLicenseIdentifier" id="DriverLicenseNumberError" class="text-danger text-center"></span>
+                <div>
+                    <label>Confirm password</label>
+                    <input id="ConfirmPassword" type="password" value="@Model.Password" class="form-control" onfocus="HideErrorSpan('ConfirmPasswordError')" required>
+                    <span id="ConfirmPasswordError" class="text-danger text-center mt-2 mb-2" style="display: block;"></span>
                 </div>
 
                 <hr class="mb-4">
 
-@*                <div class="custom-control custom-checkbox">
-                    <input asp-for="Is18YearsOld" type="checkbox" class="custom-control-input" id="Is18YearsOldCheckBox" onfocus="HideErrorSpan('AcceptingTermsError')">
-                    <label class="custom-control-label" for="Is18YearsOldCheckBox">I am 18+ years old and I agree to the Terms of Service.</label>
-                </div>*@
+                <div class="custom-control custom-checkbox">
+                    @if (Model.FirstName != string.Empty)
+                    {
+                        <input type="checkbox" class="custom-control-input" id="TermsAndConditionsAgreementCheckBox" onfocus="HideErrorSpan('TermsAndConditionsAgreementError')" checked>
+                    }
+                    else
+                    {
+                        <input type="checkbox" class="custom-control-input" id="TermsAndConditionsAgreementCheckBox" onfocus="HideErrorSpan('TermsAndConditionsAgreementError')">
+                    }
+                    <label class="custom-control-label" for="TermsAndConditionsAgreementCheckBox">I am 18+ years old and I agree to the Terms of Service.</label>
+                    <span id="TermsAndConditionsAgreementError" class="text-danger text-center mt-2 mb-2" style="display: block;"></span>
+                </div>
                 <div class="custom-control custom-checkbox">
                     <input asp-for="HasAcceptedNewsSharing" type="checkbox" class="custom-control-input" id="IsAcceptedNewsSharingCheckBox" onfocus="HideErrorSpan('NewsSharingError')">
                     <label class="custom-control-label" for="IsAcceptedNewsSharingCheckBox">Send me Sam Car Sharing news.</label>
+                    <span asp-validation-for="HasAcceptedNewsSharing" id="NewsSharingError" class="text-danger text-center mt-2 mb-2" style="display: block;"></span>
                 </div>
 
-                <div class="mt-3">
-@*                    <span asp-validation-for="Is18YearsOld" id="AcceptingTermsError" class="text-danger text-center"></span>*@
-                    <span asp-validation-for="HasAcceptedNewsSharing" id="NewsSharingError" class="text-danger text-center"></span>
-                </div>
+
                 <hr class="mb-4">
                 <button class="btn btn-primary btn-lg btn-block" type="submit">Create new account</button>
             </form>
+
+            <script>
+                $('#registrationForm').submit(function() {
+                    let flag = true;
+
+                    if (document.getElementById('Password').value !== document.getElementById('ConfirmPassword').value){
+                        document.getElementById('ConfirmPasswordError').textContent = "Password doesn't match. Please check and try again.";
+                        flag = false;
+                    }
+                    if (document.getElementById('TermsAndConditionsAgreementCheckBox').checked !== true) {
+                        document.getElementById('TermsAndConditionsAgreementError').textContent = "You must confirm that you are 18+ years old and agree to the Terms of Service.";
+                        flag = false;
+                    }
+
+                    return flag;
+                });
+            </script>
+
         </div>
     </div>
 
