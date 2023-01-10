@@ -17,13 +17,13 @@
             <h1 class="h3 mb-4 font-weight-normal">Please sign in</h1>
             <div class="mb-4">
                 <div class="col-md-4 mx-auto">
-                    <input asp-for="EmailOrLogin" type="text" class="form-control" placeholder="Login / Email" id="EmailAddress" onfocus="HideErrorSpan('EmailAddressError')">
+                    <input asp-for="EmailOrLogin" type="text" class="form-control" placeholder="Login / Email" id="EmailAddress" onfocus="HideErrorSpan('EmailAddressError')" required>
                     <span asp-validation-for="EmailOrLogin" id="EmailAddressError" class="text-danger text-center"></span>
                 </div>
             </div>
             <div class="mb-4">
                 <div class="col-md-4 mx-auto">
-                    <input asp-for="Password" type="password" class="form-control" placeholder="Password" id="Password" onfocus="HideErrorSpan('PasswordError')">
+                    <input asp-for="Password" type="password" class="form-control" placeholder="Password" id="Password" onfocus="HideErrorSpan('PasswordError')" required>
                     <span asp-validation-for="Password" id="PasswordError" class="text-danger text-center"></span>
                 </div>
             </div>

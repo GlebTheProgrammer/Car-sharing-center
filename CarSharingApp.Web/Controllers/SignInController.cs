@@ -1,9 +1,12 @@
 ﻿using CarSharingApp.Application.Contracts.Authorization;
+using CarSharingApp.Application.Contracts.ErrorType;
 using CarSharingApp.Models.Mongo;
 using CarSharingApp.Models.MongoView;
 using CarSharingApp.Web.Clients.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
+using System.Text.Json;
 
 namespace CarSharingApp.Controllers
 {
@@ -31,26 +34,26 @@ namespace CarSharingApp.Controllers
 
             string responseContent = await response.Content.ReadAsStringAsync();
 
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.Forbidden:
+                    {
+                        ForbiddenError forbiddenError = JsonSerializer.Deserialize<ForbiddenError>(responseContent) ?? new ForbiddenError();
 
-            //if (!ModelState.IsValid)
-            //    return View("Index", signedUser);
+                        ModelState.AddModelError(nameof(request.EmailOrLogin), forbiddenError.Title);
 
-            //Customer customer = await _mongoDbService.TrySignIn(signedUser);
+                        return View("Index", request);
+                    }
+                default:
+                    break;
+            }
 
-            //if (customer == null)
-            //{
-            //    HttpContext.Session.SetString("AuthorizationFailed", "true");
-            //    return RedirectToAction("Index");
-            //}
+            TokenResponse tokenResponse = JsonSerializer.Deserialize<TokenResponse>(responseContent) ?? new TokenResponse(string.Empty);
 
-            //Credentials credentials = await _mongoDbService.GetCredetnialsByUserId(customer.Id);
+            if (tokenResponse.JWToken is null)
+                throw new Exception("Token was'nt generated");
 
-            //var tokenResult = _jwtProvider.Generate(customer, credentials);
-
-            //if (tokenResult == null)
-            //    throw new Exception("Token can not be generated");
-
-            //HttpContext.Session.SetString("JWToken", tokenResult);
+            HttpContext.Session.SetString("JWToken", tokenResponse.JWToken);
             HttpContext.Session.SetString("SignedIn", "true");
 
             return RedirectToAction("Index", "Home");

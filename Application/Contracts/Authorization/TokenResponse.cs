@@ -1,4 +1,7 @@
-﻿namespace CarSharingApp.Application.Contracts.Authorization
+﻿using System.Text.Json.Serialization;
+
+namespace CarSharingApp.Application.Contracts.Authorization
 {
-    public record TokenResponse(string JWToken);
+    public record TokenResponse(
+        [property: JsonPropertyName("jwToken")] string JWToken);
 }
