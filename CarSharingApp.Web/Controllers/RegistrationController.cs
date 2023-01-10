@@ -1,6 +1,6 @@
 ﻿using CarSharingApp.Application.Contracts.Customer;
-using CarSharingApp.Application.Contracts.Error;
-using CarSharingApp.Web.Clients;
+using CarSharingApp.Application.Contracts.ErrorType;
+using CarSharingApp.Web.Clients.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Text.Json;

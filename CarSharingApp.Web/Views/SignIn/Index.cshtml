@@ -1,6 +1,4 @@
-﻿@inject IHttpContextAccessor Accessor;
-
-@model CarSharingApp.Models.MongoView.UserSignInModel;
+﻿@model CarSharingApp.Application.Contracts.Authorization.AuthorizationRequest;
 
 <head>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
@@ -19,8 +17,8 @@
             <h1 class="h3 mb-4 font-weight-normal">Please sign in</h1>
             <div class="mb-4">
                 <div class="col-md-4 mx-auto">
-                    <input asp-for="Email" type="email" class="form-control" placeholder="Email address" id="EmailAddress" onfocus="HideErrorSpan('EmailAddressError')">
-                    <span asp-validation-for="Email" id="EmailAddressError" class="text-danger text-center"></span>
+                    <input asp-for="EmailOrLogin" type="text" class="form-control" placeholder="Login / Email" id="EmailAddress" onfocus="HideErrorSpan('EmailAddressError')">
+                    <span asp-validation-for="EmailOrLogin" id="EmailAddressError" class="text-danger text-center"></span>
                 </div>
             </div>
             <div class="mb-4">
@@ -31,7 +29,7 @@
             </div>
 
             <div class="custom-control custom-checkbox mb-3">
-                <input asp-for="RememberMe" type="checkbox" class="custom-control-input" id="RememberMeCheckBox">
+                <input type="checkbox" class="custom-control-input" id="RememberMeCheckBox">
                 <label class="custom-control-label" for="RememberMeCheckBox">Remember me</label>
             </div>
 

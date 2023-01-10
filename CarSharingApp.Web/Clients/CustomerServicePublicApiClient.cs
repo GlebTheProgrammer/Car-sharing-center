@@ -1,4 +1,5 @@
 ﻿using CarSharingApp.Application.Contracts.Customer;
+using CarSharingApp.Web.Clients.Interfaces;
 using CarSharingApp.Web.Primitives;
 
 namespace CarSharingApp.Web.Clients

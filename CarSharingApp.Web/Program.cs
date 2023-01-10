@@ -12,6 +12,8 @@ using Microsoft.IdentityModel.Tokens;
 using CarSharingApp.Middlewares;
 using CarSharingApp.Repository.MongoDbRepository;
 using CarSharingApp.Web.Clients;
+using CarSharingApp.Web.Clients.Interfaces;
+using CarSharingApp.Web.Clients.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +24,8 @@ builder.Services.AddSingleton<IVehicleServicePublicApiClient, VehicleServicePubl
 builder.Services.RegisterNewHttpClients("VehiclesAPI", builder.Configuration);
 builder.Services.AddSingleton<ICustomerServicePublicApiClient, CustomerServicePublicApiClient>();
 builder.Services.RegisterNewHttpClients("CustomersAPI", builder.Configuration);
+builder.Services.AddSingleton<IAuthorizationServicePublicApiClient, AuthorizationServicePublicApiClient>();
+builder.Services.RegisterNewHttpClients("AuthorizationAPI", builder.Configuration);
 
 
 

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace CarSharingApp.Application.Contracts.Error
+namespace CarSharingApp.Application.Contracts.ErrorType
 {
     public sealed class ValidationError
     {
