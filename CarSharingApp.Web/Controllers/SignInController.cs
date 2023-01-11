@@ -1,7 +1,5 @@
 ﻿using CarSharingApp.Application.Contracts.Authorization;
 using CarSharingApp.Application.Contracts.ErrorType;
-using CarSharingApp.Models.Mongo;
-using CarSharingApp.Models.MongoView;
 using CarSharingApp.Web.Clients.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

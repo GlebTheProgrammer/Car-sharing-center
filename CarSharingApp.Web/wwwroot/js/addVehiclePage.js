@@ -50,12 +50,15 @@ var markersArray = [];
 // Function for setting up a marker on the map
 function setUpTheMarker() {
 
-    var address = document.getElementById('carAddress').value;
+    let vehicleStreetAddress = document.getElementById('vehicleStreetAddress').value;
+    let vehicleAptSuiteEtc = document.getElementById('vehicleAptSuiteEtc').value;
+
+    let vehicleAddress = vehicleStreetAddress.concat(" ", vehicleAptSuiteEtc);
 
     geocoder = new google.maps.Geocoder();
 
     geocoder.geocode({
-        address: address
+        address: vehicleAddress
     }, (results, status) => {
         if (status == google.maps.GeocoderStatus.OK) {
 

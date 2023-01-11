@@ -1,4 +1,5 @@
-﻿using CarSharingApp.Web.Clients.Interfaces;
+﻿using CarSharingApp.Application.Contracts.Vehicle;
+using CarSharingApp.Web.Clients.Interfaces;
 using CarSharingApp.Web.Primitives;
 
 namespace CarSharingApp.Web.Clients
@@ -7,26 +8,25 @@ namespace CarSharingApp.Web.Clients
     {
         private const string clientIdentifier = "VehiclesAPI";
 
-        private readonly IHttpClientFactory _httpClientFactory;
-        private readonly IConfiguration _configuration;
-
-        public VehicleServicePublicApiClient(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        public VehicleServicePublicApiClient(IHttpClientFactory httpClientFactory, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+            : base(httpClientFactory, configuration, httpContextAccessor)
         {
-            _httpClientFactory = httpClientFactory;
-            _configuration = configuration;
+        }
+
+        public async Task<HttpResponseMessage> CreateNewVehicle(CreateVehicleRequest request)
+        {
+            var client = CreateNewClientInstance(clientIdentifier);
+
+            JsonContent content = JsonContent.Create(request);
+
+            return await client.PostAsync(client.BaseAddress, content);
         }
 
         public async Task<HttpResponseMessage> GetAllApprovedAndPublishedVehiclesMapRepresentation()
         {
-            var client = CreateNewClientInstance();
+            var client = CreateNewClientInstance(clientIdentifier);
 
             return await client.GetAsync("MapRepresentation");
-        }
-
-        protected override HttpClient CreateNewClientInstance()
-        {
-            return _httpClientFactory.CreateClient(_configuration[$"Clients:{clientIdentifier}:Name"]
-                ?? throw new ArgumentNullException(clientIdentifier));
         }
     }
 }

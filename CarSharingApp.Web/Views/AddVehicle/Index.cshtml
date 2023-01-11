@@ -1,15 +1,14 @@
-﻿@model CarSharingApp.Models.MongoView.VehicleCreateModel
+﻿@model CarSharingApp.Application.Contracts.Vehicle.CreateVehicleRequest;
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9AIXs7jB_3r8oRc1zd0i9p0nanEH5Q6M&callback=initMap" async defer></script>
 
 <main class="container mt-5">
     <div class="row g-5">
-        <form class="row g-3" asp-controller="AddVehicle" asp-action="AddVehicle" method="post" enctype="multipart/form-data">
+        <form id="createNewVehicleForm" class="row g-3" asp-controller="AddVehicle" asp-action="AddVehicle" method="post" enctype="multipart/form-data">
             <div class="col-md-8">
                 <h3 class="pb-2 mb-4 fst-italic border-bottom text-center">
                     Share Your Vehicle
                 </h3>
-
 
                 <div class="justify-content-center" id="noCarImage" style="font-size: 35px; align-items: center; width: 100%; height: 400px; background-color: lightgrey; text-align: center; display: flex">
                     Select Vehicle Image
@@ -28,7 +27,7 @@
                 <input id="imageInput" asp-for="Image" class="form-control" value="" hidden />
                 <!--Image input ends here-->
 
-                <h2 class="mt-3">Fill the data</h2>
+                <h2 class="mt-3">Additional information</h2>
 
                 <div>
                     <span asp-validation-for="ProductionYear" id="ProductionYearError" class="text-danger text-center" style="margin-left: 135px;"></span>
@@ -38,10 +37,10 @@
                     </div>
                 </div>
                 <div>
-                    <span asp-validation-for="MaxSpeed" id="MaxSpeedError" class="text-danger text-center" style="margin-left: 135px;"></span>
+                    <span asp-validation-for="MaxSpeedKph" id="MaxSpeedError" class="text-danger text-center" style="margin-left: 135px;"></span>
                     <div class="d-flex flex-row">
                         <label class="mr-2" style="white-space: nowrap;">Max Speed (kph): </label>
-                        <input asp-for="MaxSpeed" type="number" class="form-control" placeholder="" onfocus="HideErrorSpan('MaxSpeedError')">
+                        <input asp-for="MaxSpeedKph" type="number" class="form-control" placeholder="" onfocus="HideErrorSpan('MaxSpeedError')">
                     </div>
                 </div>
                 <div>
@@ -63,11 +62,11 @@
                     <div class="d-flex flex-row">
                         <label class="mt-2 mr-2">Drivetrain: </label>
                         <select asp-for="Drivetrain" class="custom-select d-block" onfocus="HideErrorSpan('DrivetrainError')">
-                            <option value="0">-</option>
-                            <option value="1">All-wheel drive</option>
-                            <option value="2">Four-wheel drive</option>
-                            <option value="3">Front-wheel drive</option>
-                            <option value="4">Rear-wheel drive</option>
+                            <option value="0">Choose...</option>
+                            @foreach(var drivetrainType in CarSharingApp.Domain.SmartEnums.Drivetrain.GetPossibleEnumerations())
+                            {
+                                <option value="@CarSharingApp.Domain.SmartEnums.Drivetrain.FromName(drivetrainType)">@drivetrainType</option>
+                            }
                         </select>
                     </div>
                 </div>
@@ -76,12 +75,11 @@
                     <div class="d-flex flex-row">
                         <label class="mt-2 mr-2" style="white-space: nowrap;">Fuel Type: </label>
                         <select asp-for="FuelType" class="custom-select d-block" onfocus="HideErrorSpan('FuelTypeError')">
-                            <option value="0">-</option>
-                            <option value="1">Electric</option>
-                            <option value="2">Gasoline</option>
-                            <option value="3">Diesel Fuel</option>
-                            <option value="4">Bio-diesel</option>
-                            <option value="5">Ethanol</option>
+                            <option value="0">Choose...</option>
+                            @foreach (var fuelType in CarSharingApp.Domain.SmartEnums.FuelType.GetPossibleEnumerations())
+                            {
+                                <option value="@CarSharingApp.Domain.SmartEnums.FuelType.FromName(fuelType)">@fuelType</option>
+                            }
                         </select>
                     </div>
                 </div>
@@ -90,11 +88,11 @@
                     <div class="d-flex flex-row">
                         <label class="mt-2 mr-2">Transmission: </label>
                         <select asp-for="Transmission" class="custom-select d-block" onfocus="HideErrorSpan('TransmissionError')">
-                            <option value="0">-</option>
-                            <option value="1">Automatic Transmission (AT)</option>
-                            <option value="2">Manual Transmission (MT)</option>
-                            <option value="3">Automated Manual Transmission (AM)</option>
-                            <option value="4">Continuously Variable Transmission (CVT)</option>
+                            <option value="0">Choose...</option>
+                            @foreach (var transmissionType in CarSharingApp.Domain.SmartEnums.Transmission.GetPossibleEnumerations())
+                            {
+                                <option value="@CarSharingApp.Domain.SmartEnums.Transmission.FromName(transmissionType)">@transmissionType</option>
+                            }
                         </select>
                     </div>
                 </div>
@@ -103,10 +101,11 @@
                     <div class="d-flex flex-row">
                         <label class="mt-2 mr-2">Engine: </label>
                         <select asp-for="Engine" class="custom-select d-block" onfocus="HideErrorSpan('EngineError')">
-                            <option value="0">-</option>
-                            <option value="1">Thermal</option>
-                            <option value="2">Electrical</option>
-                            <option value="3">Physical</option>
+                            <option value="0">Choose...</option>
+                            @foreach (var engineType in CarSharingApp.Domain.SmartEnums.Engine.GetPossibleEnumerations())
+                            {
+                                <option value="@CarSharingApp.Domain.SmartEnums.Engine.FromName(engineType)">@engineType</option>
+                            }
                         </select>
                     </div>
                 </div>
@@ -118,22 +117,61 @@
                         <input asp-for="VIN" type="text" class="form-control" placeholder="" onfocus="HideErrorSpan('VINError')">
                     </div>
                 </div>
+                
+                <hr class="featurette-divider">
 
+                <h2 class="mt-3">Categories</h2>
+
+                <label class="mt-2 mr-2">Note: Here you can select any keywords that may be associated with your vehicle. If you can't add any of them, please, skip this section and move to the next one.</label>
+
+                <div class="mt-2 text-center">
+                    @foreach (var category in CarSharingApp.Domain.Enums.FlagEnums.GetPossibleValues<CarSharingApp.Domain.Enums.FlagEnums.Categories>())
+                    {
+                        if (category.Equals("None"))
+                            continue;
+
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" class="btn-check" id="btn-check-outlined-@category" autocomplete="off" value="@category" onchange="FilterCategories(this,'@category')">
+                            <label class="btn btn-outline-info" for="btn-check-outlined-@category">@category</label><br>
+                        </div>
+                    }
+                    <div class="d-flex flex-row visually-hidden">
+                        <input asp-for="Categories" type="text" class="form-control text-center" style="width: 15%" id="categoriesInput" readonly>
+                    </div>
+                </div>
 
                 <hr class="featurette-divider">
 
-                <h2 class="mt-3">Location Info</h2>
+                <h2 class="mt-3">Address Info</h2>
+
+                <label class="mt-2 mr-2">Note: Please fill all the current location fields of the vehicle down below, then click the «Search» button. If the address was found, a marker will appear on the map. If error occured, you will see error message and marker will not be set. If so, please try again.</label>
 
                 <div>
-                    <span asp-validation-for="Location.Address" id="LocationAddressError" class="text-danger text-center" style="margin-left: 175px;"></span>
+                    <span asp-validation-for="StreetAddress" id="LocationAddressError" class="text-danger text-center" style="margin-left: 175px;"></span>
                     <div class="d-flex flex-row">
-                        <label class="mt-2 mr-2" style="white-space: nowrap;">Location (Address): </label>
-                        <input asp-for="Location.Address" type="text" id="carAddress" class="form-control mr-2" placeholder="" onfocus="HideErrorSpan('LocationAddressError'); HideErrorSpan('LocationLatitideError')">
-                        <label class="btn btn-primary" onclick="setUpTheMarker()">Search</label>
+                        <input asp-for="StreetAddress" type="text" id="vehicleStreetAddress" class="form-control mr-2" placeholder="Street address" onfocus="HideErrorSpan('LocationAddressError'); HideErrorSpan('LocationLatitideError')">
                     </div>
-                    <label class="mt-2 mr-2">Note: Enter the current location of the vehicle in the «Location» field, then click the «Search» button. If the address was found, a marker will appear on the map. If error occured, you will see error message and marker will not be set. If so, please try again.</label>
+                </div>
+                <div>
+                    <span asp-validation-for="AptSuiteEtc" id="LocationAddressError" class="text-danger text-center" style="margin-left: 175px;"></span>
+                    <div class="d-flex flex-row">
+                        <input asp-for="AptSuiteEtc" type="text" id="vehicleAptSuiteEtc" class="form-control mr-2" placeholder="Apartment, suite, etc" onfocus="HideErrorSpan('LocationAddressError'); HideErrorSpan('LocationLatitideError')">
+                    </div>
+                </div>
+                <div>
+                    <span asp-validation-for="Country" id="LocationAddressError" class="text-danger text-center" style="margin-left: 175px;"></span>
+                    <div class="d-flex flex-row">
+                        <input asp-for="Country" type="text" id="vehicleAddress" class="form-control mr-2" placeholder="Country" onfocus="HideErrorSpan('LocationAddressError'); HideErrorSpan('LocationLatitideError')">
+                    </div>
+                </div>
+                <div>
+                    <span asp-validation-for="City" id="LocationAddressError" class="text-danger text-center" style="margin-left: 175px;"></span>
+                    <div class="d-flex flex-row">
+                        <input asp-for="City" type="text" id="vehicleAddress" class="form-control mr-2" placeholder="City" onfocus="HideErrorSpan('LocationAddressError'); HideErrorSpan('LocationLatitideError')">
+                    </div>
                 </div>
 
+                <span id="AddressLatitideLongitudeError" class="d-flex justify-content-center text-danger text-center mt-2 mb-2"></span>
 
                 <div class="mt-4">
                     <div class="container-fluid">
@@ -142,9 +180,9 @@
                             var map;
                             function initMap() {
 
-                                if ("@Model.Location.Longitude" != "" && "@Model.Location.Latitude" != "") {
-                                    localStorage.setItem("marker-lat", @Model.Location.Latitude);
-                                    localStorage.setItem("marker-long", @Model.Location.Longitude);
+                                if ("@Model.Longitude" != "" && "@Model.Latitude" != "") {
+                                    localStorage.setItem("marker-lat", @Model.Latitude);
+                                    localStorage.setItem("marker-long", @Model.Longitude);
                                 }
 
                                 if (localStorage.hasOwnProperty("marker-lat") && localStorage.hasOwnProperty("marker-long")) {
@@ -168,22 +206,17 @@
 
                     </div>
                 </div>
-                <span asp-validation-for="Location.Latitude" id="LocationLatitideError" class="d-flex justify-content-center text-danger text-center"></span>
+
+                <label class="btn btn-outline-primary mt-3" onclick="HideErrorSpan('AddressLatitideLongitudeError'); setUpTheMarker()">Search vehicle</label>
 
                 <div class="mt-4">
                     <div class="d-flex flex-row visually-hidden">
                         <span class="text-muted h5 mt-2 mr-2">Latitude: </span>
-                        <input asp-for="Location.Latitude" type="text" class="form-control text-center" style="width: 15%" id="latit" readonly>
+                        <input asp-for="Latitude" type="text" class="form-control text-center" style="width: 15%" id="latit" readonly>
                         <span class="text-muted h5 ml-4 mt-2">Longitude: </span>
-                        <input asp-for="Location.Longitude" type="text" class="form-control text-center ml-2" style="width: 15%" id="longit" readonly>
+                        <input asp-for="Longitude" type="text" class="form-control text-center ml-2" style="width: 15%" id="longit" readonly>
                     </div>
                 </div>
-
-                <hr class="featurette-divider">
-
-                <nav class="blog-pagination mt-4" aria-label="Pagination">
-                    <button type="submit" class="btn btn-outline-primary w-25">Share</button>
-                </nav>
 
             </div>
 
@@ -204,13 +237,13 @@
                     <div class="mt-2">
                         <label for="firstName">Basic Tariff</label>
                         <div class="d-flex flex-row">
-                            <input asp-for="Tariff.TariffPerHour" type="number" class="form-control text-center" style="width: 25%" onfocus="HideErrorSpan('HoursTariffError')">
+                            <input asp-for="HourlyRentalPrice" type="number" class="form-control text-center" style="width: 25%" onfocus="HideErrorSpan('HoursTariffError')">
                             <span class="text-muted h5 ml-1 mt-2">$/hr - </span>
-                            <input asp-for="Tariff.TariffPerDay" type="number" class="form-control text-center ml-2" style="width: 25%" onfocus="HideErrorSpan('DailyTariffError')">
+                            <input asp-for="DailyRentalPrice" type="number" class="form-control text-center ml-2" style="width: 25%" onfocus="HideErrorSpan('DailyTariffError')">
                             <span class="text-muted h5 ml-1 mt-2">$/day</span>
                         </div>
-                        <span asp-validation-for="Tariff.TariffPerHour" id="HoursTariffError" class="text-danger"></span>
-                        <span asp-validation-for="Tariff.TariffPerDay" id="DailyTariffError" class="text-danger"></span>
+                        <span asp-validation-for="HourlyRentalPrice" id="HoursTariffError" class="text-danger"></span>
+                        <span asp-validation-for="DailyRentalPrice" id="DailyTariffError" class="text-danger"></span>
                     </div>
 
                     <div class="mt-2">
@@ -218,11 +251,51 @@
                         <textarea asp-for="Description" class="form-control" id="exampleFormControlTextarea1" rows="9" style="resize: none" onfocus="HideErrorSpan('DescriptionError')" onkeydown="CheckTextAreaInput(event)"></textarea>
                         <span asp-validation-for="Description" id="DescriptionError" class="text-danger"></span>
                     </div>
+
+                    <nav class="blog-pagination mt-4" aria-label="Pagination">
+                        <button type="submit" class="btn btn-outline-primary w-25">Share</button>
+                    </nav>
                 </div>
+
             </div>
         </form>
+
+        <script>
+            $('#createNewVehicleForm').submit(function () {
+                let sending = true;
+
+                document.getElementById("categoriesInput").value = vehicleCategories.toString();
+
+                if (document.getElementById('imageInput').value === "") {
+                    document.getElementById('ImageError').textContent = "Vehicle Image is required. Use button below to browse.";
+                    sending = false;
+                }
+                if (document.getElementById('latit').value === "" || document.getElementById('longit').value === "") {
+                    document.getElementById('AddressLatitideLongitudeError').textContent = "Vehicle address must be determined on the map based on the data you've entered. Fill in all the fields, click «Search vehicle» button and then try again.";
+                    sending = false;
+                }
+
+                return sending;
+            });
+        </script>
+
     </div>
 
 </main>
 
 <script src="~/js/addVehiclePage.js" asp-append-version="true"></script>
+
+<script>
+    const vehicleCategories = [];
+
+    function FilterCategories(checkboxElement, category){
+        if (checkboxElement.checked) {
+            vehicleCategories.push(category);
+        } else {
+            var index = vehicleCategories.indexOf(category);
+            vehicleCategories.splice(index, 1);
+        }
+        alert(vehicleCategories);
+    }
+</script>
+

@@ -22,7 +22,7 @@
         string Transmission,
         string Engine,
         string VIN,
-        List<string> Categories
+        string Categories
     );
         
 }

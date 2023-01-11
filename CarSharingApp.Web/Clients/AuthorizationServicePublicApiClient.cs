@@ -8,28 +8,18 @@ namespace CarSharingApp.Web.Clients
     {
         private const string clientIdentifier = "AuthorizationAPI";
 
-        private readonly IHttpClientFactory _httpClientFactory;
-        private readonly IConfiguration _configuration;
-
-        public AuthorizationServicePublicApiClient(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        public AuthorizationServicePublicApiClient(IHttpClientFactory httpClientFactory, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+            : base(httpClientFactory, configuration, httpContextAccessor)
         {
-            _httpClientFactory = httpClientFactory;
-            _configuration = configuration;
         }
 
         public async Task<HttpResponseMessage> TryAuthorize(AuthorizationRequest request)
         {
-            var client = CreateNewClientInstance();
+            var client = CreateNewClientInstance(clientIdentifier);
 
             JsonContent content = JsonContent.Create(request);
 
             return await client.PostAsync(client.BaseAddress, content);
-        }
-
-        protected override HttpClient CreateNewClientInstance()
-        {
-            return _httpClientFactory.CreateClient(_configuration[$"Clients:{clientIdentifier}:Name"]
-                ?? throw new ArgumentNullException(clientIdentifier));
         }
     }
 }

@@ -68,7 +68,7 @@ namespace CarSharingApp.Domain.Enums
             return (T)Enum.Parse(typeof(T), value, true);
         }
 
-        private static List<string> GetPossibleValues<TEnum>()
+        public static List<string> GetPossibleValues<TEnum>()
             where TEnum : struct
         {
             Type type = typeof(TEnum);

@@ -7,16 +7,19 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - CarSharingApp</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.css">
+    <script src="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.js"></script>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/CarSharingApp.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/CarSharingApp.Web.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
-
 </head>
 
 <body style="background-color: rgb(246, 246, 246)">
@@ -38,7 +41,7 @@
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="Catalog" asp-action="Index">Catalog and Pricing</a>
                     </li>
-                    @if (Accessor.HttpContext?.Session.GetString("JWToken") != null)
+                    @if (Accessor.HttpContext?.Session.GetString("JWToken") is not null)
                     {
                         <li class="nav-item">
                             <a id="ShareYourCarBtn" class="nav-link" asp-controller="AddVehicle" asp-action="Index">Share your vehicle</a>
@@ -46,7 +49,7 @@
                     }
                 </ul>
 
-                @if (Accessor.HttpContext?.Session.GetString("JWToken") != null)
+                @if (Accessor.HttpContext?.Session.GetString("JWToken") is not null)
                 {
                     <ul class="navbar-nav d-flex flex-row ms-auto me-3">
                         <li class="nav-item me-3 me-lg-0 dropdown">
@@ -176,9 +179,10 @@
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://kit.fontawesome.com/81f3a44f30.js" crossorigin="anonymous"></script>
 
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 
