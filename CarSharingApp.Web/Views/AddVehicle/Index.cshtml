@@ -14,7 +14,6 @@
                     Select Vehicle Image
                 </div>
 
-
                 <img class="img-fluid mt-3 mx-auto d-block rounded" id="carImage" style="height: auto" src="">
 
                 <label class="btn btn-primary mt-2 float-right">
@@ -47,14 +46,26 @@
                     <span asp-validation-for="ExteriorColor" id="ExteriorColorError" class="text-danger text-center" style="margin-left: 115px;"></span>
                     <div class="d-flex flex-row">
                         <label class="mt-2 mr-2" style="white-space: nowrap;">Exterior Color: </label>
-                        <input asp-for="ExteriorColor" type="text" class="form-control" placeholder="" onfocus="HideErrorSpan('ExteriorColorError')">
+                        <select asp-for="ExteriorColor" class="custom-select d-block" onfocus="HideErrorSpan('ExteriorColorError')">
+                            <option value="0">Choose...</option>
+                            @foreach (var color in CarSharingApp.Domain.SmartEnums.Colour.GetPossibleEnumerations())
+                            {
+                                <option value="@CarSharingApp.Domain.SmartEnums.Drivetrain.FromName(color)">@color</option>
+                            }
+                        </select>
                     </div>
                 </div>
                 <div>
                     <span asp-validation-for="InteriorColor" id="InteriorColorError" class="text-danger text-center" style="margin-left: 115px;"></span>
                     <div class="d-flex flex-row">
                         <label class="mt-2 mr-2" style="white-space: nowrap;">Interior Color: </label>
-                        <input asp-for="InteriorColor" type="text" class="form-control" placeholder="" onfocus="HideErrorSpan('InteriorColorError')">
+                        <select asp-for="InteriorColor" class="custom-select d-block" onfocus="HideErrorSpan('InteriorColorError')">
+                            <option value="0">Choose...</option>
+                            @foreach (var color in CarSharingApp.Domain.SmartEnums.Colour.GetPossibleEnumerations())
+                            {
+                                <option value="@CarSharingApp.Domain.SmartEnums.Drivetrain.FromName(color)">@color</option>
+                            }
+                        </select>
                     </div>
                 </div>
                 <div>
@@ -114,7 +125,7 @@
                     <span asp-validation-for="VIN" id="VINError" class="text-danger text-center" style="margin-left:45px;"></span>
                     <div class="d-flex flex-row">
                         <label class="mt-2 mr-2">VIN: </label> 
-                        <input asp-for="VIN" type="text" class="form-control" placeholder="" onfocus="HideErrorSpan('VINError')">
+                        <input asp-for="VIN" type="text" class="form-control" placeholder="4Y1SL65848Z411439" onfocus="HideErrorSpan('VINError')">
                     </div>
                 </div>
                 
@@ -147,31 +158,31 @@
                 <label class="mt-2 mr-2">Note: Please fill all the current location fields of the vehicle down below, then click the «Search» button. If the address was found, a marker will appear on the map. If error occured, you will see error message and marker will not be set. If so, please try again.</label>
 
                 <div>
-                    <span asp-validation-for="StreetAddress" id="LocationAddressError" class="text-danger text-center" style="margin-left: 175px;"></span>
+                    <span asp-validation-for="StreetAddress" id="StreetAddressError" class="text-danger text-center" style="margin-left: 175px;"></span>
                     <div class="d-flex flex-row">
-                        <input asp-for="StreetAddress" type="text" id="vehicleStreetAddress" class="form-control mr-2" placeholder="Street address" onfocus="HideErrorSpan('LocationAddressError'); HideErrorSpan('LocationLatitideError')">
+                        <input asp-for="StreetAddress" type="text" id="vehicleStreetAddress" class="form-control mr-2" placeholder="Street address" onfocus="HideErrorSpan('StreetAddressError')">
                     </div>
                 </div>
                 <div>
-                    <span asp-validation-for="AptSuiteEtc" id="LocationAddressError" class="text-danger text-center" style="margin-left: 175px;"></span>
+                    <span asp-validation-for="AptSuiteEtc" id="AptSuiteEtcError" class="text-danger text-center" style="margin-left: 175px;"></span>
                     <div class="d-flex flex-row">
-                        <input asp-for="AptSuiteEtc" type="text" id="vehicleAptSuiteEtc" class="form-control mr-2" placeholder="Apartment, suite, etc" onfocus="HideErrorSpan('LocationAddressError'); HideErrorSpan('LocationLatitideError')">
+                        <input asp-for="AptSuiteEtc" type="text" id="vehicleAptSuiteEtc" class="form-control mr-2" placeholder="Apartment, suite, etc" onfocus="HideErrorSpan('AptSuiteEtcError')">
                     </div>
                 </div>
                 <div>
-                    <span asp-validation-for="Country" id="LocationAddressError" class="text-danger text-center" style="margin-left: 175px;"></span>
+                    <span asp-validation-for="Country" id="CountryError" class="text-danger text-center" style="margin-left: 175px;"></span>
                     <div class="d-flex flex-row">
-                        <input asp-for="Country" type="text" id="vehicleAddress" class="form-control mr-2" placeholder="Country" onfocus="HideErrorSpan('LocationAddressError'); HideErrorSpan('LocationLatitideError')">
+                        <input asp-for="Country" type="text" id="vehicleCountry" class="form-control mr-2" placeholder="Country" onfocus="HideErrorSpan('CountryError')">
                     </div>
                 </div>
                 <div>
-                    <span asp-validation-for="City" id="LocationAddressError" class="text-danger text-center" style="margin-left: 175px;"></span>
+                    <span asp-validation-for="City" id="CityError" class="text-danger text-center" style="margin-left: 175px;"></span>
                     <div class="d-flex flex-row">
-                        <input asp-for="City" type="text" id="vehicleAddress" class="form-control mr-2" placeholder="City" onfocus="HideErrorSpan('LocationAddressError'); HideErrorSpan('LocationLatitideError')">
+                        <input asp-for="City" type="text" id="vehicleCity" class="form-control mr-2" placeholder="City" onfocus="HideErrorSpan('CityError')">
                     </div>
                 </div>
 
-                <span id="AddressLatitideLongitudeError" class="d-flex justify-content-center text-danger text-center mt-2 mb-2"></span>
+                <span asp-validation-for=Latitude id="AddressLatitideLongitudeError" class="d-flex justify-content-center text-danger text-center mt-2 mb-2"></span>
 
                 <div class="mt-4">
                     <div class="container-fluid">

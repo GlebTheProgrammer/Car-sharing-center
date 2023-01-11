@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using CarSharingApp.Web.Clients.Interfaces;
 using CarSharingApp.Application.Contracts.Vehicle;
 using System.Net;
+using CarSharingApp.Application.Contracts.ErrorType;
+using System.Text.Json;
 
 namespace CarSharingApp.Controllers
 {
@@ -25,7 +27,7 @@ namespace CarSharingApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddVehicle(CreateVehicleRequest requestFromView, IFormFile file)
+        public async Task<IActionResult> AddVehicle(CreateVehicleRequest createVehicleRequest, IFormFile file)
         {
             string vehicleGeneratedImageName = string.Empty;
             if (file is not null)
@@ -33,7 +35,7 @@ namespace CarSharingApp.Controllers
             else
                 throw new Exception("Image can't be null");
 
-            var response = await _vehicleServiceClient.CreateNewVehicle(ConfigureNewCreateVehicleRequest(requestFromView, vehicleGeneratedImageName));
+            var response = await _vehicleServiceClient.CreateNewVehicle(ConfigureNewCreateVehicleRequest(createVehicleRequest, vehicleGeneratedImageName));
 
             string responseContent = await response.Content.ReadAsStringAsync();
 
@@ -41,6 +43,19 @@ namespace CarSharingApp.Controllers
             {
                 case HttpStatusCode.Unauthorized:
                     return RedirectToAction("Unauthorized401Error", "CustomExceptionHandle");
+
+                case HttpStatusCode.BadRequest:
+                    {
+                        ValidationError validationError = JsonSerializer.Deserialize<ValidationError>(responseContent) ?? new ValidationError();
+
+                        foreach (var error in validationError.Errors)
+                        {
+                            ModelState.AddModelError(error.Key.Contains('.') ? error.Key.Substring(error.Key.LastIndexOf('.')) : error.Key,
+                                error.Value.FirstOrDefault() ?? string.Empty);
+                        }
+
+                        return View("Index", createVehicleRequest);
+                    }
 
                 default:
                     break;

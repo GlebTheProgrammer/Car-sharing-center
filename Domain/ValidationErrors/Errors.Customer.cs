@@ -40,7 +40,7 @@ namespace CarSharingApp.Domain.ValidationErrors
             description: $"Customer street address must be at least {ValueObjects.Address.MinStreetAddressLength} characters long and at most {ValueObjects.Address.MaxStreetAddressLength} characters long.");
 
             public static Error InvalidAptSuitEtc => Error.Validation(
-            code: "Customer.InvalidAptSuitEtc.AptSuitEtc",
+            code: "Customer.InvalidAptSuiteEtc.AptSuitEtc",
             description: $"Customer apartment / suite number must be at least {ValueObjects.Address.MinAptSuitEtcLength} characters long and at most {ValueObjects.Address.MaxAptSuitEtcLength} characters long.");
 
             public static Error InvalidPhoneNumber => Error.Validation(
