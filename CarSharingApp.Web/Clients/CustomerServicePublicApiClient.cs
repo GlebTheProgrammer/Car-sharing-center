@@ -22,5 +22,12 @@ namespace CarSharingApp.Web.Clients
             return await client.PostAsync(client.BaseAddress, content);
 
         }
+
+        public async Task<HttpResponseMessage> GetCreateNewCustomerRequestTemplate()
+        {
+            var client = CreateNewClientInstance(clientIdentifier);
+
+            return await client.GetAsync("NewCustomerRequestTemplate");
+        }
     }
 }

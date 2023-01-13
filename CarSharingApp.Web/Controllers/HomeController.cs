@@ -3,6 +3,7 @@ using CarSharingApp.Models;
 using CarSharingApp.Web.Clients.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Net;
 
 namespace CarSharingApp.Controllers
 {
@@ -19,6 +20,15 @@ namespace CarSharingApp.Controllers
         {
 
             var response = await _vehicleServiceClient.GetAllApprovedAndPublishedVehiclesMapRepresentation();
+
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.Unauthorized:
+                    return RedirectToAction("Unauthorized401Error", "CustomExceptionHandle");
+
+                default:
+                    break;
+            }
 
             response.EnsureSuccessStatusCode();
 

@@ -16,24 +16,25 @@ namespace CarSharingApp.Controllers
             _customerServiceClient = customerServiceClient;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var createCustomerRequest = new CreateCustomerRequest(
-                FirstName: string.Empty,
-                LastName: string.Empty,
-                StreetAddress: string.Empty,
-                AptSuiteEtc: string.Empty,
-                City: string.Empty,
-                Country: string.Empty,
-                ZipPostCode: string.Empty,
-                PhoneNumber: string.Empty,
-                DriverLicenseIdentifier: string.Empty,
-                HasAcceptedNewsSharing: false,
-                Login: string.Empty,
-                Email: string.Empty,
-                Password: string.Empty);
+            var response = await _customerServiceClient.GetCreateNewCustomerRequestTemplate();
 
-            return View(createCustomerRequest);
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.Unauthorized:
+                    return RedirectToAction("Unauthorized401Error", "CustomExceptionHandle");
+
+                default:
+                    break;
+            }
+
+            response.EnsureSuccessStatusCode();
+
+            CreateCustomerRequest request = await response.Content.ReadFromJsonAsync<CreateCustomerRequest>()
+                ?? throw new NullReferenceException(nameof(request));
+
+            return View(request);
         }
 
         public async Task<IActionResult> Register(CreateCustomerRequest createCustomerRequest)
