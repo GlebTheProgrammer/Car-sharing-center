@@ -16,134 +16,208 @@
 
     <div class="row">
         <div class="d-flex justify-content-center align-content-center">
-            <form id="registrationForm" asp-controller="Registration" asp-action="Register" method="post" style="width: 600px;">
 
-                <div class="row">
-                    <div class="col-md-6">
-                        <label>First name</label>
-                        <input asp-for="FirstName" type="text" class="form-control" placeholder="Rayan" onfocus="HideErrorSpan('FirstNameError')" required>
-                        <span asp-validation-for="FirstName" id="FirstNameError" class="text-danger text-center mt-2 mb-2" style="display: block;"></span>
+            <form id="submitForm" asp-controller="Registration" asp-action="Register" method="post" class="row g-3 needs-validation" style="width: 600px;" novalidate onsubmit="CheckFormForInvalidFields();">
+
+                <div class="col-6">
+                    <label for="firstNameErrorValidationCustom" class="form-label">First name</label>
+                    <input asp-for="FirstName" type="text" class="form-control" id="firstNameErrorValidationCustom" required onclick="SetInputAsRequireValidation(this)">
+                    <div class="valid-feedback">
+                        Looks good!
                     </div>
-                    <div class="col-md-6">
-                        <label>Last name</label>
-                        <input asp-for="LastName" type="text" class="form-control" placeholder="Amari" onfocus="HideErrorSpan('LastNameError')" required>
-                        <span asp-validation-for="LastName" id="LastNameError" class="text-danger text-center mt-2 mb-2" style="display: block;"></span>
+                    <div id="firstNameErrorValidation" class="invalid-feedback">
+                        Please provide your First name.
+                    </div>
+                </div>
+                <div class="col-6">
+                    <label for="lastNameErrorValidationCustom" class="form-label">Last name</label>
+                    <input asp-for="LastName" type="text" class="form-control" id="lastNameErrorValidationCustom" required onclick="SetInputAsRequireValidation(this)">
+                    <div class="valid-feedback">
+                        <span>Looks good!</span>
+                    </div>
+                    <div id="lastNameErrorValidation" class="invalid-feedback">
+                        Please provide your Last name.
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-4">
-                        <label>Country</label>
-                        <select asp-for="Country" class="custom-select d-block w-100" onfocus="HideErrorSpan('CountryError')">
-                            <option value="0">Choose...</option>
-                            @foreach(var country in CarSharingApp.Domain.SmartEnums.Country.GetPossibleEnumerations())
-                            {
-                                <option value="@CarSharingApp.Domain.SmartEnums.Country.FromName(country)">@country</option>
-                            }
-                        </select>
-                        <span asp-validation-for="Country" id="CountryError" class="text-danger text-center mt-2 mb-2" style="display: block;"></span>
+                <div class="col-4">
+
+                    <label for="countryErrorValidationCustom" class="form-label">Country</label>
+                    <select asp-for="Country" class="form-select" id="countryErrorValidationCustom" required onclick="SetInputAsRequireValidation(this)">
+                        <option selected disabled value="">Choose...</option>
+                        @foreach (var country in CarSharingApp.Domain.SmartEnums.Country.GetPossibleEnumerations())
+                        {
+                            <option value="@CarSharingApp.Domain.SmartEnums.Country.FromName(country)">@country</option>
+                        }
+                    </select>
+                    <div class="valid-feedback">
+                        Looks good!
                     </div>
-                    <div class="col-md-4">
-                        <label>City</label>
-                        <input asp-for="City" type="text" class="form-control" placeholder="City" onfocus="HideErrorSpan('CityError')" required>
-                        <span asp-validation-for="City" id="CityError" class="text-danger text-center mt-2 mb-2" style="display: block;"></span>
+                    <div id="countryErrorValidation" class="invalid-feedback">
+                        Please select your Country.
                     </div>
-                    <div class="col-md-4">
-                        <label>ZIP/postcode</label>
-                        <input asp-for="ZipPostCode" type="text" class="form-control" placeholder="90210" onfocus="HideErrorSpan('ZipPostCodeError')" required>
-                        <span asp-validation-for="ZipPostCode" id="ZipPostCodeError" class="text-danger text-center mt-2 mb-2" style="display: block;"></span>
+                </div>
+                <div class="col-4">
+                    <label for="cityErrorValidationCustom" class="form-label">City</label>
+                    <input asp-for="City" type="text" class="form-control" id="cityErrorValidationCustom" required onclick="SetInputAsRequireValidation(this)">
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div id="cityErrorValidation" class="invalid-feedback">
+                        Please provide your City.
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label for="zipPostCodeErrorValidationCustom" class="form-label">ZIP/postcode</label>
+                    <input asp-for="ZipPostCode" type="text" class="form-control" id="zipPostCodeErrorValidationCustom" required onclick="SetInputAsRequireValidation(this)">
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div id="zipPostCodeErrorValidation" class="invalid-feedback">
+                        Please provide your Zip or postcode.
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-6">
-                        <label>Street address</label>
-                        <input asp-for="StreetAddress" type="text" class="form-control" placeholder="L.Bedy Str." onfocus="HideErrorSpan('StreetAddressError')" required>
-                        <span asp-validation-for="StreetAddress" id="StreetAddressError" class="text-danger text-center mt-2 mb-2" style="display: block;"></span>
+                <div class="col-6">
+                    <label for="streetAddressErrorValidationCustom" class="form-label">Street address</label>
+                    <input asp-for="StreetAddress" type="text" class="form-control" id="streetAddressErrorValidationCustom" required onclick="SetInputAsRequireValidation(this)">
+                    <div class="valid-feedback">
+                        Looks good!
                     </div>
-                    <div class="col-md-6">
-                        <label>Apt, suite, etc.</label>
-                        <input asp-for="AptSuiteEtc" type="text" class="form-control" placeholder="29-97" onfocus="HideErrorSpan('AptSuiteEtcError')" required>
-                        <span asp-validation-for="AptSuiteEtc" id="AptSuiteEtcError" class="text-danger text-center mt-2 mb-2" style="display: block;"></span>
+                    <div id="streetAddressErrorValidation" class="invalid-feedback">
+                        Please provide your Street address.
                     </div>
                 </div>
-
-                <div>
-                    <label>Phone number</label>
-                    <input asp-for="PhoneNumber" type="text" class="form-control" placeholder="+375331234567" onfocus="HideErrorSpan('PhoneNumberError')" required>
-                    <span asp-validation-for="PhoneNumber" id="PhoneNumberError" class="text-danger text-center mt-2 mb-2" style="display: block;"></span>
+                <div class="col-6">
+                    <label for="aptSuiteEtcErrorValidationCustom" class="form-label">Apt, suite, etc.</label>
+                    <input asp-for="AptSuiteEtc" type="text" class="form-control" id="aptSuiteEtcErrorValidationCustom" required onclick="SetInputAsRequireValidation(this)">
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div id="aptSuiteEtcErrorValidation" class="invalid-feedback">
+                        Please provide your apt. or suite.
+                    </div>
                 </div>
 
-                <div>
-                    <label>Driver License Identifier</label>
-                    <input asp-for="DriverLicenseIdentifier" type="text" class="form-control" placeholder="5AA000031" onfocus="HideErrorSpan('DriverLicenseIdentifierError')">
-                    <span asp-validation-for="DriverLicenseIdentifier" id="DriverLicenseIdentifierError" class="text-danger text-center mt-2 mb-2" style="display: block;"></span>
+                <div class="col-12">
+                    <label for="phoneNumberErrorValidationCustom" class="form-label">PhoneNumber</label>
+                    <input asp-for="PhoneNumber" type="tel" class="form-control" id="phoneNumberErrorValidationCustom" pattern="^[\\+]?[(]?[0-9]{1,3}[)]?[-\\s\\.]?[0-9]{3}[-\\s\\.]?[0-9]{4,6}$" required onclick="SetInputAsRequireValidation(this)">
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div id="phoneNumberErrorValidation" class="invalid-feedback">
+                        Phone number is not valid.
+                    </div>
                 </div>
 
-                <div>
-                    <label>Login</label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">@@</span>
+                <div class="col-12">
+                    <label for="driverLicenseErrorValidationCustom" class="form-label">Driver License Identifier</label>
+                    <input asp-for="DriverLicenseIdentifier" type="text" class="form-control" id="driverLicenseErrorValidationCustom" required onclick="SetInputAsRequireValidation(this)">
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div id="driverLicenseErrorValidation" class="invalid-feedback">
+                        Please provide your Driver license identifier.
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <label for="loginErrorValidationCustom" class="form-label">Login</label>
+                    <div class="input-group has-validation">
+                        <span class="input-group-text" id="inputGroupPrepend">@@</span>
+                        <input asp-for="Login" type="text" class="form-control" id="loginErrorValidationCustom" aria-describedby="inputGroupPrepend" pattern="[^\s]+" minlength="5" maxlength="15" required onclick="SetInputAsRequireValidation(this)">
+                        <div class="valid-feedback">
+                            Looks good!
                         </div>
-                        <input asp-for="Login" type="text" class="form-control" placeholder="MyUsername" onfocus="HideErrorSpan('LoginError')" required>
+                        <div id="loginErrorValidation" class="invalid-feedback">
+                            Customer login mustn't contain whitespaces and must be at least 5 characters long and at most 15 characters long.
+                            <span asp-validation-for="Login" id="error"></span>
+                        </div>
                     </div>
-                    <span asp-validation-for="Login" id="LoginError" class="text-danger text-center mt-2 mb-2" style="display: block;"></span>
                 </div>
 
-                <div>
-                    <label>Email</label>
-                    <input asp-for="Email" type="email" class="form-control" placeholder="yourEmail@example.com" onfocus="HideErrorSpan('EmailError')" required>
-                    <span asp-validation-for="Email" id="EmailError" class="text-danger text-center mt-2 mb-2" style="display: block;"></span>
+                <div class="col-12">
+                    <label for="emailErrorValidationCustom" class="form-label">Email</label>
+                    <input asp-for="Email" type="email" class="form-control" id="emailErrorValidationCustom" required onclick="SetInputAsRequireValidation(this)">
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div id="emailErrorValidation" class="invalid-feedback">
+                        Please provide your Email.
+                    </div>
                 </div>
 
-                <div>
-                    <label>Password</label>
-                    <input id="Password" asp-for="Password" type="password" value="@Model.Password" class="form-control" onfocus="HideErrorSpan('PasswordError')" required>
-                    <span asp-validation-for="Password" id="PasswordError" class="text-danger text-center mt-2 mb-2" style="display: block;"></span>
+                <div class="col-12">
+                    <label for="passwordErrorValidationCustom" class="form-label">Password</label>
+                    <input asp-for="Password" type="password" value="@Model.Password" class="form-control" id="passwordErrorValidationCustom" pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@@$%^&*-]).{8,}$" required onclick="SetInputAsRequireValidation(this)">
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div id="passwordErrorValidation" class="invalid-feedback">
+                        Password must have: Minimum 8 characters, at least one uppercase and lowercase English letter, at least one digit and special character.
+                    </div>
                 </div>
-
-                <div>
-                    <label>Confirm password</label>
-                    <input id="ConfirmPassword" type="password" value="@Model.Password" class="form-control" onfocus="HideErrorSpan('ConfirmPasswordError')" required>
-                    <span id="ConfirmPasswordError" class="text-danger text-center mt-2 mb-2" style="display: block;"></span>
+                <div class="col-12">
+                    <label for="confirmPasswordErrorValidationCustom" class="form-label">Confirm password</label>
+                    <input asp-for="ConfirmPassword" type="password" value="@Model.ConfirmPassword" class="form-control" id="confirmPasswordErrorValidationCustom" required onclick="SetInputAsRequireValidation(this)">
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div id="passwordErrorValidation" class="invalid-feedback">
+                        Password does not match the above one.
+                    </div>
                 </div>
 
                 <hr class="mb-4">
 
-                <div class="custom-control custom-checkbox">
-                    @if (Model.FirstName != string.Empty)
-                    {
-                        <input type="checkbox" class="custom-control-input" id="TermsAndConditionsAgreementCheckBox" onfocus="HideErrorSpan('TermsAndConditionsAgreementError')" checked>
-                    }
-                    else
-                    {
-                        <input type="checkbox" class="custom-control-input" id="TermsAndConditionsAgreementCheckBox" onfocus="HideErrorSpan('TermsAndConditionsAgreementError')">
-                    }
-                    <label class="custom-control-label" for="TermsAndConditionsAgreementCheckBox">I am 18+ years old and I agree to the Terms of Service.</label>
-                    <span id="TermsAndConditionsAgreementError" class="text-danger text-center mt-2 mb-2" style="display: block;"></span>
-                </div>
-                <div class="custom-control custom-checkbox">
-                    <input asp-for="HasAcceptedNewsSharing" type="checkbox" class="custom-control-input" id="IsAcceptedNewsSharingCheckBox" onfocus="HideErrorSpan('NewsSharingError')">
-                    <label class="custom-control-label" for="IsAcceptedNewsSharingCheckBox">Send me Sam Car Sharing news.</label>
-                    <span asp-validation-for="HasAcceptedNewsSharing" id="NewsSharingError" class="text-danger text-center mt-2 mb-2" style="display: block;"></span>
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="HasAcceptedTermsAndConditions" class="form-check-input" type="checkbox" id="termsAndConditionsCheck" required>
+                        <label class="form-check-label" for="termsAndConditionsCheck">
+                            I agree to all terms and conditions
+                        </label>
+                        <div class="invalid-feedback">
+                            You must agree before submitting.
+                        </div>
+                    </div>
                 </div>
 
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="HasAcceptedNewsSharing" class="form-check-input" type="checkbox" id="newsCheck">
+                        <label class="form-check-label" for="newsCheck">
+                            Send me Sam Car Sharing news
+                        </label>
+                    </div>
+                </div>
 
-                <hr class="mb-4">
-                <button class="btn btn-primary btn-lg btn-block" type="submit">Create new account</button>
+                <div class="col-12">
+                    <button class="btn btn-primary" type="submit">Submit form</button>
+                </div>
+
+                <div id="serverErrors" class="visually-hidden">
+                    <span id="firstNameError" asp-validation-for="FirstName"></span>
+                    <span id="lastNameError" asp-validation-for="LastName"></span>
+                    <span id="countryError" asp-validation-for="Country"></span>
+                    <span id="cityError" asp-validation-for="City"></span>
+                    <span id="zipPostCodeError" asp-validation-for="ZipPostCode"></span>
+                    <span id="streetAddressError" asp-validation-for="StreetAddress"></span>
+                    <span id="aptSuiteEtcError" asp-validation-for="AptSuiteEtc"></span>
+                    <span id="phoneNumberError" asp-validation-for="PhoneNumber"></span>
+                    <span id="driverLicenseError" asp-validation-for="DriverLicenseIdentifier"></span>
+                    <span id="loginError" asp-validation-for="Login"></span>
+                    <span id="emailError" asp-validation-for="Email"></span>
+                    <span id="passwordError" asp-validation-for="Password"></span>
+                </div>
+
             </form>
 
             <script>
                 $('#registrationForm').submit(function() {
                     let flag = true;
 
-                    if (document.getElementById('Password').value !== document.getElementById('ConfirmPassword').value){
-                        document.getElementById('ConfirmPasswordError').textContent = "Password doesn't match. Please check and try again.";
-                        flag = false;
-                    }
-                    if (document.getElementById('TermsAndConditionsAgreementCheckBox').checked !== true) {
-                        document.getElementById('TermsAndConditionsAgreementError').textContent = "You must confirm that you are 18+ years old and agree to the Terms of Service.";
+                    if (document.getElementById('passwordErrorValidationCustom').value !== document.getElementById('confirmPasswordErrorValidationCustom').value) {
+                        document.getElementById('confirmPasswordErrorValidationCustom').setAttribute("class", "form-control is-invalid");
                         flag = false;
                     }
 
@@ -157,3 +231,52 @@
 </div>
 
 <script src="~/js/registrationPage.js" asp-append-version="true"></script>
+
+<script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (() => {
+        'use strict'
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        const forms = document.querySelectorAll('.needs-validation')
+
+        // Loop over them and prevent submission
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {                
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const serverErrorSpans = document.getElementById('serverErrors').querySelectorAll("span");
+        
+        Array.from(serverErrorSpans).forEach(errorSpan => {
+            if (errorSpan.textContent !== ""){
+                document.getElementById(errorSpan.id + "Validation").textContent = errorSpan.textContent;
+                document.getElementById(errorSpan.id + "ValidationCustom").setAttribute("class", "form-control is-invalid")
+            }
+        });
+    });
+
+    function SetInputAsRequireValidation(inputElement) {
+        inputElement.setAttribute("class", "form-control");
+    }
+
+    function CheckFormForInvalidFields(){
+        const forms = document.getElementById("submitForm").querySelectorAll('input');
+
+        Array.from(forms).forEach(form => {
+            if (form.getAttribute("class").includes("is-invalid")){
+                form.setAttribute("class", "form-control");
+            }
+        });
+    }
+</script>

@@ -57,7 +57,9 @@ namespace CarSharingApp.PublicApi.Controllers
                 HasAcceptedNewsSharing: false,
                 Login: string.Empty,
                 Email: string.Empty,
-                Password: string.Empty);
+                Password: string.Empty,
+                ConfirmPassword: string.Empty,
+                HasAcceptedTermsAndConditions: false);
 
             return Ok(createCustomerRequestTemplate);
         }

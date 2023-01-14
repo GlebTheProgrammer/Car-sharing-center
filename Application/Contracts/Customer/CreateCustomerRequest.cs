@@ -13,6 +13,8 @@
         bool HasAcceptedNewsSharing,
         string Login,
         string Email,
-        string Password
+        string Password,
+        string ConfirmPassword,
+        bool HasAcceptedTermsAndConditions
     );
 }

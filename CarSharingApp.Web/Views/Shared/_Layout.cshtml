@@ -2,7 +2,7 @@
 @inject IHttpContextAccessor Accessor;
 
 <!DOCTYPE html>
-<html lang="en">
+<html id="layout" lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -28,17 +28,17 @@
         <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
             <div class="container-fluid">
                 <a class="navbar-brand" href="@Url.Action("Index", "Home")">
-                    <img src="~/Images/HomePage/samSolutionsLogoGrey.jpg" height="37" />
+                    <img src="~/Images/HomePage/samSolutionsLogo.png" height="37" />
                 </a>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" style="color: #8f9497" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" onmouseover="this.style = 'color: #c5c9cc;'" onmouseout="this.style = 'color: #8f9497'">
-                                <i class="fa-solid fa-sun me-2"></i>Light
+                            <a id="theme" class="nav-link dropdown-toggle d-flex align-items-center" style="color: #8f9497" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" onmouseover="this.style = 'color: #c5c9cc;'" onmouseout="this.style = 'color: #8f9497'">
+                                <i id="themeIcon" class="fa-solid fa-sun me-2 mt-1"></i>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item text-secondary active" href="#"><i class="fa-solid fa-moon me-2"></i>Light</a></li>
-                                <li><a class="dropdown-item text-secondary" href="#"><i class="fa-solid fa-moon me-2"></i>Dark</a></li>
+                                <li><a href="javascript:void(0);" id="setLightTheme" class="dropdown-item text-secondary"><i class="fa-solid fa-sun me-2"></i>Light</a></li>
+                                <li><a href="javascript:void(0);" id="setDarkTheme" class="dropdown-item text-secondary"><i class="fa-solid fa-moon me-2"></i>Dark</a></li>
                             </ul>
                         </li>
                         <li class="nav-item me-1">
@@ -47,7 +47,7 @@
                         <li class="nav-item me-1">
                             <a class="nav-link" asp-controller="Catalog" asp-action="Index">Catalog and Pricing</a>
                         </li>
-                        @if (Accessor.HttpContext?.Session.GetString("JWToken") is not null)
+                        @if (Accessor?.HttpContext?.Session.GetString("JWToken") is not null)
                         {
                             <li class="nav-item">
                                 <a id="ShareYourCarBtn" class="nav-link" asp-controller="AddVehicle" asp-action="Index">Share your vehicle</a>
@@ -56,7 +56,24 @@
 
                     </ul>
 
-                    @if (Accessor.HttpContext?.Session.GetString("JWToken") is not null)
+                    <script>
+                        if (localStorage.getItem("Theme") === "light") {
+                            document.getElementById("layout").setAttribute("data-bs-theme", "light");
+                            document.getElementById("setLightTheme").setAttribute("class", "dropdown-item text-secondary active");
+                            document.getElementById("themeIcon").setAttribute("class", "fa-solid fa-sun me-2 mt-1");
+
+                        } else if (localStorage.getItem("Theme") === "dark") {
+                            document.getElementById("layout").setAttribute("data-bs-theme", "dark");
+                            document.getElementById("setDarkTheme").setAttribute("class", "dropdown-item text-secondary active");
+                            document.getElementById("themeIcon").setAttribute("class", "fa-solid fa-moon me-2 mt-1");
+                        } else {
+                            document.getElementById("layout").setAttribute("data-bs-theme", "light");
+                            document.getElementById("setLightTheme").setAttribute("class", "dropdown-item text-secondary active");
+                            document.getElementById("themeIcon").setAttribute("class", "fa-solid fa-sun me-2 mt-1");
+                        }
+                    </script>
+
+                    @if (Accessor?.HttpContext?.Session.GetString("JWToken") is not null)
                     {
                         <ul class="navbar-nav d-flex flex-row ms-auto me-3">
                             <li class="nav-item me-3 me-lg-0 dropdown">
@@ -91,67 +108,145 @@
 
     </header>
     <div class="container">
-        <main role="main" class="pb-5 pt-5">
+        <main role="main" class="pt-5">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="text-center text-white" style="background-color: #f1f1f1;">
+    <!-- Remove the container if you want to extend the Footer to full width. -->
+    <div class="container my-2">
+        <!-- Footer -->
+        <footer>
+            <!-- Grid container -->
+            <div>
+                <!-- Section: Links -->
+                <section class="">
+                    <!--Grid row-->
+                    <div class="row">
+                        <!-- Grid column -->
+                        <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
+                            <h6 class="text-uppercase mb-4 font-weight-bold">
+                                Sam solutions
+                            </h6>
+                            <p>
+                                SaM Solutions is an international IT-services and software solutions provider with 
+                                over 29 years of experience. We focus on IT consulting and custom software engineering services 
+                                for both European and the U.S. markets, leveraging global resources.
+                            </p>
+                        </div>
+                        <!-- Grid column -->
 
-        <div class="container pt-4">
+                        <hr class="w-100 clearfix d-md-none" />
 
-            <section class="mb-4">
+                        <!-- Grid column -->
+                        <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
+                            <h6 class="text-uppercase mb-4 font-weight-bold">Products</h6>
+                            <p>
+                                <a class="link-secondary" href="https://www.sam-solutions.com/company/case-studies/website-functionality-enhancement-and-2-6-fold-loading-speed-increase/">Sitecore-based websites</a>
+                            </p>
+                            <p>
+                                <a class="link-secondary" href="https://www.sam-solutions.com/company/case-studies/Innominate-case-study/">Scaling QA-Processes</a>
+                            </p>
+                            <p>
+                                <a class="link-secondary" href="https://www.sam-solutions.com/company/case-studies/phytec-board-support-package/">Embedded Board Support Packages</a>
+                            </p>
+                            <p>
+                                <a class="link-secondary" href="https://sam-solutions.by/company/case-studies/azh/">Physiotherapy Practices</a>
+                            </p>
+                        </div>
+                        <!-- Grid column -->
 
-                <a class="btn btn-link btn-floating btn-lg text-dark m-1"
-                   href="https://www.facebook.com/gleb.sukristik"
-                   role="button"
-                   data-mdb-ripple-color="dark">
-                    <i class="fab fa-facebook-f"></i>
-                </a>
+                        <hr class="w-100 clearfix d-md-none" />
 
-                <a class="btn btn-link btn-floating btn-lg text-dark m-1"
-                   href="https://twitter.com/Glebyyyyyshka"
-                   role="button"
-                   data-mdb-ripple-color="dark">
-                    <i class="fab fa-twitter"></i>
-                </a>
+                        <!-- Grid column -->
+                        <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mt-3">
+                            <h6 class="text-uppercase mb-4 font-weight-bold">
+                                Useful links
+                            </h6>
+                            <p>
+                                <a class="link-secondary" href="https://sam-solutions.by/">SaM Solutions Website</a>
+                            </p>
+                            <p>
+                                <a class="link-secondary" href="https://sam-solutions.by/company/case-studies/">Case-Studies</a>
+                            </p>
+                            <p>
+                                <a class="link-secondary" href="https://sam-solutions.by/industries/">Industries</a>
+                            </p>
+                            <p>
+                                <a class="link-secondary" href="https://sam-solutions.by/career/info/">Career Info</a>
+                            </p>
+                        </div>
 
-                <a class="btn btn-link btn-floating btn-lg text-dark m-1"
-                   href="https://gleb15a@gmail.com"
-                   role="button"
-                   data-mdb-ripple-color="dark">
-                    <i class="fab fa-google"></i>
-                </a>
+                        <!-- Grid column -->
+                        <hr class="w-100 clearfix d-md-none" />
 
-                <a class="btn btn-link btn-floating btn-lg text-dark m-1"
-                   href="https://Sorry/But/I/Dont/Have/Instagram"
-                   role="button"
-                   data-mdb-ripple-color="dark">
-                    <i class="fab fa-instagram"></i>
-                </a>
+                        <!-- Grid column -->
+                        <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
+                            <h6 class="text-uppercase mb-4 font-weight-bold">Contact</h6>
+                            <p><i class="fas fa-home mr-3"></i> Minsk, Filimonova 15, Belarus</p>
+                            <p><i class="fas fa-envelope mr-3"></i> info@sam-solutions.com</p>
+                            <p><i class="fas fa-phone mr-3"></i> + 375 17 309 17 09</p>
+                            <p><i class="fas fa-print mr-3"></i> + 375 17 309 17 17</p>
+                        </div>
+                        <!-- Grid column -->
+                    </div>
+                    <!--Grid row-->
+                </section>
+                <!-- Section: Links -->
 
-                <a class="btn btn-link btn-floating btn-lg text-dark m-1"
-                   href="https://www.linkedin.com/in/glebyshka/"
-                   role="button"
-                   data-mdb-ripple-color="dark">
-                    <i class="fab fa-linkedin"></i>
-                </a>
+                <hr class="my-3">
 
-                <a class="btn btn-link btn-floating btn-lg text-dark m-1"
-                   href="https://github.com/GlebTheProgrammer"
-                   role="button"
-                   data-mdb-ripple-color="dark">
-                    <i class="fab fa-github"></i>
-                </a>
-            </section>
+                <!-- Section: Copyright -->
+                <section class="p-3 pt-0">
+                    <div class="row d-flex align-items-center">
+                        <!-- Grid column -->
+                        <div class="col-md-7 col-lg-8 text-center text-md-start">
+                            <!-- Copyright -->
+                            <div class="p-3">
+                                © 2023 Copyright:
+                                <a class="link-secondary" href="https://by.linkedin.com/in/glebyshka">Gleb Sukristik</a>
+                                &
+                                <a class="link-secondary" href="https://www.linkedin.com/in/vadzim-papko-b08a6875/">Vadzim Papko</a>
+                            </div>
+                            <!-- Copyright -->
+                        </div>
+                        <!-- Grid column -->
+                        <!-- Grid column -->
+                        <div class="col-md-5 col-lg-4 ml-lg-0 text-center text-md-end">
+                            <!-- Facebook -->
+                            <a class="btn btn-outline-secondary btn-floating m-1 link-secondary" href="https://ru-ru.facebook.com/SaMSolutionsBY/"
+                               role="button">
+                                <i" class="fab fa-facebook-f"></i>
+                            </a>
 
-        </div>
+                            <!-- Twitter -->
+                            <a class="btn btn-outline-secondary btn-floating m-1 link-secondary" href="https://twitter.com/samsolutionsby"
+                               role="button">
+                                <i class="fab fa-twitter"></i>
+                            </a>
 
-        <div class="text-center text-dark p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-            © 2022 Made By:
-            <a class="text-dark" href="https://www.linkedin.com/in/glebyshka/">Gleb Sukristik</a>
-        </div>
-    </footer>
+                            <!-- Google -->
+                            <a class="btn btn-outline-secondary btn-floating m-1 link-secondary" href="https://www.google.com/search?q=sam+solutions+google&oq=sam+solutions+google&aqs=chrome..69i57j69i64.3562j0j4&sourceid=chrome&ie=UTF-8"
+                               role="button">
+                                <i class="fab fa-google"></i>
+                            </a>
+
+                            <!-- Instagram -->
+                            <a class="btn btn-outline-secondary btn-floating m-1 link-secondary" href="https://www.instagram.com/samsolutions/"
+                               role="button">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                        </div>
+                        <!-- Grid column -->
+                    </div>
+                </section>
+                <!-- Section: Copyright -->
+            </div>
+            <!-- Grid container -->
+        </footer>
+        <!-- Footer -->
+    </div>
+    <!-- End of .container -->
 
 
     <script src="~/js/site.js" asp-append-version="true"></script>
@@ -165,6 +260,28 @@
 </body>
 
 </html>
+
+<script>
+    document.getElementById("setDarkTheme").addEventListener("click", () => {
+        document.getElementById("setLightTheme").setAttribute("class", "dropdown-item text-secondary");
+        document.getElementById("setDarkTheme").setAttribute("class", "dropdown-item text-secondary active");
+
+        document.getElementById("layout").setAttribute("data-bs-theme", "dark");
+        document.getElementById("themeIcon").setAttribute("class", "fa-solid fa-moon me-2 mt-1");
+
+        localStorage.setItem("Theme", "dark");
+    });
+
+    document.getElementById("setLightTheme").addEventListener("click", () => {
+        document.getElementById("setLightTheme").setAttribute("class", "dropdown-item text-secondary active");
+        document.getElementById("setDarkTheme").setAttribute("class", "dropdown-item text-secondary");
+
+        document.getElementById("layout").setAttribute("data-bs-theme", "light");
+        document.getElementById("themeIcon").setAttribute("class", "fa-solid fa-sun me-2 mt-1");
+
+        localStorage.setItem("Theme", "light");
+    });
+</script>
 
 <script>
     window.addEventListener("DOMContentLoaded", () => {

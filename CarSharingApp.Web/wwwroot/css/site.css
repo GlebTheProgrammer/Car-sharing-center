@@ -67,3 +67,11 @@ label.star:before {
     font-family: FontAwesome;
 }
 /*Star rating css ends here*/
+
+.dropdown-item:hover {
+    background-color: whitesmoke !important;
+}
+
+.dropdown-item.active {
+    background-color: lightgrey !important;
+}
