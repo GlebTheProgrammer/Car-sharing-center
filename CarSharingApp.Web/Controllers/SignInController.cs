@@ -38,7 +38,7 @@ namespace CarSharingApp.Controllers
                     {
                         ForbiddenError forbiddenError = JsonSerializer.Deserialize<ForbiddenError>(responseContent) ?? new ForbiddenError();
 
-                        ModelState.AddModelError(nameof(request.EmailOrLogin), forbiddenError.Title);
+                        ModelState.AddModelError(nameof(request.Password), forbiddenError.Title);
 
                         return View("Index", request);
                     }
