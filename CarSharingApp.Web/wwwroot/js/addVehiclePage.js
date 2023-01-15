@@ -19,7 +19,7 @@ function HideErrorSpan(componentId) {
 
 // Function for selecting user image and displaying it
 function onFileSelected(event) {
-    var file = document.getElementById("ImageFileInput");
+    var file = document.getElementById("ImageFileInputErrorValidationCustom");
     if (file.files.length == 0) {
         return;
     }
@@ -38,10 +38,32 @@ function onFileSelected(event) {
         const noImageElement = document.getElementById("noCarImage");
         noImageElement.style.display = "none";
 
+        const uploadButtonElement = document.getElementById("unloadImageButton");
+        uploadButtonElement.removeAttribute("disabled");
+
         imgtag.src = event.target.result;
     };
 
     reader.readAsDataURL(selectedFile);
+}
+
+function UnloadImage() {
+    var form = document.getElementById("createNewVehicleForm");
+    form.reset();
+
+    var imgtag = document.getElementById("carImage");
+    imgtag.title = "";
+
+    const imageInputElement = document.getElementById("imageInput");
+    imageInputElement.value = "";
+
+    const noImageElement = document.getElementById("noCarImage");
+    noImageElement.removeAttribute("style");
+
+    const uploadButtonElement = document.getElementById("unloadImageButton");
+    uploadButtonElement.setAttribute("disabled", "");
+
+    imgtag.removeAttribute("src");
 }
 
 // Section for working with googleMaps starts here

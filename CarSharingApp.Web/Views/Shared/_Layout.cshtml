@@ -77,19 +77,13 @@
                     {
                         <ul class="navbar-nav d-flex flex-row ms-auto me-3">
                             <li class="nav-item me-3 me-lg-0 dropdown">
-                                <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <a id="personalAccountLink" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <img src="~/Images/HomePage/customerLogo.png" class="rounded-circle" height="30" loading="lazy" />
                                 </a>
-                                <ul id="dropdownMenu" class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" href="@Url.Action("Index", "CustomerPersonalAccount")">My Account</a></li>
-                                    <li>
-                                        <hr class="dropdown-divider" />
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#" onclick="ShowLogoutConfirmationAlert()">Logout</a>
-                                    </li>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a href="@Url.Action("Index", "CustomerPersonalAccount")" id="myAccountChoice" class="dropdown-item text-secondary"><i class="fa-solid fa-user me-2"></i>My Account</a></li>
+                                    <li><a href="javascript:void(0);" id="logoutChoice" class="dropdown-item text-secondary" onclick="ShowLogoutConfirmationAlert()"><i class="fa-solid fa-right-from-bracket me-2"></i>Logout</a></li>
                                 </ul>
-
                             </li>
                         </ul>
                     }

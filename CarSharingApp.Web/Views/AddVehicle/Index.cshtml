@@ -4,136 +4,186 @@
 
 <main class="container mt-5">
     <div class="row g-5">
-        <form id="createNewVehicleForm" class="row g-3" asp-controller="AddVehicle" asp-action="AddVehicle" method="post" enctype="multipart/form-data">
-            <div class="col-md-8">
+        <form id="createNewVehicleForm" class="row g-3 needs-validation" asp-controller="AddVehicle" asp-action="AddVehicle" method="post" novalidate>
+            <div class="col-md-7 g-2 row justify-content-center">
                 <h3 class="pb-2 mb-4 fst-italic border-bottom text-center">
                     Share Your Vehicle
                 </h3>
 
-                <div class="justify-content-center" id="noCarImage" style="font-size: 35px; align-items: center; width: 100%; height: 400px; background-color: lightgrey; text-align: center; display: flex">
-                    Select Vehicle Image
+                <div class="rounded" id="noCarImage">
+                    <div class="w-full p-3">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <div class="flex flex-col items-center">
+                                <i class="fa fa-folder-open fa-4x"></i>
+                                <span>Upload Vehicle Image <label class="text-danger">*</label></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <img class="img-fluid mt-3 mx-auto d-block rounded" id="carImage" style="height: auto" src="">
 
-                <label class="btn btn-primary mt-2 float-right">
-                    Browse <input id="ImageFileInput" type="file" name="file" onchange="onFileSelected(event)" onclick="HideErrorSpan('ImageError')" accept="image/png, image/jpeg" hidden>
-                </label>
-
-                <span asp-validation-for="Image" id="ImageError" class="text-danger text-center"></span>
+                <div class="row justify-content-center mt-3">
+                    <div class="col-md-12 col-lg-10 col-12">
+                        <div class="input-group"> 
+                            <input id="ImageFileInputErrorValidationCustom" type="file" name="file" onchange="onFileSelected(event)" accept="image/png, image/jpeg" class="form-control" required onclick="SetInputAsRequireValidation(this)" />
+                            <button class="btn btn-outline-secondary" type="button" id="unloadImageButton" onclick="UnloadImage();" disabled>Unload</button>
+                            <div class="valid-feedback">
+                                Uploaded successfully!
+                            </div>
+                            <div id="ImageFileInputErrorValidation" class="invalid-feedback">
+                                Please upload vehicle Image.
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <!--Image input starts here-->
                 <input id="imageInput" asp-for="Image" class="form-control" value="" hidden />
                 <!--Image input ends here-->
 
-                <h2 class="mt-3">Additional information</h2>
+                <h2 class="mt-4 mb-3">Specifications</h2>
 
-                <div>
-                    <span asp-validation-for="ProductionYear" id="ProductionYearError" class="text-danger text-center" style="margin-left: 135px;"></span>
-                    <div class="d-flex flex-row">
-                        <label class="mr-2" style="white-space: nowrap;">Production year: </label>
-                        <input asp-for="ProductionYear" type="number" class="form-control" placeholder="" onfocus="HideErrorSpan('ProductionYearError')">
+                <div class="col-6">
+                    <label for="productionYearErrorValidationCustom" class="form-label">Production year <label class="text-danger">*</label></label>
+                    <input asp-for="ProductionYear" type="text" class="form-control" id="productionYearErrorValidationCustom" required maxlength="4" pattern="\d{4}" onclick="SetInputAsRequireValidation(this)">
+                    <div class="valid-feedback">
+                        Looks good!
                     </div>
-                </div>
-                <div>
-                    <span asp-validation-for="MaxSpeedKph" id="MaxSpeedError" class="text-danger text-center" style="margin-left: 135px;"></span>
-                    <div class="d-flex flex-row">
-                        <label class="mr-2" style="white-space: nowrap;">Max Speed (kph): </label>
-                        <input asp-for="MaxSpeedKph" type="number" class="form-control" placeholder="" onfocus="HideErrorSpan('MaxSpeedError')">
-                    </div>
-                </div>
-                <div>
-                    <span asp-validation-for="ExteriorColor" id="ExteriorColorError" class="text-danger text-center" style="margin-left: 115px;"></span>
-                    <div class="d-flex flex-row">
-                        <label class="mt-2 mr-2" style="white-space: nowrap;">Exterior Color: </label>
-                        <select asp-for="ExteriorColor" class="custom-select d-block" onfocus="HideErrorSpan('ExteriorColorError')">
-                            <option value="0">Choose...</option>
-                            @foreach (var color in CarSharingApp.Domain.SmartEnums.Colour.GetPossibleEnumerations())
-                            {
-                                <option value="@CarSharingApp.Domain.SmartEnums.Drivetrain.FromName(color)">@color</option>
-                            }
-                        </select>
-                    </div>
-                </div>
-                <div>
-                    <span asp-validation-for="InteriorColor" id="InteriorColorError" class="text-danger text-center" style="margin-left: 115px;"></span>
-                    <div class="d-flex flex-row">
-                        <label class="mt-2 mr-2" style="white-space: nowrap;">Interior Color: </label>
-                        <select asp-for="InteriorColor" class="custom-select d-block" onfocus="HideErrorSpan('InteriorColorError')">
-                            <option value="0">Choose...</option>
-                            @foreach (var color in CarSharingApp.Domain.SmartEnums.Colour.GetPossibleEnumerations())
-                            {
-                                <option value="@CarSharingApp.Domain.SmartEnums.Drivetrain.FromName(color)">@color</option>
-                            }
-                        </select>
-                    </div>
-                </div>
-                <div>
-                    <span asp-validation-for="Drivetrain" id="DrivetrainError" class="text-danger text-center" style="margin-left: 135px;"></span>
-                    <div class="d-flex flex-row">
-                        <label class="mt-2 mr-2">Drivetrain: </label>
-                        <select asp-for="Drivetrain" class="custom-select d-block" onfocus="HideErrorSpan('DrivetrainError')">
-                            <option value="0">Choose...</option>
-                            @foreach(var drivetrainType in CarSharingApp.Domain.SmartEnums.Drivetrain.GetPossibleEnumerations())
-                            {
-                                <option value="@CarSharingApp.Domain.SmartEnums.Drivetrain.FromName(drivetrainType)">@drivetrainType</option>
-                            }
-                        </select>
-                    </div>
-                </div>
-                <div>
-                    <span asp-validation-for="FuelType" id="FuelTypeError" class="text-danger text-center" style="margin-left: 135px;"></span>
-                    <div class="d-flex flex-row">
-                        <label class="mt-2 mr-2" style="white-space: nowrap;">Fuel Type: </label>
-                        <select asp-for="FuelType" class="custom-select d-block" onfocus="HideErrorSpan('FuelTypeError')">
-                            <option value="0">Choose...</option>
-                            @foreach (var fuelType in CarSharingApp.Domain.SmartEnums.FuelType.GetPossibleEnumerations())
-                            {
-                                <option value="@CarSharingApp.Domain.SmartEnums.FuelType.FromName(fuelType)">@fuelType</option>
-                            }
-                        </select>
-                    </div>
-                </div>
-                <div>
-                    <span asp-validation-for="Transmission" id="TransmissionError" class="text-danger text-center" style="margin-left: 135px;"></span>
-                    <div class="d-flex flex-row">
-                        <label class="mt-2 mr-2">Transmission: </label>
-                        <select asp-for="Transmission" class="custom-select d-block" onfocus="HideErrorSpan('TransmissionError')">
-                            <option value="0">Choose...</option>
-                            @foreach (var transmissionType in CarSharingApp.Domain.SmartEnums.Transmission.GetPossibleEnumerations())
-                            {
-                                <option value="@CarSharingApp.Domain.SmartEnums.Transmission.FromName(transmissionType)">@transmissionType</option>
-                            }
-                        </select>
-                    </div>
-                </div>
-                <div>
-                    <span asp-validation-for="Engine" id="EngineError" class="text-danger text-center" style="margin-left: 135px;"></span>
-                    <div class="d-flex flex-row">
-                        <label class="mt-2 mr-2">Engine: </label>
-                        <select asp-for="Engine" class="custom-select d-block" onfocus="HideErrorSpan('EngineError')">
-                            <option value="0">Choose...</option>
-                            @foreach (var engineType in CarSharingApp.Domain.SmartEnums.Engine.GetPossibleEnumerations())
-                            {
-                                <option value="@CarSharingApp.Domain.SmartEnums.Engine.FromName(engineType)">@engineType</option>
-                            }
-                        </select>
+                    <div id="firstNameErrorValidation" class="invalid-feedback">
+                        Please provide a valid Production year.
                     </div>
                 </div>
 
-                <div>
-                    <span asp-validation-for="VIN" id="VINError" class="text-danger text-center" style="margin-left:45px;"></span>
-                    <div class="d-flex flex-row">
-                        <label class="mt-2 mr-2">VIN: </label> 
-                        <input asp-for="VIN" type="text" class="form-control" placeholder="4Y1SL65848Z411439" onfocus="HideErrorSpan('VINError')">
+                <div class="col-6">
+                    <label for="maxSpeedKphErrorValidationCustom" class="form-label">Max speed (KM/H) <label class="text-danger">*</label></label>
+                    <input asp-for="MaxSpeedKph" type="text" class="form-control" id="maxSpeedKphErrorValidationCustom" required maxlength="4" pattern="\d{4}" onclick="SetInputAsRequireValidation(this)">
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div id="maxSpeedKphErrorValidation" class="invalid-feedback">
+                        Please provide a valid Max vehicle speed.
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <label for="exteriorColorErrorValidationCustom" class="form-label">Exterior color <label class="text-danger">*</label></label>
+                    <select asp-for="ExteriorColor" class="form-select" id="exteriorColorErrorValidationCustom" required onclick="SetInputAsRequireValidation(this)">
+                        <option selected disabled value="">Choose...</option>
+                        @foreach (var color in CarSharingApp.Domain.SmartEnums.Colour.GetPossibleEnumerations())
+                        {
+                            <option value="@CarSharingApp.Domain.SmartEnums.Colour.FromName(color)">@color</option>
+                        }
+                    </select>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div id="exteriorColorErrorValidation" class="invalid-feedback">
+                        Please select vehicle Exterior color.
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <label for="interiorColorErrorValidationCustom" class="form-label">Interior color <label class="text-danger">*</label></label>
+                    <select asp-for="InteriorColor" class="form-select" id="interiorColorErrorValidationCustom" required onclick="SetInputAsRequireValidation(this)">
+                        <option selected disabled value="">Choose...</option>
+                        @foreach (var color in CarSharingApp.Domain.SmartEnums.Colour.GetPossibleEnumerations())
+                        {
+                            <option value="@CarSharingApp.Domain.SmartEnums.Colour.FromName(color)">@color</option>
+                        }
+                    </select>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div id="exteriorColorErrorValidation" class="invalid-feedback">
+                        Please select vehicle Interior color.
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <label for="drivetrainErrorValidationCustom" class="form-label">Drivetrain <label class="text-danger">*</label></label>
+                    <select asp-for="Drivetrain" class="form-select" id="drivetrainErrorValidationCustom" required onclick="SetInputAsRequireValidation(this)">
+                        <option selected disabled value="">Choose...</option>
+                        @foreach (var drivetrain in CarSharingApp.Domain.SmartEnums.Drivetrain.GetPossibleEnumerations())
+                        {
+                            <option value="@CarSharingApp.Domain.SmartEnums.Drivetrain.FromName(drivetrain)">@drivetrain</option>
+                        }
+                    </select>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div id="drivetrainErrorValidation" class="invalid-feedback">
+                        Please select vehicle Drivetrain.
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <label for="fuelTypeErrorValidationCustom" class="form-label">Fuel type <label class="text-danger">*</label></label>
+                    <select asp-for="FuelType" class="form-select" id="fuelTypeErrorValidationCustom" required onclick="SetInputAsRequireValidation(this)">
+                        <option selected disabled value="">Choose...</option>
+                        @foreach (var fuelType in CarSharingApp.Domain.SmartEnums.FuelType.GetPossibleEnumerations())
+                        {
+                            <option value="@CarSharingApp.Domain.SmartEnums.FuelType.FromName(fuelType)">@fuelType</option>
+                        }
+                    </select>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div id="fuelTypeErrorValidation" class="invalid-feedback">
+                        Please select vehicle Fuel type.
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <label for="transmissionErrorValidationCustom" class="form-label">Transmission <label class="text-danger">*</label></label>
+                    <select asp-for="Transmission" class="form-select" id="transmissionErrorValidationCustom" required onclick="SetInputAsRequireValidation(this)">
+                        <option selected disabled value="">Choose...</option>
+                        @foreach (var transmission in CarSharingApp.Domain.SmartEnums.Transmission.GetPossibleEnumerations())
+                        {
+                            <option value="@CarSharingApp.Domain.SmartEnums.Transmission.FromName(transmission)">@transmission</option>
+                        }
+                    </select>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div id="transmissionErrorValidation" class="invalid-feedback">
+                        Please select vehicle Transmission.
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <label for="engineErrorValidationCustom" class="form-label">Engine <label class="text-danger">*</label></label>
+                    <select asp-for="Engine" class="form-select" id="engineErrorValidationCustom" required onclick="SetInputAsRequireValidation(this)">
+                        <option selected disabled value="">Choose...</option>
+                        @foreach (var engine in CarSharingApp.Domain.SmartEnums.Engine.GetPossibleEnumerations())
+                        {
+                            <option value="@CarSharingApp.Domain.SmartEnums.Engine.FromName(engine)">@engine</option>
+                        }
+                    </select>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div id="engineErrorValidation" class="invalid-feedback">
+                        Please select vehicle Engine.
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <label for="vinErrorValidationCustom" class="form-label">VIN <label class="text-danger">*</label></label>
+                    <input asp-for="VIN" type="text" class="form-control" id="vinErrorValidationCustom" required pattern="^[A-HJ-NPR-Za-hj-npr-z\\d]{8}[\\dX][A-HJ-NPR-Za-hj-npr-z\\d]{2}\\d{6}$" onclick="SetInputAsRequireValidation(this)">
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div id="vinErrorValidation" class="invalid-feedback">
+                        Please provide a valid VIN.
                     </div>
                 </div>
                 
-                <hr class="featurette-divider">
+                <hr class="featurette-divider mt-4">
 
-                <h2 class="mt-3">Categories</h2>
+                <h2 class="mt-2">Categories</h2>
 
-                <label class="mt-2 mr-2">Note: Here you can select any keywords that may be associated with your vehicle. If you can't add any of them, please, skip this section and move to the next one.</label>
+                <label class="mt-2 mr-2 mb-3">Note: Here you can select any keywords that may be associated with your vehicle. If you can't add any of them, please, skip this section and move to the next one.</label>
 
                 <div class="mt-2 text-center">
                     @foreach (var category in CarSharingApp.Domain.Enums.FlagEnums.GetPossibleValues<CarSharingApp.Domain.Enums.FlagEnums.Categories>())
@@ -141,7 +191,7 @@
                         if (category.Equals("None"))
                             continue;
 
-                        <div class="form-check form-check-inline">
+                        <div class="form-check form-check-inline mb-3" style="margin-right: 5px; padding-left: 0px;">
                             <input type="checkbox" class="btn-check" id="btn-check-outlined-@category" autocomplete="off" value="@category" onchange="FilterCategories(this,'@category')">
                             <label class="btn btn-outline-info" for="btn-check-outlined-@category">@category</label><br>
                         </div>
@@ -231,7 +281,7 @@
 
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-5">
                 <div class="position-sticky" style="top: 3rem;">
                     <div class="mt-4">
                         <label for="firstName" class="mt-4">Vehicle name</label>
@@ -277,10 +327,6 @@
 
                 document.getElementById("categoriesInput").value = vehicleCategories.toString();
 
-                if (document.getElementById('imageInput').value === "") {
-                    document.getElementById('ImageError').textContent = "Vehicle Image is required. Use button below to browse.";
-                    sending = false;
-                }
                 if (document.getElementById('latit').value === "" || document.getElementById('longit').value === "") {
                     document.getElementById('AddressLatitideLongitudeError').textContent = "Vehicle address must be determined on the map based on the data you've entered. Fill in all the fields, click «Search vehicle» button and then try again.";
                     sending = false;
@@ -309,3 +355,21 @@
     }
 </script>
 
+<script>
+    (() => {
+        'use strict'
+
+        const forms = document.querySelectorAll('.needs-validation')
+
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {                
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+</script>
