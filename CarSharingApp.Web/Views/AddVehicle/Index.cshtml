@@ -1,10 +1,8 @@
 ﻿@model CarSharingApp.Application.Contracts.Vehicle.CreateVehicleRequest;
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9AIXs7jB_3r8oRc1zd0i9p0nanEH5Q6M&callback=initMap" async defer></script>
-
-<main class="container mt-5">
+<main class="container mt-5 mb-5">
     <div class="row g-5">
-        <form id="createNewVehicleForm" class="row g-3 needs-validation" asp-controller="AddVehicle" asp-action="AddVehicle" method="post" novalidate>
+        <form id="createNewVehicleForm" class="row g-3 needs-validation" asp-controller="AddVehicle" asp-action="AddVehicle" method="post" enctype="multipart/form-data" novalidate>
             <div class="col-md-7 g-2 row justify-content-center">
                 <h3 class="pb-2 mb-4 fst-italic border-bottom text-center">
                     Share Your Vehicle
@@ -39,7 +37,7 @@
                 </div>
 
                 <!--Image input starts here-->
-                <input id="imageInput" asp-for="Image" class="form-control" value="" hidden />
+                <input id="imageInputErrorValidationCustom" asp-for="Image" class="form-control" value="" hidden />
                 <!--Image input ends here-->
 
                 <h2 class="mt-4 mb-3">Specifications</h2>
@@ -57,7 +55,7 @@
 
                 <div class="col-6">
                     <label for="maxSpeedKphErrorValidationCustom" class="form-label">Max speed (KM/H) <label class="text-danger">*</label></label>
-                    <input asp-for="MaxSpeedKph" type="text" class="form-control" id="maxSpeedKphErrorValidationCustom" required maxlength="4" pattern="\d{4}" onclick="SetInputAsRequireValidation(this)">
+                    <input asp-for="MaxSpeedKph" type="text" class="form-control" id="maxSpeedKphErrorValidationCustom" required maxlength="4" pattern="^[1-9][0-9][0-9]$|^(1000)$" onclick="SetInputAsRequireValidation(this)">
                     <div class="valid-feedback">
                         Looks good!
                     </div>
@@ -95,7 +93,7 @@
                     <div class="valid-feedback">
                         Looks good!
                     </div>
-                    <div id="exteriorColorErrorValidation" class="invalid-feedback">
+                    <div id="interiorColorErrorValidation" class="invalid-feedback">
                         Please select vehicle Interior color.
                     </div>
                 </div>
@@ -170,7 +168,7 @@
 
                 <div class="col-6">
                     <label for="vinErrorValidationCustom" class="form-label">VIN <label class="text-danger">*</label></label>
-                    <input asp-for="VIN" type="text" class="form-control" id="vinErrorValidationCustom" required pattern="^[A-HJ-NPR-Za-hj-npr-z\\d]{8}[\\dX][A-HJ-NPR-Za-hj-npr-z\\d]{2}\\d{6}$" onclick="SetInputAsRequireValidation(this)">
+                    <input asp-for="VIN" type="text" class="form-control" id="vinErrorValidationCustom" required pattern="[A-HJ-NPR-Z0-9]{17}" onclick="SetInputAsRequireValidation(this)">
                     <div class="valid-feedback">
                         Looks good!
                     </div>
@@ -207,32 +205,55 @@
 
                 <label class="mt-2 mr-2">Note: Please fill all the current location fields of the vehicle down below, then click the «Search» button. If the address was found, a marker will appear on the map. If error occured, you will see error message and marker will not be set. If so, please try again.</label>
 
-                <div>
-                    <span asp-validation-for="StreetAddress" id="StreetAddressError" class="text-danger text-center" style="margin-left: 175px;"></span>
-                    <div class="d-flex flex-row">
-                        <input asp-for="StreetAddress" type="text" id="vehicleStreetAddress" class="form-control mr-2" placeholder="Street address" onfocus="HideErrorSpan('StreetAddressError')">
+                <div class="col-6">
+                    <label for="streetAddressValidationCustom" class="form-label">Street address <label class="text-danger">*</label></label>
+                    <input asp-for="StreetAddress" type="text" class="form-control" id="streetAddressErrorValidationCustom" required onclick="SetInputAsRequireValidation(this)">
+                    <div class="valid-feedback">
+                        Looks good!
                     </div>
-                </div>
-                <div>
-                    <span asp-validation-for="AptSuiteEtc" id="AptSuiteEtcError" class="text-danger text-center" style="margin-left: 175px;"></span>
-                    <div class="d-flex flex-row">
-                        <input asp-for="AptSuiteEtc" type="text" id="vehicleAptSuiteEtc" class="form-control mr-2" placeholder="Apartment, suite, etc" onfocus="HideErrorSpan('AptSuiteEtcError')">
-                    </div>
-                </div>
-                <div>
-                    <span asp-validation-for="Country" id="CountryError" class="text-danger text-center" style="margin-left: 175px;"></span>
-                    <div class="d-flex flex-row">
-                        <input asp-for="Country" type="text" id="vehicleCountry" class="form-control mr-2" placeholder="Country" onfocus="HideErrorSpan('CountryError')">
-                    </div>
-                </div>
-                <div>
-                    <span asp-validation-for="City" id="CityError" class="text-danger text-center" style="margin-left: 175px;"></span>
-                    <div class="d-flex flex-row">
-                        <input asp-for="City" type="text" id="vehicleCity" class="form-control mr-2" placeholder="City" onfocus="HideErrorSpan('CityError')">
+                    <div id="streetAddressErrorValidation" class="invalid-feedback">
+                        Please provide a Street address.
                     </div>
                 </div>
 
-                <span asp-validation-for=Latitude id="AddressLatitideLongitudeError" class="d-flex justify-content-center text-danger text-center mt-2 mb-2"></span>
+                <div class="col-6">
+                    <label for="aptSuiteEtcValidationCustom" class="form-label">Apt, suite, etc. <label class="text-danger">*</label></label>
+                    <input asp-for="AptSuiteEtc" type="text" class="form-control" id="aptSuiteEtcErrorValidationCustom" required onclick="SetInputAsRequireValidation(this)">
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div id="aptSuiteEtcErrorValidation" class="invalid-feedback">
+                        Please provide vehicle Apt. or suite.
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <label for="countryValidationCustom" class="form-label">Country <label class="text-danger">*</label></label>
+                    <select asp-for="Country" class="form-select" id="countryErrorValidationCustom" required onclick="SetInputAsRequireValidation(this)">
+                        <option selected disabled value="">Choose...</option>
+                        @foreach (var country in CarSharingApp.Domain.SmartEnums.Country.GetPossibleEnumerations())
+                        {
+                            <option value="@CarSharingApp.Domain.SmartEnums.Country.FromName(country)">@country</option>
+                        }
+                    </select>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div id="countryErrorValidation" class="invalid-feedback">
+                        Please provide a Country.
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <label for="cityValidationCustom" class="form-label">City <label class="text-danger">*</label></label>
+                    <input asp-for="City" type="text" class="form-control" id="cityErrorValidationCustom" required onclick="SetInputAsRequireValidation(this)">
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div id="cityErrorValidation" class="invalid-feedback">
+                        Please provide a City.
+                    </div>
+                </div>
 
                 <div class="mt-4">
                     <div class="container-fluid">
@@ -240,7 +261,6 @@
                         <script>
                             var map;
                             function initMap() {
-
                                 if ("@Model.Longitude" != "" && "@Model.Latitude" != "") {
                                     localStorage.setItem("marker-lat", @Model.Latitude);
                                     localStorage.setItem("marker-long", @Model.Longitude);
@@ -265,56 +285,87 @@
                             }
                         </script>
 
+                        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9AIXs7jB_3r8oRc1zd0i9p0nanEH5Q6M&callback=initMap" async defer></script>
+
                     </div>
                 </div>
 
-                <label class="btn btn-outline-primary mt-3" onclick="HideErrorSpan('AddressLatitideLongitudeError'); setUpTheMarker()">Search vehicle</label>
-
-                <div class="mt-4">
-                    <div class="d-flex flex-row visually-hidden">
-                        <span class="text-muted h5 mt-2 mr-2">Latitude: </span>
-                        <input asp-for="Latitude" type="text" class="form-control text-center" style="width: 15%" id="latit" readonly>
-                        <span class="text-muted h5 ml-4 mt-2">Longitude: </span>
-                        <input asp-for="Longitude" type="text" class="form-control text-center ml-2" style="width: 15%" id="longit" readonly>
+                <div>
+                    <label for="latitudeValidationCustom" class="form-label visually-hidden">Latitude <label class="text-danger">*</label></label>
+                    <input asp-for="Latitude" type="text" class="form-control visually-hidden" id="latitudeErrorValidationCustom" required pattern="^[0-9]*(?:\.[0-9]*)?$">
+                    <div class="valid-feedback">
+                        Marker was set successfully.
                     </div>
+                    <div id="latitudeErrorValidation" class="invalid-feedback">
+                        Marker must be set on the map before submit.
+                    </div>
+                    <input asp-for="Longitude" type="text" class="form-control visually-hidden" id="longitudeErrorValidationCustom" required pattern="^[0-9]*(?:\.[0-9]*)?$">
                 </div>
 
+                <label id="searchVehicleBtn" class="btn btn-outline-primary mt-3" style="width: 200px;" onclick="setUpTheMarker()">Search vehicle</label>
+                <label id="resetMarkerBtn" class="btn btn-outline-warningmt-3 visually-hidden" style="width: 200px;" onclick="resetMarker()">Reset</label>
             </div>
 
             <div class="col-md-5">
-                <div class="position-sticky" style="top: 3rem;">
-                    <div class="mt-4">
-                        <label for="firstName" class="mt-4">Vehicle name</label>
-                        <input asp-for="Name" type="text" class="form-control" id="firstName" placeholder="" onfocus="HideErrorSpan('NameError')">
-                        <span asp-validation-for="Name" id="NameError" class="text-danger"></span>
-                    </div>
+                <div class="position-sticky row justify-content-center g-3" style="top: 4rem;">
 
-                    <div class="mt-2">
-                        <label for="firstName">Brief Description</label>
-                        <textarea asp-for="BriefDescription" class="form-control" id="exampleFormControlTextarea1" rows="4" style="resize: none" onfocus="HideErrorSpan('BriefDescriptionError')" onkeydown="CheckTextAreaInput(event)"></textarea>
-                        <span asp-validation-for="BriefDescription" id="BriefDescriptionError" class="text-danger"></span>
-                    </div>
-
-                    <div class="mt-2">
-                        <label for="firstName">Basic Tariff</label>
-                        <div class="d-flex flex-row">
-                            <input asp-for="HourlyRentalPrice" type="number" class="form-control text-center" style="width: 25%" onfocus="HideErrorSpan('HoursTariffError')">
-                            <span class="text-muted h5 ml-1 mt-2">$/hr - </span>
-                            <input asp-for="DailyRentalPrice" type="number" class="form-control text-center ml-2" style="width: 25%" onfocus="HideErrorSpan('DailyTariffError')">
-                            <span class="text-muted h5 ml-1 mt-2">$/day</span>
+                    <div class="col-12">
+                        <label for="nameValidationCustom" class="form-label">Name <label class="text-danger">*</label></label>
+                        <input asp-for="Name" type="text" minlength="3" maxlength="30" class="form-control" id="nameErrorValidationCustom" required onclick="SetInputAsRequireValidation(this)">
+                        <div class="valid-feedback">
+                            Looks good!
                         </div>
-                        <span asp-validation-for="HourlyRentalPrice" id="HoursTariffError" class="text-danger"></span>
-                        <span asp-validation-for="DailyRentalPrice" id="DailyTariffError" class="text-danger"></span>
+                        <div id="cityErrorValidation" class="invalid-feedback">
+                            Please provide vehicle Name. It must be at least 3 characters long and at most 40 characters long.
+                        </div>
                     </div>
 
-                    <div class="mt-2">
-                        <label for="firstName">Description</label>
-                        <textarea asp-for="Description" class="form-control" id="exampleFormControlTextarea1" rows="9" style="resize: none" onfocus="HideErrorSpan('DescriptionError')" onkeydown="CheckTextAreaInput(event)"></textarea>
-                        <span asp-validation-for="Description" id="DescriptionError" class="text-danger"></span>
+                    <div class="col-6">
+                        <label for="hourlyRentalPriceValidationCustom" class="form-label">Hourly tariff ($) <label class="text-danger">*</label></label>
+                        <input asp-for="HourlyRentalPrice" type="text" class="form-control" id="hourlyRentalPriceErrorValidationCustom" pattern="^[1-9]$|^[1-9][0-9]$|^[1-9][0-9][0-9]$|^[1-9][0-9][0-9][0-9]$|^(10000)$" required onclick="SetInputAsRequireValidation(this)">
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                        <div id="hourlyRentalPriceErrorValidation" class="invalid-feedback">
+                            Please provide a Hourly rental price. It must be somewhere between 1$ and 10000$.
+                        </div>
                     </div>
 
-                    <nav class="blog-pagination mt-4" aria-label="Pagination">
-                        <button type="submit" class="btn btn-outline-primary w-25">Share</button>
+                    <div class="col-6">
+                        <label for="dailyRentalPriceValidationCustom" class="form-label">Daily tariff ($) <label class="text-danger">*</label></label>
+                        <input asp-for="DailyRentalPrice" type="text" class="form-control" id="dailyRentalPriceErrorValidationCustom" pattern="^[1-9]$|^[1-9][0-9]$|^[1-9][0-9][0-9]$|^[1-9][0-9][0-9][0-9]$|^(10000)$" required onclick="SetInputAsRequireValidation(this)">
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                        <div id="dailyRentalPriceErrorValidation" class="invalid-feedback">
+                            Please provide a Daily rental price. It must be somewhere between 1$ and 10000$.
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="briefDescriptionValidationCustom" class="form-label">Brief description <label class="text-danger">*</label></label>
+                        <textarea asp-for="BriefDescription" type="text" minlength="30" maxlength="80" rows="3" style="resize: none" class="form-control" id="briefDescriptionErrorValidationCustom" required onclick="SetInputAsRequireValidation(this)"></textarea>
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                        <div id="briefDescriptionErrorValidation" class="invalid-feedback">
+                            Please provide a Brief description. It must be at least 30 characters long and at most 80 characters long.
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="descriptionValidationCustom" class="form-label">Description <label class="text-danger">*</label></label>
+                        <textarea asp-for="Description" type="text" minlength="50" maxlength="300" rows="8" style="resize: none" class="form-control" id="descriptionErrorValidationCustom" required onclick="SetInputAsRequireValidation(this)"></textarea>
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                        <div id="briefDescriptionErrorValidation" class="invalid-feedback">
+                            Please provide a Description. It must be at least 50 characters long and at most 300 characters long.
+                        </div>
+                    </div>
+
+                    <nav class="blog-pagination mt-4 d-flex justify-content-center" aria-label="Pagination">
+                        <button type="submit" class="btn btn-outline-primary" style="width: 150px;">Share</button>
                     </nav>
                 </div>
 
@@ -323,18 +374,34 @@
 
         <script>
             $('#createNewVehicleForm').submit(function () {
-                let sending = true;
-
                 document.getElementById("categoriesInput").value = vehicleCategories.toString();
-
-                if (document.getElementById('latit').value === "" || document.getElementById('longit').value === "") {
-                    document.getElementById('AddressLatitideLongitudeError').textContent = "Vehicle address must be determined on the map based on the data you've entered. Fill in all the fields, click «Search vehicle» button and then try again.";
-                    sending = false;
-                }
-
-                return sending;
             });
         </script>
+
+        <div id="serverErrors" class="visually-hidden">
+            <span id="aptSuiteEtcError" asp-validation-for="AptSuiteEtc"></span>
+            <span id="briefDescriptionError" asp-validation-for="BriefDescription"></span>
+            <span id="categoriesError" asp-validation-for="Categories"></span>
+            <span id="cityError" asp-validation-for="City"></span>
+            <span id="countryError" asp-validation-for="Country"></span>
+            <span id="dailyRentalPriceError" asp-validation-for="DailyRentalPrice"></span>
+            <span id="descriptionError" asp-validation-for="Description"></span>
+            <span id="drivetrainError" asp-validation-for="Drivetrain"></span>
+            <span id="engineError" asp-validation-for="Engine"></span>
+            <span id="exteriorColorError" asp-validation-for="ExteriorColor"></span>
+            <span id="fuelTypeError" asp-validation-for="FuelType"></span>
+            <span id="HourlyRentalPriceError" asp-validation-for="HourlyRentalPrice"></span>
+            <span id="imageError" asp-validation-for="Image"></span>
+            <span id="interiorColorError" asp-validation-for="InteriorColor"></span>
+            <span id="latitudeError" asp-validation-for="Latitude"></span>
+            <span id="longitudeError" asp-validation-for="Longitude"></span>
+            <span id="maxSpeedKphError" asp-validation-for="MaxSpeedKph"></span>
+            <span id="nameError" asp-validation-for="Name"></span>
+            <span id="productionYearError" asp-validation-for="ProductionYear"></span>
+            <span id="streetAddressError" asp-validation-for="StreetAddress"></span>
+            <span id="transmissionError" asp-validation-for="Transmission"></span>
+            <span id="vinError" asp-validation-for="VIN"></span>
+        </div>
 
     </div>
 
@@ -372,4 +439,34 @@
             }, false)
         })
     })()
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const serverErrorSpans = document.getElementById('serverErrors').querySelectorAll("span");
+        
+        Array.from(serverErrorSpans).forEach(errorSpan => {
+            if (errorSpan.textContent !== ""){
+                alert("hi");
+                document.getElementById(errorSpan.id + "Validation").textContent = errorSpan.textContent;
+                document.getElementById(errorSpan.id + "ValidationCustom").setAttribute("class", "form-control is-invalid")
+            }
+        });
+    });
+
+    function SetInputAsRequireValidation(inputElement) {
+        inputElement.setAttribute("class", "form-control");
+    }
+
+    function CheckFormForInvalidFields(){
+        const forms = document.getElementById("submitForm").querySelectorAll('input');
+
+        Array.from(forms).forEach(form => {
+            if (form.getAttribute("class") !== null) {
+                if (form.getAttribute("class").includes("is-invalid")) {
+                    form.setAttribute("class", "form-control");
+                }
+            }
+        });
+    }
 </script>
