@@ -54,6 +54,8 @@ namespace CarSharingApp.Controllers
                                 error.Value.FirstOrDefault() ?? string.Empty);
                         }
 
+                        _fileUploadService.UnloadFile(vehicleGeneratedImageName);
+
                         return View("Index", createVehicleRequest);
                     }
 

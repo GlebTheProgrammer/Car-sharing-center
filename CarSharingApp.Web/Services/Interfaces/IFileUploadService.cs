@@ -3,5 +3,6 @@
     public interface IFileUploadService
     {
         public Task<string> UploadFileAsync(IFormFile file);
+        public void UnloadFile(string fileName);
     }
 }

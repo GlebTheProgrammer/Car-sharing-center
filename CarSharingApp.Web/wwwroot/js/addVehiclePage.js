@@ -195,8 +195,63 @@ window.addEventListener("load", () => {
             }
         });
 
-        document.getElementById('latit').value = latit;
-        document.getElementById('longit').value = long;
+        document.getElementById('latitudeErrorValidationCustom').value = latit;
+        document.getElementById('longitudeErrorValidationCustom').value = long;
     }
 });
 // Section for working with googleMaps ends here
+
+(() => {
+    'use strict'
+
+    const forms = document.querySelectorAll('.needs-validation')
+
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+
+            form.classList.add('was-validated')
+        }, false)
+    })
+})()
+
+document.addEventListener("DOMContentLoaded", () => {
+    const serverErrorSpans = document.getElementById('serverErrors').querySelectorAll("span");
+
+    Array.from(serverErrorSpans).forEach(errorSpan => {
+        if (errorSpan.textContent !== "") {
+            document.getElementById(errorSpan.id + "Validation").textContent = errorSpan.textContent;
+            document.getElementById(errorSpan.id + "ValidationCustom").setAttribute("class", "form-control is-invalid")
+        }
+    });
+});
+
+function SetInputAsRequireValidation(inputElement) {
+    inputElement.setAttribute("class", "form-control");
+}
+
+function CheckFormForInvalidFields() {
+    const forms = document.getElementById("submitForm").querySelectorAll('input');
+
+    Array.from(forms).forEach(form => {
+        if (form.getAttribute("class") !== null) {
+            if (form.getAttribute("class").includes("is-invalid")) {
+                form.setAttribute("class", "form-control");
+            }
+        }
+    });
+}
+
+const vehicleCategories = [];
+
+function FilterCategories(checkboxElement, category) {
+    if (checkboxElement.checked) {
+        vehicleCategories.push(category);
+    } else {
+        var index = vehicleCategories.indexOf(category);
+        vehicleCategories.splice(index, 1);
+    }
+}

@@ -374,7 +374,11 @@
 
         <script>
             $('#createNewVehicleForm').submit(function () {
-                document.getElementById("categoriesInput").value = vehicleCategories.toString();
+                if (vehicleCategories.length === 0){
+                    document.getElementById("categoriesInput").value = "None";
+                } else {
+                    document.getElementById("categoriesInput").value = vehicleCategories.toString(); 
+                }
             });
         </script>
 
@@ -390,7 +394,7 @@
             <span id="engineError" asp-validation-for="Engine"></span>
             <span id="exteriorColorError" asp-validation-for="ExteriorColor"></span>
             <span id="fuelTypeError" asp-validation-for="FuelType"></span>
-            <span id="HourlyRentalPriceError" asp-validation-for="HourlyRentalPrice"></span>
+            <span id="hourlyRentalPriceError" asp-validation-for="HourlyRentalPrice"></span>
             <span id="imageError" asp-validation-for="Image"></span>
             <span id="interiorColorError" asp-validation-for="InteriorColor"></span>
             <span id="latitudeError" asp-validation-for="Latitude"></span>
@@ -408,65 +412,3 @@
 </main>
 
 <script src="~/js/addVehiclePage.js" asp-append-version="true"></script>
-
-<script>
-    const vehicleCategories = [];
-
-    function FilterCategories(checkboxElement, category){
-        if (checkboxElement.checked) {
-            vehicleCategories.push(category);
-        } else {
-            var index = vehicleCategories.indexOf(category);
-            vehicleCategories.splice(index, 1);
-        }
-    }
-</script>
-
-<script>
-    (() => {
-        'use strict'
-
-        const forms = document.querySelectorAll('.needs-validation')
-
-        Array.from(forms).forEach(form => {
-            form.addEventListener('submit', event => {                
-                if (!form.checkValidity()) {
-                    event.preventDefault()
-                    event.stopPropagation()
-                }
-                
-                form.classList.add('was-validated')
-            }, false)
-        })
-    })()
-</script>
-
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const serverErrorSpans = document.getElementById('serverErrors').querySelectorAll("span");
-        
-        Array.from(serverErrorSpans).forEach(errorSpan => {
-            if (errorSpan.textContent !== ""){
-                alert("hi");
-                document.getElementById(errorSpan.id + "Validation").textContent = errorSpan.textContent;
-                document.getElementById(errorSpan.id + "ValidationCustom").setAttribute("class", "form-control is-invalid")
-            }
-        });
-    });
-
-    function SetInputAsRequireValidation(inputElement) {
-        inputElement.setAttribute("class", "form-control");
-    }
-
-    function CheckFormForInvalidFields(){
-        const forms = document.getElementById("submitForm").querySelectorAll('input');
-
-        Array.from(forms).forEach(form => {
-            if (form.getAttribute("class") !== null) {
-                if (form.getAttribute("class").includes("is-invalid")) {
-                    form.setAttribute("class", "form-control");
-                }
-            }
-        });
-    }
-</script>

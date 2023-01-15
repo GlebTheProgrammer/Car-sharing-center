@@ -1,4 +1,6 @@
-﻿@model List<CarSharingApp.Application.Contracts.Vehicle.VehicleDisplayOnMap>;
+﻿@using System.Text.Json;
+
+@model List<CarSharingApp.Application.Contracts.Vehicle.VehicleDisplayOnMap>;
 
 <div class="container-fluid p-0 mt-3">
     <section class="row no-gutters align-items-center">
@@ -49,11 +51,59 @@
 <div class="mt-4">
     <div class="container-fluid">
         <div id="map" class="text-center" style="height: 400px; width: 100%;"></div>
-@*        <script>
-            var vehicles = '@Html.Raw(Json.Serialize(Model))';
-            initMap(vehicles); 
+        <script type="text/javascript">
+            var map;
+            function initMap(vehicles) {
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: { lat: 53.90588468960213, lng: 27.555191727187893 },
+                    zoom: 11
+                });
+
+                var model = '@(Html.Raw(Json.Serialize(Model)))';
+                var data = JSON.parse(model);
+
+
+
+                const infos = [];
+
+                for (let i = 0; i < data.length; i++) {
+                    var contentString = '<div>' +
+                        '<h5 class="card-title">' + data[i]['name'] + '</h5>' +
+                        '<img src="/vehicleImages/' + data[i]['image'] + '" style="max-width: 150px;">' +
+                        '</div>';
+
+                    infos.push(contentString);
+                }
+
+                var infoWindow = new google.maps.InfoWindow({
+                    disableAutoPan: true
+                });
+
+                for (let i = 0; i < data.length; i++) {
+                    const marker = new google.maps.Marker(
+                        {
+                            position: new google.maps.LatLng(data[i]['latitude'], data[i]['longitude']),
+                            map: map,
+                            title: data[i]['name'],
+                            icon: {
+                                url: "/Icons/vehicleIcon.png",
+                                scaledSize: new google.maps.Size(40, 40)
+                            },
+                            animation: google.maps.Animation.DROP
+                        });
+
+                    google.maps.event.addListener(marker, 'mouseover', function () {
+                        infoWindow.setContent(infos[i]),
+                            infoWindow.open(map, marker)
+                    });
+                    google.maps.event.addListener(marker, 'mouseout', function () {
+                        infoWindow.close()
+                    });
+
+                }
+            }
         </script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9AIXs7jB_3r8oRc1zd0i9p0nanEH5Q6M&callback=initMap" async defer></script>*@
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9AIXs7jB_3r8oRc1zd0i9p0nanEH5Q6M&callback=initMap" async defer></script>
     </div>
 </div>
 
