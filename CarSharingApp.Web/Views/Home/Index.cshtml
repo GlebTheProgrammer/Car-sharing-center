@@ -1,9 +1,11 @@
-﻿@model CarSharingApp.Models.MongoView.VehiclesHomeDataViewModel;
+﻿@using System.Text.Json;
+
+@model List<CarSharingApp.Application.Contracts.Vehicle.VehicleDisplayOnMap>;
 
 <div class="container-fluid p-0 mt-3">
     <section class="row no-gutters align-items-center">
         <div class="col-12 text-center d-flex">
-            <img class="img-fluid mt-3" src="~/Images/AboutUsPage/main.jpg" alt="First slide">
+            <img class="img-fluid mt-3" style="border-radius: 1%;" src="~/Images/AboutUsPage/main.jpg" alt="First slide">
             <div class="col-md-5 px-0 position-absolute text-white mt-5 ml-3">
                 <h1 class="display-4 font-italic">Future has arrived</h1>
                 <p class="lead my-3">Era when we don't have to worry about buying a new vehicle is already here...</p>
@@ -17,17 +19,17 @@
 <div class="container marketing mt-5">
     <div class="row">
         <div class="col-lg-4 text-center">
-            <img class="rounded-circle" src="~/Images/AboutUsPage/register.png" alt="Generic placeholder image" width="140" height="140">
+            <img class="rounded-circle" style="border-radius: 1%;" src="~/Images/AboutUsPage/register.png" alt="Generic placeholder image" width="140" height="140">
             <h2 class="mt-2">Register</h2>
             <p>Apply online with a valid driver's license and personal data. Most people are approved instantly and can book a vehicle within minutes. Don't worry, your data is fully secured.</p>
         </div>
         <div class="col-lg-4 text-center">
-            <img class="rounded-circle" src="~/Images/AboutUsPage/choose.png" alt="Generic placeholder image" width="140" height="140">
+            <img class="rounded-circle" style="border-radius: 1%;" src="~/Images/AboutUsPage/choose.png" alt="Generic placeholder image" width="140" height="140">
             <h2 class="mt-2">Select vehicle</h2>
             <p>Choose any vehicle from the catalog. You can check information about any available vehicle and select it according to your preferences. All vehicles are registered and licensed.</p>
         </div>
         <div class="col-lg-4 text-center">
-            <img class="rounded-circle" src="~/Images/AboutUsPage/drive.png" alt="Generic placeholder image" width="140" height="140">
+            <img class="rounded-circle" style="border-radius: 1%;" src="~/Images/AboutUsPage/drive.png" alt="Generic placeholder image" width="140" height="140">
             <h2 class="mt-2">Enjoy</h2>
             <p>Alright, you are ready to try your new vehicle out. When you're done, don't forget to park the vehicle in the same location you picked it up from, then end the trip with the app.</p>
         </div>
@@ -49,26 +51,25 @@
 <div class="mt-4">
     <div class="container-fluid">
         <div id="map" class="text-center" style="height: 400px; width: 100%;"></div>
-        <script>
+        <script type="text/javascript">
             var map;
-            function initMap()
-            {
+            function initMap(vehicles) {
                 map = new google.maps.Map(document.getElementById('map'), {
                     center: { lat: 53.90588468960213, lng: 27.555191727187893 },
-                    zoom : 11
+                    zoom: 11
                 });
 
-                var model = '@Html.Raw(Json.Serialize(Model.VehiclesLocation))';
+                var model = '@(Html.Raw(Json.Serialize(Model)))';
                 var data = JSON.parse(model);
 
-                var vehiclesData = JSON.parse('@Html.Raw(Json.Serialize(Model.Vehicles))');
+
 
                 const infos = [];
 
                 for (let i = 0; i < data.length; i++) {
                     var contentString = '<div>' +
-                        '<h5 class="card-title">' + vehiclesData[i]['name'] + '</h5>' +
-                        '<img src="/vehicleImages/' + vehiclesData[i]['image'] + '" style="max-width: 150px;">' +
+                        '<h5 class="card-title">' + data[i]['name'] + '</h5>' +
+                        '<img src="/vehicleImages/' + data[i]['image'] + '" style="max-width: 150px;">' +
                         '</div>';
 
                     infos.push(contentString);
@@ -80,20 +81,20 @@
 
                 for (let i = 0; i < data.length; i++) {
                     const marker = new google.maps.Marker(
-                    {
-                        position: new google.maps.LatLng(data[i][0], data[i][1]),
-                        map: map,
-                        title: vehiclesData[i]['name'],
-                        icon: {
-                            url: "/Icons/vehicleIcon.png",
-                            scaledSize: new google.maps.Size(40, 40)
-                        },
-                        animation: google.maps.Animation.DROP
-                    });
+                        {
+                            position: new google.maps.LatLng(data[i]['latitude'], data[i]['longitude']),
+                            map: map,
+                            title: data[i]['name'],
+                            icon: {
+                                url: "/Icons/vehicleIcon.png",
+                                scaledSize: new google.maps.Size(40, 40)
+                            },
+                            animation: google.maps.Animation.DROP
+                        });
 
                     google.maps.event.addListener(marker, 'mouseover', function () {
                         infoWindow.setContent(infos[i]),
-                        infoWindow.open(map, marker)
+                            infoWindow.open(map, marker)
                     });
                     google.maps.event.addListener(marker, 'mouseout', function () {
                         infoWindow.close()
@@ -112,27 +113,27 @@
 
 <div class="content-section__header content-lg spacing-2rem text-center medium-text-center mt-5">
     <h2>Sam Vehicles Sharing in Minsk</h2>
-    <h6><span class="text-muted">Applying is as easy as 1,2,3. All you need is to be 21 or older</span></h6>
-    <h6><span class="text-muted">(18 if a student or where required by law) and have a valid driver’s license.</span></h6>
+    <h6><span class="text-muted">Applying is as easy as 1,2,3. All you need is to be 21+ y.o.</span></h6>
+    <h6><span class="text-muted">(18+ y.o. if a student or where required by law) and have a valid driver’s license.</span></h6>
 </div>
 
 <div class="container marketing mt-5">
 
     <!-- Three columns of text below the carousel -->
     <div class="row">
-        <div class="col-lg-4">
+        <div class="col-lg-4 text-center">
             <img src="~/Images/AboutUsPage/why.png" alt="Generic placeholder image" width="140" height="140">
             <h2 class="mt-1">Why Us</h2>
             <p>We are a company with many years of experience. We are trying to keep up with the times and bring something that could be implemented in the distant future right now.</p>
             <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
         </div><!-- /.col-lg-4 -->
-        <div class="col-lg-4">
+        <div class="col-lg-4 text-center">
             <img src="~/Images/AboutUsPage/communicate.png" alt="Generic placeholder image" width="140" height="140">
             <h2 class="mt-1">Partnership</h2>
             <p>Our service is used by millions of people around the world. Our sponsors and partners are always ready to offer the best conditions for clients and discounts for active users.</p>
             <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
         </div><!-- /.col-lg-4 -->
-        <div class="col-lg-4">
+        <div class="col-lg-4 text-center">
             <img src="~/Images/AboutUsPage/motorbike.png" alt="Generic placeholder image" width="140" height="140">
             <h2 class="mt-1">Variety of Vehicles</h2>
             <p>We provide hundreds of vehicles from our partners to choose from, including premium vehicles, as well as vehicles that other users also want to rent. Join us now!</p>
@@ -155,7 +156,7 @@
             </p>
         </div>
         <div class="col-md-5">
-            <img class="featurette-image img-fluid mx-auto" src="~/Images/AboutUsPage/review1.jpg" alt="Generic placeholder image">
+            <img class="featurette-image img-fluid mx-auto" style="border-radius: 1%;" src="~/Images/AboutUsPage/review1.jpg" alt="Generic placeholder image">
         </div>
     </div>
 
@@ -169,14 +170,14 @@
             </p>
         </div>
         <div class="col-md-5 order-md-1">
-            <img class="featurette-image img-fluid mx-auto" src="~/Images/AboutUsPage/review2.jpg" alt="Generic placeholder image">
+            <img class="featurette-image img-fluid mx-auto" style="border-radius: 1%;" src="~/Images/AboutUsPage/review2.jpg" alt="Generic placeholder image">
         </div>
     </div>
 
     <hr class="featurette-divider">
 
     <div class="row featurette">
-        <div class="col-md-7 mt-3">
+        <div class="col-md-7 mt-5">
             <h2 class="featurette-heading">Delivery room dash. <span class="text-muted">How is that even possible???</span></h2>
             <p class="lead">
                 Jordan: We haven't had our own private car for a few years now, and we also gave up my company car at some point. It's just not worth it for us to own a car. The parking situation in Minsk doesn't make it any better. That's why we use car sharing about three times a week.
@@ -186,7 +187,7 @@
             </p>
         </div>
         <div class="col-md-5">
-            <img class="featurette-image img-fluid mx-auto" src="~/Images/AboutUsPage/review3.jpg" alt="Generic placeholder image">
+            <img class="featurette-image img-fluid mx-auto" style="border-radius: 1%;" src="~/Images/AboutUsPage/review3.jpg" alt="Generic placeholder image">
         </div>
     </div>
 
@@ -195,3 +196,5 @@
     <!-- /END THE FEATURETTES -->
 
 </div><!-- /.container -->
+
+<script src="~/js/homePage.js" asp-append-version="true"></script>

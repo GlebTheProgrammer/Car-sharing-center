@@ -10,8 +10,8 @@ namespace CarSharingApp.Domain.ValueObjects
     {
         public const int MinStreetAddressLength = 5;
         public const int MaxStreetAddressLength = 25;
-        public const int MinAptSuitEtcLength = 3;
-        public const int MaxAptSuitEtcLength = 25;
+        public const int MinAptSuiteEtcLength = 3;
+        public const int MaxAptSuiteEtcLength = 25;
         public const int MinCityLength = 5;
         public const int MaxCityLength = 25;
         public static readonly Regex LatitudeLongitudeRegex = new Regex(@"^[0-9]*(?:\.[0-9]*)?$");
@@ -53,9 +53,9 @@ namespace CarSharingApp.Domain.ValueObjects
             {
                 errors.Add(DomainErrors.Vehicle.InvalidStreetAddress);
             }
-            if (aptSuiteEtc.Length is > MaxAptSuitEtcLength or < MinAptSuitEtcLength)
+            if (aptSuiteEtc.Length is > MaxAptSuiteEtcLength or < MinAptSuiteEtcLength)
             {
-                errors.Add(DomainErrors.Vehicle.InvalidAptSuitEtc);
+                errors.Add(DomainErrors.Vehicle.InvalidAptSuiteEtc);
             }
             if (city.Length is > MaxCityLength or < MinCityLength)
             {

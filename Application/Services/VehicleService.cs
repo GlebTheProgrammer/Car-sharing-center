@@ -100,7 +100,7 @@ namespace CarSharingApp.Application.Services
                 request.Transmission,
                 request.Engine,
                 request.VIN,
-                request.Categories);
+                request.Categories.Split(',').ToList());
         }
 
         public ErrorOr<Vehicle> From(Vehicle vehicle, UpdateVehicleInfoRequest request)

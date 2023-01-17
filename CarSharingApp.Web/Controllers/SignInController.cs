@@ -1,51 +1,57 @@
-﻿using CarSharingApp.Login;
-using CarSharingApp.Models.Mongo;
-using CarSharingApp.Models.MongoView;
-using CarSharingApp.Repository.MongoDbRepository;
+﻿using CarSharingApp.Application.Contracts.Authorization;
+using CarSharingApp.Application.Contracts.ErrorType;
+using CarSharingApp.Web.Clients.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
+using System.Text.Json;
 
 namespace CarSharingApp.Controllers
 {
     public class SignInController : Controller
     {
-        private readonly MongoDbService _mongoDbService;
-        private readonly IJwtProvider _jwtProvider;
+        private readonly IAuthorizationServicePublicApiClient _authorizationServiceClient;
 
-        public SignInController(MongoDbService mongoDbService, IJwtProvider jwtProvider)
+        public SignInController(IAuthorizationServicePublicApiClient authorizationServiceClient)
         {
-            _jwtProvider = jwtProvider;
-            _mongoDbService= mongoDbService;
+            _authorizationServiceClient = authorizationServiceClient;
         }
 
         public IActionResult Index()
         {
-            var unsignedUser = new UserSignInModel();
+            var authorizationRequest = new AuthorizationRequest(
+                EmailOrLogin: string.Empty,
+                Password: string.Empty);
 
-            return View(unsignedUser);
+            return View(authorizationRequest);
         }
 
-        public async Task<IActionResult> TrySignIn(UserSignInModel signedUser)
+        public async Task<IActionResult> TrySignIn(AuthorizationRequest request)
         {
-            if (!ModelState.IsValid)
-                return View("Index", signedUser);
+            var response = await _authorizationServiceClient.TryAuthorize(request);
 
-            Customer customer = await _mongoDbService.TrySignIn(signedUser);
+            string responseContent = await response.Content.ReadAsStringAsync();
 
-            if (customer == null)
+            switch (response.StatusCode)
             {
-                HttpContext.Session.SetString("AuthorizationFailed", "true");
-                return RedirectToAction("Index");
+                case HttpStatusCode.Forbidden:
+                    {
+                        ForbiddenError forbiddenError = JsonSerializer.Deserialize<ForbiddenError>(responseContent) ?? new ForbiddenError();
+
+                        ModelState.AddModelError(nameof(request.Password), forbiddenError.Title);
+
+                        return View("Index", request);
+                    }
+                default:
+                    break;
             }
 
-            Credentials credentials = await _mongoDbService.GetCredetnialsByUserId(customer.Id);
+            TokenResponse tokenResponse = JsonSerializer.Deserialize<TokenResponse>(responseContent) ?? new TokenResponse(string.Empty);
 
-            var tokenResult = _jwtProvider.Generate(customer, credentials);
+            if (tokenResponse.JWToken is null)
+                throw new Exception("Token was'nt generated");
 
-            if (tokenResult == null)
-                throw new Exception("Token can not be generated");
-
-            HttpContext.Session.SetString("JWToken", tokenResult);
+            HttpContext.Session.SetString("JWToken", tokenResponse.JWToken);
             HttpContext.Session.SetString("SignedIn", "true");
 
             return RedirectToAction("Index", "Home");

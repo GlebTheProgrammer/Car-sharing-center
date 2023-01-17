@@ -12,7 +12,7 @@ namespace CarSharingApp.Domain.ValueObjects
         public const int MinProductionYear = 2000;
         public const int MaxPossibleSpeed = 1000;
         public const int MinPossibleSpeed = 200;
-        public static readonly Regex vinRegex = new Regex("^[A-HJ-NPR-Za-hj-npr-z\\d]{8}[\\dX][A-HJ-NPR-Za-hj-npr-z\\d]{2}\\d{6}$");
+        public static readonly Regex vinRegex = new Regex("[A-HJ-NPR-Z0-9]{17}");
 
         public int ProductionYear { get; private set; }
         public int MaxSpeedKph { get; private set; }

@@ -65,7 +65,7 @@ namespace CarSharingApp.PublicApi.Controllers
             ErrorOr<List<Vehicle>> getVehiclesResult = await _vehicleService.GetAllAsync();
 
             return getVehiclesResult.Match(
-                vehicles => Ok(MapVehicleResponse(vehicles)),
+                vehicles => Ok(MapVehicleResponse(vehicles.Where(v => v.Status.IsPublished && v.Status.IsConfirmedByAdmin).ToList())),
                 errors => Problem(errors));
         }
 

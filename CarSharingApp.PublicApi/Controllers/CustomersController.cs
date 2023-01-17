@@ -40,6 +40,30 @@ namespace CarSharingApp.PublicApi.Controllers
                 errors => Problem(errors));
         }
 
+        [HttpGet("NewCustomerRequestTemplate")]
+        [AllowAnonymous]
+        public IActionResult GetCreateNewCustomerRequestTemplate()
+        {
+            var createCustomerRequestTemplate = new CreateCustomerRequest(
+                FirstName: string.Empty,
+                LastName: string.Empty,
+                StreetAddress: string.Empty,
+                AptSuiteEtc: string.Empty,
+                City: string.Empty,
+                Country: string.Empty,
+                ZipPostCode: string.Empty,
+                PhoneNumber: string.Empty,
+                DriverLicenseIdentifier: string.Empty,
+                HasAcceptedNewsSharing: false,
+                Login: string.Empty,
+                Email: string.Empty,
+                Password: string.Empty,
+                ConfirmPassword: string.Empty,
+                HasAcceptedTermsAndConditions: false);
+
+            return Ok(createCustomerRequestTemplate);
+        }
+
         [HttpGet("{id:guid}")]
         [Authorize(Roles = "Administrator, Customer")]
         public async Task<IActionResult> GetCustomer(Guid id)

@@ -5,7 +5,6 @@ using CarSharingApp.Infrastructure.Authentication;
 using CarSharingApp.Infrastructure.MongoDB;
 using CarSharingApp.Infrastructure.AzureKeyVault;
 using CarSharingApp.Infrastructure.Options.Setup;
-using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -19,7 +18,10 @@ var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen();
+    builder.Services.AddSwaggerGen(config =>
+    {
+        config.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo() { Title = "Car Sharing Application Public API", Version = "v1" });
+    });
 
     builder.Services.AddAzureKeyVaultAppsettingsValues(builder.Configuration);
 
@@ -40,12 +42,13 @@ var app = builder.Build();
 {
     app.UseExceptionHandler("/error");
 
-    if (app.Environment.IsDevelopment())
+    app.UseSwagger();
+    app.UseSwaggerUI(config =>
     {
-        app.UseSwagger();
-        app.UseSwaggerUI();
-    }
-    app.UseHttpsRedirection();
+        config.SwaggerEndpoint("/swagger/v1/swagger.json", "Car Sharing Application Public API");
+    });
+
+    //app.UseHttpsRedirection();
     app.UseAuthorization();
     app.MapControllers();
     app.Run();

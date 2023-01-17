@@ -1,31 +1,73 @@
-﻿using CarSharingApp.Models.MongoView;
-using CarSharingApp.Repository.MongoDbRepository;
+﻿using CarSharingApp.Application.Contracts.Customer;
+using CarSharingApp.Application.Contracts.ErrorType;
+using CarSharingApp.Web.Clients.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
+using System.Text.Json;
 
 namespace CarSharingApp.Controllers
 {
-    public class RegistrationController : Controller
+    public sealed class RegistrationController : Controller
     {
-        private readonly MongoDbService _mongoDbService;
+        private readonly ICustomerServicePublicApiClient _customerServiceClient;
 
-        public RegistrationController(MongoDbService mongoDbService)
+        public RegistrationController(ICustomerServicePublicApiClient customerServiceClient)
         {
-            _mongoDbService = mongoDbService;
+            _customerServiceClient = customerServiceClient;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var unsignedUser = new CustomerRegisterModel();
+            var response = await _customerServiceClient.GetCreateNewCustomerRequestTemplate();
 
-            return View(unsignedUser);
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.Unauthorized:
+                    return RedirectToAction("Unauthorized401Error", "CustomExceptionHandle");
+
+                default:
+                    break;
+            }
+
+            response.EnsureSuccessStatusCode();
+
+            CreateCustomerRequest request = await response.Content.ReadFromJsonAsync<CreateCustomerRequest>()
+                ?? throw new NullReferenceException(nameof(request));
+
+            return View(request);
         }
 
-        public async Task<IActionResult> Register(CustomerRegisterModel newCustomerRegisterModel)
+        public async Task<IActionResult> Register(CreateCustomerRequest createCustomerRequest)
         {
-            if (!ModelState.IsValid)
-                return View("Index", newCustomerRegisterModel);
+            var response = await _customerServiceClient.CreteNewCustomer(createCustomerRequest);
 
-            await _mongoDbService.RegisterNewCustomer(newCustomerRegisterModel);
+            string responseContent = await response.Content.ReadAsStringAsync();
+
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.BadRequest:
+                    {
+                        ValidationError validationError = JsonSerializer.Deserialize<ValidationError>(responseContent) ?? new ValidationError();
+
+                        foreach (var error in validationError.Errors)
+                        {
+                            ModelState.AddModelError(error.Key.Contains('.') ? error.Key.Substring(error.Key.LastIndexOf('.')) : error.Key, 
+                                error.Value.FirstOrDefault() ?? string.Empty);
+                        }
+
+                        return View("Index", createCustomerRequest);
+                    }
+                case HttpStatusCode.Conflict:
+                    {
+                        ValidationError validationError = JsonSerializer.Deserialize<ValidationError>(responseContent) ?? new ValidationError();
+
+                        ViewBag.ConflictErrorMessage = validationError.Title;
+
+                        return View("Index", createCustomerRequest);
+                    }
+                default:
+                    break;
+            }
 
             HttpContext.Session.SetString("Registered", "true");
 

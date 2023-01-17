@@ -22,11 +22,11 @@ namespace CarSharingApp.Domain.ValueObjects
         {
             List<Error> errors = new();
 
-            if (hourlyRentalPrice > dailyRentalPrice)
+            if (hourlyRentalPrice >= dailyRentalPrice)
             {
                 errors.Add(DomainErrors.Vehicle.InvalidRentalPriceDifference);
             }
-            if (hourlyRentalPrice > MaxPrice && dailyRentalPrice > MaxPrice)
+            if (hourlyRentalPrice < MinPrice || dailyRentalPrice < MinPrice || hourlyRentalPrice > MaxPrice || dailyRentalPrice > MaxPrice)
             {
                 errors.Add(DomainErrors.Vehicle.InvalidRentalPrice);
             }

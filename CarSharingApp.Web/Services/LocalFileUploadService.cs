@@ -22,5 +22,16 @@ namespace CarSharingApp.Services
             await file.CopyToAsync(fileStream);
             return newFileName;
         }
+
+        public void UnloadFile(string fileName)
+        {
+            string[] files = Directory.GetFiles(Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot/vehicleImages/"));
+
+            string? existingFile = files.FirstOrDefault(str => str.Contains(fileName));
+            if (existingFile is not null)
+            {
+                File.Delete(existingFile);
+            }
+        }
     }
 }

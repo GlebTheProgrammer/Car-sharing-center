@@ -206,10 +206,10 @@ namespace CarSharingApp.Application.Services
                     return ApplicationErrors.Customer.EmailHasAlreadyExist;
 
                 case (customerWithSameEmail: null, customerWithSameLogin: not null):
-                    return ApplicationErrors.Customer.UsernameHasAlreadyExist;
+                    return ApplicationErrors.Customer.LoginHasAlreadyExist;
 
                 case (customerWithSameEmail: not null, customerWithSameLogin: not null):
-                    return ApplicationErrors.Customer.UsernameAndEmailHaveAlreadyExist;
+                    return ApplicationErrors.Customer.LoginAndEmailHaveAlreadyExist;
 
                 default:
                     break;

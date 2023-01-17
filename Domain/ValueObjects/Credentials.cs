@@ -34,9 +34,9 @@ namespace CarSharingApp.Domain.ValueObjects
         {
             List<Error> errors = new();
 
-            if (login.Length is > MaxLoginLength or < MinLoginLength)
+            if (login.Length > MaxLoginLength || login.Length < MinLoginLength || login.Contains(' '))
             {
-                errors.Add(DomainErrors.Customer.InvalidUsername);
+                errors.Add(DomainErrors.Customer.InvalidLogin);
             }
             if (!EmailRegex.IsMatch(email))
             {
@@ -66,7 +66,7 @@ namespace CarSharingApp.Domain.ValueObjects
 
             if (login.Length is > MaxLoginLength or < MinLoginLength)
             {
-                errors.Add(DomainErrors.Customer.InvalidUsername);
+                errors.Add(DomainErrors.Customer.InvalidLogin);
             }
             if (!EmailRegex.IsMatch(email))
             {

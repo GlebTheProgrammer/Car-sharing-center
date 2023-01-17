@@ -11,15 +11,9 @@ addEventListener("beforeunload", () => {
     localStorage.removeItem("marker-long");
 });
 
-// Function for hiding span error messages
-function HideErrorSpan(componentId) {
-    var component = document.getElementById(componentId);
-    component.textContent = "";
-}
-
 // Function for selecting user image and displaying it
 function onFileSelected(event) {
-    var file = document.getElementById("ImageFileInput");
+    var file = document.getElementById("ImageFileInputErrorValidationCustom");
     if (file.files.length == 0) {
         return;
     }
@@ -32,16 +26,38 @@ function onFileSelected(event) {
 
     reader.onload = function (event) {
 
-        const imageInputElement = document.getElementById("imageInput");
+        const imageInputElement = document.getElementById("imageInputErrorValidationCustom");
         imageInputElement.value = event.target.result;
 
         const noImageElement = document.getElementById("noCarImage");
         noImageElement.style.display = "none";
 
+        const uploadButtonElement = document.getElementById("unloadImageButton");
+        uploadButtonElement.removeAttribute("disabled");
+
         imgtag.src = event.target.result;
     };
 
     reader.readAsDataURL(selectedFile);
+}
+
+function UnloadImage() {
+    var form = document.getElementById("createNewVehicleForm");
+    form.reset();
+
+    var imgtag = document.getElementById("carImage");
+    imgtag.title = "";
+
+    const imageInputElement = document.getElementById("imageInputErrorValidationCustom");
+    imageInputElement.value = "";
+
+    const noImageElement = document.getElementById("noCarImage");
+    noImageElement.removeAttribute("style");
+
+    const uploadButtonElement = document.getElementById("unloadImageButton");
+    uploadButtonElement.setAttribute("disabled", "");
+
+    imgtag.removeAttribute("src");
 }
 
 // Section for working with googleMaps starts here
@@ -50,12 +66,40 @@ var markersArray = [];
 // Function for setting up a marker on the map
 function setUpTheMarker() {
 
-    var address = document.getElementById('carAddress').value;
+    let vehicleStreetAddress = document.getElementById('streetAddressErrorValidationCustom');
+    let vehicleAptSuiteEtc = document.getElementById('aptSuiteEtcErrorValidationCustom');
+    let vehileCountry = document.getElementById('countryErrorValidationCustom');
+    let vehicleCity = document.getElementById('cityErrorValidationCustom');
+
+    let areValidatedFields = true;
+
+    if (!vehicleStreetAddress.checkValidity()) {
+        vehicleStreetAddress.setAttribute("class", "form-control is-invalid");
+        areValidatedFields = false;
+    }
+    if (!vehicleAptSuiteEtc.checkValidity()) {
+        vehicleAptSuiteEtc.setAttribute("class", "form-control is-invalid");
+        areValidatedFields = false;
+    }
+    if (!vehileCountry.checkValidity()) {
+        vehileCountry.setAttribute("class", "form-control is-invalid");
+        areValidatedFields = false;
+    }
+    if (!vehicleCity.checkValidity()) {
+        vehicleCity.setAttribute("class", "form-control is-invalid");
+        areValidatedFields = false;
+    }
+
+    if (!areValidatedFields) {
+        return;
+    }
+
+    let vehicleAddress = vehicleStreetAddress.value.concat(" ", vehicleAptSuiteEtc.value);
 
     geocoder = new google.maps.Geocoder();
 
     geocoder.geocode({
-        address: address
+        address: vehicleAddress
     }, (results, status) => {
         if (status == google.maps.GeocoderStatus.OK) {
 
@@ -72,8 +116,8 @@ function setUpTheMarker() {
 
             markersArray.push(marker);
 
-            document.getElementById('latit').value = results[0].geometry.location.lat();
-            document.getElementById('longit').value = results[0].geometry.location.lng();
+            document.getElementById('latitudeErrorValidationCustom').value = results[0].geometry.location.lat();
+            document.getElementById('longitudeErrorValidationCustom').value = results[0].geometry.location.lng();
 
             map.setCenter({ lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng() });
 
@@ -82,11 +126,45 @@ function setUpTheMarker() {
             localStorage.setItem("marker-lat", results[0].geometry.location.lat());
             localStorage.setItem("marker-long", results[0].geometry.location.lng());
 
+            vehicleStreetAddress.setAttribute("readonly", "readonly");
+            vehicleStreetAddress.setAttribute("class", "form-control is-valid");
+            vehicleAptSuiteEtc.setAttribute("readonly", "readonly");
+            vehicleAptSuiteEtc.setAttribute("class", "form-control is-valid");
+            vehicleCity.setAttribute("readonly", "readonly");
+            vehicleCity.setAttribute("class", "form-control is-valid");
+            vehileCountry.setAttribute("readonly", "readonly");
+            vehileCountry.setAttribute("class", "form-control is-valid");
+
+            document.getElementById("resetMarkerBtn").setAttribute("class", "btn btn-outline-warning mt-3");
+            document.getElementById("searchVehicleBtn").setAttribute("class", "btn btn-outline-primary mt-3 visually-hidden");
+
         } else {
             alert('Address was not found. Response: ' + status);
         }
     });
+}
 
+function resetMarker() {
+    let vehicleStreetAddress = document.getElementById('streetAddressErrorValidationCustom');
+    let vehicleAptSuiteEtc = document.getElementById('aptSuiteEtcErrorValidationCustom');
+    let vehileCountry = document.getElementById('countryErrorValidationCustom');
+    let vehicleCity = document.getElementById('cityErrorValidationCustom');
+
+    vehicleStreetAddress.removeAttribute("readonly");
+    vehicleAptSuiteEtc.removeAttribute("readonly");
+    vehileCountry.removeAttribute("readonly");
+    vehicleCity.removeAttribute("readonly");
+
+    document.getElementById("resetMarkerBtn").setAttribute("class", "btn btn-outline-warning mt-3 visually-hidden");
+    document.getElementById("searchVehicleBtn").setAttribute("class", "btn btn-outline-primary mt-3");
+
+    localStorage.removeItem("marker-lat");
+    localStorage.removeItem("marker-long");
+
+    document.getElementById('latitudeErrorValidationCustom').value = "";
+    document.getElementById('longitudeErrorValidationCustom').value = "";
+
+    clearAllMarkers();
 }
 
 // Function for deleting all markers from the array
@@ -117,8 +195,63 @@ window.addEventListener("load", () => {
             }
         });
 
-        document.getElementById('latit').value = latit;
-        document.getElementById('longit').value = long;
+        document.getElementById('latitudeErrorValidationCustom').value = latit;
+        document.getElementById('longitudeErrorValidationCustom').value = long;
     }
 });
 // Section for working with googleMaps ends here
+
+(() => {
+    'use strict'
+
+    const forms = document.querySelectorAll('.needs-validation')
+
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+
+            form.classList.add('was-validated')
+        }, false)
+    })
+})()
+
+document.addEventListener("DOMContentLoaded", () => {
+    const serverErrorSpans = document.getElementById('serverErrors').querySelectorAll("span");
+
+    Array.from(serverErrorSpans).forEach(errorSpan => {
+        if (errorSpan.textContent !== "") {
+            document.getElementById(errorSpan.id + "Validation").textContent = errorSpan.textContent;
+            document.getElementById(errorSpan.id + "ValidationCustom").setAttribute("class", "form-control is-invalid")
+        }
+    });
+});
+
+function SetInputAsRequireValidation(inputElement) {
+    inputElement.setAttribute("class", "form-control");
+}
+
+function CheckFormForInvalidFields() {
+    const forms = document.getElementById("submitForm").querySelectorAll('input');
+
+    Array.from(forms).forEach(form => {
+        if (form.getAttribute("class") !== null) {
+            if (form.getAttribute("class").includes("is-invalid")) {
+                form.setAttribute("class", "form-control");
+            }
+        }
+    });
+}
+
+const vehicleCategories = [];
+
+function FilterCategories(checkboxElement, category) {
+    if (checkboxElement.checked) {
+        vehicleCategories.push(category);
+    } else {
+        var index = vehicleCategories.indexOf(category);
+        vehicleCategories.splice(index, 1);
+    }
+}

@@ -68,30 +68,11 @@ label.star:before {
 }
 /*Star rating css ends here*/
 
-/*Dropdown css starts here*/
-@media (min-width: 576px){
-
-    .dropdown-menu {
-        display: block;
-        visibility: hidden;
-        opacity: 0;
-        transition-property: opacity, visibility;
-        transition-duration: .4s, 0s;
-        transition-delay: 0s, .4s;
-    }
-
-    .dropdown:hover > .dropdown-menu {
-        visibility: visible;
-        opacity: 1;
-        transition-delay: 0s, 0s;
-    }
-
-    .dropdown-menu:after {
-        opacity: 0;
-    }
-
-    .dropdown-menu > li > a:focus {
-        background-color:grey;
-    }
+.dropdown-item:hover {
+    background-color: whitesmoke !important;
 }
-/*Dropdown css ends here*/
+
+.dropdown-item.active {
+    background-color: lightgrey !important;
+}
+
