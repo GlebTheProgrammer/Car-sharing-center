@@ -51,7 +51,7 @@ namespace CarSharingApp.Domain.ValueObjects
             }
             if (aptSuiteEtc.Length is > MaxAptSuitEtcLength or < MinAptSuitEtcLength)
             {
-                errors.Add(DomainErrors.Customer.InvalidAptSuitEtc);
+                errors.Add(DomainErrors.Customer.InvalidAptSuiteEtc);
             }
             if (city.Length is > MaxCityLength or < MinCityLength)
             {
