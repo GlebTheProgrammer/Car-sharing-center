@@ -17,6 +17,14 @@ using CarSharingApp.Web.Clients.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Host.ConfigureLogging((context, logging) =>
+{
+    //logging.ClearProviders();
+    logging.AddConfiguration(context.Configuration.GetSection("Logging"));
+    logging.AddDebug();
+    //logging.AddConsole();
+});
+
 builder.Services.AddControllersWithViews();
 
 
@@ -92,7 +100,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseSession();
 

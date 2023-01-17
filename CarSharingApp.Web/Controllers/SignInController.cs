@@ -57,7 +57,6 @@ namespace CarSharingApp.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [Authorize]
         public IActionResult Logout()
         {
             HttpContext.Session.Remove("JWToken");
