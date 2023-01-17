@@ -14,6 +14,8 @@ using CarSharingApp.Repository.MongoDbRepository;
 using CarSharingApp.Web.Clients;
 using CarSharingApp.Web.Clients.Interfaces;
 using CarSharingApp.Web.Clients.Extensions;
+using IdentityModel.Client;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +37,43 @@ builder.Services.RegisterNewHttpClients("CustomersAPI", builder.Configuration);
 builder.Services.AddSingleton<IAuthorizationServicePublicApiClient, AuthorizationServicePublicApiClient>();
 builder.Services.RegisterNewHttpClients("AuthorizationAPI", builder.Configuration);
 
+HttpClient client = new HttpClient();
+DiscoveryDocumentResponse document = await client.GetDiscoveryDocumentAsync("https://localhost:5001");
+if (document.IsError)
+{
+    throw new Exception(document.Error);
+}
+
+var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
+{
+    Address = document.TokenEndpoint,
+
+    ClientId = "client",
+    ClientSecret = "secret",
+    Scope = "CarSharingService.IdentityServer.API"
+});
+
+if (tokenResponse.IsError)
+{
+    throw new Exception(tokenResponse.Error);
+}
+
+string token = tokenResponse.AccessToken;
+
+// call api
+var apiClient = new HttpClient();
+apiClient.SetBearerToken(tokenResponse.AccessToken);
+
+var response = await apiClient.GetAsync("https://localhost:44363/Authorization");
+if (!response.IsSuccessStatusCode)
+{
+    Console.WriteLine(response.StatusCode);
+}
+else
+{
+    var doc = JsonDocument.Parse(await response.Content.ReadAsStringAsync()).RootElement;
+    Console.WriteLine(JsonSerializer.Serialize(doc, new JsonSerializerOptions { WriteIndented = true }));
+}
 
 
 

@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.Extensions.Options;
 
 namespace CarSharingApp.Infrastructure.Authentication
 {
@@ -13,26 +14,13 @@ namespace CarSharingApp.Infrastructure.Authentication
             var key = Encoding.UTF8.GetBytes(configuration["JwtBearer:SecretKey"] 
                 ?? throw new ArgumentNullException("SecretKey"));
 
-            services.AddAuthentication(options =>
+            services.AddAuthentication("Bearer").AddJwtBearer("Bearer", opt =>
             {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(opt =>
-            {
-                opt.RequireHttpsMetadata = false;
-                opt.SaveToken = true;
+                opt.Authority = "https://localhost:5001";
+
                 opt.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidIssuers = new string[] { configuration["JwtBearer:Issuer"] 
-                    ?? throw new ArgumentNullException("Issuer") },
-                    ValidAudiences = new string[] { configuration["JwtBearer:Audience"] 
-                    ?? throw new ArgumentNullException("Audience") },
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero
+                    ValidateAudience = false
                 };
             });
 

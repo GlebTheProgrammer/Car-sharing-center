@@ -48,6 +48,13 @@ namespace CarSharingApp.PublicApi.Controllers
                 value: MapTokenResponse(JWToken));
         }
 
+        [HttpGet]
+        [Microsoft.AspNetCore.Authorization.Authorize]
+        public IActionResult Get()
+        {
+            return new JsonResult(from c in User.Claims select new { c.Type, c.Value });
+        }
+
         private static TokenResponse MapTokenResponse(string Token)
         {
             return new TokenResponse(Token);
