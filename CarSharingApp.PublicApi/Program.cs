@@ -4,8 +4,6 @@ using CarSharingApp.Domain.Entities;
 using CarSharingApp.Infrastructure.Authentication;
 using CarSharingApp.Infrastructure.MongoDB;
 using CarSharingApp.Infrastructure.AzureKeyVault;
-using CarSharingApp.Infrastructure.Options.Setup;
-using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -26,16 +24,12 @@ var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.AddAzureKeyVaultAppsettingsValues(builder.Configuration);
 
-    builder.Services.ConfigureOptions<JwtOptionsSetup>();
-
     builder.Services.AddMongo(builder.Configuration);
     builder.Services.AddMongoRepository<Vehicle>(builder.Configuration["MongoDbConfig:Collections:VehiclesCollectionName"] ?? "");
     builder.Services.AddSingleton<IVehicleService, VehicleService>();
     builder.Services.AddMongoRepository<Customer>(builder.Configuration["MongoDbConfig:Collections:CustomersCollectionName"] ?? "");
     builder.Services.AddSingleton<ICustomerService, CustomerService>();
 
-    builder.Services.AddSingleton<IAuthorizationService, AuthorizationService>();
-    builder.Services.AddTransient<IJwtProvider, JwtProvider>();
     builder.Services.AddJwtBearerAuthentication(builder.Configuration);
 }
 

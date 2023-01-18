@@ -1,7 +1,6 @@
 ﻿using CarSharingApp.Application.Contracts.Authorization;
 using CarSharingApp.Application.Contracts.ErrorType;
 using CarSharingApp.Web.Clients.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Text.Json;
@@ -34,11 +33,10 @@ namespace CarSharingApp.Controllers
 
             switch (response.StatusCode)
             {
+                case HttpStatusCode.ServiceUnavailable:
                 case HttpStatusCode.Forbidden:
                     {
-                        ForbiddenError forbiddenError = JsonSerializer.Deserialize<ForbiddenError>(responseContent) ?? new ForbiddenError();
-
-                        ModelState.AddModelError(nameof(request.Password), forbiddenError.Title);
+                        ModelState.AddModelError(nameof(request.Password), responseContent);
 
                         return View("Index", request);
                     }
@@ -46,12 +44,10 @@ namespace CarSharingApp.Controllers
                     break;
             }
 
-            TokenResponse tokenResponse = JsonSerializer.Deserialize<TokenResponse>(responseContent) ?? new TokenResponse(string.Empty);
+            if (responseContent is null)
+                throw new Exception("Token wasn't generated.");
 
-            if (tokenResponse.JWToken is null)
-                throw new Exception("Token was'nt generated");
-
-            HttpContext.Session.SetString("JWToken", tokenResponse.JWToken);
+            HttpContext.Session.SetString("JWToken", responseContent);
             HttpContext.Session.SetString("SignedIn", "true");
 
             return RedirectToAction("Index", "Home");

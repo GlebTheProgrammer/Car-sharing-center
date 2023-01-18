@@ -34,46 +34,46 @@ builder.Services.AddSingleton<IVehicleServicePublicApiClient, VehicleServicePubl
 builder.Services.RegisterNewHttpClients("VehiclesAPI", builder.Configuration);
 builder.Services.AddSingleton<ICustomerServicePublicApiClient, CustomerServicePublicApiClient>();
 builder.Services.RegisterNewHttpClients("CustomersAPI", builder.Configuration);
-builder.Services.AddSingleton<IAuthorizationServicePublicApiClient, AuthorizationServicePublicApiClient>();
-builder.Services.RegisterNewHttpClients("AuthorizationAPI", builder.Configuration);
+builder.Services.AddSingleton<IAuthorizationServicePublicApiClient, DuendeIdentityServerPublicApiClient>();
+builder.Services.RegisterNewHttpClients("DuendeIdentityServerAPI", builder.Configuration);
 
-HttpClient client = new HttpClient();
-DiscoveryDocumentResponse document = await client.GetDiscoveryDocumentAsync("https://localhost:5001");
-if (document.IsError)
-{
-    throw new Exception(document.Error);
-}
+//HttpClient client = new HttpClient();
+//DiscoveryDocumentResponse document = await client.GetDiscoveryDocumentAsync("https://localhost:5001");
+//if (document.IsError)
+//{
+//    throw new Exception(document.Error);
+//}
 
-var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
-{
-    Address = document.TokenEndpoint,
+//var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
+//{
+//    Address = document.TokenEndpoint,
 
-    ClientId = "client",
-    ClientSecret = "secret",
-    Scope = "CarSharingService.IdentityServer.API"
-});
+//    ClientId = "gleb15a@gmail.com",
+//    ClientSecret = "F2BC41266204CCAC2D5B52EF7F7AD1A656822479B6246A9AE1CEDD5BCC364DD4",
+//    Scope = "accessShareNewVehiclePage"
+//});
 
-if (tokenResponse.IsError)
-{
-    throw new Exception(tokenResponse.Error);
-}
+//if (tokenResponse.IsError)
+//{
+//    throw new Exception(tokenResponse.Error);
+//}
 
-string token = tokenResponse.AccessToken;
+//string token = tokenResponse.AccessToken;
 
-// call api
-var apiClient = new HttpClient();
-apiClient.SetBearerToken(tokenResponse.AccessToken);
+//// call api
+//var apiClient = new HttpClient();
+//apiClient.SetBearerToken(tokenResponse.AccessToken);
 
-var response = await apiClient.GetAsync("https://localhost:44363/Authorization");
-if (!response.IsSuccessStatusCode)
-{
-    Console.WriteLine(response.StatusCode);
-}
-else
-{
-    var doc = JsonDocument.Parse(await response.Content.ReadAsStringAsync()).RootElement;
-    Console.WriteLine(JsonSerializer.Serialize(doc, new JsonSerializerOptions { WriteIndented = true }));
-}
+//var response = await apiClient.GetAsync("https://localhost:44363/Authorization");
+//if (!response.IsSuccessStatusCode)
+//{
+//    Console.WriteLine(response.StatusCode);
+//}
+//else
+//{
+//    var doc = JsonDocument.Parse(await response.Content.ReadAsStringAsync()).RootElement;
+//    Console.WriteLine(JsonSerializer.Serialize(doc, new JsonSerializerOptions { WriteIndented = true }));
+//}
 
 
 

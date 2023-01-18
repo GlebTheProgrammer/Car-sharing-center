@@ -19,7 +19,7 @@ namespace CarSharingApp.PublicApi.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Customer")]
+        [Authorize]
         public async Task<IActionResult> CreateVehicle(CreateVehicleRequest request)
         {
             JwtClaims? jwtClaims = GetJwtClaims();
@@ -49,7 +49,7 @@ namespace CarSharingApp.PublicApi.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        [Authorize(Roles = "Administrator, Customer")]
+        [Authorize]
         public async Task<IActionResult> GetVehicle(Guid id)
         {
             ErrorOr<Vehicle> getVehicleResult = await _vehicleService.GetVehicleAsync(id);
@@ -70,7 +70,7 @@ namespace CarSharingApp.PublicApi.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        [Authorize(Roles = "Administrator, Customer")]
+        [Authorize]
         public async Task<IActionResult> UpdateVehicleInfo(Guid id, UpdateVehicleInfoRequest request)
         {
             ErrorOr<Vehicle> getVehicleResult = await _vehicleService.GetVehicleAsync(id);
