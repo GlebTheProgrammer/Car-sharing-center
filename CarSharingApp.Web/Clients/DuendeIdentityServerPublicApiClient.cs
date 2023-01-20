@@ -34,9 +34,9 @@ namespace CarSharingApp.Web.Clients
             {
                 Address = document.TokenEndpoint,
 
-                ClientId = request.EmailOrLogin,
-                ClientSecret = Credentials.GetPasswordHashRepresentation(request.Password),
-                Scope = _configuration[$"Clients:{clientIdentifier}:Scope"]
+                ClientId = "client_id",
+                ClientSecret = "client_secret",
+                Scope = "PublicAPI.CutomerEndpoints"
             });
 
             if (tokenResponse.IsError)

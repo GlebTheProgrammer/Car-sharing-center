@@ -1,6 +1,7 @@
 ﻿using CarSharingApp.Application.Contracts.Customer;
 using CarSharingApp.Application.Contracts.ErrorType;
 using CarSharingApp.Web.Clients.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Text.Json;
@@ -16,6 +17,7 @@ namespace CarSharingApp.Controllers
             _customerServiceClient = customerServiceClient;
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var response = await _customerServiceClient.GetCreateNewCustomerRequestTemplate();
@@ -37,6 +39,7 @@ namespace CarSharingApp.Controllers
             return View(request);
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Register(CreateCustomerRequest createCustomerRequest)
         {
             var response = await _customerServiceClient.CreteNewCustomer(createCustomerRequest);

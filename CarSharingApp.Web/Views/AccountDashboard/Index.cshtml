@@ -1,0 +1,434 @@
+﻿<main>
+    <header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
+        <div class="container-xl px-4">
+            <div class="page-header-content pt-4">
+                <div class="row align-items-center justify-content-between">
+                    <div class="col-auto mt-4">
+                        <div class="page-header-title d-flex h1">
+                            <div class="page-header-icon me-3">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                                </svg>
+                            </div>
+                            Dashboard
+                        </div>
+                        <div class="page-header-subtitle">You can check account overview and activity summary below</div>
+                    </div>
+                    <div class="col-12 col-xl-auto mt-4">
+                        <div class="input-group input-group-joined border-0" style="width: 14rem">
+                            <span class="input-group-text">
+                                <i class="fa-regular fa-clock"></i>
+                            </span>
+                            <span class="form-control d-flex justify-content-center" id="currentTimeInput"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+
+
+
+
+    <!-- Main page content-->
+    <div class="container-xl px-4 mt-4">
+        <div class="row">
+            <div class="col-xxl-4 col-xl-12 mb-4">
+                <div class="card h-100">
+                    <div class="card-body h-100 p-5">
+                        <div class="row align-items-center">
+                            <div class="col-xl-8 col-xxl-12">
+                                <div class="text-center text-xl-start text-xxl-center mb-4 mb-xl-0 mb-xxl-4">
+                                    <h1 class="text-primary">Welcome back Glebyshka!</h1>
+                                    <p class="text-gray-700 mb-0">Thank you for being with us. We value every customer who makes the world a better place by helping others, lending and paying for other people's vehicles. Watch, learn and explore new horizons with Sam Solutions Vehicles Sharing Service!</p>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-xxl-12 d-flex justify-content-center">
+                                <img class="img-fluid" style="width: 260px;" src="~/Images/AccountDashboardPage/girl.png">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xxl-4 col-xl-6 mb-4">
+                <div class="card card-header-actions h-100">
+                    <div class="card-header d-flex align-items-center">
+                        Recent Activity
+                        <div class="dropdown ms-2">
+                            <button class="btn btn-transparent-dark btn-icon dropdown-toggle" id="dropdownMenuButton" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img class="img-fluid" style="width: 24px;" src="~/Images/AccountDashboardPage/menu.png">
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                <h6 class="dropdown-header">Filter Activity:</h6>
+                                <a class="dropdown-item" href="#!"><i class="fa-solid fa-globe me-2"></i><span>All</span></a>
+                                <a class="dropdown-item" href="#!"><i class="fa-regular fa-user me-2"></i><span>Account</span></a>
+                                <a class="dropdown-item" href="#!"><i class="fa-solid fa-car-rear me-2"></i><span>Vehicles</span></a>
+                                <a class="dropdown-item" href="#!"><i class="fa-regular fa-credit-card me-2"></i></i><span>Orders</span></a>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="container py-2">
+                        <!-- timeline item 1 -->
+                        <div class="row">
+                            <!-- timeline item 1 event content -->
+                            <div class="col py-2">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="float-right text-muted">Mon, Jan 9th 2020 7:00 AM</div>
+                                        <h4 class="card-title text-muted">Day 1 Orientation</h4>
+                                        <p class="card-text">Welcome to the campus, introduction and get started with the tour.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/row-->
+                        <!-- timeline item 2 -->
+                        <div class="row">
+                            <div class="col py-2">
+                                <div class="card border-success shadow">
+                                    <div class="card-body">
+                                        <div class="float-right text-success">Tue, Jan 10th 2019 8:30 AM</div>
+                                        <h4 class="card-title text-success">Day 2 Sessions</h4>
+                                        <p class="card-text">Sign-up for the lessons and speakers that coincide with your course syllabus. Meet and greet with instructors.</p>
+                                        <button class="btn btn-sm btn-outline-secondary" type="button" data-target="#t2_details" data-toggle="collapse">Show Details ▼</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/row-->
+                        <!-- timeline item 3 -->
+                        <div class="row">
+                            <div class="col py-2">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="float-right text-muted">Wed, Jan 11th 2019 8:30 AM</div>
+                                        <h4 class="card-title">Day 3 Sessions</h4>
+                                        <p>
+                                            Shoreditch vegan artisan Helvetica. Tattooed Codeply Echo Park Godard kogi, next level irony ennui twee squid fap selvage. Meggings flannel Brooklyn.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/row-->
+                        <!-- timeline item 4 -->
+                        <div class="row">
+                            <div class="col py-2">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="float-right text-muted">Thu, Jan 12th 2019 11:30 AM</div>
+                                        <h4 class="card-title">Day 4 Wrap-up</h4>
+                                        <p>Join us for lunch in Bootsy's cafe across from the Campus Center.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/row-->
+                    </div>
+                </div>
+            </div>
+            <div class="col-xxl-4 col-xl-6 mb-4">
+                <div class="card card-header-actions h-100">
+                    <div class="card-header d-flex align-items-center">
+                        Progress Tracker
+                        <div class="dropdown ms-2">
+                            <button class="btn btn-transparent-dark btn-icon dropdown-toggle" id="dropdownMenuButton" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img class="img-fluid" style="width: 24px;" src="~/Images/AccountDashboardPage/menu.png">
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#!"><i class="fa-regular fa-eye me-2"></i>Show notes</a>
+                                <a class="dropdown-item" href="#!"><i class="fa-regular fa-eye-slash me-2"></i>Hide notes</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="small">
+                            Rented vehicles
+                            <span class="float-end fw-bold">20%</span>
+                        </h4>
+                        <div class="progress mb-4"><div class="progress-bar bg-danger" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div></div>
+                        <p class="card-text">The number of your currently rented vehicles to their total number</p>
+                        <h4 class="small">
+                            Published vehicles
+                            <span class="float-end fw-bold">40%</span>
+                        </h4>
+                        <div class="progress mb-4"><div class="progress-bar bg-warning" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div></div>
+                        <p class="card-text">The number of your currently listed vehicles in the catalog to their total number.</p>
+                        <h4 class="small">
+                            Hidden vehicles
+                            <span class="float-end fw-bold">60%</span>
+                        </h4>
+                        <div class="progress mb-4"><div class="progress-bar" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div></div>
+                        <p class="card-text">The number of your currently hidden vehicles from the catalog to their total number.</p>
+                        <h4 class="small">
+                            Rented to Shared (or vice versa)
+                            <span class="float-end fw-bold">80%</span>
+                        </h4>
+                        <div class="progress mb-4"><div class="progress-bar bg-info" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div></div>
+                        <p class="card-text">The total number of your rented vehicles for all time to the total number of your orders. (or vice versa, depends on whichever is greater)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Example Colored Cards for Dashboard Demo-->
+        <div class="row">
+            <div class="col-lg-6 col-xl-3 mb-4">
+                <div class="card border-primary shadow">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="me-3">
+                                <div class="text-white-75 small">Earnings (Monthly)</div>
+                                <div class="text-lg fw-bold">$40,000</div>
+                            </div>
+                            <i class="fa-solid fa-calendar-days fa-2x"></i>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex align-items-center justify-content-between small">
+                        <a class="stretched-link link-secondary nav-link" href="#!">View Report</a>
+                        <div>
+                            <i class="fas fa-angle-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-xl-3 mb-4">
+                <div class="card border-warning shadow">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="me-3">
+                                <div class="text-white-75 small">Earnings (Annual)</div>
+                                <div class="text-lg fw-bold">$215,000</div>
+                            </div>
+                            <i class="fa-solid fa-dollar-sign fa-2x"></i>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex align-items-center justify-content-between small">
+                        <a class="stretched-link link-secondary nav-link" href="#!">View Report</a>
+                        <div>
+                            <i class="fas fa-angle-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-xl-3 mb-4">
+                <div class="card border-success shadow">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="me-3">
+                                <div class="text-white-75 small">Task Completion</div>
+                                <div class="text-lg fw-bold">24</div>
+                            </div>
+                            <i class="fa-regular fa-square-check fa-2x"></i>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex align-items-center justify-content-between small">
+                        <a class="stretched-link link-secondary nav-link" href="#!">View Tasks</a>
+                        <div>
+                            <i class="fas fa-angle-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-xl-3 mb-4">
+                <div class="card border-danger shadow">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="me-3">
+                                <div class="text-white-75 small">Pending Requests</div>
+                                <div class="text-lg fw-bold">17</div>
+                            </div>
+                            <i class="fa-regular fa-comment fa-2x"></i>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex align-items-center justify-content-between small">
+                        <a class="stretched-link link-secondary nav-link" href="#!">View Requests</a>
+                        <div>
+                            <i class="fas fa-angle-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="card mb-4">
+            <div class="card-header">Personnel Management</div>
+            <div class="card-body">
+                <div class="datatable-wrapper datatable-loading no-footer sortable searchable fixed-columns">
+                    <div class="datatable-top d-flex align-items-center">
+                        <label class="me-2">Show</label>
+                        <div class="datatable-dropdown">
+                            <select class="form-select">
+                                <option value="3" selected>3</option>
+                                <option value="5">5</option>
+                                <option value="7">7</option>
+                                <option value="10">10</option>
+                            </select>
+                        </div>
+                        <label class="ms-2">vehicles</label>
+                        <div class="datatable-search">
+                            <input type="text" class="form-control" placeholder="Search...">
+                        </div>
+                    </div>
+                    <div class="datatable-container">
+                        <table id="datatablesSimple" class="datatable-table">
+                            <thead><tr><th data-sortable="true" style="width: 16.22198505869797%;"><a href="#" class="datatable-sorter">Name</a></th><th data-sortable="true" style="width: 23.479188900747065%;"><a href="#" class="datatable-sorter">Position</a></th><th data-sortable="true" style="width: 12.806830309498398%;"><a href="#" class="datatable-sorter">Office</a></th><th data-sortable="true" aria-sort="descending" class="desc" style="width: 5.549626467449306%;"><a href="#" class="datatable-sorter">Age</a></th><th data-sortable="true" style="width: 12.379935965848453%;"><a href="#" class="datatable-sorter">Start date</a></th><th data-sortable="true" style="width: 11.52614727854856%;"><a href="#" class="datatable-sorter">Salary</a></th><th data-sortable="true" style="width: 9.498399146211312%;"><a href="#" class="datatable-sorter">Status</a></th><th data-sortable="true" style="width: 8.537886872998932%;"><a href="#" class="datatable-sorter">Actions</a></th></tr></thead>
+                            <tbody>
+                                <tr data-index="0">
+                                    <td>Michael Silva</td>
+                                    <td>Marketing Designer</td>
+                                    <td>London</td>
+                                    <td>66</td>
+                                    <td>2012/11/27</td>
+                                    <td>$198,500</td>
+                                    <td><div class="badge bg-primary text-white rounded-pill">Full-time</div></td>
+                                    <td>
+                                        <button class="btn btn-datatable btn-icon btn-transparent-dark me-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><CIRCLE cx="12" cy="12" r="1"></CIRCLE><CIRCLE cx="12" cy="5" r="1"></CIRCLE><CIRCLE cx="12" cy="19" r="1"></CIRCLE></svg></button>
+                                        <button class="btn btn-datatable btn-icon btn-transparent-dark"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><POLYLINE points="3 6 5 6 21 6"></POLYLINE><PATH d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></PATH><LINE x1="10" y1="11" x2="10" y2="17"></LINE><LINE x1="14" y1="11" x2="14" y2="17"></LINE></svg></button>
+                                    </td>
+                                </tr>
+                                <tr data-index="1">
+                                    <td>Ashton Cox</td>
+                                    <td>Junior Technical Author</td>
+                                    <td>San Francisco</td>
+                                    <td>66</td>
+                                    <td>2009/01/12</td>
+                                    <td>$86,000</td>
+                                    <td><div class="badge bg-secondary text-white rounded-pill">Part-time</div></td>
+                                    <td>
+                                        <button class="btn btn-datatable btn-icon btn-transparent-dark me-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><CIRCLE cx="12" cy="12" r="1"></CIRCLE><CIRCLE cx="12" cy="5" r="1"></CIRCLE><CIRCLE cx="12" cy="19" r="1"></CIRCLE></svg></button>
+                                        <button class="btn btn-datatable btn-icon btn-transparent-dark"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><POLYLINE points="3 6 5 6 21 6"></POLYLINE><PATH d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></PATH><LINE x1="10" y1="11" x2="10" y2="17"></LINE><LINE x1="14" y1="11" x2="14" y2="17"></LINE></svg></button>
+                                    </td>
+                                </tr>
+                                <tr data-index="2">
+                                    <td>Jackson Bradshaw</td>
+                                    <td>Director</td>
+                                    <td>New York</td>
+                                    <td>65</td>
+                                    <td>2008/09/26</td>
+                                    <td>$645,750</td>
+                                    <td><div class="badge bg-primary text-white rounded-pill">Full-time</div></td>
+                                    <td>
+                                        <button class="btn btn-datatable btn-icon btn-transparent-dark me-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><CIRCLE cx="12" cy="12" r="1"></CIRCLE><CIRCLE cx="12" cy="5" r="1"></CIRCLE><CIRCLE cx="12" cy="19" r="1"></CIRCLE></svg></button>
+                                        <button class="btn btn-datatable btn-icon btn-transparent-dark"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><POLYLINE points="3 6 5 6 21 6"></POLYLINE><PATH d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></PATH><LINE x1="10" y1="11" x2="10" y2="17"></LINE><LINE x1="14" y1="11" x2="14" y2="17"></LINE></svg></button>
+                                    </td>
+                                </tr>
+                                <tr data-index="3">
+                                    <td>Paul Byrd</td>
+                                    <td>Chief Financial Officer (CFO)</td>
+                                    <td>New York</td>
+                                    <td>64</td>
+                                    <td>2010/06/09</td>
+                                    <td>$725,000</td>
+                                    <td><div class="badge bg-primary text-white rounded-pill">Full-time</div></td>
+                                    <td>
+                                        <button class="btn btn-datatable btn-icon btn-transparent-dark me-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><CIRCLE cx="12" cy="12" r="1"></CIRCLE><CIRCLE cx="12" cy="5" r="1"></CIRCLE><CIRCLE cx="12" cy="19" r="1"></CIRCLE></svg></button>
+                                        <button class="btn btn-datatable btn-icon btn-transparent-dark"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><POLYLINE points="3 6 5 6 21 6"></POLYLINE><PATH d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></PATH><LINE x1="10" y1="11" x2="10" y2="17"></LINE><LINE x1="14" y1="11" x2="14" y2="17"></LINE></svg></button>
+                                    </td>
+                                </tr>
+                                <tr data-index="4">
+                                    <td>Olivia Liang</td>
+                                    <td>Support Engineer</td>
+                                    <td>Singapore</td>
+                                    <td>64</td>
+                                    <td>2011/02/03</td>
+                                    <td>$234,500</td>
+                                    <td><div class="badge bg-primary text-white rounded-pill">Full-time</div></td>
+                                    <td>
+                                        <button class="btn btn-datatable btn-icon btn-transparent-dark me-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><CIRCLE cx="12" cy="12" r="1"></CIRCLE><CIRCLE cx="12" cy="5" r="1"></CIRCLE><CIRCLE cx="12" cy="19" r="1"></CIRCLE></svg></button>
+                                        <button class="btn btn-datatable btn-icon btn-transparent-dark"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><POLYLINE points="3 6 5 6 21 6"></POLYLINE><PATH d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></PATH><LINE x1="10" y1="11" x2="10" y2="17"></LINE><LINE x1="14" y1="11" x2="14" y2="17"></LINE></svg></button>
+                                    </td>
+                                </tr>
+                                <tr data-index="5">
+                                    <td>Serge Baldwin</td>
+                                    <td>Data Coordinator</td>
+                                    <td>Singapore</td>
+                                    <td>64</td>
+                                    <td>2012/04/09</td>
+                                    <td>$138,575</td>
+                                    <td><div class="badge bg-primary text-white rounded-pill">Full-time</div></td>
+                                    <td>
+                                        <button class="btn btn-datatable btn-icon btn-transparent-dark me-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><CIRCLE cx="12" cy="12" r="1"></CIRCLE><CIRCLE cx="12" cy="5" r="1"></CIRCLE><CIRCLE cx="12" cy="19" r="1"></CIRCLE></svg></button>
+                                        <button class="btn btn-datatable btn-icon btn-transparent-dark"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><POLYLINE points="3 6 5 6 21 6"></POLYLINE><PATH d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></PATH><LINE x1="10" y1="11" x2="10" y2="17"></LINE><LINE x1="14" y1="11" x2="14" y2="17"></LINE></svg></button>
+                                    </td>
+                                </tr>
+                                <tr data-index="6">
+                                    <td>Zenaida Frank</td>
+                                    <td>Software Engineer</td>
+                                    <td>New York</td>
+                                    <td>63</td>
+                                    <td>2010/01/04</td>
+                                    <td>$125,250</td>
+                                    <td><div class="badge bg-primary text-white rounded-pill">Full-time</div></td>
+                                    <td>
+                                        <button class="btn btn-datatable btn-icon btn-transparent-dark me-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><CIRCLE cx="12" cy="12" r="1"></CIRCLE><CIRCLE cx="12" cy="5" r="1"></CIRCLE><CIRCLE cx="12" cy="19" r="1"></CIRCLE></svg></button>
+                                        <button class="btn btn-datatable btn-icon btn-transparent-dark"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><POLYLINE points="3 6 5 6 21 6"></POLYLINE><PATH d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></PATH><LINE x1="10" y1="11" x2="10" y2="17"></LINE><LINE x1="14" y1="11" x2="14" y2="17"></LINE></svg></button>
+                                    </td>
+                                </tr>
+                                <tr data-index="7">
+                                    <td>Garrett Winters</td>
+                                    <td>Accountant</td>
+                                    <td>Tokyo</td>
+                                    <td>63</td>
+                                    <td>2011/07/25</td>
+                                    <td>$170,750</td>
+                                    <td><div class="badge bg-warning rounded-pill">Pending</div></td>
+                                    <td>
+                                        <button class="btn btn-datatable btn-icon btn-transparent-dark me-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><CIRCLE cx="12" cy="12" r="1"></CIRCLE><CIRCLE cx="12" cy="5" r="1"></CIRCLE><CIRCLE cx="12" cy="19" r="1"></CIRCLE></svg></button>
+                                        <button class="btn btn-datatable btn-icon btn-transparent-dark"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><POLYLINE points="3 6 5 6 21 6"></POLYLINE><PATH d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></PATH><LINE x1="10" y1="11" x2="10" y2="17"></LINE><LINE x1="14" y1="11" x2="14" y2="17"></LINE></svg></button>
+                                    </td>
+                                </tr>
+                                <tr data-index="8">
+                                    <td>Vivian Harrell</td>
+                                    <td>Financial Controller</td>
+                                    <td>San Francisco</td>
+                                    <td>62</td>
+                                    <td>2009/02/14</td>
+                                    <td>$452,500</td>
+                                    <td><div class="badge bg-primary text-white rounded-pill">Full-time</div></td>
+                                    <td>
+                                        <button class="btn btn-datatable btn-icon btn-transparent-dark me-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><CIRCLE cx="12" cy="12" r="1"></CIRCLE><CIRCLE cx="12" cy="5" r="1"></CIRCLE><CIRCLE cx="12" cy="19" r="1"></CIRCLE></svg></button>
+                                        <button class="btn btn-datatable btn-icon btn-transparent-dark"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><POLYLINE points="3 6 5 6 21 6"></POLYLINE><PATH d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></PATH><LINE x1="10" y1="11" x2="10" y2="17"></LINE><LINE x1="14" y1="11" x2="14" y2="17"></LINE></svg></button>
+                                    </td>
+                                </tr>
+                                <tr data-index="9">
+                                    <td>Tiger Nixon</td>
+                                    <td>System Architect</td>
+                                    <td>Edinburgh</td>
+                                    <td>61</td>
+                                    <td>2011/04/25</td>
+                                    <td>$320,800</td>
+                                    <td><div class="badge bg-primary text-white rounded-pill">Full-time</div></td>
+                                    <td>
+                                        <button class="btn btn-datatable btn-icon btn-transparent-dark me-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><CIRCLE cx="12" cy="12" r="1"></CIRCLE><CIRCLE cx="12" cy="5" r="1"></CIRCLE><CIRCLE cx="12" cy="19" r="1"></CIRCLE></svg></button>
+                                        <button class="btn btn-datatable btn-icon btn-transparent-dark"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><POLYLINE points="3 6 5 6 21 6"></POLYLINE><PATH d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></PATH><LINE x1="10" y1="11" x2="10" y2="17"></LINE><LINE x1="14" y1="11" x2="14" y2="17"></LINE></svg></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div><div class="datatable-bottom"><div class="datatable-info">Showing 1 to 10 of 57 entries</div><nav class="datatable-pagination"><ul class="datatable-pagination-list"><li class="active"><a href="#" data-page="1">1</a></li><li class=""><a href="#" data-page="2">2</a></li><li class=""><a href="#" data-page="3">3</a></li><li class=""><a href="#" data-page="4">4</a></li><li class=""><a href="#" data-page="5">5</a></li><li class=""><a href="#" data-page="6">6</a></li><li class="pager"><a href="#" data-page="2">›</a></li></ul></nav></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+
+<script>
+    //var datetime = new Date();
+    //console.log(datetime);
+    //document.getElementById("currentTimeInput").textContent = datetime; //it will print on html page
+
+    const timeDisplay = document.getElementById("currentTimeInput");
+    function refreshTime() {
+        const dateString = new Date().toLocaleString();
+        const formattedString = dateString.replace(", ", " - ");
+        timeDisplay.textContent = formattedString;
+    }
+    setInterval(refreshTime, 1000);
+</script>

@@ -1,6 +1,7 @@
 ﻿using CarSharingApp.Application.Contracts.Authorization;
 using CarSharingApp.Application.Contracts.ErrorType;
 using CarSharingApp.Web.Clients.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Text.Json;
@@ -16,6 +17,7 @@ namespace CarSharingApp.Controllers
             _authorizationServiceClient = authorizationServiceClient;
         }
 
+        [AllowAnonymous]
         public IActionResult Index()
         {
             var authorizationRequest = new AuthorizationRequest(
@@ -25,6 +27,7 @@ namespace CarSharingApp.Controllers
             return View(authorizationRequest);
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> TrySignIn(AuthorizationRequest request)
         {
             var response = await _authorizationServiceClient.TryAuthorize(request);
@@ -53,6 +56,7 @@ namespace CarSharingApp.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [Authorize]
         public IActionResult Logout()
         {
             HttpContext.Session.Remove("JWToken");

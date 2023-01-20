@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
@@ -8,15 +9,21 @@ namespace CarSharingApp.Infrastructure.Authentication
     {
         public static IServiceCollection AddJwtBearerAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddAuthentication("Bearer").AddJwtBearer("Bearer", opt =>
-            {
-                opt.Authority = "https://localhost:5001";
-
-                opt.TokenValidationParameters = new TokenValidationParameters
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, config =>
                 {
-                    ValidateAudience = false
-                };
-            });
+                    config.Authority = "https://localhost:5001";
+
+                    config.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidAudiences = new List<string>
+                        {
+                            "PublicAPI.CutomerEndpoints"
+                        }
+                    };
+                    
+                });
 
             return services;
         }

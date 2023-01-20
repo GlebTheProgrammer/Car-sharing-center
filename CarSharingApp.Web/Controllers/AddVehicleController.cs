@@ -5,6 +5,7 @@ using CarSharingApp.Application.Contracts.Vehicle;
 using System.Net;
 using CarSharingApp.Application.Contracts.ErrorType;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CarSharingApp.Controllers
 {
@@ -19,6 +20,7 @@ namespace CarSharingApp.Controllers
             _vehicleServiceClient = vehicleServiceClient;
         }
 
+        [Authorize]
         public IActionResult Index()
         {
             var createNewVehicleRequest = ConfigureNewCreateVehicleRequest();
@@ -26,6 +28,7 @@ namespace CarSharingApp.Controllers
             return View(createNewVehicleRequest);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddVehicle(CreateVehicleRequest createVehicleRequest, IFormFile file)
         {

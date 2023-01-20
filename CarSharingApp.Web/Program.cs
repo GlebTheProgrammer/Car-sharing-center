@@ -14,8 +14,7 @@ using CarSharingApp.Repository.MongoDbRepository;
 using CarSharingApp.Web.Clients;
 using CarSharingApp.Web.Clients.Interfaces;
 using CarSharingApp.Web.Clients.Extensions;
-using IdentityModel.Client;
-using System.Text.Json;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,7 +28,6 @@ builder.Host.ConfigureLogging((context, logging) =>
 
 builder.Services.AddControllersWithViews();
 
-
 builder.Services.AddSingleton<IVehicleServicePublicApiClient, VehicleServicePublicApiClient>();
 builder.Services.RegisterNewHttpClients("VehiclesAPI", builder.Configuration);
 builder.Services.AddSingleton<ICustomerServicePublicApiClient, CustomerServicePublicApiClient>();
@@ -37,43 +35,25 @@ builder.Services.RegisterNewHttpClients("CustomersAPI", builder.Configuration);
 builder.Services.AddSingleton<IAuthorizationServicePublicApiClient, DuendeIdentityServerPublicApiClient>();
 builder.Services.RegisterNewHttpClients("DuendeIdentityServerAPI", builder.Configuration);
 
-//HttpClient client = new HttpClient();
-//DiscoveryDocumentResponse document = await client.GetDiscoveryDocumentAsync("https://localhost:5001");
-//if (document.IsError)
-//{
-//    throw new Exception(document.Error);
-//}
+var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]);
+builder.Services.AddAuthentication(config =>
+{
+    config.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    config.DefaultChallengeScheme = "oidc";
+})
+    .AddCookie()
+    .AddOpenIdConnect("oidc", config =>
+    {
+        config.Authority = builder.Configuration[$"Clients:DuendeIdentityServerAPI:BaseAddress"];
+        config.ClientId = "client_id_mvc";
+        config.ClientSecret = "client_secret_mvc";
+        config.SaveTokens = true;
 
-//var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
-//{
-//    Address = document.TokenEndpoint,
+        config.ResponseType = "code";
+    });
 
-//    ClientId = "gleb15a@gmail.com",
-//    ClientSecret = "F2BC41266204CCAC2D5B52EF7F7AD1A656822479B6246A9AE1CEDD5BCC364DD4",
-//    Scope = "accessShareNewVehiclePage"
-//});
 
-//if (tokenResponse.IsError)
-//{
-//    throw new Exception(tokenResponse.Error);
-//}
 
-//string token = tokenResponse.AccessToken;
-
-//// call api
-//var apiClient = new HttpClient();
-//apiClient.SetBearerToken(tokenResponse.AccessToken);
-
-//var response = await apiClient.GetAsync("https://localhost:44363/Authorization");
-//if (!response.IsSuccessStatusCode)
-//{
-//    Console.WriteLine(response.StatusCode);
-//}
-//else
-//{
-//    var doc = JsonDocument.Parse(await response.Content.ReadAsStringAsync()).RootElement;
-//    Console.WriteLine(JsonSerializer.Serialize(doc, new JsonSerializerOptions { WriteIndented = true }));
-//}
 
 
 
@@ -102,28 +82,6 @@ builder.Services.AddTransient<IJwtProvider, JwtProvider>();
 
 // JWT options configuration setup is here
 builder.Services.ConfigureOptions<JwtOptionsSetup>();
-
-var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]);
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(opt =>
-{
-    opt.RequireHttpsMetadata = false;
-    opt.SaveToken = true;
-    opt.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(key),
-        ValidIssuers = new string[] { builder.Configuration["Jwt:Issuer"] },
-        ValidAudiences = new string[] { builder.Configuration["Jwt:Audience"] },
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ClockSkew = TimeSpan.Zero
-    };
-});
 
 // DB configuration section
 builder.Services.Configure<CarSharingDatabaseSettings>(

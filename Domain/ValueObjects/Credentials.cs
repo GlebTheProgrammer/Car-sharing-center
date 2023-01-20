@@ -88,7 +88,7 @@ namespace CarSharingApp.Domain.ValueObjects
             yield return Password;
         }
 
-        public static string GetPasswordHashRepresentation(string password, string salt = "")
+        private static string GetPasswordHashRepresentation(string password, string salt = "")
         {
             using (var sha = new System.Security.Cryptography.SHA256Managed())
             {
