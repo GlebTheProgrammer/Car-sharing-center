@@ -1,4 +1,5 @@
 using CarSharingApp.IdentityServer.StaticFiles;
+using Microsoft.AspNetCore.Identity;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()

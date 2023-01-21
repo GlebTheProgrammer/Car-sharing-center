@@ -1,4 +1,9 @@
-﻿using CarSharingApp.IdentityServer.Models;
+﻿using CarSharingApp.Application.Contracts.Authorization;
+using CarSharingApp.Domain.Abstractions;
+using CarSharingApp.Domain.Entities;
+using CarSharingApp.Domain.ValueObjects;
+using CarSharingApp.IdentityServer.StaticFiles;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarSharingApp.IdentityServer.Controllers
@@ -6,6 +11,22 @@ namespace CarSharingApp.IdentityServer.Controllers
     [Route("[controller]")]
     public class AuthController : Controller
     {
+        //private readonly SignInManager<IdentityUser> _signInManager;
+        //private readonly UserManager<IdentityUser> _userManager;
+        private readonly IServiceProvider _serviceProvider;
+        private readonly IRepository<Customer> _customersRepository;
+
+        public AuthController(/*SignInManager<IdentityUser> signInManager,*/
+                              //UserManager<IdentityUser> userManager,
+                              IServiceProvider serviceProvider,
+                              IRepository<Customer> customerRepository)
+        {
+            //_signInManager = signInManager;
+            //_userManager = userManager;
+            _serviceProvider = serviceProvider;
+            _customersRepository = customerRepository;
+        }
+
         [Route("[action]")]
         public IActionResult SignIn(string returnUrl)
         {
@@ -14,9 +35,38 @@ namespace CarSharingApp.IdentityServer.Controllers
 
         [HttpPost]
         [Route("[action]")]
-        public IActionResult SignIn(LoginViewModel model)
+        public async Task<IActionResult> SignIn(AuthorizationRequest request)
         {
-            return View();
+            Credentials userCredentials = Credentials.CreateForAuthorization(request.EmailOrLogin, request.EmailOrLogin, request.Password);
+
+            Customer? customer = await _customersRepository.GetAsync(c => (c.Credentials.Email == userCredentials.Email ||
+            c.Credentials.Login == userCredentials.Login) && c.Credentials.Password == userCredentials.Password);
+            
+            if (customer is null)
+            {
+                ModelState.AddModelError("Password", "Customer with provided credentials doesn't exist.");
+                return View(request);
+            }
+
+            //IdentityServerConfigurations.CreateNewIdentityUser(_serviceProvider, customer);
+
+            //var identityUser = await _userManager.FindByNameAsync(customer.Credentials.Login);
+
+            //if (identityUser is null)
+            //{
+            //    ModelState.AddModelError("Password", "Something went wrong. Please try again later.");
+            //    return View(request);
+            //}
+
+            //var signinResult = await _signInManager.PasswordSignInAsync(identityUser, customer.Credentials.Password, false, false);
+
+            if (/*signinResult.Succeeded*/true)
+            {
+                return Redirect(request.ReturnUrl);
+            }
+
+            ModelState.AddModelError("Password", "Something went wrong. Please try again later.");
+            return View(request);
         }
     }
 }

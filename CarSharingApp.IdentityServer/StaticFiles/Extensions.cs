@@ -1,4 +1,7 @@
-﻿using Serilog;
+﻿using CarSharingApp.Domain.Entities;
+using CarSharingApp.Infrastructure.MongoDB;
+using Microsoft.AspNetCore.Identity;
+using Serilog;
 
 namespace CarSharingApp.IdentityServer.StaticFiles
 {
@@ -20,6 +23,9 @@ namespace CarSharingApp.IdentityServer.StaticFiles
                 .AddInMemoryApiScopes(IdentityServerConfigurations.GetApiScopes())
                 .AddInMemoryIdentityResources(IdentityServerConfigurations.GetIdentityResources())
                 .AddDeveloperSigningCredential();
+
+            builder.Services.AddMongo(builder.Configuration);
+            builder.Services.AddMongoRepository<Customer>(builder.Configuration["MongoDbConfig:Collections:CustomersCollectionName"] ?? "");
 
             builder.Services.AddControllersWithViews();
 

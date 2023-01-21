@@ -20,3 +20,7 @@ html {
 body {
   margin-bottom: 60px;
 }
+body {
+    background-image: url('../images/signinpage/sam-office-blured.jpg');
+    background-size: cover;
+}

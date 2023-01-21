@@ -1,5 +1,4 @@
 ﻿using CarSharingApp.Application.Contracts.Authorization;
-using CarSharingApp.Domain.ValueObjects;
 using CarSharingApp.Web.Clients.Interfaces;
 using CarSharingApp.Web.Primitives;
 using IdentityModel.Client;

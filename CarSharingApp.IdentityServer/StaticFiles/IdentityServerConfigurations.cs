@@ -1,5 +1,8 @@
-﻿using Duende.IdentityServer;
+﻿using CarSharingApp.Domain.Entities;
+using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace CarSharingApp.IdentityServer.StaticFiles
 {
@@ -45,5 +48,31 @@ namespace CarSharingApp.IdentityServer.StaticFiles
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile()
             };
+
+
+
+
+
+        public static void CreateNewIdentityUser(IServiceProvider scopeServiceProvider, Customer customer)
+        {
+            var userManager = scopeServiceProvider.GetService<UserManager<IdentityUser>>();
+
+            var user = new IdentityUser
+            {
+                Id = customer.Id.ToString(),
+                Email = customer.Credentials.Email,
+                PhoneNumber = customer.PhoneNumber,
+                UserName = customer.Credentials.Login,
+                PasswordHash = customer.Credentials.Password
+            };
+
+            var result = userManager?.CreateAsync(user, customer.Credentials.Password).GetAwaiter().GetResult();
+            if (result.Succeeded)
+            {
+                userManager?.AddClaimAsync(user, new Claim(ClaimTypes.Role, "Customer")).GetAwaiter().GetResult();
+            }
+        }
+
+
     }
 }

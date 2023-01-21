@@ -1,26 +1,101 @@
-﻿@model CarSharingApp.IdentityServer.Models.LoginViewModel
+﻿@inject IConfiguration _congiguration;
 
-<h1>Login</h1>
+@model CarSharingApp.Application.Contracts.Authorization.AuthorizationRequest;
 
-<form asp-controller="Auth" asp-action="SignIn" method="post">
-    <div asp-validation-summary="All"></div>
+<div class="mt-5 text-center">
+    <img class="mb-4 mt-5" src="~/Images/SignInPage/samSolutionsLogo.png" alt="" width="72" height="72">
+    <h2>Sign in</h2>
+</div>
 
-    <input hidden asp-for="ReturnUrl" />
+<div class="row mb-5">
+    <div class="d-flex justify-content-center align-content-center mt-3 text-center">
+        <form asp-controller="Auth" asp-action="SignIn" class="row g-3 needs-validation justify-content-center" style="width: 600px;" method="post" novalidate>
 
-    <div>
-        <label>UserName</label>
-        <input asp-for="Usernane" />
-        <span asp-validation-for="Usernane"></span>
+            <div class="col-7">
+                <input asp-for="EmailOrLogin" type="text" class="form-control" id="emailOrLoginErrorValidationCustom" onclick="SetInputAsRequireValidation(this)" placeholder="Email / Login" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+                <div id="emailOrLoginErrorValidation" class="invalid-feedback">
+                    Email or login required.
+                </div>
+            </div>
+
+            <div class="col-7">
+                <input asp-for="Password" type="password" class="form-control" id="passwordErrorValidationCustom" onclick="SetInputAsRequireValidation(this)" placeholder="Password" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+                <div id="passwordErrorValidation" class="invalid-feedback">
+                    Password required.
+                </div>
+            </div>
+
+            <div class="col-12 text-center mt-4">
+                <button class="btn btn-lg btn-primary w-25 mb-4" type="submit">Login</button>
+            </div>
+
+            <div id="serverErrors" class="visually-hidden">
+                <span id="emailOrLoginError" asp-validation-for="EmailOrLogin"></span>
+                <span id="passwordError" asp-validation-for="Password"></span>
+            </div>
+
+            <input hidden asp-for="ReturnUrl" readonly />
+        </form>
     </div>
-
-    <div>
-        <label>Password</label>
-        <input asp-for="Password" />
-        <span asp-validation-for="Password"></span>
+    <div class="mb-4">
+        <div class="text-center">
+            <a class="link-primary nav-link" href="@_congiguration["RegistrationPath"]">Don't have an account? Join us now</a>
+        </div>
     </div>
+</div>
 
-    <p>
-        <button type="submit">Log in</button>
-    </p>
+<script>
+    (() => {
+        'use strict'
 
-</form>
+        const forms = document.querySelectorAll('.needs-validation')
+
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const serverErrorSpans = document.getElementById('serverErrors').querySelectorAll("span");
+
+        Array.from(serverErrorSpans).forEach(errorSpan => {
+            if (errorSpan.textContent !== "") {
+                document.getElementById(errorSpan.id + "Validation").textContent = errorSpan.textContent;
+                document.getElementById(errorSpan.id + "ValidationCustom").setAttribute("class", "form-control is-invalid")
+            }
+        });
+    });
+
+    function SetInputAsRequireValidation(inputElement) {
+        inputElement.setAttribute("class", "form-control");
+    }
+
+    function CheckFormForInvalidFields() {
+        const forms = document.getElementById("submitForm").querySelectorAll('input');
+
+        Array.from(forms).forEach(form => {
+            if (form.getAttribute("class") !== null) {
+                if (form.getAttribute("class").includes("is-invalid")) {
+                    form.setAttribute("class", "form-control");
+                }
+            }
+        });
+    }
+</script>
+
+

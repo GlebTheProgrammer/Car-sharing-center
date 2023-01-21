@@ -3,47 +3,172 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - CarSharingApp.IdentityServer</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <title>@ViewData["Title"] - CarSharingApp</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.css">
+    <script src="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.js"></script>
+
+
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CarSharingApp.IdentityServer.styles.css" asp-append-version="true" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">CarSharingApp.IdentityServer</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
+
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2023 - CarSharingApp.IdentityServer - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Remove the container if you want to extend the Footer to full width. -->
+    <div class="container my-2">
+        <!-- Footer -->
+        <footer>
+            <!-- Grid container -->
+            <div>
+                <!-- Section: Links -->
+                <section class="">
+                    <!--Grid row-->
+                    <div class="row" style="color: aliceblue;">
+                        <!-- Grid column -->
+                        <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
+                            <h6 class="text-uppercase mb-4 font-weight-bold">
+                                Sam solutions
+                            </h6>
+                            <p>
+                                SaM Solutions is an international IT-services and software solutions provider with
+                                over 29 years of experience. We focus on IT consulting and custom software engineering services
+                                for both European and the U.S. markets, leveraging global resources.
+                            </p>
+                        </div>
+                        <!-- Grid column -->
+
+                        <hr class="w-100 clearfix d-md-none" />
+
+                        <!-- Grid column -->
+                        <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
+                            <h6 class="text-uppercase mb-4 font-weight-bold">Products</h6>
+                            <p>
+                                <a class="link-primary nav-link" href="https://www.sam-solutions.com/company/case-studies/website-functionality-enhancement-and-2-6-fold-loading-speed-increase/">Sitecore-based websites</a>
+                            </p>
+                            <p>
+                                <a class="link-primary nav-link" href="https://www.sam-solutions.com/company/case-studies/Innominate-case-study/">Scaling QA-Processes</a>
+                            </p>
+                            <p>
+                                <a class="link-primary nav-link" href="https://www.sam-solutions.com/company/case-studies/phytec-board-support-package/">Embedded Board Support Packages</a>
+                            </p>
+                            <p>
+                                <a class="link-primary nav-link" href="https://sam-solutions.by/company/case-studies/azh/">Physiotherapy Practices</a>
+                            </p>
+                        </div>
+                        <!-- Grid column -->
+
+                        <hr class="w-100 clearfix d-md-none" />
+
+                        <!-- Grid column -->
+                        <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mt-3">
+                            <h6 class="text-uppercase mb-4 font-weight-bold">
+                                Useful links
+                            </h6>
+                            <p>
+                                <a class="link-primary nav-link" href="https://sam-solutions.by/">SaM Solutions Website</a>
+                            </p>
+                            <p>
+                                <a class="link-primary nav-link" href="https://sam-solutions.by/company/case-studies/">Case-Studies</a>
+                            </p>
+                            <p>
+                                <a class="link-primary nav-link" href="https://sam-solutions.by/industries/">Industries</a>
+                            </p>
+                            <p>
+                                <a class="link-primary nav-link" href="https://sam-solutions.by/career/info/">Career Info</a>
+                            </p>
+                        </div>
+
+                        <!-- Grid column -->
+                        <hr class="w-100 clearfix d-md-none" />
+
+                        <!-- Grid column -->
+                        <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
+                            <h6 class="text-uppercase mb-4 font-weight-bold">Contact</h6>
+                            <p><i class="fas fa-home mr-3"></i> Minsk, Filimonova 15, Belarus</p>
+                            <p><i class="fas fa-envelope mr-3"></i> info@sam-solutions.com</p>
+                            <p><i class="fas fa-phone mr-3"></i> + 375 17 309 17 09</p>
+                            <p><i class="fas fa-print mr-3"></i> + 375 17 309 17 17</p>
+                        </div>
+                        <!-- Grid column -->
+                    </div>
+                    <!--Grid row-->
+                </section>
+                <!-- Section: Links -->
+
+                <hr class="my-3">
+
+                <!-- Section: Copyright -->
+                <section class="p-3 pt-0">
+                    <div class="row d-flex align-items-center">
+                        <!-- Grid column -->
+                        <div class="col-md-7 col-lg-8 text-center text-md-start">
+                            <!-- Copyright -->
+                            <div class="p-3 d-flex" style="color: aliceblue;">
+                                © 2023 Copyright:
+                                <a class="ms-2 me-2 link-primary nav-link" href="https://by.linkedin.com/in/glebyshka">Gleb Sukristik</a>
+                                &
+                                <a class="ms-2 me-2 link-primary nav-link" href="https://www.linkedin.com/in/vadzim-papko-b08a6875/">Vadzim Papko</a>
+                            </div>
+                            <!-- Copyright -->
+                        </div>
+                        <!-- Grid column -->
+                        <!-- Grid column -->
+                        <div class="col-md-5 col-lg-4 ml-lg-0 text-center text-md-end">
+                            <!-- Facebook -->
+                            <a class="btn btn-outline-primary btn-floating m-1 link-primary" href="https://ru-ru.facebook.com/SaMSolutionsBY/"
+                               role="button">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+
+                            <!-- Twitter -->
+                            <a class="btn btn-outline-primary btn-floating m-1 link-primary" href="https://twitter.com/samsolutionsby"
+                               role="button">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+
+                            <!-- Google -->
+                            <a class="btn btn-outline-primary btn-floating m-1 link-primary" href="https://www.google.com/search?q=sam+solutions+google&oq=sam+solutions+google&aqs=chrome..69i57j69i64.3562j0j4&sourceid=chrome&ie=UTF-8"
+                               role="button">
+                                <i class="fab fa-google"></i>
+                            </a>
+
+                            <!-- Instagram -->
+                            <a class="btn btn-outline-primary btn-floating m-1 link-primary" href="https://www.instagram.com/samsolutions/"
+                               role="button">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                        </div>
+                        <!-- Grid column -->
+                    </div>
+                </section>
+                <!-- Section: Copyright -->
+            </div>
+            <!-- Grid container -->
+        </footer>
+        <!-- Footer -->
+    </div>
+    <!-- End of .container -->
+
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://kit.fontawesome.com/81f3a44f30.js" crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

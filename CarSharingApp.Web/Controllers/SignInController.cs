@@ -20,9 +20,12 @@ namespace CarSharingApp.Controllers
         [AllowAnonymous]
         public IActionResult Index()
         {
-            var authorizationRequest = new AuthorizationRequest(
-                EmailOrLogin: string.Empty,
-                Password: string.Empty);
+            var authorizationRequest = new AuthorizationRequest
+            {
+                EmailOrLogin = string.Empty,
+                Password = string.Empty,
+                ReturnUrl = string.Empty,
+            };
 
             return View(authorizationRequest);
         }
