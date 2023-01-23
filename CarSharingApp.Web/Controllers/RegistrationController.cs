@@ -42,7 +42,7 @@ namespace CarSharingApp.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Register(CreateCustomerRequest createCustomerRequest)
         {
-            var response = await _customerServiceClient.CreteNewCustomer(createCustomerRequest);
+            var response = await _customerServiceClient.CreateNewCustomer(createCustomerRequest);
 
             string responseContent = await response.Content.ReadAsStringAsync();
 

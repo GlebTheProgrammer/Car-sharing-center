@@ -1,4 +1,5 @@
-﻿using CarSharingApp.Domain.Entities;
+﻿using CarSharingApp.Domain.Abstractions;
+using CarSharingApp.Domain.Entities;
 using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
 using Microsoft.AspNetCore.Identity;
@@ -8,6 +9,7 @@ namespace CarSharingApp.IdentityServer.StaticFiles
 {
     public static class IdentityServerConfigurations
     {
+
         public static IEnumerable<Client> GetClients() =>
             new List<Client>
             {

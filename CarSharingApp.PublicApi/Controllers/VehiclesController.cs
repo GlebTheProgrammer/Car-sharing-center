@@ -38,14 +38,12 @@ namespace CarSharingApp.PublicApi.Controllers
 
             Vehicle vehicle = requestToVehicleResult.Value;
 
-            ErrorOr<Created> createVehicleResult =  await _vehicleService.CreateVehicleAsync(vehicle);
+            await _vehicleService.CreateVehicleAsync(vehicle);
 
-            return createVehicleResult.Match(
-                created => CreatedAtAction(
+            return CreatedAtAction(
                         actionName: nameof(GetVehicle),
                         routeValues: new { id = vehicle.Id },
-                        value: MapVehicleResponse(vehicle)),
-                errors => Problem(errors));
+                        value: MapVehicleResponse(vehicle));
         }
 
         [HttpGet("{id:guid}")]
@@ -62,11 +60,9 @@ namespace CarSharingApp.PublicApi.Controllers
         [HttpGet("MapRepresentation")]
         public async Task<IActionResult> GetVehiclesMapRepresentation()
         {
-            ErrorOr<List<Vehicle>> getVehiclesResult = await _vehicleService.GetAllAsync();
+            List<Vehicle> getVehiclesResult = await _vehicleService.GetAllAsync();
 
-            return getVehiclesResult.Match(
-                vehicles => Ok(MapVehicleResponse(vehicles.Where(v => v.Status.IsPublished && v.Status.IsConfirmedByAdmin).ToList())),
-                errors => Problem(errors));
+            return Ok(MapVehicleResponse(getVehiclesResult.Where(v => v.Status.IsPublished && v.Status.IsConfirmedByAdmin).ToList()));
         }
 
         [HttpPut("{id:guid}")]
@@ -96,11 +92,9 @@ namespace CarSharingApp.PublicApi.Controllers
 
             Vehicle vehicle = requestToVehicleResult.Value;
 
-            ErrorOr<Updated> updateVehicleResult = await _vehicleService.UpdateVehicleAsync(vehicle);
+            await _vehicleService.UpdateVehicleAsync(vehicle);
 
-            return updateVehicleResult.Match(
-                updated => NoContent(),
-                errors => Problem(errors));
+            return NoContent();
         }
 
         [HttpDelete("{id:guid}")]
@@ -120,11 +114,9 @@ namespace CarSharingApp.PublicApi.Controllers
                 return Forbid();
             }
 
-            ErrorOr<Deleted> deleteVehicleResult = await _vehicleService.DeleteVehicleAsync(id);
+            await _vehicleService.DeleteVehicleAsync(id);
 
-            return deleteVehicleResult.Match(
-                deleted => NoContent(),
-                errors => Problem(errors));
+            return NoContent();
         }
 
         private static VehicleResponse MapVehicleResponse(Vehicle vehicle)

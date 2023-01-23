@@ -16,21 +16,21 @@ namespace CarSharingApp.Application.Services
             _vehicleRepository = vehicleRepository;
         }
 
-        public async Task<ErrorOr<Created>> CreateVehicleAsync(Vehicle vehicle)
+        public async Task<Created> CreateVehicleAsync(Vehicle vehicle)
         {
             await _vehicleRepository.CreateAsync(vehicle);
 
             return Result.Created;
         }
 
-        public async Task<ErrorOr<Deleted>> DeleteVehicleAsync(Guid id)
+        public async Task<Deleted> DeleteVehicleAsync(Guid id)
         {
             await _vehicleRepository.DeleteAsync(id);
 
             return Result.Deleted;
         }
 
-        public async Task<ErrorOr<List<Vehicle>>> GetAllAsync()
+        public async Task<List<Vehicle>> GetAllAsync()
         {
             var result = await _vehicleRepository.GetAllAsync();
 
@@ -47,28 +47,28 @@ namespace CarSharingApp.Application.Services
                 return ApplicationErrors.Vehicle.NotFound;
         }
 
-        public async Task<ErrorOr<List<Vehicle>>> GetWithLimit(int skip, int limit)
+        public async Task<List<Vehicle>> GetWithLimit(int skip, int limit)
         {
             var result = await _vehicleRepository.GetAsyncWithLimit(skip, limit);
 
             return result.ToList();
         }
 
-        public async Task<ErrorOr<int>> GetRecordsCount()
+        public async Task<int> GetRecordsCount()
         {
             var result = await _vehicleRepository.GetAllAsync();
 
             return result.Count;
         }
 
-        public async Task<ErrorOr<List<Vehicle>>> GetWithLimitPublishedAndApproved(int skip, int limit)
+        public async Task<List<Vehicle>> GetWithLimitPublishedAndApproved(int skip, int limit)
         {
             var result = await _vehicleRepository.GetAsyncWithLimit(v => v.Status.IsConfirmedByAdmin && v.Status.IsPublished, skip, limit);
 
             return result.ToList();
         }
 
-        public async Task<ErrorOr<Updated>> UpdateVehicleAsync(Vehicle vehicle)
+        public async Task<Updated> UpdateVehicleAsync(Vehicle vehicle)
         {
             await _vehicleRepository.UpdateAsync(vehicle);
 

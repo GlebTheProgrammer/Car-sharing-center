@@ -66,14 +66,6 @@ namespace CarSharingApp.Controllers
                     break;
             }
 
-
-
-
-
-
-
-
-
             HttpContext.Session.SetString("AddedNewVehicle", "true");
 
             return RedirectToAction("Index", "Catalog");

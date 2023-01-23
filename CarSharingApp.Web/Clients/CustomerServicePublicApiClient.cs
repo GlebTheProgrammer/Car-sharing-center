@@ -13,7 +13,7 @@ namespace CarSharingApp.Web.Clients
         {
         }
 
-        public async Task<HttpResponseMessage> CreteNewCustomer(CreateCustomerRequest request)
+        public async Task<HttpResponseMessage> CreateNewCustomer(CreateCustomerRequest request)
         {
             var client = CreateNewClientInstance(clientIdentifier);
 

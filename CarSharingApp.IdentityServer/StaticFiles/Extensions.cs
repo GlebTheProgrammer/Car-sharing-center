@@ -1,6 +1,6 @@
 ﻿using CarSharingApp.Domain.Entities;
+using CarSharingApp.IdentityServer.Storages;
 using CarSharingApp.Infrastructure.MongoDB;
-using Microsoft.AspNetCore.Identity;
 using Serilog;
 
 namespace CarSharingApp.IdentityServer.StaticFiles
@@ -19,7 +19,8 @@ namespace CarSharingApp.IdentityServer.StaticFiles
                 options.Events.RaiseFailureEvents = true;
                 options.EmitStaticAudienceClaim = true;
             })
-                .AddInMemoryClients(IdentityServerConfigurations.GetClients())
+                //.AddInMemoryClients(IdentityServerConfigurations.GetClients())
+                .AddClientStore<CustomersStorage>()
                 .AddInMemoryApiScopes(IdentityServerConfigurations.GetApiScopes())
                 .AddInMemoryIdentityResources(IdentityServerConfigurations.GetIdentityResources())
                 .AddDeveloperSigningCredential();

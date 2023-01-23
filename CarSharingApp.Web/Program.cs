@@ -5,16 +5,13 @@ using CarSharingApp.Payment;
 using CarSharingApp.Payment.StripeService;
 using CarSharingApp.Services;
 using CarSharingApp.Services.Interfaces;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Stripe;
 using System.Text;
-using Microsoft.IdentityModel.Tokens;
 using CarSharingApp.Middlewares;
 using CarSharingApp.Repository.MongoDbRepository;
 using CarSharingApp.Web.Clients;
 using CarSharingApp.Web.Clients.Interfaces;
 using CarSharingApp.Web.Clients.Extensions;
-using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,25 +29,9 @@ builder.Services.AddSingleton<IVehicleServicePublicApiClient, VehicleServicePubl
 builder.Services.RegisterNewHttpClients("VehiclesAPI", builder.Configuration);
 builder.Services.AddSingleton<ICustomerServicePublicApiClient, CustomerServicePublicApiClient>();
 builder.Services.RegisterNewHttpClients("CustomersAPI", builder.Configuration);
-builder.Services.AddSingleton<IAuthorizationServicePublicApiClient, DuendeIdentityServerPublicApiClient>();
-builder.Services.RegisterNewHttpClients("DuendeIdentityServerAPI", builder.Configuration);
+builder.Services.AddSingleton<IAuthorizationServicePublicApiClient, AuthorizationServicePublicApiClient>();
+builder.Services.RegisterNewHttpClients("AuthorizationAPI", builder.Configuration);
 
-var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]);
-builder.Services.AddAuthentication(config =>
-{
-    config.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    config.DefaultChallengeScheme = "oidc";
-})
-    .AddCookie()
-    .AddOpenIdConnect("oidc", config =>
-    {
-        config.Authority = builder.Configuration[$"Clients:DuendeIdentityServerAPI:BaseAddress"];
-        config.ClientId = "client_id_mvc";
-        config.ClientSecret = "client_secret_mvc";
-        config.SaveTokens = true;
-
-        config.ResponseType = "code";
-    });
 
 
 

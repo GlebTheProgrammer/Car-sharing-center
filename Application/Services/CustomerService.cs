@@ -17,9 +17,9 @@ namespace CarSharingApp.Application.Services
             _customerRepository = customerRepository;
         }
 
-        public async Task<ErrorOr<Created>> CreateCustomerAsync(Customer customer)
+        public async Task<ErrorOr<Customer>> CreateCustomerAsync(Customer customer)
         {
-            ErrorOr<Success> checkCredentialsForUniquenessRequest = await CredentialsCheckout(customer);
+            ErrorOr<Customer> checkCredentialsForUniquenessRequest = await CredentialsCheckout(customer);
 
             if (checkCredentialsForUniquenessRequest.IsError)
             {
@@ -28,17 +28,17 @@ namespace CarSharingApp.Application.Services
 
             await _customerRepository.CreateAsync(customer);
 
-            return Result.Created;
+            return customer;
         }
 
-        public async Task<ErrorOr<Deleted>> DeleteCustomerAsync(Guid id)
+        public async Task<Deleted> DeleteCustomerAsync(Guid id)
         {
             await _customerRepository.DeleteAsync(id);
 
             return Result.Deleted;
         }
 
-        public async Task<ErrorOr<List<Customer>>> GetAllAsync()
+        public async Task<List<Customer>> GetAllAsync()
         {
             var result = await _customerRepository.GetAllAsync();
 
@@ -55,9 +55,9 @@ namespace CarSharingApp.Application.Services
                 return ApplicationErrors.Customer.NotFound;
         }
 
-        public async Task<ErrorOr<Updated>> UpdateCustomerCredentialsAsync(Customer customer)
+        public async Task<ErrorOr<Customer>> UpdateCustomerCredentialsAsync(Customer customer)
         {
-            ErrorOr<Success> checkCredentialsForUniquenessRequest = await CredentialsCheckout(customer);
+            ErrorOr<Customer> checkCredentialsForUniquenessRequest = await CredentialsCheckout(customer);
 
             if (checkCredentialsForUniquenessRequest.IsError)
             {
@@ -66,24 +66,24 @@ namespace CarSharingApp.Application.Services
 
             await _customerRepository.UpdateAsync(customer);
 
-            return Result.Updated;
+            return customer;
         }
 
-        public async Task<ErrorOr<Updated>> UpdateCustomerInfoAsync(Customer customer)
+        public async Task<Updated> UpdateCustomerInfoAsync(Customer customer)
         {
             await _customerRepository.UpdateAsync(customer);
 
             return Result.Updated;
         }
 
-        public async Task<ErrorOr<Updated>> UpdateCustomerPasswordAsync(Customer customer)
+        public async Task<Updated> UpdateCustomerPasswordAsync(Customer customer)
         {
             await _customerRepository.UpdateAsync(customer);
 
             return Result.Updated;
         }
 
-        public async Task<ErrorOr<Success>> CompareCustomerOldPasswordWithExistingOne(Guid id, string oldPassword)
+        public async Task<ErrorOr<string>> CompareCustomerOldPasswordWithExistingOne(Guid id, string oldPassword)
         {
             Customer? customer = await _customerRepository.GetAsync(id);
 
@@ -99,7 +99,7 @@ namespace CarSharingApp.Application.Services
                 if (customer.Credentials.Password != oldCredentials.Password)
                     return ApplicationErrors.Customer.PasswordConfirmationFailed;
                 else
-                    return Result.Success;
+                    return oldPassword;
 
             }
             else
@@ -195,7 +195,7 @@ namespace CarSharingApp.Application.Services
                 existingCustomer.Statistics.VehiclesShared);
         }
 
-        private async Task<ErrorOr<Success>> CredentialsCheckout(Customer customer)
+        private async Task<ErrorOr<Customer>> CredentialsCheckout(Customer customer)
         {
             Customer? customerWithSameLogin = await _customerRepository.GetAsync(c => c.Credentials.Login == customer.Credentials.Login);
             Customer? customerWithSameEmail = await _customerRepository.GetAsync(c => c.Credentials.Email == customer.Credentials.Email);
@@ -215,7 +215,7 @@ namespace CarSharingApp.Application.Services
                     break;
             }
 
-            return Result.Success;
+            return customer;
         }
     }
 }

@@ -1,8 +1,7 @@
-﻿using CarSharingApp.Application.Contracts.Authorization;
-using CarSharingApp.Domain.Abstractions;
+﻿using CarSharingApp.Domain.Abstractions;
 using CarSharingApp.Domain.Entities;
 using CarSharingApp.Domain.ValueObjects;
-using CarSharingApp.IdentityServer.StaticFiles;
+using Duende.IdentityServer.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,17 +11,17 @@ namespace CarSharingApp.IdentityServer.Controllers
     public class AuthController : Controller
     {
         //private readonly SignInManager<IdentityUser> _signInManager;
-        //private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<Client> _userManager;
         private readonly IServiceProvider _serviceProvider;
         private readonly IRepository<Customer> _customersRepository;
 
         public AuthController(/*SignInManager<IdentityUser> signInManager,*/
-                              //UserManager<IdentityUser> userManager,
+                              UserManager<Client> userManager,
                               IServiceProvider serviceProvider,
                               IRepository<Customer> customerRepository)
         {
             //_signInManager = signInManager;
-            //_userManager = userManager;
+            _userManager = userManager;
             _serviceProvider = serviceProvider;
             _customersRepository = customerRepository;
         }
@@ -35,7 +34,7 @@ namespace CarSharingApp.IdentityServer.Controllers
 
         [HttpPost]
         [Route("[action]")]
-        public async Task<IActionResult> SignIn(AuthorizationRequest request)
+        public async Task<IActionResult> SignIn(Application.Contracts.Authorization.AuthorizationRequest request)
         {
             Credentials userCredentials = Credentials.CreateForAuthorization(request.EmailOrLogin, request.EmailOrLogin, request.Password);
 
@@ -50,7 +49,7 @@ namespace CarSharingApp.IdentityServer.Controllers
 
             //IdentityServerConfigurations.CreateNewIdentityUser(_serviceProvider, customer);
 
-            //var identityUser = await _userManager.FindByNameAsync(customer.Credentials.Login);
+            var identityUser = await _userManager.FindByIdAsync("hello");
 
             //if (identityUser is null)
             //{
@@ -65,8 +64,8 @@ namespace CarSharingApp.IdentityServer.Controllers
                 return Redirect(request.ReturnUrl);
             }
 
-            ModelState.AddModelError("Password", "Something went wrong. Please try again later.");
-            return View(request);
+            //ModelState.AddModelError("Password", "Something went wrong. Please try again later.");
+            //return View(request);
         }
     }
 }

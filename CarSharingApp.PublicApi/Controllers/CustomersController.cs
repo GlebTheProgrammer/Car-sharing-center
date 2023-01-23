@@ -30,7 +30,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
             Customer customer = requestToCustomerResult.Value;
 
-            ErrorOr<Created> createCustomerResult = await _customerService.CreateCustomerAsync(customer);
+            ErrorOr<Customer> createCustomerResult = await _customerService.CreateCustomerAsync(customer);
 
             return createCustomerResult.Match(
                 created => CreatedAtAction(
@@ -97,11 +97,9 @@ namespace CarSharingApp.PublicApi.Controllers
 
             Customer customer = requestToCustomerResult.Value;
 
-            ErrorOr<Updated> updateCustomerInfoResult = await _customerService.UpdateCustomerInfoAsync(customer);
+            await _customerService.UpdateCustomerInfoAsync(customer);
 
-            return updateCustomerInfoResult.Match(
-                updated => NoContent(),
-                errors => Problem(errors));
+            return NoContent();
         }
 
         [HttpPut("Credentials/{id:guid}")]
@@ -126,11 +124,9 @@ namespace CarSharingApp.PublicApi.Controllers
 
             Customer customer = requestToCustomerResult.Value;
 
-            ErrorOr<Updated> updateCustomerResult = await _customerService.UpdateCustomerPasswordAsync(customer);
+            await _customerService.UpdateCustomerPasswordAsync(customer);
 
-            return updateCustomerResult.Match(
-                updated => NoContent(),
-                errors => Problem(errors));
+            return NoContent();
         }
 
         [HttpPut("Password/{id:guid}")]
@@ -154,17 +150,15 @@ namespace CarSharingApp.PublicApi.Controllers
 
             Customer customerWithUpdatedPassword = requestToCustomerResult.Value;
 
-            ErrorOr<Success> checkoutIfOldPasswordMatchResult = await _customerService.CompareCustomerOldPasswordWithExistingOne(id, request.currentPassword);
+            ErrorOr<string> checkoutIfOldPasswordMatchResult = await _customerService.CompareCustomerOldPasswordWithExistingOne(id, request.currentPassword);
             if (checkoutIfOldPasswordMatchResult.IsError)
             {
                 return Problem(checkoutIfOldPasswordMatchResult.Errors);
             }
 
-            ErrorOr<Updated> updateCustomerResult = await _customerService.UpdateCustomerPasswordAsync(customerWithUpdatedPassword);
+            await _customerService.UpdateCustomerPasswordAsync(customerWithUpdatedPassword);
 
-            return updateCustomerResult.Match(
-                updated => NoContent(),
-                errors => Problem(errors));
+            return NoContent();
         }
 
         [HttpDelete("{id:guid}")]
@@ -178,13 +172,9 @@ namespace CarSharingApp.PublicApi.Controllers
                 return Problem(getCustomerResult.Errors);
             }
 
-            Customer notDeletedCustomerYet = getCustomerResult.Value;
+            await _customerService.DeleteCustomerAsync(id);
 
-            ErrorOr<Deleted> deleteCustomerResult = await _customerService.DeleteCustomerAsync(id);
-
-            return deleteCustomerResult.Match(
-                deleted => NoContent(),
-                errors => Problem(errors));
+            return NoContent();
         }
 
         private static CustomerResponse MapCustomerResponse(Customer customer)

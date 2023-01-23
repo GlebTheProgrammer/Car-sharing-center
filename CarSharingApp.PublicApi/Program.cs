@@ -4,6 +4,7 @@ using CarSharingApp.Domain.Entities;
 using CarSharingApp.Infrastructure.Authentication;
 using CarSharingApp.Infrastructure.MongoDB;
 using CarSharingApp.Infrastructure.AzureKeyVault;
+using CarSharingApp.Infrastructure.MSSQL;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -30,7 +31,10 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddMongoRepository<Customer>(builder.Configuration["MongoDbConfig:Collections:CustomersCollectionName"] ?? "");
     builder.Services.AddSingleton<ICustomerService, CustomerService>();
 
+    builder.Services.AddSingleton<IAuthorizationService, AuthorizationService>();
     builder.Services.AddJwtBearerAuthentication(builder.Configuration);
+
+    builder.Services.AddMSSQLDBconnection(builder.Configuration);
 }
 
 var app = builder.Build();
@@ -46,7 +50,18 @@ var app = builder.Build();
 
     //app.UseHttpsRedirection();
     app.UseAuthentication();
-    app.UseAuthorization();
+
+    app.Use(async (context, next) =>
+    {
+        if (!context.User.Identity?.IsAuthenticated ?? false)
+        {
+            context.Response.StatusCode = (int)System.Net.HttpStatusCode.Unauthorized;
+            await context.Response.WriteAsync("Not authenticated");
+        }
+        else await next();
+    });
+
+
     app.MapControllers();
     app.Run();
 }
