@@ -1,8 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
 namespace CarSharingApp.Infrastructure.Authentication
 {
@@ -10,31 +9,21 @@ namespace CarSharingApp.Infrastructure.Authentication
     {
         public static IServiceCollection AddJwtBearerAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
-            var key = Encoding.UTF8.GetBytes(configuration["JwtBearer:SecretKey"] 
-                ?? throw new ArgumentNullException("SecretKey"));
-
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(opt =>
-            {
-                opt.RequireHttpsMetadata = false;
-                opt.SaveToken = true;
-                opt.TokenValidationParameters = new TokenValidationParameters
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, config =>
                 {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidIssuers = new string[] { configuration["JwtBearer:Issuer"] 
-                    ?? throw new ArgumentNullException("Issuer") },
-                    ValidAudiences = new string[] { configuration["JwtBearer:Audience"] 
-                    ?? throw new ArgumentNullException("Audience") },
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero
-                };
-            });
+                    config.Authority = "https://localhost:5001";
+
+                    config.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidAudiences = new List<string>
+                        {
+                            "PublicAPI.CutomerEndpoints"
+                        }
+                    };
+                    
+                });
 
             return services;
         }

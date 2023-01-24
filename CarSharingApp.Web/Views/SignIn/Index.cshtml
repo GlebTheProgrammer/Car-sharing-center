@@ -37,6 +37,8 @@
                 <span id="emailOrLoginError" asp-validation-for="EmailOrLogin"></span>
                 <span id="passwordError" asp-validation-for="Password"></span>
             </div>
+
+            <input hidden asp-for="ReturnUrl" readonly />
         </form>
     </div>
     <div class="mb-4">

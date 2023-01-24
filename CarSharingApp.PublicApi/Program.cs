@@ -4,7 +4,7 @@ using CarSharingApp.Domain.Entities;
 using CarSharingApp.Infrastructure.Authentication;
 using CarSharingApp.Infrastructure.MongoDB;
 using CarSharingApp.Infrastructure.AzureKeyVault;
-using CarSharingApp.Infrastructure.Options.Setup;
+using CarSharingApp.Infrastructure.MSSQL;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -15,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
         logging.AddDebug();
         //logging.AddConsole();
     });
-
+    
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen(config =>
@@ -25,8 +25,6 @@ var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.AddAzureKeyVaultAppsettingsValues(builder.Configuration);
 
-    builder.Services.ConfigureOptions<JwtOptionsSetup>();
-
     builder.Services.AddMongo(builder.Configuration);
     builder.Services.AddMongoRepository<Vehicle>(builder.Configuration["MongoDbConfig:Collections:VehiclesCollectionName"] ?? "");
     builder.Services.AddSingleton<IVehicleService, VehicleService>();
@@ -34,12 +32,14 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddSingleton<ICustomerService, CustomerService>();
 
     builder.Services.AddSingleton<IAuthorizationService, AuthorizationService>();
-    builder.Services.AddTransient<IJwtProvider, JwtProvider>();
     builder.Services.AddJwtBearerAuthentication(builder.Configuration);
+
+    builder.Services.AddMSSQLDBconnection(builder.Configuration);
 }
 
 var app = builder.Build();
 {
+    app.Logger.LogError(app.Environment.EnvironmentName);
     app.UseExceptionHandler("/error");
 
     app.UseSwagger();
@@ -49,7 +49,19 @@ var app = builder.Build();
     });
 
     //app.UseHttpsRedirection();
-    app.UseAuthorization();
+    app.UseAuthentication();
+
+    app.Use(async (context, next) =>
+    {
+        if (!context.User.Identity?.IsAuthenticated ?? false)
+        {
+            context.Response.StatusCode = (int)System.Net.HttpStatusCode.Unauthorized;
+            await context.Response.WriteAsync("Not authenticated");
+        }
+        else await next();
+    });
+
+
     app.MapControllers();
     app.Run();
 }

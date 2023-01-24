@@ -2,7 +2,6 @@
 using CarSharingApp.Application.Interfaces;
 using CarSharingApp.Domain.Entities;
 using CarSharingApp.Domain.ValueObjects;
-using CarSharingApp.Infrastructure.Authentication;
 using ErrorOr;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,18 +9,16 @@ namespace CarSharingApp.PublicApi.Controllers
 {
     public sealed class AuthorizationController : ApiController
     {
-        private readonly IJwtProvider _jwtProvider;
         private readonly IAuthorizationService _authorizationService;
 
-        public AuthorizationController(IJwtProvider jwtProvider, IAuthorizationService authorizationService)
+        public AuthorizationController(IAuthorizationService authorizationService)
         {
-            _jwtProvider = jwtProvider;
             _authorizationService = authorizationService;
         }
 
         [HttpPost]
         [Microsoft.AspNetCore.Authorization.AllowAnonymous]
-        public async Task<IActionResult> GenerateToken(AuthorizationRequest request)
+        public async Task<IActionResult> Authorize(AuthorizationRequest request)
         {
             ErrorOr<Credentials> requestToCredentialsResult = _authorizationService.From(request);
 
@@ -41,16 +38,15 @@ namespace CarSharingApp.PublicApi.Controllers
 
             Customer customer = loginResult.Value;
 
-            string JWToken = _jwtProvider.Generate(customer);
-
-            return CreatedAtAction(
-                actionName: nameof(GenerateToken),
-                value: MapTokenResponse(JWToken));
+            return Ok(value: MapAuthorizationResponse(customer));
         }
 
-        private static TokenResponse MapTokenResponse(string Token)
+        private static SuccessfulAuthorizationResponse MapAuthorizationResponse(Customer customer)
         {
-            return new TokenResponse(Token);
+            return new SuccessfulAuthorizationResponse(
+                customer.Id.ToString(),
+                customer.Credentials.Login,
+                customer.Credentials.Email);
         }
     }
 }

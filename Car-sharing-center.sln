@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarSharingApp.Infrastructur
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A3160ACE-F358-4620-B6D2-D31CF9581E49}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarSharingApp.PublicApi", "CarSharingApp.PublicApi\CarSharingApp.PublicApi.csproj", "{A07A0236-20AE-423D-B9AF-4AA8919061D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarSharingApp.PublicApi", "CarSharingApp.PublicApi\CarSharingApp.PublicApi.csproj", "{A07A0236-20AE-423D-B9AF-4AA8919061D0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

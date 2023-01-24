@@ -30,7 +30,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
             Customer customer = requestToCustomerResult.Value;
 
-            ErrorOr<Created> createCustomerResult = await _customerService.CreateCustomerAsync(customer);
+            ErrorOr<Customer> createCustomerResult = await _customerService.CreateCustomerAsync(customer);
 
             return createCustomerResult.Match(
                 created => CreatedAtAction(
@@ -65,14 +65,9 @@ namespace CarSharingApp.PublicApi.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        [Authorize(Roles = "Administrator, Customer")]
+        [Authorize]
         public async Task<IActionResult> GetCustomer(Guid id)
         {
-            if (!IsRequestAllowed(id)) 
-            {
-                return Forbid();
-            }
-
             ErrorOr<Customer> getCustomerResult = await _customerService.GetCustomerAsync(id);
 
             return getCustomerResult.Match(
@@ -81,14 +76,9 @@ namespace CarSharingApp.PublicApi.Controllers
         }
         
         [HttpPut("Info/{id:guid}")]
-        [Authorize(Roles = "Administrator, Customer")]
+        [Authorize]
         public async Task<IActionResult> UpdateCustomerInfo(Guid id, UpdateCustomerInfoRequest request)
         {
-            if (!IsRequestAllowed(id))
-            {
-                return Forbid();
-            }
-
             ErrorOr<Customer> getCustomerResult = await _customerService.GetCustomerAsync(id);
 
             if (getCustomerResult.IsError)
@@ -107,22 +97,15 @@ namespace CarSharingApp.PublicApi.Controllers
 
             Customer customer = requestToCustomerResult.Value;
 
-            ErrorOr<Updated> updateCustomerInfoResult = await _customerService.UpdateCustomerInfoAsync(customer);
+            await _customerService.UpdateCustomerInfoAsync(customer);
 
-            return updateCustomerInfoResult.Match(
-                updated => NoContent(),
-                errors => Problem(errors));
+            return NoContent();
         }
 
         [HttpPut("Credentials/{id:guid}")]
-        [Authorize(Roles = "Administrator, Customer")]
+        [Authorize]
         public async Task<IActionResult> UpdateCustomerCredentials(Guid id, UpdateCustomerCredentialsRequest request)
         {
-            if (!IsRequestAllowed(id))
-            {
-                return Forbid();
-            }
-
             ErrorOr<Customer> getCustomerResult = await _customerService.GetCustomerAsync(id);
 
             if (getCustomerResult.IsError)
@@ -141,22 +124,15 @@ namespace CarSharingApp.PublicApi.Controllers
 
             Customer customer = requestToCustomerResult.Value;
 
-            ErrorOr<Updated> updateCustomerResult = await _customerService.UpdateCustomerPasswordAsync(customer);
+            await _customerService.UpdateCustomerPasswordAsync(customer);
 
-            return updateCustomerResult.Match(
-                updated => NoContent(),
-                errors => Problem(errors));
+            return NoContent();
         }
 
         [HttpPut("Password/{id:guid}")]
-        [Authorize(Roles = "Administrator, Customer")]
+        [Authorize]
         public async Task<IActionResult> UpdateCustomerPassword(Guid id, UpdateCustomerPasswordRequest request)
         {
-            if (!IsRequestAllowed(id))
-            {
-                return Forbid();
-            }
-
             ErrorOr<Customer> getCustomerResult = await _customerService.GetCustomerAsync(id);
 
             if (getCustomerResult.IsError)
@@ -174,28 +150,21 @@ namespace CarSharingApp.PublicApi.Controllers
 
             Customer customerWithUpdatedPassword = requestToCustomerResult.Value;
 
-            ErrorOr<Success> checkoutIfOldPasswordMatchResult = await _customerService.CompareCustomerOldPasswordWithExistingOne(id, request.currentPassword);
+            ErrorOr<string> checkoutIfOldPasswordMatchResult = await _customerService.CompareCustomerOldPasswordWithExistingOne(id, request.currentPassword);
             if (checkoutIfOldPasswordMatchResult.IsError)
             {
                 return Problem(checkoutIfOldPasswordMatchResult.Errors);
             }
 
-            ErrorOr<Updated> updateCustomerResult = await _customerService.UpdateCustomerPasswordAsync(customerWithUpdatedPassword);
+            await _customerService.UpdateCustomerPasswordAsync(customerWithUpdatedPassword);
 
-            return updateCustomerResult.Match(
-                updated => NoContent(),
-                errors => Problem(errors));
+            return NoContent();
         }
 
         [HttpDelete("{id:guid}")]
-        [Authorize(Roles = "Administrator, Customer")]
+        [Authorize]
         public async Task<IActionResult> DeleteCustomer(Guid id)
         {
-            if (!IsRequestAllowed(id))
-            {
-                return Forbid();
-            }
-
             ErrorOr<Customer> getCustomerResult = await _customerService.GetCustomerAsync(id);
 
             if (getCustomerResult.IsError)
@@ -203,13 +172,9 @@ namespace CarSharingApp.PublicApi.Controllers
                 return Problem(getCustomerResult.Errors);
             }
 
-            Customer notDeletedCustomerYet = getCustomerResult.Value;
+            await _customerService.DeleteCustomerAsync(id);
 
-            ErrorOr<Deleted> deleteCustomerResult = await _customerService.DeleteCustomerAsync(id);
-
-            return deleteCustomerResult.Match(
-                deleted => NoContent(),
-                errors => Problem(errors));
+            return NoContent();
         }
 
         private static CustomerResponse MapCustomerResponse(Customer customer)
@@ -225,18 +190,6 @@ namespace CarSharingApp.PublicApi.Controllers
                 customer.Statistics,
                 customer.HasAcceptedNewsSharing,
                 customer.Credentials);
-        }
-
-        private bool IsRequestAllowed(Guid requestedId)
-        {
-            JwtClaims? jwtClaims = GetJwtClaims();
-
-            if (jwtClaims == null || (jwtClaims.Id != requestedId.ToString() && jwtClaims.Role != "Administrator"))
-            {
-                return false;
-            }
-
-            return true;
         }
     }
 }

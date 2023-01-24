@@ -17,7 +17,11 @@ namespace CarSharingApp.Infrastructure.MongoDB
             
             services.AddSingleton(s =>
             {
-                var mongoClient = new MongoClient(configuration["ConnectionStrings:MongoDbAtlasCloud"]);
+                MongoClient mongoClient = new MongoClient();
+
+                mongoClient = new MongoClient(configuration["ConnectionStrings:MongoDbLocal"]);
+                //mongoClient = new MongoClient(configuration["ConnectionStrings:MongoDbAtlasCloud"]);
+
                 return mongoClient.GetDatabase(configuration["MongoDbConfig:DbName"]);
             });
 

@@ -1,6 +1,7 @@
 ﻿using CarSharingApp.Application.Contracts.Vehicle;
 using CarSharingApp.Models;
 using CarSharingApp.Web.Clients.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Net;
@@ -16,6 +17,7 @@ namespace CarSharingApp.Controllers
             _vehicleServiceClient = vehicleServiceClient;
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
 
@@ -66,6 +68,7 @@ namespace CarSharingApp.Controllers
             return View(viewModel);
         }
 
+        [AllowAnonymous]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

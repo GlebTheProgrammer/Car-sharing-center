@@ -5,10 +5,8 @@ using CarSharingApp.Payment;
 using CarSharingApp.Payment.StripeService;
 using CarSharingApp.Services;
 using CarSharingApp.Services.Interfaces;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Stripe;
 using System.Text;
-using Microsoft.IdentityModel.Tokens;
 using CarSharingApp.Middlewares;
 using CarSharingApp.Repository.MongoDbRepository;
 using CarSharingApp.Web.Clients;
@@ -27,13 +25,15 @@ builder.Host.ConfigureLogging((context, logging) =>
 
 builder.Services.AddControllersWithViews();
 
-
 builder.Services.AddSingleton<IVehicleServicePublicApiClient, VehicleServicePublicApiClient>();
 builder.Services.RegisterNewHttpClients("VehiclesAPI", builder.Configuration);
 builder.Services.AddSingleton<ICustomerServicePublicApiClient, CustomerServicePublicApiClient>();
 builder.Services.RegisterNewHttpClients("CustomersAPI", builder.Configuration);
 builder.Services.AddSingleton<IAuthorizationServicePublicApiClient, AuthorizationServicePublicApiClient>();
 builder.Services.RegisterNewHttpClients("AuthorizationAPI", builder.Configuration);
+
+
+
 
 
 
@@ -63,28 +63,6 @@ builder.Services.AddTransient<IJwtProvider, JwtProvider>();
 
 // JWT options configuration setup is here
 builder.Services.ConfigureOptions<JwtOptionsSetup>();
-
-var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]);
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(opt =>
-{
-    opt.RequireHttpsMetadata = false;
-    opt.SaveToken = true;
-    opt.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(key),
-        ValidIssuers = new string[] { builder.Configuration["Jwt:Issuer"] },
-        ValidAudiences = new string[] { builder.Configuration["Jwt:Audience"] },
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ClockSkew = TimeSpan.Zero
-    };
-});
 
 // DB configuration section
 builder.Services.Configure<CarSharingDatabaseSettings>(

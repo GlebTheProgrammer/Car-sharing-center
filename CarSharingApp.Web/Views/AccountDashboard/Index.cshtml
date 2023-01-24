@@ -1,0 +1,556 @@
+﻿<main>
+    <header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
+        <div class="container-xl px-4">
+            <div class="page-header-content pt-4">
+                <div class="row align-items-center justify-content-between">
+                    <div class="d-flex flex-row align-items-center card col-lg-12 p-3 mt-4">
+                        <div class="col-lg-5 d-flex justify-content-center">
+                            <img id="Image2" class="rounded-circle" src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2.webp" width="170" height="170">
+                        </div>
+                        <div class="col-lg-7 d-flex flex-column">
+                            <label style="font-size: 30px;">Gleb Sukristik</label>
+                            <label style="font-size: 15px;">World is full of great people. Just smile and be free.</label>
+                            <label class="mt-2" style="font-size: 15px;">gleb15a@gmail.com</label>
+                            <label style="font-size: 15px;">Belarus, Minsk, L.Bedy 29-97</label>
+                            <label style="font-size: 15px;">+375 33 600 60 38</label>
+                            <button class="btn btn-sm btn-outline-secondary mt-3" type="button" style="width: 200px;" data-toggle="collapse">
+                                Edit account info
+                                <i class="fa-solid fa-square-pen ms-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-auto mt-4">
+                        <div class="page-header-title d-flex h1">
+                            <div class="page-header-icon me-3">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                                </svg>
+                            </div>
+                            Dashboard
+                        </div>
+                        <div class="page-header-subtitle">You can check account overview and activity summary below</div>
+                    </div>
+                    <div class="col-12 col-xl-auto mt-4">
+                        <div class="input-group input-group-joined border-0" style="width: 14rem">
+                            <span class="input-group-text">
+                                <i class="fa-regular fa-clock"></i>
+                            </span>
+                            <span class="form-control d-flex justify-content-center" id="currentTimeInput"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+
+
+
+
+    <!-- Main page content-->
+    <div class="container-xl px-4 mt-4">
+        <div class="row">
+            <div class="col-xxl-4 col-xl-12 mb-4">
+                <div class="card h-100">
+                    <div class="card-body h-100 p-5">
+                        <div class="row align-items-center">
+                            <div class="col-xl-8 col-xxl-12">
+                                <div class="text-center text-xl-start text-xxl-center mb-4 mb-xl-0 mb-xxl-4">
+                                    <h1 class="text-primary">Welcome back Glebyshka!</h1>
+                                    <p class="text-gray-700 mb-0">Thank you for being with us. We value every customer who makes the world a better place by helping others, lending and paying for other people's vehicles. Watch, learn and explore new horizons with Sam Solutions Vehicles Sharing Service!</p>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 col-xxl-12 d-flex justify-content-center">
+                                <img class="img-fluid" style="width: 260px;" src="~/Images/AccountDashboardPage/girl.png">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xxl-4 col-xl-6 mb-4">
+                <div class="card card-header-actions h-100">
+                    <div class="card-header d-flex align-items-center text-primary">
+                        Recent Activity
+                        <div class="dropdown ms-2">
+                            <button class="btn btn-transparent-dark btn-icon dropdown-toggle" id="dropdownMenuButton" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img class="img-fluid" style="width: 24px;" src="~/Images/AccountDashboardPage/menu.png">
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                <h6 class="dropdown-header">Filter Activity:</h6>
+                                <a class="dropdown-item" href="#!"><i class="fa-solid fa-globe me-2"></i><span>All</span></a>
+                                <a class="dropdown-item" href="#!"><i class="fa-regular fa-user me-2"></i><span>Account</span></a>
+                                <a class="dropdown-item" href="#!"><i class="fa-solid fa-car-rear me-2"></i><span>Vehicles</span></a>
+                                <a class="dropdown-item" href="#!"><i class="fa-regular fa-credit-card me-2"></i><span>Orders</span></a>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="container py-2">
+                        <!-- timeline item 1 -->
+                        <div class="row">
+                            <!-- timeline item 1 event content -->
+                            <div class="col py-2">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="float-right text-muted">Mon, Jan 9th 2020 7:00 AM</div>
+                                        <h4 class="card-title text-muted">Day 1 Orientation</h4>
+                                        <p class="card-text">Welcome to the campus, introduction and get started with the tour.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/row-->
+                        <!-- timeline item 2 -->
+                        <div class="row">
+                            <div class="col py-2">
+                                <div class="card border-success shadow">
+                                    <div class="card-body">
+                                        <div class="float-right text-success">Tue, Jan 10th 2019 8:30 AM</div>
+                                        <h4 class="card-title text-success">Day 2 Sessions</h4>
+                                        <p class="card-text">Sign-up for the lessons and speakers that coincide with your course syllabus. Meet and greet with instructors.</p>
+                                        <button class="btn btn-sm btn-outline-secondary" type="button" data-target="#t2_details" data-toggle="collapse">Show Details ▼</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/row-->
+                        <!-- timeline item 3 -->
+                        <div class="row">
+                            <div class="col py-2">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="float-right text-muted">Wed, Jan 11th 2019 8:30 AM</div>
+                                        <h4 class="card-title">Day 3 Sessions</h4>
+                                        <p>
+                                            Shoreditch vegan artisan Helvetica. Tattooed Codeply Echo Park Godard kogi, next level irony ennui twee squid fap selvage. Meggings flannel Brooklyn.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/row-->
+                        <!-- timeline item 4 -->
+                        <div class="row">
+                            <div class="col py-2">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="float-right text-muted">Thu, Jan 12th 2019 11:30 AM</div>
+                                        <h4 class="card-title">Day 4 Wrap-up</h4>
+                                        <p>Join us for lunch in Bootsy's cafe across from the Campus Center.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/row-->
+                    </div>
+                </div>
+            </div>
+            <div class="col-xxl-4 col-xl-6 mb-4">
+                <div class="card card-header-actions h-100">
+                    <div class="card-header d-flex align-items-center text-primary">
+                        Progress Tracker
+                        <div class="dropdown ms-2">
+                            <button class="btn btn-transparent-dark btn-icon dropdown-toggle" id="dropdownMenuButton" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img class="img-fluid" style="width: 24px;" src="~/Images/AccountDashboardPage/menu.png">
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#!"><i class="fa-regular fa-eye me-2"></i>Show notes</a>
+                                <a class="dropdown-item" href="#!"><i class="fa-regular fa-eye-slash me-2"></i>Hide notes</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="small">
+                            Rented vehicles
+                            <span class="float-end fw-bold">20%</span>
+                        </h4>
+                        <div class="progress mb-4"><div class="progress-bar bg-danger" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div></div>
+                        <p class="card-text">The number of your currently rented vehicles to their total number</p>
+                        <h4 class="small">
+                            Published vehicles
+                            <span class="float-end fw-bold">40%</span>
+                        </h4>
+                        <div class="progress mb-4"><div class="progress-bar bg-warning" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div></div>
+                        <p class="card-text">The number of your currently listed vehicles in the catalog to their total number.</p>
+                        <h4 class="small">
+                            Hidden vehicles
+                            <span class="float-end fw-bold">60%</span>
+                        </h4>
+                        <div class="progress mb-4"><div class="progress-bar" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div></div>
+                        <p class="card-text">The number of your currently hidden vehicles from the catalog to their total number.</p>
+                        <h4 class="small">
+                            Rented to Shared (or vice versa)
+                            <span class="float-end fw-bold">80%</span>
+                        </h4>
+                        <div class="progress mb-4"><div class="progress-bar bg-info" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div></div>
+                        <p class="card-text">The total number of your rented vehicles for all time to the total number of your orders. (or vice versa, depends on whichever is greater)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Example Colored Cards for Dashboard Demo-->
+        <div class="row">
+            <div class="col-lg-6 col-xl-3 mb-4">
+                <div class="card border-primary shadow">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="me-3">
+                                <div class="text-white-75 small">Earnings (Monthly)</div>
+                                <div class="text-lg fw-bold">$40,000</div>
+                            </div>
+                            <i class="fa-solid fa-calendar-days fa-2x"></i>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex align-items-center justify-content-between small">
+                        <a class="stretched-link link-secondary nav-link" href="#!">View Report</a>
+                        <div>
+                            <i class="fas fa-angle-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-xl-3 mb-4">
+                <div class="card border-warning shadow">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="me-3">
+                                <div class="text-white-75 small">Earnings (Annual)</div>
+                                <div class="text-lg fw-bold">$215,000</div>
+                            </div>
+                            <i class="fa-solid fa-dollar-sign fa-2x"></i>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex align-items-center justify-content-between small">
+                        <a class="stretched-link link-secondary nav-link" href="#!">View Report</a>
+                        <div>
+                            <i class="fas fa-angle-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-xl-3 mb-4">
+                <div class="card border-success shadow">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="me-3">
+                                <div class="text-white-75 small">Vehicles Rented</div>
+                                <div class="text-lg fw-bold">24</div>
+                            </div>
+                            <i class="fa-regular fa-square-check fa-2x"></i>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex align-items-center justify-content-between small">
+                        <a class="stretched-link link-secondary nav-link" href="#!">View Tasks</a>
+                        <div>
+                            <i class="fas fa-angle-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-xl-3 mb-4">
+                <div class="card border-danger shadow">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="me-3">
+                                <div class="text-white-75 small">Vehicles Shared</div>
+                                <div class="text-lg fw-bold">17</div>
+                            </div>
+                            <i class="fa-regular fa-comment fa-2x"></i>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex align-items-center justify-content-between small">
+                        <a class="stretched-link link-secondary nav-link" href="#!">View Requests</a>
+                        <div>
+                            <i class="fas fa-angle-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="card mb-4">
+            <div class="card-header text-primary">Vehicles Management</div>
+            <div class="card-body">
+                <div class="datatable-wrapper datatable-loading no-footer sortable searchable fixed-columns">
+                    <div class="datatable-top d-flex align-items-center">
+                        <label class="me-2">Show</label>
+                        <div class="datatable-dropdown">
+                            <select class="form-select">
+                                <option value="3" selected>3</option>
+                                <option value="5">5</option>
+                                <option value="7">7</option>
+                                <option value="10">10</option>
+                            </select>
+                        </div>
+                        <label class="ms-2 me-5">vehicles</label>
+                        <div class="datatable-search">
+                            <input type="text" class="form-control" placeholder="Search...">
+                        </div>
+                    </div>
+                    <div class="datatable-container mt-4">
+                        <table id="datatablesSimple" class="table">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" scope="col">
+                                        <label class="datatable-sorter text-primary">Name</label>
+                                    </th>
+                                    <th class="text-center" scope="col">
+                                        <label class="datatable-sorter text-primary">Hourly price</label>
+                                    </th>
+                                    <th class="text-center" scope="col">
+                                        <label class="datatable-sorter text-primary">Daily price</label>
+                                    </th>
+                                    <th class="text-center" scope="col">
+                                        <label class="datatable-sorter text-primary">Published</label>
+                                    </th>
+                                    <th class="text-center" scope="col">
+                                        <label class="datatable-sorter text-primary">Times ordered</label>
+                                    </th>
+                                    <th class="text-center" scope="col">
+                                        <label class="datatable-sorter text-primary">Status</label>
+                                    </th>
+                                    <th class="text-center" scope="col">
+                                        <label class="datatable-sorter text-primary">Actions</label>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr data-index="0">
+                                    <td class="text-center">BMW</td>
+                                    <td class="text-center">$198,500</td>
+                                    <td class="text-center">$198,500</td>
+                                    <td class="text-center">2012/11/27</td>
+                                    <td class="text-center">10</td>
+                                    <td class="text-center"><div class="badge bg-secondary text-white rounded-pill">In catalog</div></td>
+                                    <td class="d-flex justify-content-center">
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" id="dropdownMenuButton" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Choose...
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                                <h6 class="dropdown-header">Available actions:</h6>
+                                                <a class="dropdown-item" href="#!"><i class="fa-solid fa-minus me-2"></i><span>Hide</span></a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr data-index="1">
+                                    <td class="text-center">BMW</td>
+                                    <td class="text-center">$198,500</td>
+                                    <td class="text-center">$198,500</td>
+                                    <td class="text-center">2012/11/27</td>
+                                    <td class="text-center">10</td>
+                                    <td class="text-center"><div class="badge bg-danger text-white rounded-pill">Hidden</div></td>
+                                    <td class="d-flex justify-content-center">
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" id="dropdownMenuButton" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Choose...
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                                <h6 class="dropdown-header">Available actions:</h6>
+                                                <a class="dropdown-item" href="#!"><i class="fa-solid fa-share-nodes me-2"></i><span>Publish</span></a>
+                                                <a class="dropdown-item" href="#!"><i class="fa-solid fa-square-pen me-2"></i><span>Modify</span></a>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-sm btn-outline-secondary ms-2" type="button" data-target="#t2_details" data-toggle="collapse">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr data-index="2">
+                                    <td class="text-center">BMW</td>
+                                    <td class="text-center">$198,500</td>
+                                    <td class="text-center">$198,500</td>
+                                    <td class="text-center">2012/11/27</td>
+                                    <td class="text-center">10</td>
+                                    <td class="text-center"><div class="badge bg-warning text-white rounded-pill">Processing</div></td>
+                                    <td class="d-flex justify-content-center">
+                                        <button class="btn btn-sm btn-outline-secondary ms-2" type="button" data-target="#t2_details" data-toggle="collapse">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr data-index="3">
+                                    <td class="text-center">BMW</td>
+                                    <td class="text-center">$198,500</td>
+                                    <td class="text-center">$198,500</td>
+                                    <td class="text-center">2012/11/27</td>
+                                    <td class="text-center">10</td>
+                                    <td class="text-center"><div class="badge bg-success text-white rounded-pill">Rented</div></td>
+                                    <td class="d-flex justify-content-center">
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" id="dropdownMenuButton" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Choose...
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                                <h6 class="dropdown-header">Available actions:</h6>
+                                                <a class="dropdown-item" href="#!"><i class="fa-solid fa-circle-info me-2"></i><span>Rental info</span></a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="datatable-bottom">
+                        <div class="datatable-info">Showing 1 to 4 of 4 vehicles</div>
+                        <nav class="datatable-pagination">
+                            <ul class="datatable-pagination-list">
+                                <li class="active">
+                                    <a href="#" data-page="1">1</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="card mb-5">
+            <div class="card-header text-primary">Rentals Management</div>
+            <div class="card-body">
+                <div class="datatable-wrapper datatable-loading no-footer sortable searchable fixed-columns">
+                    <div class="datatable-top d-flex align-items-center">
+                        <label class="me-2">Show</label>
+                        <div class="datatable-dropdown">
+                            <select class="form-select">
+                                <option value="3" selected>3</option>
+                                <option value="5">5</option>
+                                <option value="7">7</option>
+                                <option value="10">10</option>
+                            </select>
+                        </div>
+                        <label class="ms-2 me-5">vehicles</label>
+                        <div class="datatable-search">
+                            <input type="text" class="form-control" placeholder="Search...">
+                        </div>
+                    </div>
+                    <div class="datatable-container mt-4">
+                        <table id="datatablesSimple" class="table">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" scope="col">
+                                        <label class="datatable-sorter text-primary">Vehicle name</label>
+                                    </th>
+                                    <th class="text-center" scope="col">
+                                        <label class="datatable-sorter text-primary">Price</label>
+                                    </th>
+                                    <th class="text-center" scope="col">
+                                        <label class="datatable-sorter text-primary">Rented</label>
+                                    </th>
+                                    <th class="text-center" scope="col">
+                                        <label class="datatable-sorter text-primary">Time left</label>
+                                    </th>
+                                    <th class="text-center" scope="col">
+                                        <label class="datatable-sorter text-primary">Expires</label>
+                                    </th>
+                                    <th class="text-center" scope="col">
+                                        <label class="datatable-sorter text-primary">Status</label>
+                                    </th>
+                                    <th class="text-center" scope="col">
+                                        <label class="datatable-sorter text-primary">Actions</label>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr data-index="0">
+                                    <td class="text-center">BMW</td>
+                                    <td class="text-center">$198,500</td>
+                                    <td class="text-center">2012/11/27</td>
+                                    <td class="text-center">10 min</td>
+                                    <td class="text-center">2012/11/27</td>
+                                    <td class="text-center"><div class="badge bg-success text-white rounded-pill">Active</div></td>
+                                    <td class="d-flex justify-content-center">
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" id="dropdownMenuButton" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Choose...
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                                <h6 class="dropdown-header">Available actions:</h6>
+                                                <a class="dropdown-item" href="#!"><i class="fa-solid fa-circle-info me-2"></i><span>Order info</span></a>
+                                                <a class="dropdown-item" href="#!"><i class="fa-solid fa-flag-checkered me-2"></i><span>Finish</span></a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr data-index="1">
+                                    <td class="text-center">BMW</td>
+                                    <td class="text-center">$198,500</td>
+                                    <td class="text-center">2012/11/27</td>
+                                    <td class="text-center">10 min</td>
+                                    <td class="text-center">2012/11/27</td>
+                                    <td class="text-center"><div class="badge bg-warning text-white rounded-pill">Expires</div></td>
+                                    <td class="d-flex justify-content-center">
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" id="dropdownMenuButton" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Choose...
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                                <h6 class="dropdown-header">Available actions:</h6>
+                                                <a class="dropdown-item" href="#!"><i class="fa-solid fa-circle-info me-2"></i><span>Order info</span></a>
+                                                <a class="dropdown-item" href="#!"><i class="fa-solid fa-flag-checkered me-2"></i><span>Finish</span></a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr data-index="2">
+                                    <td class="text-center">BMW</td>
+                                    <td class="text-center">$198,500</td>
+                                    <td class="text-center">2012/11/27</td>
+                                    <td class="text-center">10 min</td>
+                                    <td class="text-center">2012/11/27</td>
+                                    <td class="text-center"><div class="badge bg-danger text-white rounded-pill">Finished</div></td>
+                                    <td class="d-flex justify-content-center">
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" id="dropdownMenuButton" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Choose...
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                                <h6 class="dropdown-header">Available actions:</h6>
+                                                <a class="dropdown-item" href="#!"><i class="fa-solid fa-circle-info me-2"></i><span>Order info</span></a>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-sm btn-outline-secondary ms-2" type="button" data-target="#t2_details" data-toggle="collapse">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="datatable-bottom">
+                        <div class="datatable-info">Showing 1 to 4 of 4 vehicles</div>
+                        <nav class="datatable-pagination">
+                            <ul class="datatable-pagination-list">
+                                <li class="active">
+                                    <a href="#" data-page="1">1</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+
+<script>
+    //var datetime = new Date();
+    //console.log(datetime);
+    //document.getElementById("currentTimeInput").textContent = datetime; //it will print on html page
+
+    const timeDisplay = document.getElementById("currentTimeInput");
+    function refreshTime() {
+        const dateString = new Date().toLocaleString();
+        const formattedString = dateString.replace(", ", " - ");
+        timeDisplay.textContent = formattedString;
+    }
+    setInterval(refreshTime, 1000);
+</script>

@@ -28,6 +28,5 @@ namespace CarSharingApp.Infrastructure.AzureKeyVault
 
             return services;
         }
-
     }
 }
