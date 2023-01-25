@@ -1,5 +1,4 @@
-﻿using CarSharingApp.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using CarSharingApp.Web.Clients.Interfaces;
 using CarSharingApp.Application.Contracts.Vehicle;
 using System.Net;
@@ -11,16 +10,15 @@ namespace CarSharingApp.Controllers
 {
     public sealed class AddVehicleController : Controller
     {
-        private readonly IFileUploadService _fileUploadService;
         private readonly IVehicleServicePublicApiClient _vehicleServiceClient;
+        private readonly IAzureBlobStoragePublicApiClient _blobStorageClient;
 
-        public AddVehicleController(IVehicleServicePublicApiClient vehicleServiceClient, IFileUploadService fileUploadService)
+        public AddVehicleController(IVehicleServicePublicApiClient vehicleServiceClient, IAzureBlobStoragePublicApiClient blobStorageClient)
         {
-            _fileUploadService = fileUploadService;
             _vehicleServiceClient = vehicleServiceClient;
+            _blobStorageClient = blobStorageClient;
         }
 
-        [Authorize]
         public IActionResult Index()
         {
             var createNewVehicleRequest = ConfigureNewCreateVehicleRequest();
@@ -28,17 +26,16 @@ namespace CarSharingApp.Controllers
             return View(createNewVehicleRequest);
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddVehicle(CreateVehicleRequest createVehicleRequest, IFormFile file)
         {
-            string vehicleGeneratedImageName = string.Empty;
-            if (file is not null)
-                vehicleGeneratedImageName = await _fileUploadService.UploadFileAsync(file);
-            else
+            if (file is null)
                 throw new Exception("Image can't be null");
 
-            var response = await _vehicleServiceClient.CreateNewVehicle(ConfigureNewCreateVehicleRequest(createVehicleRequest, vehicleGeneratedImageName));
+            DateTime dateTime = DateTime.Now;
+            string imageName = $"{dateTime.Hour}_{dateTime.Minute}_{dateTime.Second}_{file.FileName}";
+
+            var response = await _vehicleServiceClient.CreateNewVehicle(ConfigureNewCreateVehicleRequest(createVehicleRequest, imageName));
 
             string responseContent = await response.Content.ReadAsStringAsync();
 
@@ -57,14 +54,14 @@ namespace CarSharingApp.Controllers
                                 error.Value.FirstOrDefault() ?? string.Empty);
                         }
 
-                        _fileUploadService.UnloadFile(vehicleGeneratedImageName);
-
                         return View("Index", createVehicleRequest);
                     }
 
                 default:
                     break;
             }
+
+            await _blobStorageClient.UploadIFormFileBlobAsync(file, imageName);
 
             HttpContext.Session.SetString("AddedNewVehicle", "true");
 

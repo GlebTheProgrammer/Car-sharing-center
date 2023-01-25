@@ -1,4 +1,4 @@
-﻿using IdentityModel.Client;
+﻿using System.Net.Http.Headers;
 
 namespace CarSharingApp.Web.Primitives
 {
@@ -24,7 +24,7 @@ namespace CarSharingApp.Web.Primitives
             string? jwToken = _httpContextAccessor?.HttpContext?.Session.GetString("JWToken");
 
             if (jwToken is not null)
-                client.SetBearerToken(jwToken);
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwToken);
 
             return client;
         }

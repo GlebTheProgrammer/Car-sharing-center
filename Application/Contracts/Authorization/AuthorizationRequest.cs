@@ -9,8 +9,5 @@ namespace CarSharingApp.Application.Contracts.Authorization
 
         [Required]
         public string Password { get; set; } = string.Empty;
-
-        [Required]
-        public string ReturnUrl { get; set; } = string.Empty;
     }
 }
