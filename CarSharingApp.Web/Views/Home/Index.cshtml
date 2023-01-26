@@ -1,4 +1,5 @@
 ﻿@using System.Text.Json;
+@inject IConfiguration _configuration;
 
 @model List<CarSharingApp.Application.Contracts.Vehicle.VehicleDisplayOnMap>;
 
@@ -62,14 +63,14 @@
                 var model = '@(Html.Raw(Json.Serialize(Model)))';
                 var data = JSON.parse(model);
 
-
+                var vehicleImagesUrl = "@(_configuration["AzureBlobStorage:ImagesPath"])";
 
                 const infos = [];
 
                 for (let i = 0; i < data.length; i++) {
                     var contentString = '<div>' +
                         '<h5 class="card-title">' + data[i]['name'] + '</h5>' +
-                        '<img src="/vehicleImages/' + data[i]['image'] + '" style="max-width: 150px;">' +
+                        '<img src="' + vehicleImagesUrl + data[i]['image'] + '" style="max-width: 150px;">' +
                         '</div>';
 
                     infos.push(contentString);

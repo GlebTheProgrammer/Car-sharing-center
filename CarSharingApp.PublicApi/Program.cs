@@ -33,6 +33,9 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddMongoRepository<Customer>(builder.Configuration["MongoDbConfig:Collections:CustomersCollectionName"] ?? "");
     builder.Services.AddSingleton<ICustomerService, CustomerService>();
 
+    builder.Services.AddMSSQLDBconnection(builder.Configuration);
+    builder.Services.AddMSSQLRepository<ActionNote>();
+
     builder.Services.AddSingleton<IAuthorizationService, AuthorizationService>();
 
     builder.Services.ConfigureOptions<JwtOptionsSetup>();

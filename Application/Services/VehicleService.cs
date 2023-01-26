@@ -10,22 +10,33 @@ namespace CarSharingApp.Application.Services
     public class VehicleService : IVehicleService
     {
         private readonly IRepository<Vehicle> _vehicleRepository;
+        private readonly IRepository<ActionNote> _noteRepository;
 
-        public VehicleService(IRepository<Vehicle> vehicleRepository)
+        public VehicleService(IRepository<Vehicle> vehicleRepository, IRepository<ActionNote> noteRepository)
         {
             _vehicleRepository = vehicleRepository;
+            _noteRepository = noteRepository;
         }
 
         public async Task<Created> CreateVehicleAsync(Vehicle vehicle)
         {
             await _vehicleRepository.CreateAsync(vehicle);
 
+            await _noteRepository.CreateAsync(ActionNote.AddedNewVehicleNote(vehicle.CustomerId, vehicle.Name, vehicle.Id));
+
             return Result.Created;
         }
 
         public async Task<Deleted> DeleteVehicleAsync(Guid id)
         {
+            var vehicleToDelete = await _vehicleRepository.GetAsync(id);
+
+            if (vehicleToDelete is null)
+                return Result.Deleted;
+
             await _vehicleRepository.DeleteAsync(id);
+
+            await _noteRepository.CreateAsync(ActionNote.DeletedVehicleNote(vehicleToDelete.CustomerId, vehicleToDelete.Name));
 
             return Result.Deleted;
         }
@@ -71,6 +82,8 @@ namespace CarSharingApp.Application.Services
         public async Task<Updated> UpdateVehicleAsync(Vehicle vehicle)
         {
             await _vehicleRepository.UpdateAsync(vehicle);
+
+            await _noteRepository.CreateAsync(ActionNote.UpdatedVehicleNote(vehicle.CustomerId, vehicle.Name));
 
             return Result.Updated;
         }

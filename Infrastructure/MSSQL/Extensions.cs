@@ -1,4 +1,6 @@
-﻿using CarSharingApp.Infrastructure.MSSQL.Contexts;
+﻿using CarSharingApp.Domain.Abstractions;
+using CarSharingApp.Domain.Primitives;
+using CarSharingApp.Infrastructure.MSSQL.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,7 +13,16 @@ namespace CarSharingApp.Infrastructure.MSSQL
             : IConfigurationBuilder, IConfigurationRoot, IDisposable
         {
             services.AddDbContext<CarSharingAppContext>(options => options.UseSqlServer
-                (configuration.GetConnectionString("MSSQL")));
+                (configuration.GetConnectionString("MSSQL")), 
+                contextLifetime: ServiceLifetime.Singleton,
+                optionsLifetime: ServiceLifetime.Singleton);
+
+            return services;
+        }
+
+        public static IServiceCollection AddMSSQLRepository<T>(this IServiceCollection services) where T : Entity
+        {
+            services.AddSingleton<IRepository<T>, MsSqlRepository<T>>();
 
             return services;
         }
