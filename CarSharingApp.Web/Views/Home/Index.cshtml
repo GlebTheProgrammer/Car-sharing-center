@@ -63,7 +63,7 @@
                 var model = '@(Html.Raw(Json.Serialize(Model)))';
                 var data = JSON.parse(model);
 
-                var vehicleImagesUrl = "@(_configuration["AzureBlobStorage:ImagesPath"])";
+                var vehicleImagesUrl = "@(_configuration["AzureBlobStorage:VehiclesImagesPath"])";
 
                 const infos = [];
 

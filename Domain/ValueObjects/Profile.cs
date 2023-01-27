@@ -6,8 +6,8 @@ namespace CarSharingApp.Domain.ValueObjects
 {
     public sealed class Profile : ValueObject
     {
-        public const string DefaultDescription = "No description yet";
-        public const string DefaultImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTdmrjoiXGVFEcd1cX9Arb1itXTr2u8EKNpw&usqp=CAU";
+        public const string DefaultDescription = "World is full of great people. Just smile and follow your heart.";
+        public const string DefaultImage = "image1.png"; // This image is stored in Azure Blob storage
         public const int MinDescriptionLength = 5;
         public const int MaxDescriptionLength = 100;
         public const int MinImageLength = 1;

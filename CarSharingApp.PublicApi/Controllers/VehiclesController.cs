@@ -119,7 +119,7 @@ namespace CarSharingApp.PublicApi.Controllers
             return NoContent();
         }
 
-        private static VehicleResponse MapVehicleResponse(Vehicle vehicle)
+        private VehicleResponse MapVehicleResponse(Vehicle vehicle)
         {
             return new VehicleResponse(
                 vehicle.Id,
@@ -138,7 +138,7 @@ namespace CarSharingApp.PublicApi.Controllers
                 vehicle.Status);
         }
 
-        private static VehiclesDisplayOnMapResponse MapVehicleResponse(List<Vehicle> vehicles)
+        private VehiclesDisplayOnMapResponse MapVehicleResponse(List<Vehicle> vehicles)
         {
             var resultList = new List<VehicleDisplayOnMap>();
 

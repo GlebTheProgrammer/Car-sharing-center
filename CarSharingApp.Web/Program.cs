@@ -30,6 +30,8 @@ builder.Services.AddSingleton<ICustomerServicePublicApiClient, CustomerServicePu
 builder.Services.RegisterNewHttpClients("CustomersAPI", builder.Configuration);
 builder.Services.AddSingleton<IAuthorizationServicePublicApiClient, AuthorizationServicePublicApiClient>();
 builder.Services.RegisterNewHttpClients("AuthorizationAPI", builder.Configuration);
+builder.Services.AddSingleton<IAccountServicePublicApiClient, AccountServicePublicApiClient>();
+builder.Services.RegisterNewHttpClients("AccountsAPI", builder.Configuration);
 builder.Services.AddSingleton<IAzureADPublicApiClient, AzureADPublicApiClient>();
 builder.Services.RegisterNewHttpClients("AzureActiveDirectoryAPI", builder.Configuration);
 

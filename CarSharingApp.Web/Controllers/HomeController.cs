@@ -20,7 +20,6 @@ namespace CarSharingApp.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-
             var response = await _vehicleServiceClient.GetAllApprovedAndPublishedVehiclesMapRepresentation();
 
             switch (response.StatusCode)

@@ -1,18 +1,21 @@
-﻿<main>
+﻿@inject IConfiguration _configuration;
+@model CarSharingApp.Application.Contracts.Account.AccountDataResponse;
+
+<main>
     <header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
         <div class="container-xl px-4">
             <div class="page-header-content pt-4">
                 <div class="row align-items-center justify-content-between">
                     <div class="d-flex flex-row align-items-center card col-lg-12 p-3 mt-4">
                         <div class="col-lg-5 d-flex justify-content-center">
-                            <img id="Image2" class="rounded-circle" src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2.webp" width="170" height="170">
+                            <img class="rounded-circle" src="@(string.Join("", _configuration["AzureBlobStorage:CustomersAccountImagesPath"], Model.Customer.Image))" width="170" height="170">
                         </div>
                         <div class="col-lg-7 d-flex flex-column">
-                            <label style="font-size: 30px;">Gleb Sukristik</label>
-                            <label style="font-size: 15px;">World is full of great people. Just smile and be free.</label>
-                            <label class="mt-2" style="font-size: 15px;">gleb15a@gmail.com</label>
-                            <label style="font-size: 15px;">Belarus, Minsk, L.Bedy 29-97</label>
-                            <label style="font-size: 15px;">+375 33 600 60 38</label>
+                            <label style="font-size: 30px;">@string.Join(" ", Model.Customer.FirstName, Model.Customer.LastName)</label>
+                            <label style="font-size: 15px;">@Model.Customer.Description</label>
+                            <label class="mt-2" style="font-size: 15px;">@Model.Customer.Email</label>
+                            <label style="font-size: 15px;">@($"{Model.Customer.Country}, {Model.Customer.City}, {Model.Customer.StreetAddress} {Model.Customer.AptSuiteEtc}")</label>
+                            <label style="font-size: 15px;">@Model.Customer.PhoneNumber</label>
                             <button class="btn btn-sm btn-outline-secondary mt-3" type="button" style="width: 200px;" data-toggle="collapse">
                                 Edit account info
                                 <i class="fa-solid fa-square-pen ms-2"></i>
@@ -43,11 +46,6 @@
         </div>
     </header>
 
-
-
-
-
-
     <!-- Main page content-->
     <div class="container-xl px-4 mt-4">
         <div class="row">
@@ -57,7 +55,7 @@
                         <div class="row align-items-center">
                             <div class="col-xl-8 col-xxl-12">
                                 <div class="text-center text-xl-start text-xxl-center mb-4 mb-xl-0 mb-xxl-4">
-                                    <h1 class="text-primary">Welcome back Glebyshka!</h1>
+                                    <h1 class="text-primary">@($"Welcome back {Model.Customer.Username}!")</h1>
                                     <p class="text-gray-700 mb-0">Thank you for being with us. We value every customer who makes the world a better place by helping others, lending and paying for other people's vehicles. Watch, learn and explore new horizons with Sam Solutions Vehicles Sharing Service!</p>
                                 </div>
                             </div>
@@ -88,9 +86,41 @@
 
 
                     <div class="container py-2">
-                        <!-- timeline item 1 -->
-                        <div class="row">
-                            <!-- timeline item 1 event content -->
+
+                        @foreach(var note in Model.ActionNotes)
+                        {
+                            if(CarSharingApp.Domain.SmartEnums.NoteType.FromName(note.Type) == CarSharingApp.Domain.SmartEnums.NoteType.AddedNewVehicle)
+                            {
+                                <div class="row">
+                                    <div class="col py-2">
+                                        <div class="card border-success shadow">
+                                            <div class="card-body">
+                                                <div class="float-right text-success">@(note.ActionMadeTime.ToString("ddd MMM dd yyy h:mm tt"))</div>
+                                                <h4 class="card-title text-success">@note.Type</h4>
+                                                <p class="card-text">@note.Note</p>
+                                                <button class="btn btn-sm btn-outline-secondary" type="button" data-target="#t2_details" data-toggle="collapse">Show Details ▼</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            } 
+                            else
+                            {
+                                <div class="row">
+                                    <div class="col py-2">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="float-right text-success">@(note.ActionMadeTime.ToString("ddd MMM dd yyy h:mm tt"))</div>
+                                                <h4 class="card-title text-success">@note.Type</h4>
+                                                <p class="card-text">@note.Note</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+
+@*                        <div class="row">
                             <div class="col py-2">
                                 <div class="card">
                                     <div class="card-body">
@@ -101,8 +131,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!--/row-->
-                        <!-- timeline item 2 -->
                         <div class="row">
                             <div class="col py-2">
                                 <div class="card border-success shadow">
@@ -115,8 +143,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!--/row-->
-                        <!-- timeline item 3 -->
                         <div class="row">
                             <div class="col py-2">
                                 <div class="card">
@@ -130,8 +156,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!--/row-->
-                        <!-- timeline item 4 -->
                         <div class="row">
                             <div class="col py-2">
                                 <div class="card">
@@ -142,8 +166,8 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <!--/row-->
+                        </div>*@
+
                     </div>
                 </div>
             </div>
