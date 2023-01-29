@@ -4,7 +4,6 @@ namespace CarSharingApp.Application.Contracts.Account
 {
     public record AccountDataResponse(
         [property: JsonPropertyName("customer")] CustomerToBeDisplayedInAccount Customer,
-        [property: JsonPropertyName("actionNotes")] List<NoteToBeDisplayedInAccount> ActionNotes,
         [property: JsonPropertyName("vehicles")] List<VehicleToBeDisplayedInAccount> Vehicles
     );
 
@@ -22,17 +21,10 @@ namespace CarSharingApp.Application.Contracts.Account
         [property: JsonPropertyName("city")] string City,
         [property: JsonPropertyName("streetAddress")] string StreetAddress,
         [property: JsonPropertyName("aptSuiteEtc")] string AptSuiteEtc,
-        [property: JsonPropertyName("phoneNumber")] string PhoneNumber
+        [property: JsonPropertyName("phoneNumber")] string PhoneNumber,
+        [property: JsonPropertyName("vehiclesRented")] int VehiclesRented,
+        [property: JsonPropertyName("vehiclesShared")] int VehiclesShared
     );
-
-    public record NoteToBeDisplayedInAccount(
-        [property: JsonPropertyName("actorId")] Guid ActorId,
-        [property: JsonPropertyName("note")] string Note,
-        [property: JsonPropertyName("type")] string Type,
-        [property: JsonPropertyName("actionMadeTime")] DateTime ActionMadeTime,
-        [property: JsonPropertyName("actionEntityId")] Guid? ActionEntityId
-    );
-
 
     public record VehicleToBeDisplayedInAccount(
         [property: JsonPropertyName("image")] string Image,

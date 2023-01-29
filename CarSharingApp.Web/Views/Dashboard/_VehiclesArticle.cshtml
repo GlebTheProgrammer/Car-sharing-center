@@ -1,0 +1,162 @@
+﻿@model List<CarSharingApp.Application.Contracts.Account.AccountVehicleData>
+
+@{
+    CarSharingApp.Models.ApplicationData.Pager pager = new CarSharingApp.Models.ApplicationData.Pager();
+
+    int pageNo = 0;
+
+    if (ViewBag.Pager != null)
+    {
+        pager = ViewBag.Pager;
+        pageNo = pager.CurrentPage;
+    }
+}
+
+<div class="card-body">
+    <div class="datatable-wrapper datatable-loading no-footer sortable searchable fixed-columns">
+        <div class="datatable-top d-flex align-items-center">
+            <label class="me-2">Show</label>
+            <div class="datatable-dropdown">
+                <select class="form-select">
+                    <option value="3" selected>3</option>
+                    <option value="5">5</option>
+                    <option value="7">7</option>
+                    <option value="10">10</option>
+                </select>
+
+                <select name="pageSize" id="totalVehiclesDisplayedSelect" class="custom-select custom-select-sm form-control form-control-sm">
+                    <option value="3">3</option>
+                    <option value="5">5</option>
+                    <option value="7">7</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+            <label class="ms-2 me-5">vehicles</label>
+            <div class="datatable-search">
+                <input type="text" class="form-control" placeholder="Search...">
+            </div>
+        </div>
+        <div class="datatable-container mt-4">
+            <table id="datatablesSimple" class="table">
+                <thead>
+                    <tr>
+                        <th class="text-center" scope="col">
+                            <label class="datatable-sorter text-primary">Image</label>
+                        </th>
+                        <th class="text-center" scope="col">
+                            <label class="datatable-sorter text-primary">Name</label>
+                        </th>
+                        <th class="text-center" scope="col">
+                            <label class="datatable-sorter text-primary">Hourly price</label>
+                        </th>
+                        <th class="text-center" scope="col">
+                            <label class="datatable-sorter text-primary">Daily price</label>
+                        </th>
+                        <th class="text-center" scope="col">
+                            <label class="datatable-sorter text-primary">Published</label>
+                        </th>
+                        <th class="text-center" scope="col">
+                            <label class="datatable-sorter text-primary">Times ordered</label>
+                        </th>
+                        <th class="text-center" scope="col">
+                            <label class="datatable-sorter text-primary">Status</label>
+                        </th>
+                        <th class="text-center" scope="col">
+                            <label class="datatable-sorter text-primary">Actions</label>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-index="0">
+                        <td class="text-center"><img src="~/Images/HomePage/customerLogo.png" class="rounded-circle" height="30" loading="lazy" /></td>
+                        <td class="text-center">BMW</td>
+                        <td class="text-center">$198,500</td>
+                        <td class="text-center">$198,500</td>
+                        <td class="text-center">2012/11/27</td>
+                        <td class="text-center">10</td>
+                        <td class="text-center"><div class="badge bg-secondary text-white rounded-pill">In catalog</div></td>
+                        <td class="d-flex justify-content-center">
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" id="dropdownMenuButton" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Choose...
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                    <h6 class="dropdown-header">Available actions:</h6>
+                                    <a class="dropdown-item" href="#!"><i class="fa-solid fa-minus me-2"></i><span>Hide</span></a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr data-index="1">
+                        <td class="text-center"><img src="~/Images/HomePage/customerLogo.png" class="rounded-circle" height="30" loading="lazy" /></td>
+                        <td class="text-center">BMW</td>
+                        <td class="text-center">$198,500</td>
+                        <td class="text-center">$198,500</td>
+                        <td class="text-center">2012/11/27</td>
+                        <td class="text-center">10</td>
+                        <td class="text-center"><div class="badge bg-danger text-white rounded-pill">Hidden</div></td>
+                        <td class="d-flex justify-content-center">
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" id="dropdownMenuButton" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Choose...
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                    <h6 class="dropdown-header">Available actions:</h6>
+                                    <a class="dropdown-item" href="#!"><i class="fa-solid fa-share-nodes me-2"></i><span>Publish</span></a>
+                                    <a class="dropdown-item" href="#!"><i class="fa-solid fa-square-pen me-2"></i><span>Modify</span></a>
+                                </div>
+                            </div>
+                            <button class="btn btn-sm btn-outline-secondary ms-2" type="button" data-target="#t2_details" data-toggle="collapse">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr data-index="2">
+                        <td class="text-center"><img src="~/Images/HomePage/customerLogo.png" class="rounded-circle" height="30" loading="lazy" /></td>
+                        <td class="text-center">BMW</td>
+                        <td class="text-center">$198,500</td>
+                        <td class="text-center">$198,500</td>
+                        <td class="text-center">2012/11/27</td>
+                        <td class="text-center">10</td>
+                        <td class="text-center"><div class="badge bg-warning text-white rounded-pill">Processing</div></td>
+                        <td class="d-flex justify-content-center">
+                            <button class="btn btn-sm btn-outline-secondary ms-2" type="button" data-target="#t2_details" data-toggle="collapse">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr data-index="3">
+                        <td class="text-center"><img src="~/Images/HomePage/customerLogo.png" class="rounded-circle" height="30" loading="lazy" /></td>
+                        <td class="text-center">BMW</td>
+                        <td class="text-center">$198,500</td>
+                        <td class="text-center">$198,500</td>
+                        <td class="text-center">2012/11/27</td>
+                        <td class="text-center">10</td>
+                        <td class="text-center"><div class="badge bg-success text-white rounded-pill">Rented</div></td>
+                        <td class="d-flex justify-content-center">
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" id="dropdownMenuButton" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Choose...
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                    <h6 class="dropdown-header">Available actions:</h6>
+                                    <a class="dropdown-item" href="#!"><i class="fa-solid fa-circle-info me-2"></i><span>Rental info</span></a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="datatable-bottom">
+            <div class="datatable-info">Showing 1 to 4 of 4 vehicles</div>
+            <nav class="datatable-pagination">
+                <ul class="datatable-pagination-list">
+                    <li class="active">
+                        <a href="#" data-page="1">1</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>

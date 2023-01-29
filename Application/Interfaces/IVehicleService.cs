@@ -8,9 +8,10 @@ namespace CarSharingApp.Application.Interfaces
     {
         Task<Created> CreateVehicleAsync(Vehicle vehicle);
         Task<List<Vehicle>> GetAllAsync();
-        Task<List<Vehicle>> GetWithLimit(int skip, int limit);
-        Task<int> GetRecordsCount();
-        Task<List<Vehicle>> GetWithLimitPublishedAndApproved(int skip, int limit);
+        Task<List<Vehicle>> GetWithLimitAsync(int skip, int limit);
+        Task<List<Vehicle>> GetAllCustomerVehiclesAsync(Guid customerId);
+        Task<int> GetRecordsCountAsync();
+        Task<List<Vehicle>> GetWithLimitPublishedAndApprovedAsync(int skip, int limit);
         Task<ErrorOr<Vehicle>> GetVehicleAsync(Guid id);
         Task<Updated> UpdateVehicleAsync(Vehicle vehicle);
         Task<Deleted> DeleteVehicleAsync(Guid id);

@@ -58,23 +58,30 @@ namespace CarSharingApp.Application.Services
                 return ApplicationErrors.Vehicle.NotFound;
         }
 
-        public async Task<List<Vehicle>> GetWithLimit(int skip, int limit)
+        public async Task<List<Vehicle>> GetWithLimitAsync(int skip, int limit)
         {
             var result = await _vehicleRepository.GetAsyncWithLimit(skip, limit);
 
             return result.ToList();
         }
 
-        public async Task<int> GetRecordsCount()
+        public async Task<int> GetRecordsCountAsync()
         {
             var result = await _vehicleRepository.GetAllAsync();
 
             return result.Count;
         }
 
-        public async Task<List<Vehicle>> GetWithLimitPublishedAndApproved(int skip, int limit)
+        public async Task<List<Vehicle>> GetWithLimitPublishedAndApprovedAsync(int skip, int limit)
         {
             var result = await _vehicleRepository.GetAsyncWithLimit(v => v.Status.IsConfirmedByAdmin && v.Status.IsPublished, skip, limit);
+
+            return result.ToList();
+        }
+
+        public async Task<List<Vehicle>> GetAllCustomerVehiclesAsync(Guid customerId)
+        {
+            var result = await _vehicleRepository.GetAllAsync(v => v.CustomerId == customerId);
 
             return result.ToList();
         }

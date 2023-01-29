@@ -6,6 +6,7 @@ using ErrorOr;
 using Microsoft.AspNetCore.Authorization;
 using CarSharingApp.Infrastructure.Authentication;
 using CarSharingApp.Domain.Enums;
+using CarSharingApp.PublicApi.Primitives;
 
 namespace CarSharingApp.PublicApi.Controllers
 {

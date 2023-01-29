@@ -35,6 +35,7 @@ var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.AddMSSQLDBconnection(builder.Configuration);
     builder.Services.AddMSSQLRepository<ActionNote>();
+    builder.Services.AddSingleton<IActionNotesService, ActionNotesService>();
 
     builder.Services.AddSingleton<IAuthorizationService, AuthorizationService>();
 

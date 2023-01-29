@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.IdentityModel.JsonWebTokens;
 using System.Security.Claims;
 
-namespace CarSharingApp.PublicApi.Controllers
+namespace CarSharingApp.PublicApi.Primitives
 {
     [ApiController]
     [Route("[controller]")]

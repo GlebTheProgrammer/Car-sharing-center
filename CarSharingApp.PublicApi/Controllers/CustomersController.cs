@@ -2,6 +2,7 @@
 using CarSharingApp.Application.Interfaces;
 using CarSharingApp.Domain.Entities;
 using CarSharingApp.Infrastructure.Authentication;
+using CarSharingApp.PublicApi.Primitives;
 using ErrorOr;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
