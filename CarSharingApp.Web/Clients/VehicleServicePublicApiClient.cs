@@ -22,11 +22,27 @@ namespace CarSharingApp.Web.Clients
             return await client.PostAsync(client.BaseAddress, content);
         }
 
+        public async Task<HttpResponseMessage> DeleteVehicle(string vehicleId)
+        {
+            var client = CreateNewClientInstance(clientIdentifier);
+
+            return await client.DeleteAsync(vehicleId);
+        }
+
         public async Task<HttpResponseMessage> GetAllApprovedAndPublishedVehiclesMapRepresentation()
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
             return await client.GetAsync("MapRepresentation");
+        }
+
+        public async Task<HttpResponseMessage> UpdateVehicleStatus(UpdateVehicleStatusRequest request)
+        {
+            var client = CreateNewClientInstance(clientIdentifier);
+
+            JsonContent content = JsonContent.Create(request);
+
+            return await client.PutAsync("UpdateVehicleStatus", content);
         }
     }
 }

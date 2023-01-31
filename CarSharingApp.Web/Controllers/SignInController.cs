@@ -118,7 +118,7 @@ namespace CarSharingApp.Controllers
             HttpContext.Session.SetString("JWToken", tokenResponse.JWToken);
             HttpContext.Session.SetString("SignedIn", "true");
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Dashboard");
         }
 
         [Authorize]

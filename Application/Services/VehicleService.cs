@@ -3,6 +3,7 @@ using CarSharingApp.Application.Interfaces;
 using CarSharingApp.Application.ServiceErrors;
 using CarSharingApp.Domain.Abstractions;
 using CarSharingApp.Domain.Entities;
+using CarSharingApp.Domain.Enums;
 using ErrorOr;
 
 namespace CarSharingApp.Application.Services
@@ -95,6 +96,13 @@ namespace CarSharingApp.Application.Services
             return Result.Updated;
         }
 
+        public async Task<Updated> UpdateVehicleStatusAsync(Vehicle vehicle)
+        {
+            await _vehicleRepository.UpdateAsync(vehicle);
+
+            return Result.Updated;
+        }
+
         public ErrorOr<Vehicle> From(Guid customerId, CreateVehicleRequest request)
         {
             return Vehicle.Create(
@@ -153,6 +161,41 @@ namespace CarSharingApp.Application.Services
                 vehicle.Status.IsPublished,
                 vehicle.Status.IsOrdered,
                 vehicle.Status.IsConfirmedByAdmin,
+                vehicle.TimesOrdered,
+                vehicle.PublishedTime,
+                vehicle.LastTimeOrdered);
+        }
+
+        public ErrorOr<Vehicle> From(Vehicle vehicle, UpdateVehicleStatusRequest request)
+        {
+            return Vehicle.Create(
+                vehicle.CustomerId,
+                vehicle.Name,
+                vehicle.Image,
+                vehicle.BriefDescription,
+                vehicle.Description,
+                vehicle.Tariff.HourlyRentalPrice,
+                vehicle.Tariff.DailyRentalPrice,
+                vehicle.Location.StreetAddress,
+                vehicle.Location.AptSuiteEtc,
+                vehicle.Location.City,
+                vehicle.Location.Country.ToString(),
+                vehicle.Location.Latitude,
+                vehicle.Location.Longitude,
+                vehicle.Specifications.ProductionYear,
+                vehicle.Specifications.MaxSpeedKph,
+                vehicle.Specifications.ExteriorColor.ToString(),
+                vehicle.Specifications.InteriorColor.ToString(),
+                vehicle.Specifications.Drivetrain.ToString(),
+                vehicle.Specifications.FuelType.ToString(),
+                vehicle.Specifications.Transmission.ToString(),
+                vehicle.Specifications.Engine.ToString(),
+                vehicle.Specifications.VIN,
+                FlagEnums.GetListFromCategories(vehicle.Categories),
+                vehicle.Id,
+                request.IsPublished,
+                request.IsOrdered,
+                request.IsConfirmedByAdmin,
                 vehicle.TimesOrdered,
                 vehicle.PublishedTime,
                 vehicle.LastTimeOrdered);

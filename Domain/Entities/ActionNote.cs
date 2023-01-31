@@ -60,7 +60,7 @@ namespace CarSharingApp.Domain.Entities
         public static ActionNote AddedNewVehicleNote(Guid actorId, string vehicleName, Guid vehicleId) => 
             new(new Guid(), actorId, NoteType.AddedNewVehicle.Value, $"{AddedNewVehicleNoteStr} ({vehicleName})", DateTime.Now, vehicleId);
         public static ActionNote DeletedVehicleNote(Guid actorId, string vehicleName) =>
-            new(new Guid(), actorId, NoteType.DeletedExistingVehicle.Value, $"{AddedNewVehicleNoteStr} ({vehicleName})", DateTime.Now, null);
+            new(new Guid(), actorId, NoteType.DeletedExistingVehicle.Value, $"{DeletedVehicleNoteStr} ({vehicleName})", DateTime.Now, null);
         public static ActionNote UpdatedVehicleNote(Guid actorId, string vehicleName) =>
             new(new Guid(), actorId, NoteType.UpdatedExistingVehicle.Value, $"{UpdatedVehicleNoteStr} ({vehicleName})", DateTime.Now, null);
 

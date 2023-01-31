@@ -98,6 +98,39 @@ namespace CarSharingApp.PublicApi.Controllers
             return NoContent();
         }
 
+        [HttpPut("[action]")]
+        [Authorize]
+        public async Task<IActionResult> UpdateVehicleStatus(UpdateVehicleStatusRequest request)
+        {
+            ErrorOr<Vehicle> getVehicleResult = await _vehicleService.GetVehicleAsync(Guid.Parse(request.vehicleId));
+
+            if (getVehicleResult.IsError)
+            {
+                return Problem(getVehicleResult.Errors);
+            }
+
+            Vehicle notUpdatedVehicle = getVehicleResult.Value;
+
+            if (!IsRequestAllowed(notUpdatedVehicle.CustomerId))
+            {
+                return Forbid();
+            }
+
+            ErrorOr<Vehicle> requestToVehicleResult = _vehicleService.From(notUpdatedVehicle, request);
+
+            if (requestToVehicleResult.IsError)
+            {
+                return Problem(requestToVehicleResult.Errors);
+            }
+
+            Vehicle vehicle = requestToVehicleResult.Value;
+
+            await _vehicleService.UpdateVehicleStatusAsync(vehicle);
+
+            return NoContent();
+        }
+
+
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteVehicle(Guid id)
         {

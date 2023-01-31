@@ -17,16 +17,6 @@ namespace CarSharingApp.Web.Clients
             _configuration = configuration;
         }
 
-        //public async Task<BlobInfo> GetBlobAsync(string name)
-        //{
-        //    var containerClient = _blobServiceClient.GetBlobContainerClient(_configuration["AzureBlobStorage:ContainerName"]);
-        //    var blobClient = containerClient.GetBlobClient(name);
-        //    var blobDownloadInfo = await blobClient.DownloadContentAsync();
-
-        //    return new BlobInfo(blobDownloadInfo.Value.Content, blobDownloadInfo.Value.ContentType);
-
-        //}
-
         public async Task<IEnumerable<string>> ListBlobsAsync()
         {
             var containerClient = _blobServiceClient.GetBlobContainerClient(_configuration["AzureBlobStorage:ContainerName"]);
