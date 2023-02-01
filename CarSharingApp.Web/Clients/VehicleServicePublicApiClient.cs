@@ -29,6 +29,13 @@ namespace CarSharingApp.Web.Clients
             return await client.DeleteAsync(vehicleId);
         }
 
+        public async Task<HttpResponseMessage> GetAllApprovedAndPublishedVehiclesCatalogRepresentation()
+        {
+            var client = CreateNewClientInstance(clientIdentifier);
+
+            return await client.GetAsync("CatalogRepresentation");
+        }
+
         public async Task<HttpResponseMessage> GetAllApprovedAndPublishedVehiclesMapRepresentation()
         {
             var client = CreateNewClientInstance(clientIdentifier);

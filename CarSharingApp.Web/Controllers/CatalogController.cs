@@ -1,66 +1,35 @@
-﻿using CarSharingApp.Models.ApplicationData;
-using CarSharingApp.Models.MongoView;
-using CarSharingApp.Repository.MongoDbRepository;
+﻿using CarSharingApp.Application.Contracts.Vehicle;
+using CarSharingApp.Web.Clients.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarSharingApp.Controllers
 {
     public class CatalogController : Controller
     {
-        private readonly MongoDbService _mongoDbService;
+        private readonly IVehicleServicePublicApiClient _vehicleServiceClient;
 
-        public CatalogController(MongoDbService mongoDbService)
+        public CatalogController(IVehicleServicePublicApiClient vehicleServiceClient)
         {
-            _mongoDbService = mongoDbService;
+            _vehicleServiceClient = vehicleServiceClient;
         }
 
-        public async Task<IActionResult> Index(int page = 1, int pageSize = 3)
+        public IActionResult Index()
         {
-            //var vehiclesIds = _repositoryManager.OrdersRepository.CheckExpiredOrdersAndGetVehiclesId().Result;
-            //if (vehiclesIds.Count > 0)
-            //    _repositoryManager.VehiclesRepository.ChangeVehiclesIsOrderedState(vehiclesIds, false);
-
-            List<VehicleCatalogModel> vehicles_CatalogRepresentation = await _mongoDbService.GetAllPublishedAndNotOrderedVehicles_CatalogRepresentation();
-            int notOrderedPublishedVehiclesCount = vehicles_CatalogRepresentation.Count();
-
-            if (page < 1)
-                page = 1;
-            Pager pager = new Pager(notOrderedPublishedVehiclesCount, page, pageSize);
-
-            int vehiclesSkip = (page - 1) * pageSize;
-            List<VehicleCatalogModel> vehiclesToDisplay_CatalogRepresentation = vehicles_CatalogRepresentation.Skip(vehiclesSkip).Take(pager.PageSize).ToList();
-
-            ViewBag.Pager = pager;
-            VehiclesCatalogDataViewModel model = new VehiclesCatalogDataViewModel()
-            {
-                Vehicles = vehiclesToDisplay_CatalogRepresentation,
-                NumberOfVehiclesToBeDisplayed = pageSize,
-                NumberOfNotOrderedVehicles = notOrderedPublishedVehiclesCount,
-                IndexOfFirstVehicleInTheList = vehiclesToDisplay_CatalogRepresentation.Count == 0 ? 0 : vehiclesSkip + 1,
-                IndexOfLastVehicleInTheList = vehiclesSkip + pageSize > vehiclesToDisplay_CatalogRepresentation.Count ? vehiclesToDisplay_CatalogRepresentation.Count : vehiclesSkip + pageSize,
-            };
-
-            return View(model);
+            return View();
         }
 
+        // Partial views rendering goes below
 
-        [HttpPost]
-        public async Task<IActionResult> ChangeDisplayedVehiclesCount(string data)
+        public async Task<IActionResult> VehiclesCatalogPartial()
         {
-            int numberOfVehiclesToDisplay = int.Parse(data);
+            var response = await _vehicleServiceClient.GetAllApprovedAndPublishedVehiclesCatalogRepresentation();
 
-            List<VehicleCatalogModel> vehicles_CatalogRepresentation = await _mongoDbService.GetAllPublishedAndNotOrderedVehicles_CatalogRepresentation();
+            response.EnsureSuccessStatusCode();
 
-            VehiclesCatalogDataViewModel model = new VehiclesCatalogDataViewModel
-            {
-                Vehicles = vehicles_CatalogRepresentation.Take(numberOfVehiclesToDisplay).ToList(),
-                NumberOfNotOrderedVehicles = vehicles_CatalogRepresentation.Count(),
-                NumberOfVehiclesToBeDisplayed = numberOfVehiclesToDisplay,
-                IndexOfFirstVehicleInTheList = vehicles_CatalogRepresentation.Count == 0 ? 0 : 1,
-                IndexOfLastVehicleInTheList = vehicles_CatalogRepresentation.Count
-            };
+            VehiclesDisplayInCatalogResponse responseModel = await response.Content.ReadFromJsonAsync<VehiclesDisplayInCatalogResponse>()
+                ?? throw new NullReferenceException(nameof(responseModel));
 
-            return View("Index", model);
+            return PartialView("_VehiclesCatalog", responseModel.Vehicles);
         }
     }
 }

@@ -63,7 +63,15 @@ namespace CarSharingApp.PublicApi.Controllers
         {
             List<Vehicle> getVehiclesResult = await _vehicleService.GetAllAsync();
 
-            return Ok(MapVehicleResponse(getVehiclesResult.Where(v => v.Status.IsPublished && v.Status.IsConfirmedByAdmin).ToList()));
+            return Ok(MapVehicleMapResponse(getVehiclesResult.Where(v => v.Status.IsPublished && v.Status.IsConfirmedByAdmin).ToList()));
+        }
+
+        [HttpGet("CatalogRepresentation")]
+        public async Task<IActionResult> GetVehiclesCatalogRepresentation()
+        {
+            List<Vehicle> getVehiclesResult = await _vehicleService.GetAllAsync();
+
+            return Ok(MapVehicleCatalogResponse(getVehiclesResult.Where(v => v.Status.IsPublished && v.Status.IsConfirmedByAdmin).ToList()));
         }
 
         [HttpPut("{id:guid}")]
@@ -172,7 +180,7 @@ namespace CarSharingApp.PublicApi.Controllers
                 vehicle.Status);
         }
 
-        private VehiclesDisplayOnMapResponse MapVehicleResponse(List<Vehicle> vehicles)
+        private VehiclesDisplayOnMapResponse MapVehicleMapResponse(List<Vehicle> vehicles)
         {
             var resultList = new List<VehicleDisplayOnMap>();
 
@@ -186,6 +194,25 @@ namespace CarSharingApp.PublicApi.Controllers
             }
 
             return new VehiclesDisplayOnMapResponse(resultList);
+        }
+
+        private VehiclesDisplayInCatalogResponse MapVehicleCatalogResponse(List<Vehicle> vehicles)
+        {
+            var resultList = new List<VehicleDisplayInCatalog>();
+
+            foreach (var vehicle in vehicles)
+            {
+                resultList.Add(new VehicleDisplayInCatalog(
+                    vehicle.Id.ToString(),
+                    vehicle.Name,
+                    vehicle.Image,
+                    vehicle.BriefDescription,
+                    $"{vehicle.Tariff.HourlyRentalPrice}",
+                    $"{vehicle.Tariff.DailyRentalPrice}",
+                    vehicle.TimesOrdered));
+            }
+
+            return new VehiclesDisplayInCatalogResponse(resultList);
         }
 
         private bool IsRequestAllowed(Guid requestedId)

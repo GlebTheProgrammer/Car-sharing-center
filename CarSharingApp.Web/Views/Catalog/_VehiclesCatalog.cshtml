@@ -1,0 +1,36 @@
+﻿@inject IConfiguration _configuration;
+
+@model List<CarSharingApp.Application.Contracts.Vehicle.VehicleDisplayInCatalog>
+
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    @foreach(var vehicle in Model)
+    {
+        <div class="col">
+            <div class="card">
+                <img src="@(_configuration["AzureBlobStorage:VehiclesImagesPath"] + vehicle.Image)" class="card-img-top">
+                <div class="card-body">
+                    <h3 class="card-title">@vehicle.Name</h3>
+                    <p class="card-text">@vehicle.BriefDescription</p>
+                    <h4 class="card-text">@vehicle.HourlyRentalPrice $<span class="text-muted h5">/hr - </span>@vehicle.DailyRentalPrice $<span class="text-muted h5">/day</span></h4>
+                    <a href="@Url.Action("Index", "VehicleInformation", new {vehicleId = vehicle.VehicleId})" class="btn btn-info mt-2" style="width:max-content">Information</a>
+                    <p></p>
+
+                    @if (vehicle.TimesOrdered == 0)
+                    {
+                        <p class="card-text"><small class="text-muted">New vehicle!</small></p>
+                    }
+                    else
+                    {
+                        <p class="card-text"><small class="text-muted">Was rented @(vehicle.TimesOrdered) times.</small></p>
+@*                        int timeDaysDifference = Convert.ToInt32((DateTime.Now - (DateTime)vehicle.LastTimeOrdered).TotalDays);
+                        int timeHoursDifference = Convert.ToInt32((DateTime.Now - (DateTime)vehicle.LastTimeOrdered).TotalHours % 24);
+                        int timeMinutesDifference = Convert.ToInt32((DateTime.Now - (DateTime)vehicle.LastTimeOrdered).TotalMinutes % 24 % 60) + 1;
+
+                        <p class="card-text"><small class="text-muted">Last taken @(timeDaysDifference > 0 ? $"{timeDaysDifference} days " : "")@(timeHoursDifference > 0 ? $"{timeHoursDifference} hours " : "")@($"{timeMinutesDifference} mins") ago</small></p>*@
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
