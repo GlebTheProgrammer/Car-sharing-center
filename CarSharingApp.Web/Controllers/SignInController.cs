@@ -69,6 +69,13 @@ namespace CarSharingApp.Controllers
         //    return;
         //}
 
+        //public void AuthenticationCode(string code, string state, string id_token)
+        //{
+        //    _azureAdClient.RequestAccessToken(code, state, id_token);
+
+        //    return;
+        //}
+
         //public IActionResult Token(string access_token, string token_type, int expires_in, string scope, string refresh_token, string id_token)
         //{
         //    if (access_token == null || token_type == null || expires_in == 0 || scope == null || refresh_token == null || id_token == null)

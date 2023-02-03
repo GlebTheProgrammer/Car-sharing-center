@@ -1,6 +1,6 @@
 ﻿using CarSharingApp.Application.Contracts.Account;
 using CarSharingApp.Application.Contracts.Vehicle;
-using CarSharingApp.Models.ApplicationData;
+using CarSharingApp.Web.Models;
 using CarSharingApp.Web.Clients.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;

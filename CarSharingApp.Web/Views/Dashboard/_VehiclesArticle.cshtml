@@ -2,7 +2,7 @@
 @model List<CarSharingApp.Application.Contracts.Account.AccountVehicleData>
 
 @{
-    CarSharingApp.Models.ApplicationData.Pager pager = new CarSharingApp.Models.ApplicationData.Pager();
+    CarSharingApp.Web.Models.Pager pager = new CarSharingApp.Web.Models.Pager();
 
     int pageNo = 0;
 
@@ -204,7 +204,7 @@
         })
     });
 
-    // When user click different page on vehicles table
+    // When user click next/prev page on vehicles table
     function ChangePage(pageNumber){
         var value = $("#searchInput").val();
         if (document.getElementById("searchByNameRadio").checked) {
