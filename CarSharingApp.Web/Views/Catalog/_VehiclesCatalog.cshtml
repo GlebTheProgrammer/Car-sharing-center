@@ -13,25 +13,27 @@
     }
 }
 
-<div class="datatable-top d-flex align-items-center mt-4 mb-4">
-    <div class="datatable-search d-flex align-items-center">
-        <label class="ms-2 me-4 text-nowrap">Search by:</label>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="searchByNameRadio" value="option1" @(ViewBag.SearchBy == null || ViewBag.SearchBy == "Name" ? "checked" : "")>
-            <label class="form-check-label text-nowrap" for="searchByNameRadio">Name</label>
+<fieldset id="vehiclesGroup">
+    <div class="datatable-top d-flex align-items-center mt-4 mb-4">
+        <div class="datatable-search d-flex align-items-center">
+            <label class="ms-2 me-4 text-nowrap">Search by:</label>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="inlineRadioOptionsForVehicles" id="searchByNameRadio" value="option1" @(ViewBag.SearchBy == null || ViewBag.SearchBy == "Name" ? "checked" : "")>
+                <label class="form-check-label text-nowrap" for="searchByNameRadio">Name</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="inlineRadioOptionsForVehicles" id="searchByBriefDescriptionRadio" value="option2" @(ViewBag.SearchBy == "BriefDescription" ? "checked" : "")>
+                <label class="form-check-label text-nowrap" for="searchByBriefDescriptionRadio">Brief Description</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="inlineRadioOptionsForVehicles" id="searchByPriceRadio" value="option3" @(ViewBag.SearchBy == "Price" ? "checked" : "")>
+                <label class="form-check-label text-nowrap" for="searchByPriceRadio">Price</label>
+            </div>
+            <input id="searchInput" name="searchInput" type="text" class="form-control ms-4" placeholder="Type here..." value="@ViewBag.SearchInput">
+            <button id="searchButton" type="button" class="btn btn-outline-secondary ms-2" style="border-radius: 30px;">Search</button>
         </div>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="searchByBriefDescriptionRadio" value="option2" @(ViewBag.SearchBy == "BriefDescription" ? "checked" : "")>
-            <label class="form-check-label text-nowrap" for="searchByBriefDescriptionRadio">Brief Description</label>
-        </div>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="searchByPriceRadio" value="option3" @(ViewBag.SearchBy == "Price" ? "checked" : "")>
-            <label class="form-check-label text-nowrap" for="searchByPriceRadio">Price</label>
-        </div>
-        <input id="searchInput" name="searchInput" type="text" class="form-control ms-4" placeholder="Type here..." value="@ViewBag.SearchInput">
-        <button id="searchButton" type="button" class="btn btn-outline-secondary ms-2" style="border-radius: 30px;">Search</button>
     </div>
-</div>
+</fieldset>
 
 <div class="row justify-content-center row-cols-1 row-cols-md-3 g-4 mb-4">
     @foreach(var vehicle in Model)

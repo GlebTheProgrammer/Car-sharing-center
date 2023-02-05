@@ -1,23 +1,156 @@
 ﻿<div class="modal fade" id="searchByCriteriaModal" tabindex="-1" aria-labelledby="searchByCriteriaModal" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog" role="document">
         <div class="modal-content rounded-4 shadow">
             <div class="modal-header border-bottom-0">
                 <h1 class="modal-title fs-5">Advanced search</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body py-0">
-                <p>This is a modal sheet, a variation of the modal that docs itself to the bottom of the viewport like the newer share sheets in iOS.</p>
+                <fieldset id="modalGroup">
+                    <p>This is a modal sheet, a variation of the modal that docs itself to the bottom of the viewport like the newer share sheets in iOS.</p>
 
-                <div class="d-flex flex-column col-lg-6">
-                    <label for="priceRangeInput" class="form-label">Example range</label>
-                    <input type="range" class="form-range" min="1" max="9999" id="priceRangeInput">
-                </div>
-                <div class="d-flex flex-column col-lg-6">
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" id="includePriceSearch" />
-                        <label class="form-check-label" for="includePriceSearch"></label>
+
+                    <div class="row">
+                        <label class="form-check-label" for="includePriceSearch">Hourly rental price (max)</label>
                     </div>
-                </div>
+                    <div class="d-flex gap-2 align-items-center">
+                        <input type="range" class="form-range me-0" min="1" max="150" value="1" id="hourlyPriceRangeInput" oninput="hourlyPriceRangeOutput.value=value" />
+                        <div>
+                            <output id="hourlyPriceRangeOutput">0</output>
+                            <label>$</label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <label class="form-check-label" for="includeDailySearch">Daily rental price (max)</label>
+                    </div>
+                    <div class="d-flex gap-2 align-items-center">
+                        <input type="range" class="form-range me-0" min="1" max="1500" value="1" id="dailyPriceRangeInput" oninput="dailyPriceRangeOutput.value=value" />
+                        <div>
+                            <output id="dailyPriceRangeOutput">0</output>
+                            <label>$</label>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-2 mt-3">
+                        <label class="form-check-label">Country:</label>
+                        <select class="form-select" style="max-width: 150px;" id="countrySearchSelectInput" required>
+                            <option selected disabled value="">Choose...</option>
+                            @foreach (var country in CarSharingApp.Domain.SmartEnums.Country.GetPossibleEnumerations())
+                            {
+                                <option value="@CarSharingApp.Domain.SmartEnums.Country.FromName(country)">@country</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="row mt-3 mb-3">
+                        <label class="form-check-label" for="includeDailySearch">Possible categories</label>
+                    </div>
+                    <div class="text-center">
+                        @foreach (var category in CarSharingApp.Domain.Enums.FlagEnums.GetPossibleValues<CarSharingApp.Domain.Enums.FlagEnums.Categories>())
+                        {
+                            if (category.Equals("None"))
+                                continue;
+
+                            <div class="form-check form-check-inline mb-3" style="margin-right: 5px; padding-left: 0px;">
+                                <input type="checkbox" class="btn-check" id="btn-check-outlined-@category" autocomplete="off" value="@category">
+                                <label class="btn btn-outline-secondary btn-sm" for="btn-check-outlined-@category">@category</label><br>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="row">
+
+                        <div class="d-flex flex-column col-lg-6 mb-3">
+                            <label for="exteriorColorErrorValidationCustom" class="form-label">Exterior color</label>
+                            <select class="form-select" id="exteriorColorErrorValidationCustom" onclick="SetInputAsRequireValidation(this)">
+                                <option selected value="">Any</option>
+                                @foreach (var color in CarSharingApp.Domain.SmartEnums.Colour.GetPossibleEnumerations())
+                                {
+                                    <option value="@CarSharingApp.Domain.SmartEnums.Colour.FromName(color)">@color</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="d-flex flex-column col-lg-6 mb-3">
+                            <label for="interiorColorErrorValidationCustom" class="form-label">Interior color</label>
+                            <select class="form-select" id="interiorColorErrorValidationCustom" onclick="SetInputAsRequireValidation(this)">
+                                <option selected value="">Any</option>
+                                @foreach (var color in CarSharingApp.Domain.SmartEnums.Colour.GetPossibleEnumerations())
+                                {
+                                    <option value="@CarSharingApp.Domain.SmartEnums.Colour.FromName(color)">@color</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="d-flex flex-column col-lg-6 mb-3">
+                            <label for="drivetrainErrorValidationCustom" class="form-label">Drivetrain</label>
+                            <select class="form-select" id="drivetrainErrorValidationCustom" onclick="SetInputAsRequireValidation(this)">
+                                <option selected value="">Any</option>
+                                @foreach (var drivetrain in CarSharingApp.Domain.SmartEnums.Drivetrain.GetPossibleEnumerations())
+                                {
+                                    <option value="@CarSharingApp.Domain.SmartEnums.Drivetrain.FromName(drivetrain)">@drivetrain</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="d-flex flex-column col-lg-6 mb-3">
+                            <label for="fuelTypeErrorValidationCustom" class="form-label">Fuel type</label>
+                            <select class="form-select" id="fuelTypeErrorValidationCustom" onclick="SetInputAsRequireValidation(this)">
+                                <option selected value="">Any</option>
+                                @foreach (var fuelType in CarSharingApp.Domain.SmartEnums.FuelType.GetPossibleEnumerations())
+                                {
+                                    <option value="@CarSharingApp.Domain.SmartEnums.FuelType.FromName(fuelType)">@fuelType</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="d-flex flex-column col-lg-6 mb-3">
+                            <label for="transmissionErrorValidationCustom" class="form-label">Transmission</label>
+                            <select class="form-select" id="transmissionErrorValidationCustom" onclick="SetInputAsRequireValidation(this)">
+                                <option selected value="">Any</option>
+                                @foreach (var transmission in CarSharingApp.Domain.SmartEnums.Transmission.GetPossibleEnumerations())
+                                {
+                                    <option value="@CarSharingApp.Domain.SmartEnums.Transmission.FromName(transmission)">@transmission</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="d-flex flex-column col-lg-6 mb-3">
+                            <label for="engineErrorValidationCustom" class="form-label">Engine</label>
+                            <select class="form-select" id="engineErrorValidationCustom" onclick="SetInputAsRequireValidation(this)">
+                                <option selected value="">Any</option>
+                                @foreach (var engine in CarSharingApp.Domain.SmartEnums.Engine.GetPossibleEnumerations())
+                                {
+                                    <option value="@CarSharingApp.Domain.SmartEnums.Engine.FromName(engine)">@engine</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+
+
+
+                    
+
+                    <div class="d-flex justify-content-center gap-3 mt-3">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptionsForModal" id="inlineRadio1" value="option1" checked>
+                            <label class="form-check-label" for="inlineRadio1">All</label>
+                        </div>
+                        <div class="form-check form-check-inline text-center">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptionsForModal" id="inlineRadio2" value="option2" disabled>
+                            <label class="form-check-label" for="inlineRadio2">All except my vehicles (disabled)</label>
+                        </div>
+                        <div class="form-check form-check-inline text-center">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptionsForModal" id="inlineRadio3" value="option3" disabled>
+                            <label class="form-check-label" for="inlineRadio3">My vehicles only (disabled)</label>
+                        </div>
+                    </div>
+
+
+                </fieldset>
+                
+
+
+
+
             </div>
             <div class="modal-footer flex-column border-top-0">
                 <button type="button" class="btn btn-lg btn-primary w-100 mx-0 mb-2">Save changes</button>
@@ -26,3 +159,26 @@
         </div>
     </div>
 </div>
+
+<script>
+    const rangeInputs = document.querySelectorAll('input[type="range"]')
+    //const numberInput = document.querySelector('input[type="number"]')
+
+    function handleInputChange(e) {
+        let target = e.target
+        if (e.target.type !== 'range') {
+            target = document.getElementById('range')
+        }
+        const min = target.min
+        const max = target.max
+        const val = target.value
+
+        target.style.backgroundSize = (val - min) * 100 / (max - min) + '% 100%'
+    }
+
+    rangeInputs.forEach(input => {
+        input.addEventListener('input', handleInputChange)
+    })
+
+    //numberInput.addEventListener('input', handleInputChange)
+</script>
