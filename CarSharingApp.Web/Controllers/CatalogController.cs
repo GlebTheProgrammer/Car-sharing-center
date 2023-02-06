@@ -24,7 +24,26 @@ namespace CarSharingApp.Controllers
         public async Task<IActionResult> VehiclesCatalogPartial(string searchBy, string searchInput, int page = 1, int pageSize = 9)
         {
             var response = await _vehicleServiceClient.GetAllApprovedAndPublishedVehiclesCatalogRepresentation();
+            var viewModel = await RenderCatalog(searchBy, searchInput, page, pageSize, response);
 
+            return PartialView("_VehiclesCatalog", viewModel);
+        }
+
+        public IActionResult FilterModalPartial()
+        {
+            return PartialView("_FilterModal");
+        }
+
+        public async Task<IActionResult> AdvancedSearch(GetVehiclesByCriteriaRequest request, string searchBy, string searchInput, int page = 1, int pageSize = 9)
+        {
+            var response = await _vehicleServiceClient.GetAllApprovedAndPublishedVehiclesWithFilterCatalogRepresentation(request);
+            var viewModel = await RenderCatalog(searchBy, searchInput, page, pageSize, response);
+
+            return PartialView("_VehiclesCatalog", viewModel);
+        }
+
+        private async Task<List<VehicleDisplayInCatalog>> RenderCatalog(string searchBy, string searchInput, int page, int pageSize, HttpResponseMessage response)
+        {
             response.EnsureSuccessStatusCode();
 
             VehiclesDisplayInCatalogResponse responseModel = await response.Content.ReadFromJsonAsync<VehiclesDisplayInCatalogResponse>()
@@ -48,12 +67,7 @@ namespace CarSharingApp.Controllers
             ViewBag.Pager = pager;
             ViewBag.VehiclesCount = partialViewModel.Count;
 
-            return PartialView("_VehiclesCatalog", partialViewModel.Skip(vehiclesSkip).Take(pager.PageSize).ToList());
-        }
-
-        public IActionResult FilterModalPartial()
-        {
-            return PartialView("_FilterModal");
+            return partialViewModel.Skip(vehiclesSkip).Take(pager.PageSize).ToList();
         }
 
         private List<VehicleDisplayInCatalog> GetViewModel(VehiclesDisplayInCatalogResponse serverResponse, string searchCriteria, string searchInput)

@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Authorization;
 using CarSharingApp.Infrastructure.Authentication;
 using CarSharingApp.Domain.Enums;
 using CarSharingApp.PublicApi.Primitives;
+using CarSharingApp.Domain.ValueObjects;
+using CarSharingApp.Domain.SmartEnums;
+using static CarSharingApp.Domain.Enums.FlagEnums;
 
 namespace CarSharingApp.PublicApi.Controllers
 {
@@ -72,6 +75,68 @@ namespace CarSharingApp.PublicApi.Controllers
             List<Vehicle> getVehiclesResult = await _vehicleService.GetAllAsync();
 
             return Ok(MapVehicleCatalogResponse(getVehiclesResult.Where(v => v.Status.IsPublished && v.Status.IsConfirmedByAdmin).ToList()));
+        }
+
+        [HttpPost("CriteriaCatalogRepresentation")]
+        public async Task<IActionResult> GetVehiclesByCriteria(GetVehiclesByCriteriaRequest request)
+        {
+            List<Vehicle> getVehiclesResult = await _vehicleService.GetAllAsync();
+
+            List<Vehicle> publisedAndApprovedVehicles = getVehiclesResult.Where(v => v.Status.IsPublished && v.Status.IsConfirmedByAdmin).ToList();
+
+            bool tryParseHourlyPrice = decimal.TryParse(request.MaxHourlyRentalPrice, out decimal maxHourlyPrice);
+            if (!tryParseHourlyPrice || maxHourlyPrice == 0)
+                maxHourlyPrice = Tariff.MaxPrice;
+            bool tryParseDailyPrice = decimal.TryParse(request.MaxDailyRentalPrice, out decimal maxDailyPrice);
+            if (!tryParseDailyPrice || maxDailyPrice == 0)
+                maxDailyPrice = Tariff.MaxPrice;
+
+
+            Country? country = request.Country == null ? null : Country.FromName(request.Country);
+            Colour? exteriorColor = request.ExteriorColor == null ? null : Colour.FromName(request.ExteriorColor);
+            Colour? interiorColor = request.InteriorColor == null ? null : Colour.FromName(request.InteriorColor);
+            Drivetrain? drivetrain = request.Drivetrain == null ? null : Drivetrain.FromName(request.Drivetrain);
+            FuelType? fuelType = request.FuelType == null ? null : FuelType.FromName(request.FuelType);
+            Transmission? transmission = request.Transmission == null ? null : Transmission.FromName(request.Transmission);
+            Engine? engine = request.Engine == null ? null : Engine.FromName(request.Engine);
+            ErrorOr<Categories> categories = request.Categories == null ? Categories.None : GetCategoriesFromList(request.Categories.Split(',').ToList());
+
+            List<Vehicle> vehiclesThatMatchCriteria =
+                publisedAndApprovedVehicles.Where(v => (v.Tariff.HourlyRentalPrice <= maxHourlyPrice && v.Tariff.DailyRentalPrice <= maxDailyPrice) &&
+                                                       (country == null ? true : v.Location.Country.Name == country.Name) &&
+                                                       (exteriorColor == null ? true : v.Specifications.ExteriorColor.Name == exteriorColor.Name) &&
+                                                       (interiorColor == null ? true : v.Specifications.InteriorColor.Name == interiorColor.Name) &&
+                                                       (drivetrain == null ? true : v.Specifications.Drivetrain.Name == drivetrain.Name) &&
+                                                       (fuelType == null ? true : v.Specifications.FuelType.Name == fuelType.Name) &&
+                                                       (transmission == null ? true : v.Specifications.Transmission.Name == transmission.Name) &&
+                                                       (engine == null ? true : v.Specifications.Engine.Name == engine.Name)).ToList();
+
+            List<Vehicle> vehiclesThatMatchCriteriaAndCategories = new List<Vehicle>();
+            if (!categories.IsError && categories != Categories.None)
+            {
+                foreach (var vehicle in vehiclesThatMatchCriteria)
+                {
+                    if (TwoCategoryMatch(vehicle.Categories, categories.Value))
+                        vehiclesThatMatchCriteriaAndCategories.Add(vehicle);
+                }
+            }
+            else
+                vehiclesThatMatchCriteriaAndCategories = vehiclesThatMatchCriteria;
+
+            if (request.SearchAllVehicles)
+                return Ok(MapVehicleCatalogResponse(vehiclesThatMatchCriteriaAndCategories));
+            else
+            {
+                JwtClaims? jwtClaims = GetJwtClaims();
+
+                if (jwtClaims is null)
+                    throw new NullReferenceException(nameof(jwtClaims));
+
+                if (request.SearchAllExceptMyVehicles)
+                    return Ok(MapVehicleCatalogResponse(vehiclesThatMatchCriteriaAndCategories.Where(v => v.CustomerId != Guid.Parse(jwtClaims.Id)).ToList()));
+                else
+                    return Ok(MapVehicleCatalogResponse(vehiclesThatMatchCriteriaAndCategories.Where(v => v.CustomerId == Guid.Parse(jwtClaims.Id)).ToList()));
+            }
         }
 
         [HttpPut("{id:guid}")]
@@ -140,6 +205,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
 
         [HttpDelete("{id:guid}")]
+        [Authorize]
         public async Task<IActionResult> DeleteVehicle(Guid id)
         {
             ErrorOr<Vehicle> getVehicleResult = await _vehicleService.GetVehicleAsync(id);

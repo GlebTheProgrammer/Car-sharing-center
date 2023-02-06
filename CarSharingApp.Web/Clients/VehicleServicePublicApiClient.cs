@@ -1,6 +1,7 @@
 ﻿using CarSharingApp.Application.Contracts.Vehicle;
 using CarSharingApp.Web.Clients.Interfaces;
 using CarSharingApp.Web.Primitives;
+using System.Text;
 
 namespace CarSharingApp.Web.Clients
 {
@@ -41,6 +42,15 @@ namespace CarSharingApp.Web.Clients
             var client = CreateNewClientInstance(clientIdentifier);
 
             return await client.GetAsync("MapRepresentation");
+        }
+
+        public async Task<HttpResponseMessage> GetAllApprovedAndPublishedVehiclesWithFilterCatalogRepresentation(GetVehiclesByCriteriaRequest request)
+        {
+            var client = CreateNewClientInstance(clientIdentifier);
+
+            JsonContent content = JsonContent.Create(request);
+
+            return await client.PostAsync("CriteriaCatalogRepresentation", content);
         }
 
         public async Task<HttpResponseMessage> UpdateVehicleStatus(UpdateVehicleStatusRequest request)

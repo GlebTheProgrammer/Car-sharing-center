@@ -18,6 +18,26 @@ function ShowSuccessfulMessageAfterLogout() {
     });
 }
 
+// Function to show message about successful filters adding 
+function ShowSuccessfulMessageAfterAppliedFilters() {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-start',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    });
+
+    Toast.fire({
+        icon: 'success',
+        title: 'Filters were applied successfully.'
+    });
+}
+
 // Function to show message about successful vehicle deletion
 function ShowSuccessfulMessageAfterVehicleWasDeleted() {
     const Toast = Swal.mixin({
