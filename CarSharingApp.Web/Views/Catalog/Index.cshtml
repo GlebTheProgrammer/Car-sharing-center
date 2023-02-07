@@ -8,12 +8,12 @@
         <div class="carousel-item active" data-bs-interval="10000">
             <img src="~/Images/CatalogPage/slider_image1.png" class="d-block w-100" alt="">
         </div>
-@*        <div class="carousel-item" data-bs-interval="10000">
+        <div class="carousel-item" data-bs-interval="10000">
             <img src="https://picsum.photos/1024/300?grayscale" class="d-block w-100" alt="">
         </div>
         <div class="carousel-item" data-bs-interval="10000">
             <img src="https://picsum.photos/1023/300?grayscale" class="d-block w-100" alt="">
-        </div>*@
+        </div>
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#catalogCarousel" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -33,7 +33,7 @@
             <p>
                 <button id="searchByCriteriaBtn" type="button" class="btn btn-primary my-2 me-1" data-bs-toggle="modal" data-bs-target="#searchByCriteriaModal">Search vehicles by criteria</button>
 
-                <a href="#" class="btn btn-secondary my-2">Search nearby vehicles</a>
+                <a asp-controller="SearchNearbyVehicles" asp-action="Index" class="btn btn-secondary my-2">Search nearby vehicles</a>
             </p>
         </div>
     </div>

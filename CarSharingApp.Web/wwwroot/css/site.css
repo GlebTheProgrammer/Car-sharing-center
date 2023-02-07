@@ -76,34 +76,7 @@ label.star:before {
     background-color: lightgrey !important;
 }
 
-/*input[type=range] {
-    -webkit-appearance: none;
-}
-
-input[type=range]::-webkit-slider-runnable-track {
-    width: 300px;
-    height: 5px;
-    background: linear-gradient(90deg, rgb(214,214,214) 60%, rgb(214,214,214) 60%);
-    border: none;
-    border-radius: 3px;
-}
-
-input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    border: none;
-    height: 16px;
-    width: 16px;
-    border-radius: 50%;
-    background: grey;
-    margin-top: -4px;
-}
-
-input[type=range]:focus {
-    outline: none;
-}
-
-*/
-
+/*Range inputs style goes here*/
 input[type="range"] {
     -webkit-appearance: none;
     margin-right: 15px;
@@ -116,7 +89,6 @@ input[type="range"] {
     background-repeat: no-repeat;
 }
 
-/* Input Track */
 input[type=range]::-webkit-slider-runnable-track {
     -webkit-appearance: none;
     box-shadow: none;
@@ -129,4 +101,22 @@ input[type="range"]::-ms-track {
     box-shadow: none;
     border: none;
     background: transparent;
+}
+
+/*Search nearby vehicles button css*/
+.custom-map-control-button {
+    background-color: #fff;
+    border: 0;
+    border-radius: 2px;
+    box-shadow: 0 1px 4px -1px rgba(0, 0, 0, 0.3);
+    margin: 10px;
+    padding: 0 0.5em;
+    font: 400 18px Roboto, Arial, sans-serif;
+    overflow: hidden;
+    height: 40px;
+    cursor: pointer;
+}
+
+.custom-map-control-button:hover {
+    background: rgb(235, 235, 235);
 }

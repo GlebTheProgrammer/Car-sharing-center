@@ -48,6 +48,9 @@
                         <li class="nav-item me-1">
                             <a class="nav-link" asp-controller="Catalog" asp-action="Index">Catalog and Pricing</a>
                         </li>
+                        <li class="nav-item me-1">
+                            <a class="nav-link" asp-controller="SearchNearbyVehicles" asp-action="Index">Nearby Vehicles</a>
+                        </li>
                         @if (Accessor?.HttpContext?.Session.GetString("JWToken") is not null)
                         {
                             <li class="nav-item">
