@@ -16,7 +16,6 @@ namespace CarSharingApp.Domain.SmartEnums
         public static readonly Colour Orange = new(9, "Orange");
         public static readonly Colour Beige = new(10, "Beige");
 
-
         private Colour(int value, string name) : base(value, name)
         {
         }

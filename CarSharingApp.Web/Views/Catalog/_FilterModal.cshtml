@@ -1,0 +1,270 @@
+﻿@inject IHttpContextAccessor httpContextAccessor;
+@model CarSharingApp.Application.Contracts.Vehicle.GetVehiclesByCriteriaRequest;
+
+<div class="modal fade" id="searchByCriteriaModal" tabindex="-1" aria-labelledby="searchByCriteriaModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content rounded-4 shadow">
+            <div class="modal-header border-bottom-0">
+                <h1 class="modal-title fs-5">Advanced search</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body py-0">
+                <fieldset id="modalGroup">
+                    <p>Choose any options that suit your taste, and then our system will display vehicles for you according to your preferences.</p>
+
+
+                    <div class="row">
+                        <label class="form-check-label" for="includePriceSearch">Hourly rental price (max)</label>
+                    </div>
+                    <div class="d-flex gap-2 align-items-center">
+                        <input asp-for="MaxHourlyRentalPrice" type="range" class="form-range me-0" min="0" max="150" value="0" id="hourlyPriceRangeInput" oninput="hourlyPriceRangeOutput.value=value" />
+                        <div>
+                            <output id="hourlyPriceRangeOutput">0</output>
+                            <label>$</label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <label class="form-check-label" for="includeDailySearch">Daily rental price (max)</label>
+                    </div>
+                    <div class="d-flex gap-2 align-items-center">
+                        <input asp-for="MaxDailyRentalPrice" type="range" class="form-range me-0" min="0" max="1500" value="0" id="dailyPriceRangeInput" oninput="dailyPriceRangeOutput.value=value" />
+                        <div>
+                            <output id="dailyPriceRangeOutput">0</output>
+                            <label>$</label>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-2 mt-3">
+                        <label class="form-check-label">Country:</label>
+                        <select asp-for="Country" class="form-select" style="max-width: 150px;" id="countrySearchSelectInput" required>
+                            <option selected value="">All</option>
+                            @foreach (var country in CarSharingApp.Domain.SmartEnums.Country.GetPossibleEnumerations())
+                            {
+                                <option value="@CarSharingApp.Domain.SmartEnums.Country.FromName(country)">@country</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="row mt-3 mb-3">
+                        <label class="form-check-label" for="includeDailySearch">Possible categories (Skip to select them all)</label>
+                    </div>
+                    <div class="text-center">
+                        @foreach (var category in CarSharingApp.Domain.Enums.FlagEnums.GetPossibleValues<CarSharingApp.Domain.Enums.FlagEnums.Categories>())
+                        {
+                            if (category.Equals("None"))
+                                continue;
+
+                            <div class="form-check form-check-inline mb-3" style="margin-right: 5px; padding-left: 0px;">
+                                <input type="checkbox" class="btn-check" id="btn-check-outlined-@category" autocomplete="off" value="@category" onchange="FilterCategories(this,'@category')">
+                                <label class="btn btn-outline-secondary btn-sm" for="btn-check-outlined-@category">@category</label><br>
+                            </div>
+                        }
+                        <div class="d-flex flex-row visually-hidden">
+                            <input asp-for="Categories" type="text" class="form-control text-center" style="width: 15%" id="categoriesInput" readonly>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="d-flex flex-column col-lg-6 mb-3">
+                            <label for="exteriorColorErrorValidationCustom" class="form-label">Exterior color</label>
+                            <select asp-for="ExteriorColor" class="form-select" id="exteriorColorErrorValidationCustom">
+                                <option selected value="">All</option>
+                                @foreach (var color in CarSharingApp.Domain.SmartEnums.Colour.GetPossibleEnumerations())
+                                {
+                                    <option value="@CarSharingApp.Domain.SmartEnums.Colour.FromName(color)">@color</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="d-flex flex-column col-lg-6 mb-3">
+                            <label for="interiorColorErrorValidationCustom" class="form-label">Interior color</label>
+                            <select asp-for="InteriorColor" class="form-select" id="interiorColorErrorValidationCustom">
+                                <option selected value="">All</option>
+                                @foreach (var color in CarSharingApp.Domain.SmartEnums.Colour.GetPossibleEnumerations())
+                                {
+                                    <option value="@CarSharingApp.Domain.SmartEnums.Colour.FromName(color)">@color</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="d-flex flex-column col-lg-6 mb-3">
+                            <label for="drivetrainErrorValidationCustom" class="form-label">Drivetrain</label>
+                            <select asp-for="Drivetrain" class="form-select" id="drivetrainErrorValidationCustom">
+                                <option selected value="">All</option>
+                                @foreach (var drivetrain in CarSharingApp.Domain.SmartEnums.Drivetrain.GetPossibleEnumerations())
+                                {
+                                    <option value="@CarSharingApp.Domain.SmartEnums.Drivetrain.FromName(drivetrain)">@drivetrain</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="d-flex flex-column col-lg-6 mb-3">
+                            <label for="fuelTypeErrorValidationCustom" class="form-label">Fuel type</label>
+                            <select asp-for="FuelType" class="form-select" id="fuelTypeErrorValidationCustom">
+                                <option selected value="">All</option>
+                                @foreach (var fuelType in CarSharingApp.Domain.SmartEnums.FuelType.GetPossibleEnumerations())
+                                {
+                                    <option value="@CarSharingApp.Domain.SmartEnums.FuelType.FromName(fuelType)">@fuelType</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="d-flex flex-column col-lg-6 mb-3">
+                            <label for="transmissionErrorValidationCustom" class="form-label">Transmission</label>
+                            <select asp-for="Transmission" class="form-select" id="transmissionErrorValidationCustom">
+                                <option selected value="">All</option>
+                                @foreach (var transmission in CarSharingApp.Domain.SmartEnums.Transmission.GetPossibleEnumerations())
+                                {
+                                    <option value="@CarSharingApp.Domain.SmartEnums.Transmission.FromName(transmission)">@transmission</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="d-flex flex-column col-lg-6 mb-3">
+                            <label for="engineErrorValidationCustom" class="form-label">Engine</label>
+                            <select asp-for="Engine" class="form-select" id="engineErrorValidationCustom">
+                                <option selected value="">All</option>
+                                @foreach (var engine in CarSharingApp.Domain.SmartEnums.Engine.GetPossibleEnumerations())
+                                {
+                                    <option value="@CarSharingApp.Domain.SmartEnums.Engine.FromName(engine)">@engine</option>
+                                }
+                            </select>
+                        </div>
+                    </div>        
+
+                    <div class="d-flex justify-content-center gap-3 mt-3">
+                        <div class="form-check form-check-inline">
+                            <input asp-for="SearchAllVehicles" class="form-check-input" type="radio" name="inlineRadioOptionsForModal" id="searchAll" value="true" onclick="ChangeElementValue();" checked>
+                            <label class="form-check-label" for="searchAll">All</label>
+                        </div>
+
+                        @if (httpContextAccessor?.HttpContext?.Session.GetString("JWToken") is not null)
+                        {
+                            <div class="form-check form-check-inline text-center">
+                                <input asp-for="SearchAllExceptMyVehicles" class="form-check-input" type="radio" name="inlineRadioOptionsForModal" id="searchAllExceptMy" value="false" onclick="ChangeElementValue();">
+                                <label class="form-check-label" for="searchAllExceptMy">All except my vehicles</label>
+                            </div>
+                            <div class="form-check form-check-inline text-center">
+                                <input asp-for="SearchMyVehicles" class="form-check-input" type="radio" name="inlineRadioOptionsForModal" id="searchMy" value="false" onclick="ChangeElementValue();">
+                                <label class="form-check-label" for="searchMy">My vehicles only</label>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-check form-check-inline text-center">
+                                <input asp-for="SearchAllExceptMyVehicles" class="form-check-input" type="radio" name="inlineRadioOptionsForModal" id="searchAllExceptMy" value="false" onclick="ChangeElementValue();" disabled>
+                                <label class="form-check-label" for="searchAllExceptMy">All except my vehicles (disabled)</label>
+                            </div>
+                            <div class="form-check form-check-inline text-center">
+                                <input asp-for="SearchMyVehicles" class="form-check-input" type="radio" name="inlineRadioOptionsForModal" id="searchMy" value="false" onclick="ChangeElementValue();" disabled>
+                                <label class="form-check-label" for="searchMy">My vehicles only (disabled)</label>
+                            </div>
+                        }
+                    </div>
+
+                </fieldset>
+            </div>
+            <div class="modal-footer flex-column border-top-0">
+                <button id="applyAdvancedSearch" type="button" class="btn btn-lg btn-primary w-100 mx-0 mb-2">Search</button>
+                <button type="button" class="btn btn-lg btn-light w-100 mx-0" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#applyAdvancedSearch').on('click', function (event) {
+        var maxHourlyRentalPrice = document.getElementById("hourlyPriceRangeInput").value;
+        var maxDailyRentalPrice = document.getElementById("dailyPriceRangeInput").value;
+        var includeCountrySearchSelectInput = document.getElementById("countrySearchSelectInput").value;
+        var includeCategoriesSearchSelectInput = document.getElementById("categoriesInput").value;
+        var includeExteriorColourSearchSelectInput = document.getElementById("exteriorColorErrorValidationCustom").value;
+        var includeInteriorColourSearchSelectInput = document.getElementById("interiorColorErrorValidationCustom").value;
+        var includeDrivetrainSearchSelectInput = document.getElementById("drivetrainErrorValidationCustom").value;
+        var includeFuelTypeSearchSelectInput = document.getElementById("fuelTypeErrorValidationCustom").value;
+        var includeTransmissionSearchSelectInput = document.getElementById("transmissionErrorValidationCustom").value;
+        var includeEngineSearchSelectInput = document.getElementById("engineErrorValidationCustom").value;
+        var includeSearchAll = document.getElementById("searchAll").value;
+        var includeSearchAllExceptMy = document.getElementById("searchAllExceptMy").value;
+        var includeSearchMy = document.getElementById("searchMy").value;
+
+        let urlArray = [];
+
+        urlArray.push("MaxHourlyRentalPrice=" + maxHourlyRentalPrice);
+        urlArray.push("MaxDailyRentalPrice=" + maxDailyRentalPrice);
+        urlArray.push("Country=" + includeCountrySearchSelectInput);
+        urlArray.push("Categories=" + includeCategoriesSearchSelectInput);
+        urlArray.push("ExteriorColor=" + includeExteriorColourSearchSelectInput);
+        urlArray.push("InteriorColor=" + includeInteriorColourSearchSelectInput);
+        urlArray.push("Drivetrain=" + includeDrivetrainSearchSelectInput);
+        urlArray.push("FuelType=" + includeFuelTypeSearchSelectInput);
+        urlArray.push("Transmission=" + includeTransmissionSearchSelectInput);
+        urlArray.push("Engine=" + includeEngineSearchSelectInput);
+        urlArray.push("SearchAllVehicles=" + includeSearchAll);
+        urlArray.push("SearchMyVehicles=" + includeSearchMy);
+        urlArray.push("SearchAllExceptMyVehicles=" + includeSearchAllExceptMy);
+
+        $('#vehiclesPartialZone').load("/Catalog/AdvancedSearch?" + urlArray.join("&"));
+        $('#searchByCriteriaModal').modal('hide');
+        ShowSuccessfulMessageAfterAppliedFilters();
+    });
+</script>
+
+<script>
+    var searchAllCheckBox = document.getElementById("searchAll");
+    var searchAllExceptMyCheckBox = document.getElementById("searchAllExceptMy");
+    var searchMyCheckBox = document.getElementById("searchMy");
+
+    function ChangeElementValue(){
+
+        if (searchAllCheckBox.checked) {
+            searchAllCheckBox.value = "true";
+            searchAllExceptMyCheckBox.value = "false";
+            searchMyCheckBox.value = "false";
+        } else if (searchAllExceptMyCheckBox.checked) {
+            searchAllCheckBox.value = "false";
+            searchAllExceptMyCheckBox.value = "true";
+            searchMyCheckBox.value = "false";
+        } else if (searchMyCheckBox.checked) {
+            searchAllCheckBox.value = "false";
+            searchAllExceptMyCheckBox.value = "false";
+            searchMyCheckBox.value = "true";
+        }
+    }
+
+    const vehicleCategories = [];
+
+    function FilterCategories(checkboxElement, category) {
+        if (checkboxElement.checked) {
+            vehicleCategories.push(category);
+        } else {
+            var index = vehicleCategories.indexOf(category);
+            vehicleCategories.splice(index, 1);
+        }
+
+        if (vehicleCategories.length === 0) {
+            document.getElementById("categoriesInput").value = "None";
+        } else {
+            document.getElementById("categoriesInput").value = vehicleCategories.toString();
+        }
+    }
+</script>
+
+<script>
+    const rangeInputs = document.querySelectorAll('input[type="range"]')
+
+    function handleInputChange(e) {
+        let target = e.target
+        if (e.target.type !== 'range') {
+            target = document.getElementById('range')
+        }
+        const min = target.min
+        const max = target.max
+        const val = target.value
+
+        target.style.backgroundSize = (val - min) * 100 / (max - min) + '% 100%'
+    }
+
+    rangeInputs.forEach(input => {
+        input.addEventListener('input', handleInputChange)
+    })
+
+</script>

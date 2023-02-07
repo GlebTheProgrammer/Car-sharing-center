@@ -1,0 +1,38 @@
+﻿@model CarSharingApp.Application.Contracts.Account.AccountActionNotesResponse;
+
+<div class="container py-2">
+
+    @foreach (var note in Model.ActionNotes)
+    {
+        if (CarSharingApp.Domain.SmartEnums.NoteType.FromName(note.Type) == CarSharingApp.Domain.SmartEnums.NoteType.AddedNewVehicle)
+        {
+            <div class="row">
+                <div class="col py-2">
+                    <div class="card border-success shadow">
+                        <div class="card-body">
+                            <div class="float-right text-success">@(note.ActionMadeTime.ToString("ddd MMM dd yyy h:mm tt", new System.Globalization.CultureInfo("en-US")))</div>
+                            <h4 class="card-title text-success">@note.Type</h4>
+                            <p class="card-text">@note.Note</p>
+                            <button class="btn btn-sm btn-outline-secondary" type="button" data-target="#t2_details" data-toggle="collapse">Show Details ▼</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col py-2">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="float-right text-muted">@(note.ActionMadeTime.ToString("ddd MMM dd yyy h:mm tt", new System.Globalization.CultureInfo("en-US")))</div>
+                            <h4 class="card-title text-muted">@note.Type</h4>
+                            <p class="card-text">@note.Note</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+
+</div>

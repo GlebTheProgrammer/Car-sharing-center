@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Http;
 @inject IHttpContextAccessor Accessor;
+@inject IConfiguration _configuration;
 
 <!DOCTYPE html>
 <html id="layout" lang="en">
@@ -47,6 +48,9 @@
                         <li class="nav-item me-1">
                             <a class="nav-link" asp-controller="Catalog" asp-action="Index">Catalog and Pricing</a>
                         </li>
+                        <li class="nav-item me-1">
+                            <a class="nav-link" asp-controller="SearchNearbyVehicles" asp-action="Index">Nearby Vehicles</a>
+                        </li>
                         @if (Accessor?.HttpContext?.Session.GetString("JWToken") is not null)
                         {
                             <li class="nav-item">
@@ -78,10 +82,10 @@
                         <ul class="navbar-nav d-flex flex-row ms-auto me-3">
                             <li class="nav-item me-3 me-lg-0 dropdown">
                                 <a id="personalAccountLink" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <img src="~/Images/HomePage/customerLogo.png" class="rounded-circle" height="30" loading="lazy" />
+                                    <img src="@(string.Join("", _configuration["AzureBlobStorage:CustomersAccountImagesPath"], "image1.png"))" class="rounded-circle" height="30" loading="lazy" />
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a href="@Url.Action("Index", "CustomerPersonalAccount")" id="myAccountChoice" class="dropdown-item text-secondary"><i class="fa-solid fa-user me-2"></i>My Account</a></li>
+                                    <li><a href="@Url.Action("Index", "Dashboard")" id="myAccountChoice" class="dropdown-item text-secondary"><i class="fa-solid fa-user me-2"></i>Dashboard</a></li>
                                     <li><a href="javascript:void(0);" id="logoutChoice" class="dropdown-item text-secondary" onclick="ShowLogoutConfirmationAlert()"><i class="fa-solid fa-right-from-bracket me-2"></i>Logout</a></li>
                                 </ul>
                             </li>
@@ -89,7 +93,7 @@
                     }
                     else
                     {
-                        <button id="SignInBtn" class="btn btn-outline-primary me-3" onclick="location.href='@Url.Action("Index","AccountDashboard")'">Log In</button>
+                        <button id="SignInBtn" class="btn btn-outline-primary me-3" onclick="location.href='@Url.Action("Index","SignIn")'">Log In</button>
                         <button id="RegisterBtn" class="btn btn-outline-success me-3" onclick="location.href='@Url.Action("Index","Registration")'">Sign Up</button>
                     }
 

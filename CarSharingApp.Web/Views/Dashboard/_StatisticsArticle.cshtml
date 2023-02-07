@@ -1,0 +1,28 @@
+﻿@model CarSharingApp.Application.Contracts.Account.AccountStatisticsDataResponse;
+
+<div class="card-body">
+    <h4 class="small">
+        Rented vehicles
+        <span class="float-end fw-bold">@(Model.VehiclesRentedToTheirTotalNumber)%</span>
+    </h4>
+    <div class="progress mb-4"><div class="progress-bar bg-info" role="progressbar" style="width: @(Model.VehiclesRentedToTheirTotalNumber)%" aria-valuenow="@(Model.VehiclesRentedToTheirTotalNumber)" aria-valuemin="0" aria-valuemax="100"></div></div>
+    <p class="card-text">The number of your currently rented vehicles to their total number</p>
+    <h4 class="small">
+        Published vehicles
+        <span class="float-end fw-bold">@(Model.VehiclesPublishedToTheirTotalNumber)%</span>
+    </h4>
+    <div class="progress mb-4"><div class="progress-bar bg-success" role="progressbar" style="width: @(Model.VehiclesPublishedToTheirTotalNumber)%" aria-valuenow="@(Model.VehiclesPublishedToTheirTotalNumber)" aria-valuemin="0" aria-valuemax="100"></div></div>
+    <p class="card-text">The number of your currently listed vehicles in the catalog to their total number.</p>
+    <h4 class="small">
+        Hidden vehicles
+        <span class="float-end fw-bold">@(Model.VehiclesHiddenToTheirTotalNumber)%</span>
+    </h4>
+    <div class="progress mb-4"><div class="progress-bar bg-warning" role="progressbar" style="width: @(Model.VehiclesHiddenToTheirTotalNumber)%" aria-valuenow="@(Model.VehiclesHiddenToTheirTotalNumber)" aria-valuemin="0" aria-valuemax="100"></div></div>
+    <p class="card-text">The number of your currently hidden vehicles from the catalog to their total number.</p>
+    <h4 class="small">
+        Rented to Shared (or vice versa)
+        <span class="float-end fw-bold">@(Model.RentedVehiclesToShared)%</span>
+    </h4>
+    <div class="progress mb-4"><div class="progress-bar" role="progressbar" style="width: @(Model.RentedVehiclesToShared)%" aria-valuenow="@(Model.RentedVehiclesToShared)" aria-valuemin="0" aria-valuemax="100"></div></div>
+    <p class="card-text">The total number of your rented vehicles for all time to the total number of your orders. (or vice versa, depends on whichever is greater)</p>
+</div>

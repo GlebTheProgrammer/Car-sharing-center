@@ -11,10 +11,13 @@ namespace CarSharingApp.Application.Services
     public class CustomerService : ICustomerService
     {
         private readonly IRepository<Customer> _customerRepository;
+        private readonly IRepository<ActionNote> _noteRepository;
 
-        public CustomerService(IRepository<Customer> customerRepository)
+        public CustomerService(IRepository<Customer> customerRepository, 
+                               IRepository<ActionNote> noteRepository)
         {
             _customerRepository = customerRepository;
+            _noteRepository = noteRepository;
         }
 
         public async Task<ErrorOr<Customer>> CreateCustomerAsync(Customer customer)
@@ -27,6 +30,7 @@ namespace CarSharingApp.Application.Services
             }
 
             await _customerRepository.CreateAsync(customer);
+            await _noteRepository.CreateAsync(ActionNote.RegisteredNote(customer.Id));
 
             return customer;
         }
@@ -34,6 +38,12 @@ namespace CarSharingApp.Application.Services
         public async Task<Deleted> DeleteCustomerAsync(Guid id)
         {
             await _customerRepository.DeleteAsync(id);
+
+            var notesToDelete = await _noteRepository.GetAllAsync(note => note.ActorId == id);
+            foreach(var note in notesToDelete)
+            {
+                await _noteRepository.DeleteAsync(note.Id);
+            }
 
             return Result.Deleted;
         }
@@ -65,6 +75,7 @@ namespace CarSharingApp.Application.Services
             }
 
             await _customerRepository.UpdateAsync(customer);
+            await _noteRepository.CreateAsync(ActionNote.UpdatedCustomerCredentialsNote(customer.Id));
 
             return customer;
         }
@@ -72,6 +83,7 @@ namespace CarSharingApp.Application.Services
         public async Task<Updated> UpdateCustomerInfoAsync(Customer customer)
         {
             await _customerRepository.UpdateAsync(customer);
+            await _noteRepository.CreateAsync(ActionNote.UpdatedCustomerInfoNote(customer.Id));
 
             return Result.Updated;
         }
@@ -79,6 +91,7 @@ namespace CarSharingApp.Application.Services
         public async Task<Updated> UpdateCustomerPasswordAsync(Customer customer)
         {
             await _customerRepository.UpdateAsync(customer);
+            await _noteRepository.CreateAsync(ActionNote.UpdatedCustomerPasswordNote(customer.Id));
 
             return Result.Updated;
         }

@@ -1,203 +1,58 @@
-﻿@using CarSharingApp.Models.ApplicationData
-@using CarSharingApp.Models.MongoView;
-
-@model CarSharingApp.Models.MongoView.VehiclesCatalogDataViewModel
-
-@{
-    Pager pager = new Pager();
-
-    int pageNo = 0;
-
-    if (ViewBag.Pager != null)
-    {
-        pager = ViewBag.Pager;
-        pageNo = pager.CurrentPage;
-    }
-}
-
-@{
-    List<VehicleCatalogModel> vehiclesForFirstColumn = Model.Vehicles.Where((vehicle, index) => index % 3 == 0).ToList();
-    List<VehicleCatalogModel> vehiclesForSecondColumn = Model.Vehicles.Where((vehicle, index) => index % 3 == 1).ToList();
-    List<VehicleCatalogModel> vehiclesForThirdColumn = Model.Vehicles.Where((vehicle, index) => index % 3 == 2).ToList();
-}
-
-<h1 class="pt-5 mb-4" style="color:black; text-align:center">Explore Sam Car's Prices for Daily and Hourly Car Rental</h1>
-
-<hr class="featurette-divider mt-2 mb-3">
-
-<div class="d-flex flex-row col-sm-12 ">
-    <label class="mr-2">Show</label>
-    <form asp-controller="Catalog" asp-action="Index" method="post" >
-        <select name="pageSize" id="totalVehiclesDisplayedSelect" class="custom-select custom-select-sm form-control form-control-sm">
-            <option value="3">3</option>
-            <option value="6">6</option>
-            <option value="9">9</option>
-            <option value="12">12</option>
-            <option value="15">15</option>
-        </select>
-        <button id="changeNumberOfVehiclesBtn" type="submit" class="visually-hidden"></button>
-    </form>
-    <label class="ml-2">vehicles</label>
-    <div class="d-flex flex-row ml-auto">
-        <label class="mr-2">Search:</label>
-        <input id="searchCarInput" type="search" class="form-control form-control-sm" placeholder="Type here" style="width:70%">
+﻿<div id="catalogCarousel" class="carousel slide mt-5" data-bs-ride="carousel" style="max-width: 1024px; margin: auto;">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#catalogCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#catalogCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#catalogCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
     </div>
+    <div class="carousel-inner">
+        <div class="carousel-item active" data-bs-interval="10000">
+            <img src="~/Images/CatalogPage/slider_image1.png" class="d-block w-100" alt="">
+        </div>
+        <div class="carousel-item" data-bs-interval="10000">
+            <img src="https://picsum.photos/1024/300?grayscale" class="d-block w-100" alt="">
+        </div>
+        <div class="carousel-item" data-bs-interval="10000">
+            <img src="https://picsum.photos/1023/300?grayscale" class="d-block w-100" alt="">
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#catalogCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#catalogCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
 </div>
 
-<div class="container">
-    <div class="row mt-4">
+<section class="mt-5 text-center container">
+    <div class="row mt-5">
+        <div class="col-lg-6 col-md-8 mx-auto">
+            <h1 class="fw-light">Explore SamSolutions Vehicles Prices for Daily and Hourly Rental</h1>
+            <p class="lead text-muted">All vehicles are available for the rent and were provided by different people all over the world. Share your personal vehicles, rent them from other customers and feel all the charm and comfort of SamVehicles service.</p>
+            <p>
+                <button id="searchByCriteriaBtn" type="button" class="btn btn-primary my-2 me-1" data-bs-toggle="modal" data-bs-target="#searchByCriteriaModal">Search vehicles by criteria</button>
 
-        <div class="col">
-            @{
-                foreach (var vehicle in vehiclesForFirstColumn)
-                {
-                    <div class="card mb-4">
-
-                        <img class="card-img-top" src="~/vehicleImages/@vehicle.Image">
-
-                        <div class="card-body">
-                            <h3 class="card-title">@vehicle.Name</h3>
-                            <p class="card-text">@vehicle.BriefDescription</p>
-                            <h4 class="card-text">@vehicle.Tariff.TariffPerHour $<span class="text-muted h5">/hr - </span>@vehicle.Tariff.TariffPerDay $<span class="text-muted h5">/day</span></h4>
-                            <a href="@Url.Action("Index", "VehicleInformation", new {vehicleId = vehicle.Id})" class="btn btn-info mt-2" style="width:max-content">Information</a>
-                            <p></p>
-
-                            @if (vehicle.TimesOrdered == 0)
-                            {
-                                <p class="card-text"><small class="text-muted">New vehicle!</small></p>
-                            }
-                            else
-                            {
-                                int timeDaysDifference = Convert.ToInt32((DateTime.Now - (DateTime)vehicle.LastTimeOrdered).TotalDays);
-                                int timeHoursDifference = Convert.ToInt32((DateTime.Now - (DateTime)vehicle.LastTimeOrdered).TotalHours % 24);
-                                int timeMinutesDifference = Convert.ToInt32((DateTime.Now - (DateTime)vehicle.LastTimeOrdered).TotalMinutes % 24 % 60) + 1;
-
-                                <p class="card-text"><small class="text-muted">Last taken @(timeDaysDifference > 0 ? $"{timeDaysDifference} days " : "")@(timeHoursDifference > 0 ? $"{timeHoursDifference} hours " : "")@($"{timeMinutesDifference} mins") ago</small></p>
-                            }
-                        </div>
-                    </div>
-                }
-            }
-        </div>
-
-        <div class="col">
-            @{
-                foreach (var vehicle in vehiclesForSecondColumn)
-                {
-                    <div class="card mb-4">
-                        <img class="card-img-top" src="~/vehicleImages/@vehicle.Image">
-
-                        <div class="card-body">
-                            <h3 class="card-title">@vehicle.Name</h3>
-                            <p class="card-text">@vehicle.BriefDescription</p>
-                            <h4 class="card-text">@vehicle.Tariff.TariffPerHour $<span class="text-muted h5">/hr - </span>@vehicle.Tariff.TariffPerDay $<span class="text-muted h5">/day</span></h4>
-                            <a href="@Url.Action("Index", "VehicleInformation", new {vehicleId = vehicle.Id})" class="btn btn-info mt-2" style="width:max-content">Information</a>
-                            <p></p>
-
-                            @if (vehicle.TimesOrdered == 0)
-                            {
-                                <p class="card-text"><small class="text-muted">New vehicle!</small></p>
-                            }
-                            else
-                            {
-                                int timeDaysDifference = Convert.ToInt32((DateTime.Now - (DateTime)vehicle.LastTimeOrdered).TotalDays);
-                                int timeHoursDifference = Convert.ToInt32((DateTime.Now - (DateTime)vehicle.LastTimeOrdered).TotalHours % 24);
-                                int timeMinutesDifference = Convert.ToInt32((DateTime.Now - (DateTime)vehicle.LastTimeOrdered).TotalMinutes % 24 % 60) + 1;
-
-                                <p class="card-text"><small class="text-muted">Last taken @(timeDaysDifference > 0 ? $"{timeDaysDifference} days " : "")@(timeHoursDifference > 0 ? $"{timeHoursDifference} hours " : "")@($"{timeMinutesDifference} mins") ago</small></p>
-                            }
-                        </div>
-                    </div>
-                }
-            }
-        </div>
-
-        <div class="col">
-            @{
-                foreach (var vehicle in vehiclesForThirdColumn)
-                {
-                    <div class="card mb-4">
-                        <img class="card-img-top" src="~/vehicleImages/@vehicle.Image">
-
-                        <div class="card-body">
-                            <h3 class="card-title">@vehicle.Name</h3>
-                            <p class="card-text">@vehicle.BriefDescription</p>
-                            <h4 class="card-text">@vehicle.Tariff.TariffPerHour $<span class="text-muted h5">/hr - </span>@vehicle.Tariff.TariffPerDay $<span class="text-muted h5">/day</span></h4>
-                            <a href="@Url.Action("Index", "VehicleInformation", new {vehicleId = vehicle.Id})" class="btn btn-info mt-2" style="width:max-content">Information</a>
-                            <p></p>
-
-                            @if (vehicle.TimesOrdered == 0)
-                            {
-                                <p class="card-text"><small class="text-muted">New vehicle!</small></p>
-                            }
-                            else
-                            {
-                                int timeDaysDifference = Convert.ToInt32((DateTime.Now - (DateTime)vehicle.LastTimeOrdered).TotalDays);
-                                int timeHoursDifference = Convert.ToInt32((DateTime.Now - (DateTime)vehicle.LastTimeOrdered).TotalHours % 24);
-                                int timeMinutesDifference = Convert.ToInt32((DateTime.Now - (DateTime)vehicle.LastTimeOrdered).TotalMinutes % 24 % 60) + 1;
-
-                                <p class="card-text"><small class="text-muted">Last taken @(timeDaysDifference > 0 ? $"{timeDaysDifference} days " : "")@(timeHoursDifference > 0 ? $"{timeHoursDifference} hours " : "")@($"{timeMinutesDifference} mins") ago</small></p>
-                            }
-                        </div>
-                    </div>
-                }
-            }
+                <a asp-controller="SearchNearbyVehicles" asp-action="Index" class="btn btn-secondary my-2">Search nearby vehicles</a>
+            </p>
         </div>
     </div>
+</section>
+
+<h1 class="fw-light d-flex justify-content-center mt-4">Choose vehicle that suits you</h1>
+
+<div id="vehiclesPartialZone">
+
 </div>
 
+<div id="filterModalPartialZone">
 
-<div class="d-flex flex-row col-sm-12 ">
-    <div class="">
-        <div class="dataTables_info" id="dtOrderExample_info" role="status" aria-live="polite">Showing @Model.IndexOfFirstVehicleInTheList to @Model.IndexOfLastVehicleInTheList of @Model.NumberOfNotOrderedVehicles vehicles</div>
-    </div>
-    <div class="ml-auto">
-        <div class="dataTables_paginate paging_simple_numbers" id="dtOrderExample_paginate">
-            @if (pager.TotalPages > 0)
-            {
-                <ul class="pagination">
-
-                    @if (pager.CurrentPage > 1)
-                    {
-                        <li class="page-item">
-                            <a class="page-link" asp-controller="Catalog" asp-action="Index" asp-route-page="1">First</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" asp-controller="Catalog" asp-action="Index" asp-route-page="@(pager.CurrentPage - 1)">Previous</a>
-                        </li>
-                    }
-
-                    @for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
-                    {
-                        <li class="page-item @(pge == pager.CurrentPage ? "active" : "")">
-                            <a class="page-link" asp-controller="Catalog" asp-action="Index" asp-route-page="@pge">@pge</a>
-                        </li>
-                    }
-
-                    @if (pager.CurrentPage < pager.TotalPages)
-                    {
-                        <li class="page-item">
-                            <a class="page-link" asp-controller="Catalog" asp-action="Index" asp-route-page="@(pager.CurrentPage + 1)">Next</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" asp-controller="Catalog" asp-action="Index" asp-route-page="@(pager.TotalPages)">Last</a>
-                        </li>
-                    }
-
-                </ul>
-            }
-        </div>
-    </div>
 </div>
+
 
 <script src="~/js/catalogPage.js" asp-append-version="true"></script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-
-        var selectTag = document.getElementById("totalVehiclesDisplayedSelect");
-        const options = Array.from(selectTag.options);
-        const optionToSelect = options.find(item => item.text === "@Model.NumberOfVehiclesToBeDisplayed");
-        selectTag.value = optionToSelect.value;
-    });
+    $('#vehiclesPartialZone').load("/Catalog/VehiclesCatalogPartial");
+    $('#filterModalPartialZone').load("/Catalog/FilterModalPartial");
 </script>

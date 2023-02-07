@@ -14,7 +14,47 @@ function ShowSuccessfulMessageAfterLogout() {
 
     Toast.fire({
         icon: 'success',
-        title: 'Logged out successfully'
+        title: 'Logged out successfully.'
+    });
+}
+
+// Function to show message about successful filters adding 
+function ShowSuccessfulMessageAfterAppliedFilters() {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-start',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    });
+
+    Toast.fire({
+        icon: 'success',
+        title: 'Filters were applied successfully.'
+    });
+}
+
+// Function to show message about successful vehicle deletion
+function ShowSuccessfulMessageAfterVehicleWasDeleted() {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-start',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    });
+
+    Toast.fire({
+        icon: 'success',
+        title: 'Vehicle was deleted successfully.'
     });
 }
 
@@ -51,7 +91,7 @@ function ShowSuccessfulMessageAfterLogIn() {
 
     Toast.fire({
         icon: 'success',
-        title: 'Signed in successfully'
+        title: 'Signed in successfully.'
     });
 }
 
@@ -71,7 +111,7 @@ function ShowSuccessfulMessageAfterUserHasChangedAccountData() {
 
     Toast.fire({
         icon: 'success',
-        title: 'Account data was changed successfully'
+        title: 'Account data was changed successfully.'
     });
 }
 
@@ -91,7 +131,7 @@ function ShowSuccessfulMessageAfterUserHasChangedVehicleData() {
 
     Toast.fire({
         icon: 'success',
-        title: 'Vehicle data was changed successfully'
+        title: 'Vehicle data was changed successfully.'
     });
 }
 
@@ -111,11 +151,11 @@ function ShowSuccessfulMessageAfterUserHasChangedPassword() {
 
     Toast.fire({
         icon: 'success',
-        title: 'Password was changed successfully'
+        title: 'Password was changed successfully.'
     });
 }
 
-// Function to show message about unauthorized access attempt
+// Function to show message about successful vehicle addition
 function ShowSuccessfulCarSharingMessage() {
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
@@ -126,16 +166,16 @@ function ShowSuccessfulCarSharingMessage() {
 
     swalWithBootstrapButtons.fire({
         title: 'Successfuly shared!',
-        text: "Vehicle was added to your personal account page. Go there and activate it right now!",
+        text: "Vehicle was successfully sent to our administrators for review. Check vehicle status on Dashboard page right now!",
         icon: 'success',
         showCancelButton: true,
         confirmButtonColor: '#007aff',
-        confirmButtonText: 'Activate',
+        confirmButtonText: 'Check',
         cancelButtonText: 'Later',
         reverseButtons: true
     }).then((result) => {
         if (result.isConfirmed) {
-            window.location.href = '/CustomerPersonalAccount/';
+            window.location.href = '/Dashboard/';
         }
     })
 }
@@ -177,7 +217,7 @@ function ShowSuccessfulOrderFinishedMessage() {
 
     Toast.fire({
         icon: 'success',
-        title: 'Order was finished successfully'
+        title: 'Order was finished successfully.'
     });
 }
 

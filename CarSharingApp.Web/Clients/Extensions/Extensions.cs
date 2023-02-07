@@ -1,4 +1,6 @@
-﻿using Polly;
+﻿using Azure.Storage.Blobs;
+using CarSharingApp.Web.Clients.Interfaces;
+using Polly;
 using Polly.Contrib.WaitAndRetry;
 
 namespace CarSharingApp.Web.Clients.Extensions
@@ -17,6 +19,16 @@ namespace CarSharingApp.Web.Clients.Extensions
             .AddTransientHttpErrorPolicy(
             polictBuilder =>
                 polictBuilder.WaitAndRetryAsync(Backoff.DecorrelatedJitterBackoffV2(TimeSpan.FromSeconds(1), 4)));
+
+            return services;
+        }
+
+        public static IServiceCollection RegisterAzureBlobStorageClient<T>(this IServiceCollection services, T configuration) where T
+    : IConfigurationBuilder, IConfigurationRoot, IDisposable
+        {
+            services.AddSingleton(s => new BlobServiceClient(configuration["AzureBlobStorage:ConnectionString"]));
+
+            services.AddSingleton<IAzureBlobStoragePublicApiClient, BlobStoragePublicApiClient>();
 
             return services;
         }

@@ -1,4 +1,6 @@
-﻿namespace CarSharingApp.Models.ApplicationData
+﻿using System.Globalization;
+
+namespace CarSharingApp.Models.ApplicationData
 {
     public class Pager
     {
@@ -43,6 +45,6 @@
 
         public int TotalPages { get; set; }
         public int StartPage { get; set; }
-        public int EndPage { get; set; }
+        public int EndPage { get; set; } 
     }
 }

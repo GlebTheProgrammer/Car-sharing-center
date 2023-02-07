@@ -6,7 +6,6 @@ using CarSharingApp.Payment.StripeService;
 using CarSharingApp.Services;
 using CarSharingApp.Services.Interfaces;
 using Stripe;
-using System.Text;
 using CarSharingApp.Middlewares;
 using CarSharingApp.Repository.MongoDbRepository;
 using CarSharingApp.Web.Clients;
@@ -31,6 +30,14 @@ builder.Services.AddSingleton<ICustomerServicePublicApiClient, CustomerServicePu
 builder.Services.RegisterNewHttpClients("CustomersAPI", builder.Configuration);
 builder.Services.AddSingleton<IAuthorizationServicePublicApiClient, AuthorizationServicePublicApiClient>();
 builder.Services.RegisterNewHttpClients("AuthorizationAPI", builder.Configuration);
+builder.Services.AddSingleton<IAccountServicePublicApiClient, AccountServicePublicApiClient>();
+builder.Services.RegisterNewHttpClients("AccountsAPI", builder.Configuration);
+builder.Services.AddSingleton<IAzureADPublicApiClient, AzureADPublicApiClient>();
+builder.Services.RegisterNewHttpClients("AzureActiveDirectoryAPI", builder.Configuration);
+
+builder.Services.RegisterAzureBlobStorageClient(builder.Configuration);
+
+
 
 
 
@@ -56,7 +63,6 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 // Dependency injection is here
 builder.Services.AddSingleton<IPaymentSessionProvider, StripeSessionProvider>();
 
-builder.Services.AddScoped<IFileUploadService, LocalFileUploadService>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddTransient<IJwtProvider, JwtProvider>();
@@ -82,15 +88,6 @@ if (!app.Environment.IsDevelopment())
 
 app.UseSession();
 
-app.Use(async (context, next) =>
-{
-    var JWToken = context.Session.GetString("JWToken");
-    if (!string.IsNullOrEmpty(JWToken))
-    {
-        context.Request.Headers.Add("Authorization", "Bearer " + JWToken);
-    }
-    await next();
-});
 app.UseStaticFiles();
 app.UseAuthentication();
 app.UseRouting();

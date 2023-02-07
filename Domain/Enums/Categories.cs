@@ -82,5 +82,19 @@ namespace CarSharingApp.Domain.Enums
 
             return enumPossibleStringValues.ToList();
         }
+
+        public static bool TwoCategoryMatch(Categories standart, Categories comparand)
+        {
+            // standart  101
+            // comparand 001
+            // result    001
+
+            var comparison = standart & comparand;
+
+            if (comparison != comparand)
+                return false;
+
+            return true;
+        }
     }
 }
