@@ -30,6 +30,15 @@ namespace CarSharingApp.Web.Clients
             return await client.DeleteAsync(vehicleId);
         }
 
+        public async Task<HttpResponseMessage> GetAllApprovedAndPublishedNearbyVehiclesMapRepresentation(GetNearbyVehiclesMapRepresentationRequest request)
+        {
+            var client = CreateNewClientInstance(clientIdentifier);
+
+            JsonContent content = JsonContent.Create(request);
+
+            return await client.PostAsync("NearbyVehiclesMapRepresentation", content);
+        }
+
         public async Task<HttpResponseMessage> GetAllApprovedAndPublishedVehiclesCatalogRepresentation()
         {
             var client = CreateNewClientInstance(clientIdentifier);

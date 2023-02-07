@@ -1,0 +1,152 @@
+﻿@inject IConfiguration _configuration;
+@model List<CarSharingApp.Application.Contracts.Vehicle.VehicleDisplayOnMap>;
+
+<div class="container-fluid">
+    <div id="map" class="text-center" style="height: 75vh; width: 100%;"></div>
+    <script type="text/javascript">
+        // Define variables section goes here
+        var map;
+        const vehiclesMarkerArray = [];
+        const userMarkersArray = [];
+        var userCurrentLatitude;
+        var userCurrentLongitude;
+
+        var vehiclesListModel = '@(Html.Raw(Json.Serialize(Model)))';
+        var vehiclesJsonListModel = JSON.parse(vehiclesListModel);
+        var vehicleImagesUrl = "@(_configuration["AzureBlobStorage:VehiclesImagesPath"])";
+        var infoWindowsContent = [];
+        for (let i = 0; i < vehiclesJsonListModel.length; i++) {
+            var contentString = '<div>' +
+                '<h5 class="card-title">' + vehiclesJsonListModel[i]['name'] + '</h5>' +
+                '<img src="' + vehicleImagesUrl + vehiclesJsonListModel[i]['image'] + '" style="max-width: 150px;">' +
+                '</div>';
+
+            infoWindowsContent.push(contentString);
+        }
+        // Define variables section ends here
+
+        function initMap(vehicles) {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 53.90588468960213, lng: 27.555191727187893 },
+                zoom: 11
+            });
+
+            var infoWindow = new google.maps.InfoWindow({
+                disableAutoPan: true
+            });
+            for (let i = 0; i < vehiclesJsonListModel.length; i++) {
+                const marker = new google.maps.Marker(
+                {
+                    position: new google.maps.LatLng(vehiclesJsonListModel[i]['latitude'], vehiclesJsonListModel[i]['longitude']),
+                    map: map,
+                    title: vehiclesJsonListModel[i]['name'],
+                    icon: {
+                        url: "/Icons/vehicleIcon.png",
+                        scaledSize: new google.maps.Size(40, 40)
+                    },
+                    animation: google.maps.Animation.DROP
+                });
+                google.maps.event.addListener(marker, 'mouseover', function () {
+                    infoWindow.setContent(infoWindowsContent[i]),
+                        infoWindow.open(map, marker)
+                });
+                google.maps.event.addListener(marker, 'mouseout', function () {
+                    infoWindow.close()
+                });
+                vehiclesMarkerArray.push(marker);
+            }
+
+            const locationButton = document.createElement("button");
+            locationButton.textContent = "Pan to My Current Location";
+            locationButton.classList.add("custom-map-control-button");
+            map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
+            locationButton.addEventListener("click", () => {
+                // Try HTML5 geolocation.
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            const pos = {
+                                lat: position.coords.latitude,
+                                lng: position.coords.longitude,
+                            };
+
+                            userCurrentLatitude = pos.lat;
+                            userCurrentLongitude = pos.lng;
+
+                            map.setCenter(pos);
+
+                            for (let i = 0; i < userMarkersArray.length; i++) {
+                                userMarkersArray[i].setMap(null);
+                            }
+
+                            const marker = new google.maps.Marker(
+                            {
+                                position: new google.maps.LatLng(pos.lat, pos.lng),
+                                map: map,
+                                title: "You are here.",
+                                icon: {
+                                    url: "/Icons/personIcon.png",
+                                    scaledSize: new google.maps.Size(40, 40)
+                                },
+                                animation: google.maps.Animation.DROP
+                            });
+                        },
+                        () => {
+                            handleLocationError(true);
+                        }
+                    );
+                } else {
+                    // Browser doesn't support Geolocation
+                    handleLocationError(false);
+                }
+            });
+
+            const searchNearbyVehiclesButton = document.getElementById("searchNearbyVehiclesBtn");
+            searchNearbyVehiclesButton.addEventListener("click", () => {
+
+                Swal.fire({
+                    title: 'How many vehicles we are looking for?',
+                    input: 'number',
+                    inputAttributes: {
+                        autocapitalize: 'off'
+                    },
+                    showCancelButton: true,
+                    confirmButtonText: 'Look up',
+                    showLoaderOnConfirm: true,
+                    preConfirm: (vehiclesNumber) => {
+                        return fetch('/SearchNearbyVehicles/GetNearbyVehicles?latitude=' + userCurrentLatitude + '&longitude=' + userCurrentLongitude + '&vehiclesCount=' + vehiclesNumber)
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error(response.statusText)
+                                }
+                                return response.json()
+                            })
+                            .catch(error => {
+                                Swal.showValidationMessage(
+                                    `Request failed: ${error}`
+                                )
+                            })
+                    },
+                    allowOutsideClick: () => !Swal.isLoading()
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: `${result.value.login}'s avatar`,
+                            imageUrl: result.value.avatar_url
+                        })
+                    }
+                })
+
+            });
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9AIXs7jB_3r8oRc1zd0i9p0nanEH5Q6M&callback=initMap" async defer></script>
+</div>
+
+<script>
+    function handleLocationError(browserHasGeolocation) {
+            browserHasGeolocation
+        ? ShowErrorMessageAfterGeolocationServiceFailed("Error: The Geolocation service failed.")
+        : ShowErrorMessageAfterGeolocationServiceFailed("Error: Your browser doesn't support geolocation.")
+    }
+</script>

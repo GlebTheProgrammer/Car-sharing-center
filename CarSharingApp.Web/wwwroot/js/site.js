@@ -18,6 +18,18 @@ function ShowSuccessfulMessageAfterLogout() {
     });
 }
 
+//Function to show message about error when tried to get current user location
+function ShowErrorMessageAfterGeolocationServiceFailed(errorMessage) {
+    Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: errorMessage,
+        confirmButtonColor: '#257cfd',
+        timer: 10000,
+        timerProgressBar: true
+    })
+}
+
 // Function to show message about successful filters adding 
 function ShowSuccessfulMessageAfterAppliedFilters() {
     const Toast = Swal.mixin({

@@ -10,6 +10,7 @@ using CarSharingApp.PublicApi.Primitives;
 using CarSharingApp.Domain.ValueObjects;
 using CarSharingApp.Domain.SmartEnums;
 using static CarSharingApp.Domain.Enums.FlagEnums;
+using System.Globalization;
 
 namespace CarSharingApp.PublicApi.Controllers
 {
@@ -138,6 +139,40 @@ namespace CarSharingApp.PublicApi.Controllers
                     return Ok(MapVehicleCatalogResponse(vehiclesThatMatchCriteriaAndCategories.Where(v => v.CustomerId == Guid.Parse(jwtClaims.Id)).ToList()));
             }
         }
+
+        [HttpPost("NearbyVehiclesMapRepresentation")]
+        public async Task<IActionResult> GetVehiclesByCriteria(GetNearbyVehiclesMapRepresentationRequest request)
+        {
+            List<Vehicle> getVehiclesResult = await _vehicleService.GetAllAsync();
+
+            List<Vehicle> publisedAndApprovedVehicles = getVehiclesResult.Where(v => v.Status.IsPublished && v.Status.IsConfirmedByAdmin).ToList();
+
+            const int EarthRadiusKm = 6371;
+
+            Dictionary<Guid, double> VehicleGuid_Distance = new Dictionary<Guid, double>();
+
+            foreach (var vehicle in publisedAndApprovedVehicles)
+            {
+                var latitudeDiff = (Math.PI / 180) * double.Parse(vehicle.Location.Latitude, CultureInfo.InvariantCulture) - (Math.PI / 180) * double.Parse(request.UserLatitude, CultureInfo.InvariantCulture);
+                var longitudeDiff = (Math.PI / 180) * double.Parse(vehicle.Location.Longitude, CultureInfo.InvariantCulture) - (Math.PI / 180) * double.Parse(request.UserLongitude, CultureInfo.InvariantCulture);
+
+                var a = Math.Pow(Math.Sin(latitudeDiff / 2), 2) + Math.Cos(double.Parse(request.UserLatitude, CultureInfo.InvariantCulture)) * Math.Cos(double.Parse(vehicle.Location.Latitude, CultureInfo.InvariantCulture)) * Math.Pow(Math.Sin(longitudeDiff / 2), 2);
+                var c = 2 * Math.Asin(Math.Sqrt(a));
+                var kmDifference = c * EarthRadiusKm;
+
+                VehicleGuid_Distance.Add(vehicle.Id, kmDifference);
+            }
+
+            List<Vehicle> sortedNearbyVehicles = new List<Vehicle>();
+            foreach (var vehicle in VehicleGuid_Distance.OrderBy(v => v.Value))
+            {
+                sortedNearbyVehicles.Add(publisedAndApprovedVehicles.Find(v => v.Id == vehicle.Key) ??
+                    throw new Exception(nameof(vehicle)));
+            }
+
+            return Ok(MapVehicleMapResponse(sortedNearbyVehicles));
+        }
+
 
         [HttpPut("{id:guid}")]
         [Authorize]
