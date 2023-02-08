@@ -4,11 +4,10 @@
             <h1 class="fw-light">Fast and Convenient Opportunity</h1>
             <p class="lead text-muted">New here? Please read the instruction below before starting using an existing feature.</p>
             <p>
-                <button id="openGuideModalBtn" type="button" class="btn btn-primary my-2 me-1" data-bs-toggle="modal" data-bs-target="#guidanceModal">Read The Guidance</button>
-            </p>
-            <h1 class="fw-light">Actions available</h1>
-            <p>
-                <button id="searchNearbyVehiclesBtn" type="button" class="btn btn-secondarymy-2 me-1">Search nearby vehicles</button>
+                <button id="openGuideModalBtn" type="button" class="btn btn-primary my-2 me-1" data-bs-toggle="modal" data-bs-target="#guidanceModal">
+                    Read The Guidance
+                </button>
+                <button id="searchNearbyVehiclesBtn" type="button" class="btn btn-secondary my-2 me-1">Search nearby vehicles</button>
             </p>
         </div>
     </div>
@@ -22,7 +21,25 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body py-0">
-                <p>Choose any options that suit your taste, and then our system will display vehicles for you according to your preferences.</p>
+                <p class="text-center">
+                    Welcome to the "Nearby vehicles search" page. We are very pleased that you have decided to use our service for the selection of vehicles nearest to you. Please read instructions below before using it. Thank you for being with us &#10084;
+                </p>
+                <h5>Instructions</h5>
+                <p>
+                    1. Before we can show you nearest vehicles, we need to get access to your current location. Grant the site permission to receive your geolocation data.
+                </p>
+                <p>
+                    2. After allowing access to geolocation, click on the <span class="badge text-bg-light">Pan to My Current Location</span> button on the map, after which your current location will appear on the map. If the location was found incorrectly, try again.
+                </p>
+                <p>
+                    3. Next, click on the <span class="badge text-bg-secondary">Search nearby vehicles</span> button next to the <span class="badge text-bg-primary">Read The Guidance</span> button, after which popup menu will be opened, where you have to enter desired number of vehicles to search, after which our service will look through the catalog and display all found vehicles below in the form of a table.
+                </p>
+                <p>
+                    4. By selecting the appropriate vehicle from the table below, using the opposite button you can find out how to get to the vehicle in the shortest time. The service will select the nearest route from your location to the location of the vehicle.
+                </p>
+                <p>
+                    5. If you have changed your location and want to use the search again, we strongly recommend refreshing the page, but you can still try to do it on the current one. Good luck dear vehicle lover!
+                </p>
             </div>
             <div class="modal-footer flex-column border-top-0">
                 <button type="button" class="btn btn-lg btn-light w-50 mx-0" data-bs-dismiss="modal">Close</button>
@@ -32,7 +49,6 @@
 </div>
 
 <div id="mapPartialZone" class="mt-4">
-    
 </div>
 
 <script>

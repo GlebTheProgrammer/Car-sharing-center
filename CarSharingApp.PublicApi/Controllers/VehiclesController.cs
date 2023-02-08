@@ -141,7 +141,7 @@ namespace CarSharingApp.PublicApi.Controllers
         }
 
         [HttpPost("NearbyVehiclesMapRepresentation")]
-        public async Task<IActionResult> GetVehiclesByCriteria(GetNearbyVehiclesMapRepresentationRequest request)
+        public async Task<IActionResult> GetNearbyVehiclesMapRepresentation(GetNearbyVehiclesMapRepresentationRequest request)
         {
             List<Vehicle> getVehiclesResult = await _vehicleService.GetAllAsync();
 
@@ -164,13 +164,15 @@ namespace CarSharingApp.PublicApi.Controllers
             }
 
             List<Vehicle> sortedNearbyVehicles = new List<Vehicle>();
-            foreach (var vehicle in VehicleGuid_Distance.OrderBy(v => v.Value))
+            List<double> kmDiffList = new List<double>(); 
+            foreach (var vehicle in VehicleGuid_Distance.OrderBy(v => v.Value).Take(request.Count))
             {
                 sortedNearbyVehicles.Add(publisedAndApprovedVehicles.Find(v => v.Id == vehicle.Key) ??
                     throw new Exception(nameof(vehicle)));
+                kmDiffList.Add(vehicle.Value);
             }
 
-            return Ok(MapVehicleMapResponse(sortedNearbyVehicles));
+            return Ok(MapNearbyVehicleMapResponse(sortedNearbyVehicles, kmDiffList));
         }
 
 
@@ -295,6 +297,30 @@ namespace CarSharingApp.PublicApi.Controllers
             }
 
             return new VehiclesDisplayOnMapResponse(resultList);
+        }
+
+        private NearbyVehiclesDisplayOnMapResponse MapNearbyVehicleMapResponse(List<Vehicle> vehicles, List<double> kmDiffList)
+        {
+            var resultList = new List<NearbyVehicleDisplayOnMapResponse>();
+
+            int counter = 0;
+            foreach (var vehicle in vehicles)
+            {
+                string vehicleHourlPyrice = $"{vehicle.Tariff.HourlyRentalPrice}";
+                string vehicleDailyPrice = $"{vehicle.Tariff.DailyRentalPrice}";
+
+                resultList.Add(new NearbyVehicleDisplayOnMapResponse(
+                    vehicle.Name,
+                    vehicle.Image,
+                    vehicle.Location.Latitude,
+                    vehicle.Location.Longitude,
+                    vehicleHourlPyrice.Length > 3 ? vehicleHourlPyrice.Insert(vehicleHourlPyrice.Length - 3, ",") : vehicleHourlPyrice,
+                    vehicleDailyPrice.Length > 3 ? vehicleDailyPrice.Insert(vehicleDailyPrice.Length - 3, ",") : vehicleDailyPrice,
+                    vehicle.TimesOrdered,
+                    $"{kmDiffList[counter++]}"[..4]));
+            }
+
+            return new NearbyVehiclesDisplayOnMapResponse(resultList);
         }
 
         private VehiclesDisplayInCatalogResponse MapVehicleCatalogResponse(List<Vehicle> vehicles)

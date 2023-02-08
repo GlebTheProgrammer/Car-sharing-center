@@ -38,7 +38,7 @@ namespace CarSharingApp.Web.Controllers
 
         #endregion
 
-        public async Task<IActionResult> GetNearbyVehicles(string latitude, string longitude, int vehiclesCount)
+        public async Task<JsonResult> GetNearbyVehicles(string latitude, string longitude, int vehiclesCount)
         {
             var requestModel = new GetNearbyVehiclesMapRepresentationRequest(latitude, longitude, vehiclesCount);
 
@@ -46,12 +46,11 @@ namespace CarSharingApp.Web.Controllers
 
             response.EnsureSuccessStatusCode();
 
-            VehiclesDisplayOnMapResponse responseModel = await response.Content.ReadFromJsonAsync<VehiclesDisplayOnMapResponse>()
+            NearbyVehiclesDisplayOnMapResponse responseModel = await response.Content.ReadFromJsonAsync<NearbyVehiclesDisplayOnMapResponse>()
                 ?? throw new NullReferenceException(nameof(responseModel));
 
-            var viewModel = responseModel.Vehicles;
-
-            return PartialView("_MapArticle", viewModel);
+            var resStr = await response.Content.ReadAsStringAsync();
+            return Json(responseModel);
         }
     }
 }
