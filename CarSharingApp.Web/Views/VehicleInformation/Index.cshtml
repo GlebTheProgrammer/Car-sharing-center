@@ -1,13 +1,12 @@
-﻿@using System.IdentityModel.Tokens.Jwt;
-@inject IHttpContextAccessor Accessor;
-@model CarSharingApp.Models.MongoView.VehicleInformationModel;
+﻿@inject IConfiguration _configuration;
+@model CarSharingApp.Application.Contracts.Vehicle.VehicleInformationResponse;
 
-<main class="container mt-5">
+<main class="container mt-5 mb-5">
 
-    @if (Model.OwnerId == new JwtSecurityTokenHandler().ReadJwtToken(Accessor.HttpContext.Session.GetString("JWToken")).Claims.First(c => c.Type == JwtRegisteredClaimNames.Sub).Value)
+    @if (Model.IsOfferedCustomerVehicle)
     {
-        <div class="alert alert-info position-sticky" role="alert">
-            This is your vehicle. You can't rent your own vehicle, but you can still check its profile.
+        <div class="alert text-center alert-warning position-sticky" role="alert">
+            This is your vehicle. You can't rent your own vehicles, but still can check their pages.
         </div>
     }
 
@@ -17,22 +16,22 @@
                 Vehicle Details
             </h3>
 
-            <img class="img-fluid mt-3 mx-auto d-block rounded" style="height: auto" src="~/vehicleImages/@Model.Image">
+            <img class="img-fluid mt-3 mx-auto d-block rounded" style="height: auto" src="@(_configuration["AzureBlobStorage:VehiclesImagesPath"] + Model.Image)">
 
             <article class="blog-post mt-2">
                 <h2 class="blog-post-title">@Model.Name</h2>
-                <p class="blog-post-meta">Published: @(Model.PublishedTime.Month) @(Model.PublishedTime.Day), @(Model.PublishedTime.Year) by <a href="@Url.Action("Index", "CustomerProfile", new {vehicleId = Model.VehicleId})">@Model.OwnerUsername</a></p>
+                <p class="blog-post-meta">Published: @(Model.PublishedTime.ToString("dd/MM/yyyy")) by <a href="@Url.Action("Index", "CustomerProfile", new {vehicleId = Model.Id})">@Model.CustomerLogin</a></p>
 
                 <p>@Model.Description</p>
                 <hr>
             </article>
             @{
-                var latModel = float.Parse(Model.Location.Latitude.Replace('.', ','));
-                var longModel = float.Parse(Model.Location.Longitude.Replace('.', ','));
+                var latModel = float.Parse(Model.Latitude.Replace('.', ','));
+                var longModel = float.Parse(Model.Longitude.Replace('.', ','));
             }
             <article class="blog-post">
-                <h3>Vehicle location</h3>
-                <p>You can see vehicle location (@Model.Location.Address) on the map and check if it suits you:</p>
+                <h3>Location</h3>
+                <p>You can see vehicle location (@Model.StreetAddress) on the map and check if it suits you:</p>
                 <div class="mt-4 mb-2">
                     <div class="container-fluid">
                         <div id="map" class="text-center" style="height: 400px; width: 100%;"></div>
@@ -68,6 +67,23 @@
             </article>
 
             <article class="blog-post">
+                <h3>Related Categories</h3>
+                <p>Here you can see all the categories that vehicle's owner selected:</p>
+                <div class="text-center">
+                    @foreach (var category in Model.Categories)
+                    {
+                        if (category.Equals("None"))
+                        {
+                            <h4>Vehicle owner did not added any category.</h4>
+                        }
+
+                        <span class="badge rounded-pill text-bg-primary">@category</span>
+                    }
+                </div>
+                <hr>
+            </article>
+
+            <article class="blog-post">
                 <h3>Information table</h3>
                 <p>Here you can see all the detailed information about the vehicle:</p>
                 <table class="table">
@@ -84,15 +100,15 @@
                         </tr>
                         <tr>
                             <td>Max speed</td>
-                            <td class="text-center">@Model.MaxSpeed</td>
+                            <td class="text-center">@Model.MaxSpeedKph</td>
                         </tr>
                         <tr>
                             <td>Exterior color</td>
-                            <td class="text-center">@Model.ExteriorColor</td>
+                            <td class="text-center">@Model.ExteriorColour</td>
                         </tr>
                         <tr>
                             <td>Interior color</td>
-                            <td class="text-center">@Model.InteriorColor</td>
+                            <td class="text-center">@Model.InteriorColour</td>
                         </tr>
                         <tr>
                             <td>Drivetrain</td>
@@ -124,18 +140,18 @@
         </div>
 
         <div class="col-md-4">
-            <div class="position-sticky" style="top: 4rem;">
-                <div class="p-4 mb-3 bg-light rounded">
+            <div class="position-sticky" style="top: 5rem;">
+                <div class="mt-4 mb-4 rounded">
                     <h4 class="fst-italic">Description</h4>
                     <p class="mb-0">@Model.BriefDescription</p>
                 </div>
 
                 <div class="ml-4 mt-4">
-                    <h4 class="fst-italic mb-3">Rating (@(Model.Rating.ReviewsCount) reviews)</h4>
+                    <h4 class="fst-italic mb-3">Rating (0 reviews)</h4>
                     <span class="h6 mr-1">Condition:</span>
-                    <span class="card-text">@Math.Round(Model.Rating.Condition, 1) </span>
+                    <span class="card-text">5 </span>
                     @{
-                        double rating = Math.Round(Model.Rating.Condition, 1);
+                        double rating = 5;
                         for (int i = 0; i < 5; i++)
                         {
                             if (rating > i && rating >= i + 1)
@@ -150,7 +166,7 @@
                                 }
                                 else
                                 {
-                                        <span class="fa fa-star"></span>
+                                    <span class="fa fa-star"></span>
                                 }
                             }
                         }
@@ -159,9 +175,9 @@
 
                 <div class="ml-4 mt-1">
                     <span class="h6 mr-1">Fuel consumption:</span>
-                    <span class="card-text">@Math.Round(Model.Rating.FuelConsumption, 1) </span>
+                    <span class="card-text">5 </span>
                     @{
-                        rating = Math.Round(Model.Rating.FuelConsumption, 1);
+                        rating = 5;
                         for (int i = 0; i < 5; i++)
                         {
                             if (rating > i && rating >= i + 1)
@@ -176,7 +192,7 @@
                                 }
                                 else
                                 {
-                                        <span class="fa fa-star"></span>
+                                    <span class="fa fa-star"></span>
                                 }
                             }
                         }
@@ -185,9 +201,9 @@
 
                 <div class="ml-4 mt-1">
                     <span class="h6 mr-1">Easy to drive:</span>
-                    <span class="card-text">@Math.Round(Model.Rating.EasyToDrive, 1) </span>
+                    <span class="card-text">5 </span>
                     @{
-                        rating = Math.Round(Model.Rating.EasyToDrive, 1);
+                        rating = 5;
                         for (int i = 0; i < 5; i++)
                         {
                             if (rating > i && rating >= i + 1)
@@ -202,7 +218,7 @@
                                 }
                                 else
                                 {
-                                        <span class="fa fa-star"></span>
+                                    <span class="fa fa-star"></span>
                                 }
                             }
                         }
@@ -211,9 +227,9 @@
 
                 <div class="ml-4 mt-1">
                     <span class="h6 mr-1">Family-friendly:</span>
-                    <span class="card-text">@Math.Round(Model.Rating.FamilyFriendly, 1) </span>
+                    <span class="card-text">5 </span>
                     @{
-                        rating = Math.Round(Model.Rating.FamilyFriendly, 1);
+                        rating = 5;
                         for (int i = 0; i < 5; i++)
                         {
                             if (rating > i && rating >= i + 1)
@@ -228,7 +244,7 @@
                                 }
                                 else
                                 {
-                                        <span class="fa fa-star"></span>
+                                    <span class="fa fa-star"></span>
                                 }
                             }
                         }
@@ -237,9 +253,9 @@
 
                 <div class="ml-4 mt-1">
                     <span class="h6 mr-1">SUV:</span>
-                    <span class="card-text">@Math.Round(Model.Rating.SUV, 1) </span>
+                    <span class="card-text">5 </span>
                     @{
-                        rating = Math.Round(Model.Rating.SUV, 1);
+                        rating = 5;
                         for (int i = 0; i < 5; i++)
                         {
                             if (rating > i && rating >= i + 1)
@@ -254,7 +270,7 @@
                                 }
                                 else
                                 {
-                                        <span class="fa fa-star"></span>
+                                    <span class="fa fa-star"></span>
                                 }
                             }
                         }
@@ -263,9 +279,9 @@
 
                 <div class="ml-4 mt-4">
                     <span class="h4 mr-1">Overall:</span>
-                    <span class="card-text">@Math.Round(Model.Rating.Overall, 1) </span>
+                    <span class="card-text">5 </span>
                     @{
-                        rating = Math.Round(Model.Rating.Overall, 1);
+                        rating = 5;
                         for (int i = 0; i < 5; i++)
                         {
                             if (rating > i && rating >= i + 1)
@@ -289,15 +305,15 @@
 
                 <div class="ml-4 mt-4">
                     <h4 class="fst-italic">Price</h4>
-                    <h4 class="card-text">@Model.Tariff.TariffPerHour $<span class="text-muted h5">/hr - </span>@Model.Tariff.TariffPerDay $<span class="text-muted h5">/day</span></h4>
+                    <h4 class="card-text">@Model.HourlyRentalPrice $<span class="text-muted h5">/hr - </span>@Model.DailyRentalPrice $<span class="text-muted h5">/day</span></h4>
                 </div>
 
                 <nav class="blog-pagination ml-4 mt-4" aria-label="Pagination">
 
                     <!-- Button trigger modal -->
-                    @if (Model.OwnerId != new JwtSecurityTokenHandler().ReadJwtToken(Accessor.HttpContext.Session.GetString("JWToken")).Claims.First(c => c.Type == JwtRegisteredClaimNames.Sub).Value)
+                    @if (!Model.IsOfferedCustomerVehicle)
                     {
-                        <button type="button" class="btn btn-outline-primary mr-2" data-bs-toggle="modal" data-bs-target="#rentalModal">
+                        <button type="button" class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#rentalModal">
                             Order
                         </button>
                     }
@@ -315,7 +331,7 @@
 </div>
 
 <script>
-    $('#partialZone_PaymentModal').load("/VehicleInformation/RentOrderPartial", { vehicleId: "@Model.VehicleId", vehicleName: "@Model.Name", tariffPerHour: "@Model.Tariff.TariffPerHour", tariffPerDay: "@Model.Tariff.TariffPerDay" });
+    $('#partialZone_PaymentModal').load("/VehicleInformation/RentOrderPartial", { vehicleId: "@Model.Id", vehicleName: "@Model.Name", tariffPerHour: "@Model.HourlyRentalPrice", tariffPerDay: "@Model.DailyRentalPrice" });
 </script>
 
 

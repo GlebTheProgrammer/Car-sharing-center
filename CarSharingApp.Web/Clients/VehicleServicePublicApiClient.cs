@@ -62,6 +62,13 @@ namespace CarSharingApp.Web.Clients
             return await client.PostAsync("CriteriaCatalogRepresentation", content);
         }
 
+        public async Task<HttpResponseMessage> GetVehicleInformation(Guid id)
+        {
+            var client = CreateNewClientInstance(clientIdentifier);
+
+            return await client.GetAsync("Information" + $"?id={id}");
+        }
+
         public async Task<HttpResponseMessage> UpdateVehicleStatus(UpdateVehicleStatusRequest request)
         {
             var client = CreateNewClientInstance(clientIdentifier);

@@ -17,10 +17,12 @@ namespace CarSharingApp.PublicApi.Controllers
     public sealed class VehiclesController : ApiController
     {
         private readonly IVehicleService _vehicleService;
+        private readonly ICustomerService _customerService;
 
-        public VehiclesController(IVehicleService vehicleService)
+        public VehiclesController(IVehicleService vehicleService, ICustomerService customerService)
         {
             _vehicleService = vehicleService;
+            _customerService = customerService;
         }
 
         [HttpPost]
@@ -61,6 +63,35 @@ namespace CarSharingApp.PublicApi.Controllers
                 vehicle => Ok(MapVehicleResponse(vehicle)),
                 errors => Problem(errors));
         }
+
+        [HttpGet("Information")]
+        [Authorize]
+        public async Task<IActionResult> GetVehicleInformation(Guid id)
+        {
+            JwtClaims? jwtClaims = GetJwtClaims();
+
+            if (jwtClaims is null)
+            {
+                return Forbid();
+            }
+
+            ErrorOr<Vehicle> getVehicleResult = await _vehicleService.GetVehicleAsync(id);
+            if (getVehicleResult.IsError)
+            {
+                return Problem(getVehicleResult.Errors);
+            }
+            Vehicle vehicle = getVehicleResult.Value;
+
+            ErrorOr<Customer> getCustomerResult = await _customerService.GetCustomerAsync(vehicle.CustomerId);
+            if (getCustomerResult.IsError)
+            {
+                return Problem(getCustomerResult.Errors);
+            }
+            Customer customer = getCustomerResult.Value;
+
+            return Ok(MapVehicleInformationResponse(vehicle, customer, jwtClaims.Id));
+        }
+
 
         [HttpGet("MapRepresentation")]
         public async Task<IActionResult> GetVehiclesMapRepresentation()
@@ -281,6 +312,40 @@ namespace CarSharingApp.PublicApi.Controllers
                 vehicle.PublishedTime,
                 vehicle.LastTimeOrdered,
                 vehicle.Status);
+        }
+
+        private VehicleInformationResponse MapVehicleInformationResponse(Vehicle vehicle, Customer owner, string requestedCustomerId)
+        {
+            return new VehicleInformationResponse(
+                vehicle.Id.ToString(),
+                owner.Credentials.Login,
+                owner.Id.ToString(),
+                vehicle.Name,
+                vehicle.Image,
+                vehicle.BriefDescription,
+                vehicle.Description,
+                $"{vehicle.Tariff.HourlyRentalPrice}",
+                $"{vehicle.Tariff.DailyRentalPrice}",
+                vehicle.Location.StreetAddress,
+                vehicle.Location.AptSuiteEtc,
+                vehicle.Location.City,
+                vehicle.Location.Country.Name,
+                vehicle.Location.Latitude,
+                vehicle.Location.Longitude,
+                vehicle.Specifications.ProductionYear,
+                vehicle.Specifications.MaxSpeedKph,
+                vehicle.Specifications.ExteriorColor.Name,
+                vehicle.Specifications.InteriorColor.Name,
+                vehicle.Specifications.Drivetrain.Name,
+                vehicle.Specifications.FuelType.Name,
+                vehicle.Specifications.Transmission.Name,
+                vehicle.Specifications.Engine.Name,
+                vehicle.Specifications.VIN,
+                FlagEnums.GetListFromCategories(vehicle.Categories),
+                vehicle.TimesOrdered,
+                vehicle.PublishedTime,
+                vehicle.LastTimeOrdered,
+                vehicle.CustomerId.ToString().Equals(requestedCustomerId));
         }
 
         private VehiclesDisplayOnMapResponse MapVehicleMapResponse(List<Vehicle> vehicles)
