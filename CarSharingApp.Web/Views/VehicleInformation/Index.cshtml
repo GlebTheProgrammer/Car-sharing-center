@@ -26,8 +26,9 @@
                 <hr>
             </article>
             @{
-                var latModel = float.Parse(Model.Latitude.Replace('.', ','));
-                var longModel = float.Parse(Model.Longitude.Replace('.', ','));
+                var latModel = float.Parse(Model.Latitude);
+                var longModel = float.Parse(Model.Longitude);
+                //var longModel = float.Parse(Model.Longitude.Replace('.', ','));
             }
             <article class="blog-post">
                 <h3>Location</h3>

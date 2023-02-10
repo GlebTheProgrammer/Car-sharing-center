@@ -2,10 +2,12 @@
 using CarSharingApp.Application.Contracts.Vehicle;
 using CarSharingApp.Payment;
 using CarSharingApp.Web.Clients.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarSharingApp.Controllers
 {
+    [Authorize]
     public class VehicleInformationController : Controller
     {
         private readonly IVehicleServicePublicApiClient _vehicleServiceClient;
@@ -74,7 +76,7 @@ namespace CarSharingApp.Controllers
         }
 
         // Partial section starts here
-
+        
         public IActionResult RentOrderPartial(string vehicleId, string vehicleName, string tariffPerHour, string tariffPerDay)
         {
             var viewModel = new PaymentModel()

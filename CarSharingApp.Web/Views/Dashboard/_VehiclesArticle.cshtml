@@ -216,22 +216,35 @@
 
     // When user click delete vehicle button on vehicles table
     function DeleteVehicle(vehicleId, vehicleImage){
-        var value = $("#searchInput").val();
-        if (document.getElementById("searchByNameRadio").checked) {
-            $('#vehiclesPartialZone').load("/Dashboard/DeleteVehicleAndRenderVehiclesArticlePartial?vehicleId=" + vehicleId + "&vehicleImage=" + vehicleImage + "&searchBy=Name&searchInput=" + value, function(responseTxt, statusTxt, xhr){
-                if (statusTxt === "success"){
-                    UpdateStatisticsAndNotesArticles();
-                    ShowSuccessfulMessageAfterVehicleWasDeleted();
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Vehicle will be deleted with all history!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#4FA64F',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var value = $("#searchInput").val();
+                if (document.getElementById("searchByNameRadio").checked) {
+                    $('#vehiclesPartialZone').load("/Dashboard/DeleteVehicleAndRenderVehiclesArticlePartial?vehicleId=" + vehicleId + "&vehicleImage=" + vehicleImage + "&searchBy=Name&searchInput=" + value, function (responseTxt, statusTxt, xhr) {
+                        if (statusTxt === "success") {
+                            UpdateStatisticsAndNotesArticles();
+                            ShowSuccessfulMessageAfterVehicleWasDeleted();
+                        }
+                    });
+                } else if (document.getElementById("searchByPriceRadio").checked) {
+                    $('#vehiclesPartialZone').load("/Dashboard/DeleteVehicleAndRenderVehiclesArticlePartial?vehicleId=" + vehicleId + "&vehicleImage=" + vehicleImage + "&searchBy=Price&searchInput=" + value, function (responseTxt, statusTxt, xhr) {
+                        if (statusTxt === "success") {
+                            UpdateStatisticsAndNotesArticles();
+                            ShowSuccessfulMessageAfterVehicleWasDeleted();
+                        }
+                    });
                 }
-            });
-        } else if (document.getElementById("searchByPriceRadio").checked) {
-            $('#vehiclesPartialZone').load("/Dashboard/DeleteVehicleAndRenderVehiclesArticlePartial?vehicleId=" + vehicleId + "&vehicleImage=" + vehicleImage + "&searchBy=Price&searchInput=" + value, function(responseTxt, statusTxt, xhr){
-                if (statusTxt === "success") {
-                    UpdateStatisticsAndNotesArticles();
-                    ShowSuccessfulMessageAfterVehicleWasDeleted();
-                }
-            });
-        }
+            }
+        });
     }
 
     // When user click either hide or publish button on vehicle in vehicles table

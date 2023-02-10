@@ -13,7 +13,7 @@ namespace CarSharingApp.Application.Services
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<ActionNote> _noteRepository;
 
-        public CustomerService(IRepository<Customer> customerRepository, 
+        public CustomerService(IRepository<Customer> customerRepository,
                                IRepository<ActionNote> noteRepository)
         {
             _customerRepository = customerRepository;
@@ -40,7 +40,7 @@ namespace CarSharingApp.Application.Services
             await _customerRepository.DeleteAsync(id);
 
             var notesToDelete = await _noteRepository.GetAllAsync(note => note.ActorId == id);
-            foreach(var note in notesToDelete)
+            foreach (var note in notesToDelete)
             {
                 await _noteRepository.DeleteAsync(note.Id);
             }

@@ -4,9 +4,11 @@ using CarSharingApp.Web.Models;
 using CarSharingApp.Web.Clients.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CarSharingApp.Web.Controllers
 {
+    [Authorize]
     public class DashboardController : Controller
     {
         private readonly IAccountServicePublicApiClient _accountServiceClient;
@@ -140,6 +142,16 @@ namespace CarSharingApp.Web.Controllers
             response.EnsureSuccessStatusCode();
 
             return Redirect($"/Dashboard/VehiclesArticlePartial?searchBy={searchBy}&searchInput={searchInput}");
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> CheckIfVehicleExists(string id)
+        {
+            var response = await _vehicleServiceClient.GetVehicleInformation(Guid.Parse(id));
+
+            response.EnsureSuccessStatusCode();
+
+            return Json(new { data = true });
         }
 
     }

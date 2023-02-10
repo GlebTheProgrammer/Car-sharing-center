@@ -71,7 +71,7 @@ namespace CarSharingApp.Controllers
 
         //public void AuthenticationCode(string code, string state, string id_token)
         //{
-        //    _azureAdClient.RequestAccessToken(code, state, id_token);
+        //    _azureAdClient.RequestAccessToken(code, id_token);
 
         //    return;
         //}

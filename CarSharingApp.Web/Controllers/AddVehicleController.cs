@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace CarSharingApp.Controllers
 {
+    [Authorize]
     public sealed class AddVehicleController : Controller
     {
         private readonly IVehicleServicePublicApiClient _vehicleServiceClient;

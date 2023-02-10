@@ -7,6 +7,8 @@ using CarSharingApp.Infrastructure.MSSQL;
 using CarSharingApp.Infrastructure.AzureAD;
 using CarSharingApp.Infrastructure.Authentication;
 using CarSharingApp.Infrastructure.Authentication.Options;
+using CarSharingApp.Infrastructure.MSSQL.Contexts;
+using CarSharingApp.Infrastructure.MSSQL.Seeds;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -49,7 +51,22 @@ var builder = WebApplication.CreateBuilder(args);
 
 var app = builder.Build();
 {
-    app.Logger.LogError(app.Environment.EnvironmentName);
+
+    //using (var scope = app.Services.CreateScope())
+    //{
+    //    var scopedProvider = scope.ServiceProvider;
+    //    try
+    //    {
+    //        var catalogContext = scopedProvider.GetRequiredService<CarSharingAppContext>();
+    //        await CarSharingAppContextSeed.SeedAsync(catalogContext);
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        app.Logger.LogError(ex, "An error occurred seeding the DB.");
+    //    }
+    //}
+
+    app.Logger.LogInformation(app.Environment.EnvironmentName);
     app.UseExceptionHandler("/error");
 
     app.UseSwagger();

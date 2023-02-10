@@ -13,7 +13,7 @@
                             <div class="float-right text-success">@(note.ActionMadeTime.ToString("ddd MMM dd yyy h:mm tt", new System.Globalization.CultureInfo("en-US")))</div>
                             <h4 class="card-title text-success">@note.Type</h4>
                             <p class="card-text">@note.Note</p>
-                            <button class="btn btn-sm btn-outline-secondary" type="button" data-target="#t2_details" data-toggle="collapse">Show Details ▼</button>
+                            <button class="btn btn-sm btn-outline-secondary" type="button" data-target="#t2_details" data-toggle="collapse" onclick="TryRedirect('@note.ActionEntityId.ToString()')">Show Details ▼</button>
                         </div>
                     </div>
                 </div>
@@ -34,5 +34,25 @@
             </div>
         }
     }
-
 </div>
+
+<script>
+    function TryRedirect(id){
+        $.ajax({
+            type: 'GET',
+            url: 'Dashboard/CheckIfVehicleExists',
+            contentType: "application/json; charset=utf-8",
+            data: {id: id},
+            cache: false,
+            async: true,
+            success: function(data) {
+                if (data) {
+                    window.location.href = "/VehicleInformation?vehicleId=" + id
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                ShowErrorMessage("Vehicle does not exist any more.");
+            }
+        });
+    }
+</script>

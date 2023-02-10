@@ -1,7 +1,4 @@
-﻿using System.Net;
-using System.Security.Policy;
-
-namespace CarSharingApp.Middlewares
+﻿namespace CarSharingApp.Middlewares
 {
     public class GlobalExceptionHandlingMiddleware
     {
