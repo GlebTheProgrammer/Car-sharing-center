@@ -6,12 +6,14 @@ using MongoDB.Driver;
 using CarSharingApp.Domain.Abstractions;
 using CarSharingApp.Domain.Primitives;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace CarSharingApp.Infrastructure.MongoDB
 {
     public static class Extensions
     {
-        public static IServiceCollection AddMongo(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddMongo(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment hostEnvironment)
         {
             BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
             
@@ -19,8 +21,10 @@ namespace CarSharingApp.Infrastructure.MongoDB
             {
                 MongoClient mongoClient = new MongoClient();
 
-                mongoClient = new MongoClient(configuration["ConnectionStrings:MongoDbLocal"]);
-                //mongoClient = new MongoClient(configuration["ConnectionStrings:MongoDbAtlasCloud"]);
+                if(hostEnvironment.IsDevelopment())
+                    mongoClient = new MongoClient(configuration["ConnectionStrings:MongoDbLocal"]);
+                else
+                    mongoClient = new MongoClient(configuration["ConnectionStrings:MongoDbAtlasCloud"]);
 
                 return mongoClient.GetDatabase(configuration["MongoDbConfig:DbName"]);
             });

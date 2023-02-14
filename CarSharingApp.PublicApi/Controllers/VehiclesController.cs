@@ -11,6 +11,7 @@ using CarSharingApp.Domain.ValueObjects;
 using CarSharingApp.Domain.SmartEnums;
 using static CarSharingApp.Domain.Enums.FlagEnums;
 using System.Globalization;
+using Azure.Core;
 
 namespace CarSharingApp.PublicApi.Controllers
 {
@@ -18,11 +19,15 @@ namespace CarSharingApp.PublicApi.Controllers
     {
         private readonly IVehicleService _vehicleService;
         private readonly ICustomerService _customerService;
+        private readonly ILogger<VehiclesController> _logger;
 
-        public VehiclesController(IVehicleService vehicleService, ICustomerService customerService)
+        public VehiclesController(IVehicleService vehicleService, 
+                                  ICustomerService customerService, 
+                                  ILogger<VehiclesController> logger)
         {
             _vehicleService = vehicleService;
             _customerService = customerService;
+            _logger = logger;
         }
 
         [HttpPost]
@@ -40,12 +45,15 @@ namespace CarSharingApp.PublicApi.Controllers
 
             if (requestToVehicleResult.IsError)
             {
+                _logger.LogInformation("Customer with ID: {customerId} entered wrong data trying to add new vehicle.", jwtClaims.Id);
                 return Problem(requestToVehicleResult.Errors);
             }
 
             Vehicle vehicle = requestToVehicleResult.Value;
 
             await _vehicleService.CreateVehicleAsync(vehicle);
+
+            _logger.LogInformation("Customer with ID: {customerId} has successfully added new vehicle with ID: {vehicleId}.", jwtClaims.Id, vehicle.Id);
 
             return CreatedAtAction(
                         actionName: nameof(GetVehicle),
@@ -78,6 +86,7 @@ namespace CarSharingApp.PublicApi.Controllers
             ErrorOr<Vehicle> getVehicleResult = await _vehicleService.GetVehicleAsync(id);
             if (getVehicleResult.IsError)
             {
+                _logger.LogInformation("Failed finding information of the vehicle with ID: {vehicleId} for the customer with ID: {customerId}.", id, jwtClaims.Id);
                 return Problem(getVehicleResult.Errors);
             }
             Vehicle vehicle = getVehicleResult.Value;
@@ -85,6 +94,7 @@ namespace CarSharingApp.PublicApi.Controllers
             ErrorOr<Customer> getCustomerResult = await _customerService.GetCustomerAsync(vehicle.CustomerId);
             if (getCustomerResult.IsError)
             {
+                _logger.LogInformation("Failed finding information of the owner with ID: {ownerId} of the vehicle with ID: {vehicleId} for the customer with ID: {customerId}.", vehicle.CustomerId, id, jwtClaims.Id);
                 return Problem(getCustomerResult.Errors);
             }
             Customer customer = getCustomerResult.Value;
@@ -162,7 +172,10 @@ namespace CarSharingApp.PublicApi.Controllers
                 JwtClaims? jwtClaims = GetJwtClaims();
 
                 if (jwtClaims is null)
+                {
+                    _logger.LogInformation("Unauthorized user tried to get access for the filter for authorized customers only.");
                     throw new NullReferenceException(nameof(jwtClaims));
+                }
 
                 if (request.SearchAllExceptMyVehicles)
                     return Ok(MapVehicleCatalogResponse(vehiclesThatMatchCriteriaAndCategories.Where(v => v.CustomerId != Guid.Parse(jwtClaims.Id)).ToList()));
@@ -215,6 +228,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
             if (getVehicleResult.IsError)
             {
+                _logger.LogInformation("Failed finding information of the vehicle with ID: {vehicleId} when tried to change its data.", id);
                 return Problem(getVehicleResult.Errors);
             }
 
@@ -222,6 +236,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
             if (!IsRequestAllowed(notUpdatedVehicle.CustomerId))
             {
+                _logger.LogInformation("Update vehicle with ID: {vehicleId} status request is not allowed because of missing permissions.", id);
                 return Forbid();
             }
 
@@ -236,6 +251,8 @@ namespace CarSharingApp.PublicApi.Controllers
 
             await _vehicleService.UpdateVehicleAsync(vehicle);
 
+            _logger.LogInformation("Customer with ID: {customerId} has successfully updated vehicle with ID: {vehicleId} information.", vehicle.CustomerId, vehicle.Id);
+
             return NoContent();
         }
 
@@ -247,6 +264,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
             if (getVehicleResult.IsError)
             {
+                _logger.LogInformation("Failed finding vehicle with ID: {vehicleId} when tried to change its status.", request.vehicleId);
                 return Problem(getVehicleResult.Errors);
             }
 
@@ -254,6 +272,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
             if (!IsRequestAllowed(notUpdatedVehicle.CustomerId))
             {
+                _logger.LogInformation("Update vehicle with ID: {vehicleId} status request is not allowed because of missing permissions.", request.vehicleId);
                 return Forbid();
             }
 
@@ -268,6 +287,8 @@ namespace CarSharingApp.PublicApi.Controllers
 
             await _vehicleService.UpdateVehicleStatusAsync(vehicle);
 
+            _logger.LogInformation("Customer with ID: {customerId} has successfully updated vehicle with ID: {vehicleId} status.", vehicle.CustomerId, vehicle.Id);
+
             return NoContent();
         }
 
@@ -280,6 +301,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
             if (getVehicleResult.IsError)
             {
+                _logger.LogInformation("Failed finding vehicle with ID: {vehicleId} when tried to delete it.", id);
                 return Problem(getVehicleResult.Errors);
             }
 
@@ -287,10 +309,13 @@ namespace CarSharingApp.PublicApi.Controllers
 
             if (!IsRequestAllowed(notDeletedVehicleYet.CustomerId))
             {
+                _logger.LogInformation("Delete vehicle with ID: {vehicleId} request is not allowed because of missing permissions.", id);
                 return Forbid();
             }
 
             await _vehicleService.DeleteVehicleAsync(id);
+
+            _logger.LogInformation("Customer with ID: {customerId} has successfully deleted vehicle with ID: {vehicleId}.", notDeletedVehicleYet.CustomerId, notDeletedVehicleYet.Id);
 
             return NoContent();
         }

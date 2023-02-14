@@ -8,7 +8,7 @@ namespace CarSharingApp.Infrastructure.AzureKeyVault
 {
     public static class Extensions
     {
-        public static IServiceCollection AddAzureKeyVaultAppsettingsValues<T>(this IServiceCollection services,T configuration) where T 
+        public static IServiceCollection AddAzureKeyVaultAppsettingsValues<T>(this IServiceCollection services, T configuration) where T 
             : IConfigurationBuilder, IConfigurationRoot, IDisposable
         {
             string kvURL = configuration["KeyVaultConfig:KVUrl"] 

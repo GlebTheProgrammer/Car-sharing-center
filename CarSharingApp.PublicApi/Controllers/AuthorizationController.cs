@@ -13,11 +13,15 @@ namespace CarSharingApp.PublicApi.Controllers
     {
         private readonly IJwtProvider _jwtProvider;
         private readonly IAuthorizationService _authorizationService;
+        private readonly ILogger<AuthorizationController> _logger;
 
-        public AuthorizationController(IJwtProvider jwtProvider, IAuthorizationService authorizationService)
+        public AuthorizationController(IJwtProvider jwtProvider, 
+                                       IAuthorizationService authorizationService, 
+                                       ILogger<AuthorizationController> logger)
         {
             _jwtProvider = jwtProvider;
             _authorizationService = authorizationService;
+            _logger = logger;
         }
 
         //[HttpPost]
@@ -62,12 +66,15 @@ namespace CarSharingApp.PublicApi.Controllers
 
             if (loginResult.IsError)
             {
+                _logger.LogInformation("Someone has provided wrong credentials and failed the authorization process.");
                 return Problem(loginResult.Errors);
             }
 
             Customer customer = loginResult.Value;
 
             string JWToken = _jwtProvider.Generate(customer);
+
+            _logger.LogInformation("Server has generated new JWToken for the customer with ID: {customerId}.", customer.Id);
 
             return CreatedAtAction(
                 actionName: nameof(GenerateToken),

@@ -1,12 +1,14 @@
 ﻿using CarSharingApp.Infrastructure.MSSQL.Contexts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace CarSharingApp.Infrastructure.MSSQL.Seeds
 {
     public class CarSharingAppContextSeed
     {
         public static async Task SeedAsync(CarSharingAppContext carSharingAppContext,
-        int retry = 0)
+                                           ILogger logger,
+                                           int retry = 0)
         {
             var retryForAvailability = retry;
             try
@@ -16,13 +18,15 @@ namespace CarSharingApp.Infrastructure.MSSQL.Seeds
                     carSharingAppContext.Database.Migrate();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 if (retryForAvailability >= 10) throw;
 
                 retryForAvailability++;
 
-                await SeedAsync(carSharingAppContext, retryForAvailability);
+                logger.LogError(ex.Message);
+
+                await SeedAsync(carSharingAppContext, logger, retryForAvailability);
                 throw;
             }
         }
