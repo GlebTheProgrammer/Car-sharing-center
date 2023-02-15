@@ -1,0 +1,36 @@
+name: Publish PublicAPI to IIS 🚀
+
+on: 
+  workflow_dispatch:
+  push:
+      branches:
+        - main
+
+jobs:
+  build-and-deploy:
+
+    runs-on: self-hosted
+    
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '7.0.x'
+    
+    # dotnet build and publish
+    - name: Build with dotnet
+      run: dotnet build --configuration Release .\CarSharingApp.PublicApi
+
+    - name: dotnet publish 
+      run: |
+        dotnet publish -c Release -o dotnetcorepublicapi .\dotnet-core-webapp
+    - name: Deploy to IIS
+      run: |
+        iisreset /stop
+        Copy-Item ./dotnetcorepublicapi/* C:/Car" "Sharing" "App" "Public" "Api -Recurse -Force
+        iisreset /start
+    
+    - name: Curl the website as a smoke test
+      run: curl http://carsharingapp.norwayeast.cloudapp.azure.com:20001/swagger
