@@ -20,17 +20,31 @@ jobs:
         dotnet-version: '7.0.x'
     
     # dotnet build and publish
-    - name: Build with dotnet
+    
+    - name: Build CarSharingApp PublicAPI
       run: dotnet build --configuration Release ./CarSharingApp.PublicApi
 
-    - name: dotnet publish 
+    - name: Publish CarSharingApp PublicAPI to Azure VM 
       run: |
         dotnet publish -c Release -o dotnetcorecarsharingapppublicapi ./CarSharingApp.PublicApi
-    - name: Deploy to IIS
+        
+    - name: Build CarSharingApp Web
+      run: |
+        dotnet build --configuration Release ./CarSharingApp.Web
+
+    - name: Publish CarSharingApp Web to Azure VM 
+      run: |
+        dotnet publish -c Release -o dotnetcorecarsharingappweb ./CarSharingApp.Web
+        
+    - name: Deploy PublicAPI and Web to IIS
       run: |
         iisreset /stop
         Copy-Item ./dotnetcorecarsharingapppublicapi/* C:/Car" "Sharing" "App" "Public" "Api -Recurse -Force
+        Copy-Item ./dotnetcorecarsharingappweb/* C:/Car" "Sharing" "App" "Web -Recurse -Force
         iisreset /start
     
-    - name: Curl the website as a smoke test
+    - name: Curl PublicAPI as a smoke test
       run: curl http://carsharingapp.norwayeast.cloudapp.azure.com:20001/swagger
+
+    - name: Curl Web application as a smoke test
+      run: curl http://carsharingapp.norwayeast.cloudapp.azure.com:20002
