@@ -25,11 +25,11 @@ jobs:
 
     - name: dotnet publish 
       run: |
-        dotnet publish -c Release -o dotnetcorepublicapi ./CarSharingApp.PublicApi
+        dotnet publish -c Release -o dotnetcorecarsharingapppublicapi ./CarSharingApp.PublicApi
     - name: Deploy to IIS
       run: |
         iisreset /stop
-        Copy-Item ./dotnetcorepublicapi/* C:/Car" "Sharing" "App" "Public" "Api -Recurse -Force
+        Copy-Item ./dotnetcorecarsharingapppublicapi/* C:/Car" "Sharing" "App" "Public" "Api -Recurse -Force
         iisreset /start
     
     - name: Curl the website as a smoke test
