@@ -12,10 +12,13 @@ namespace CarSharingApp.PublicApi.Controllers
     public sealed class CustomersController : ApiController
     {
         private readonly ICustomerService _customerService;
+        private readonly ILogger<CustomersController> _logger;
 
-        public CustomersController(ICustomerService customerService)
+        public CustomersController(ICustomerService customerService, 
+                                   ILogger<CustomersController> logger)
         {
             _customerService = customerService;
+            _logger = logger;
         }
 
         [HttpPost]
@@ -32,6 +35,9 @@ namespace CarSharingApp.PublicApi.Controllers
             Customer customer = requestToCustomerResult.Value;
 
             ErrorOr<Customer> createCustomerResult = await _customerService.CreateCustomerAsync(customer);
+            
+            if (!createCustomerResult.IsError)
+                _logger.LogInformation("New customer with ID: {registeredCustomerId} has been registered.", customer.Id);
 
             return createCustomerResult.Match(
                 created => CreatedAtAction(
@@ -84,6 +90,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
             if (getCustomerResult.IsError)
             {
+                _logger.LogInformation("Failed finding customer with ID: {customerId} when trying to update data.", id);
                 return Problem(getCustomerResult.Errors);
             }
 
@@ -100,6 +107,8 @@ namespace CarSharingApp.PublicApi.Controllers
 
             await _customerService.UpdateCustomerInfoAsync(customer);
 
+            _logger.LogInformation("Customer with ID: {registeredCustomerId} has successfully updated his data.", customer.Id);
+
             return NoContent();
         }
 
@@ -111,6 +120,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
             if (getCustomerResult.IsError)
             {
+                _logger.LogInformation("Failed finding customer with ID: {customerId} when trying to update his credentials (email and(or) login).", id);
                 return Problem(getCustomerResult.Errors);
             }
 
@@ -127,6 +137,8 @@ namespace CarSharingApp.PublicApi.Controllers
 
             await _customerService.UpdateCustomerPasswordAsync(customer);
 
+            _logger.LogInformation("Customer with ID: {registeredCustomerId} has successfully changed his credentials (email and(or) login).", customer.Id);
+
             return NoContent();
         }
 
@@ -138,6 +150,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
             if (getCustomerResult.IsError)
             {
+                _logger.LogInformation("Failed finding customer with ID: {customerId} when trying to update password.", id);
                 return Problem(getCustomerResult.Errors);
             }
 
@@ -154,10 +167,13 @@ namespace CarSharingApp.PublicApi.Controllers
             ErrorOr<string> checkoutIfOldPasswordMatchResult = await _customerService.CompareCustomerOldPasswordWithExistingOne(id, request.currentPassword);
             if (checkoutIfOldPasswordMatchResult.IsError)
             {
+                _logger.LogInformation("Customer with ID: {registeredCustomerId} has entered wrong previous password trying to change it.", id);
                 return Problem(checkoutIfOldPasswordMatchResult.Errors);
             }
 
             await _customerService.UpdateCustomerPasswordAsync(customerWithUpdatedPassword);
+
+            _logger.LogInformation("Customer with ID: {registeredCustomerId} has successfully changed his password.", id);
 
             return NoContent();
         }
@@ -170,10 +186,13 @@ namespace CarSharingApp.PublicApi.Controllers
 
             if (getCustomerResult.IsError)
             {
+                _logger.LogInformation("Failed finding customer with ID: {customerId} when deleting.", id);
                 return Problem(getCustomerResult.Errors);
             }
 
             await _customerService.DeleteCustomerAsync(id);
+
+            _logger.LogInformation("Customer with ID: {registeredCustomerId} has successfully been deleted.", id);
 
             return NoContent();
         }

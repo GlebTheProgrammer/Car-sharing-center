@@ -22,9 +22,7 @@ namespace CarSharingApp.Web.Clients
                 "&response_type=code" +
                 $"&redirect_uri={_configuration[$"Clients:{clientIdentifier}:AuthorizationCodeRedirectUri"]}" +
                 "&response_mode=query" +
-                //"&scope=https%3A%2F%2Fgraph.microsoft.com%2Fmail.read" +
                 "&scope=https://graph.microsoft.com/User.Read" +
-                //"&scope=openid%20offline_access%20https%3A%2F%2Fgraph.microsoft.com/.default" +
                 "&state=12345" +
                 "&code_challenge=sHphVC32GXwvqdlnRLkif3QGk4veCWWb4pKY_CyocfY" + // Here is my own code_challenge generated value 
                 "&code_challenge_method=S256");
@@ -41,9 +39,7 @@ namespace CarSharingApp.Web.Clients
             var requestBody = new[]
             {
                 new KeyValuePair<string, string>("client_id", _configuration["AzureAd:ClientId"] ?? string.Empty),
-                //new KeyValuePair<string, string>("scope", "https%3A%2F%2Fgraph.microsoft.com%2Fmail.read"),
                 new KeyValuePair<string, string>("scope", "https://graph.microsoft.com/User.Read"),
-                //new KeyValuePair<string, string>("scope", "openid%20offline_access%20https%3A%2F%2Fgraph.microsoft.com/.default"),
                 new KeyValuePair<string, string>("code", authorizationCode),
                 new KeyValuePair<string, string>("redirect_uri", _configuration[$"Clients:{clientIdentifier}:AuthorizationCodeRedirectUri"] ?? string.Empty),
                 new KeyValuePair<string, string>("grant_type", "authorization_code"),

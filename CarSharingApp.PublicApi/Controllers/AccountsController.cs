@@ -16,15 +16,18 @@ namespace CarSharingApp.PublicApi.Controllers
         private readonly ICustomerService _customerService;
         private readonly IVehicleService _vehicleService;
         private readonly IActionNotesService _notesService;
+        private readonly ILogger<AccountsController> _logger;
 
         public AccountsController(
             ICustomerService customerService,
             IVehicleService vehicleService,
-            IActionNotesService notesService)
+            IActionNotesService notesService,
+            ILogger<AccountsController> logger)
         {
             _customerService = customerService;
             _vehicleService = vehicleService;
             _notesService = notesService;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -38,6 +41,8 @@ namespace CarSharingApp.PublicApi.Controllers
             {
                 return Forbid();
             }
+
+            _logger.LogInformation("Customer with ID: {customerId} asked for account data.", jwtClaims.Id);
 
             Guid customerId = Guid.Parse(jwtClaims.Id);
 
@@ -64,6 +69,8 @@ namespace CarSharingApp.PublicApi.Controllers
             {
                 return Forbid();
             }
+
+            _logger.LogInformation("Customer with ID: {customerId} asked for account notes data.", jwtClaims.Id);
 
             if (type is null)
                 throw new Exception(nameof(type));
@@ -104,6 +111,8 @@ namespace CarSharingApp.PublicApi.Controllers
                 return Forbid();
             }
 
+            _logger.LogInformation("Customer with ID: {customerId} asked for account statistics data.", jwtClaims.Id);
+
             Guid customerId = Guid.Parse(jwtClaims.Id);
             ErrorOr<Customer> customerRequest = await _customerService.GetCustomerAsync(customerId);
             if (customerRequest.IsError)
@@ -128,6 +137,8 @@ namespace CarSharingApp.PublicApi.Controllers
             {
                 return Forbid();
             }
+
+            _logger.LogInformation("Customer with ID: {customerId} asked for account vehicles data.", jwtClaims.Id);
 
             List<Vehicle> vehicles = await _vehicleService.GetAllCustomerVehiclesAsync(Guid.Parse(jwtClaims.Id));
 

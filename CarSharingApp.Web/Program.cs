@@ -3,14 +3,13 @@ using CarSharingApp.Login.Authentication;
 using CarSharingApp.OptionsSetup;
 using CarSharingApp.Payment;
 using CarSharingApp.Payment.StripeService;
-using CarSharingApp.Services;
-using CarSharingApp.Services.Interfaces;
 using Stripe;
 using CarSharingApp.Middlewares;
 using CarSharingApp.Repository.MongoDbRepository;
 using CarSharingApp.Web.Clients;
 using CarSharingApp.Web.Clients.Interfaces;
 using CarSharingApp.Web.Clients.Extensions;
+using CarSharingApp.Web.OptionsSetup;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,7 +36,9 @@ builder.Services.RegisterNewHttpClients("AzureActiveDirectoryAPI", builder.Confi
 
 builder.Services.RegisterAzureBlobStorageClient(builder.Configuration);
 
-
+builder.Services.ConfigureOptions<JwtOptionsSetup>();
+builder.Services.AddTransient<IJwtProvider, JwtProvider>();
+builder.Services.AddJwtBearerAuthentication(builder.Configuration);
 
 
 
@@ -65,11 +66,6 @@ builder.Services.AddSingleton<IPaymentSessionProvider, StripeSessionProvider>();
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-builder.Services.AddTransient<IJwtProvider, JwtProvider>();
-
-// JWT options configuration setup is here
-builder.Services.ConfigureOptions<JwtOptionsSetup>();
-
 // DB configuration section
 builder.Services.Configure<CarSharingDatabaseSettings>(
     builder.Configuration.GetSection("CarSharingLocalDB"));
@@ -87,6 +83,16 @@ if (!app.Environment.IsDevelopment())
 //app.UseHttpsRedirection();
 
 app.UseSession();
+
+app.Use(async (context, next) =>
+{
+    var JWToken = context.Session.GetString("JWToken");
+    if (!string.IsNullOrEmpty(JWToken))
+    {
+        context.Request.Headers.Add("Authorization", "Bearer " + JWToken);
+    }
+    await next();
+});
 
 app.UseStaticFiles();
 app.UseAuthentication();

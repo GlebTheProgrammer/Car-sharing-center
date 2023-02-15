@@ -1,0 +1,268 @@
+﻿@inject IConfiguration _configuration;
+@model List<CarSharingApp.Application.Contracts.Vehicle.VehicleDisplayOnMap>;
+
+<div class="container-fluid d-flex">
+    <div id="map" class="text-center" style="height: 75vh; width: 100%;"></div>
+    <script type="text/javascript">
+        // Define variables section goes here
+        var map;
+        const vehiclesMarkerArray = [];
+        const userMarkersArray = [];
+        var userCurrentLatitude;
+
+        var vehiclesListModel = '@(Html.Raw(Json.Serialize(Model)))';
+        var vehiclesJsonListModel = JSON.parse(vehiclesListModel);
+        var vehicleImagesUrl = "@(_configuration["AzureBlobStorage:VehiclesImagesPath"])";
+        var infoWindowsContent = [];
+        for (let i = 0; i < vehiclesJsonListModel.length; i++) {
+            var contentString = '<div>' +
+                '<h5 class="card-title">' + vehiclesJsonListModel[i]['name'] + '</h5>' +
+                '<img src="' + vehicleImagesUrl + vehiclesJsonListModel[i]['image'] + '" style="max-width: 150px;">' +
+                '</div>';
+
+            infoWindowsContent.push(contentString);
+        }
+        // Define variables section ends here
+
+        function initMap(vehicles) {
+            const directionsRenderer = new google.maps.DirectionsRenderer();
+            const directionsService = new google.maps.DirectionsService();
+
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 53.90588468960213, lng: 27.555191727187893 },
+                zoom: 11,
+                disableDefaultUI: true
+            });
+
+            directionsRenderer.setMap(map);
+            directionsRenderer.setPanel(document.getElementById("sidebar"));
+
+            var infoWindow = new google.maps.InfoWindow({
+                disableAutoPan: true
+            });
+            for (let i = 0; i < vehiclesJsonListModel.length; i++) {
+                const marker = new google.maps.Marker(
+                {
+                    position: new google.maps.LatLng(vehiclesJsonListModel[i]['latitude'], vehiclesJsonListModel[i]['longitude']),
+                    map: map,
+                    title: vehiclesJsonListModel[i]['name'],
+                    icon: {
+                        url: "/Icons/vehicleIcon.png",
+                        scaledSize: new google.maps.Size(40, 40)
+                    },
+                    animation: google.maps.Animation.DROP
+                });
+                google.maps.event.addListener(marker, 'mouseover', function () {
+                    infoWindow.setContent(infoWindowsContent[i]),
+                        infoWindow.open(map, marker)
+                });
+                google.maps.event.addListener(marker, 'mouseout', function () {
+                    infoWindow.close()
+                });
+                vehiclesMarkerArray.push(marker);
+            }
+
+            const locationButton = document.createElement("button");
+            locationButton.textContent = "Pan to My Current Location";
+            locationButton.classList.add("custom-map-control-button");
+            map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
+            locationButton.addEventListener("click", () => {
+                document.getElementById("sidebar").innerHTML = "";
+                document.getElementById("tableBody").innerHTML = "";
+                document.getElementById("vehiclesTable").setAttribute("hidden", "");
+                // Try HTML5 geolocation.
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            const pos = {
+                                lat: position.coords.latitude,
+                                lng: position.coords.longitude,
+                            };
+
+                            userCurrentLatitude = pos.lat;
+                            userCurrentLongitude = pos.lng;
+
+                            map.setCenter(pos);
+
+                            for (let i = 0; i < userMarkersArray.length; i++) {
+                                userMarkersArray[i].setMap(null);
+                            }
+
+                            const marker = new google.maps.Marker(
+                            {
+                                position: new google.maps.LatLng(pos.lat, pos.lng),
+                                map: map,
+                                title: "You are here.",
+                                icon: {
+                                    url: "/Icons/personIcon.png",
+                                    scaledSize: new google.maps.Size(40, 40)
+                                },
+                                animation: google.maps.Animation.DROP
+                            });
+
+                            userMarkersArray.push(marker);
+                        },
+                        () => {
+                            handleLocationError(true);
+                        }
+                    );
+                } else {
+                    // Browser doesn't support Geolocation
+                    handleLocationError(false);
+                }
+            });
+
+            const searchNearbyVehiclesButton = document.getElementById("searchNearbyVehiclesBtn");
+            searchNearbyVehiclesButton.addEventListener("click", () => {
+
+                Swal.fire({
+                    title: 'How many vehicles you are looking for?',
+                    input: 'number',
+                    inputAttributes: {
+                        autocapitalize: 'off'
+                    },
+                    showCancelButton: true,
+                    confirmButtonText: 'Search',
+                    confirmButtonColor: '#257cfd',
+                    showLoaderOnConfirm: true,
+                    preConfirm: (vehiclesNumber) => {
+                        if (typeof userCurrentLatitude === 'undefined') {
+                            ShowErrorMessageAfterGeolocationServiceFailed("You have to pan your current location before trying search.");
+                            throw "User side geolocation error.";
+                        } else {
+                            return fetch('/SearchNearbyVehicles/GetNearbyVehicles?latitude=' + userCurrentLatitude + '&longitude=' + userCurrentLongitude + '&vehiclesCount=' + vehiclesNumber)
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error(response.statusText)
+                                    }
+                                    return response.json()
+                                })
+                                .catch(error => {
+                                    Swal.showValidationMessage(
+                                        `Request failed: ${error}`
+                                    )
+                                })
+                        }
+                    },
+                    allowOutsideClick: () => !Swal.isLoading()
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById("sidebar").innerHTML = "";
+                        document.getElementById("tableBody").innerHTML = "";
+
+
+                        for(let i = 0; i < result.value.vehicles.length; i++){
+                            let tdImage = "<td class='text-center'><img src='@(_configuration["AzureBlobStorage:VehiclesImagesPath"])" + result.value.vehicles[i]["image"] + "'class='rounded-circle' style = 'max-height: 30px; width: auto;' loading = 'lazy' /> </td>";
+                            let tdName = "<td class='text-center'>" + result.value.vehicles[i]["name"] + "</td>";
+                            let tdHourlyPrice = "<td class='text-center'>$" + result.value.vehicles[i]["hourlyRentalPrice"] + "</td>";
+                            let tdDailyPrice = "<td class='text-center'>$" + result.value.vehicles[i]["dailyRentalPrice"] + "</td>";
+                            let tdTimesOrdered = "<td class='text-center'>" + result.value.vehicles[i]["timesOrdered"] + "</td>";
+                            let tdDistance = "<td class='text-center'>" + result.value.vehicles[i]["distance"] + " KM</td>";
+                            let tdShowTripButton = "<td class='d-flex justify-content-center'> <div class='dropdown'> <button class='btn btn-sm btn-outline-secondary dropdown-toggle' id='dropdownMenuButton' type='button' data-bs-toggle='dropdown' aria-haspopup='true' aria-expanded='false'> Choose... </button> <div class='dropdown-menu dropdown-menu-end' aria-labelledby='dropdownMenuButton'> <h6 class='dropdown-header'>Available actions:</h6> <a id='showTripBtn" + i + "' class='dropdown-item' href='#!'><i class='fa-solid fa-location-crosshairs me-2'></i><span>Show the Trip</span></a> </div> </div> </td>"
+
+                            $('#tableBody').append("<tr>" + tdImage + tdName + tdHourlyPrice + tdDailyPrice + tdTimesOrdered + tdDistance + tdShowTripButton + "</tr>");
+                        }
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: `Success! We have found ${result.value.vehicles.length} vehicles to show you.`,
+                            confirmButtonText: 'Lets have a look',
+                            confirmButtonColor: '#4FA64F',
+                            didClose: () => {
+                                document.getElementById("vehiclesTable").removeAttribute("hidden");
+                                document.getElementById("tableBody").scrollIntoView();
+                                for(let i = 0; i < result.value.vehicles.length; i++){
+                                    document.getElementById("showTripBtn" + i).addEventListener("click", () => {
+
+                                        const geocoder = new google.maps.Geocoder();
+
+                                        const userlatlng = {
+                                            lat: parseFloat(userCurrentLatitude),
+                                            lng: parseFloat(userCurrentLongitude)
+                                        };
+                                        const vehiclelatlng = {
+                                            lat: parseFloat(result.value.vehicles[i]["latitude"]),
+                                            lng: parseFloat(result.value.vehicles[i]["longitude"])
+                                        };
+
+                                        geocoder.geocode({ location: userlatlng }).then((userResponse) => {
+                                            if (userResponse.results[0]) {
+
+                                                geocoder
+                                                    .geocode({ location: vehiclelatlng })
+                                                    .then((vehicleResponse) => {
+                                                        if (vehicleResponse.results[0]) {
+
+                                                            directionsService
+                                                                .route({
+                                                                    origin: userResponse.results[0].formatted_address,
+                                                                    destination: vehicleResponse.results[0].formatted_address,
+                                                                    travelMode: google.maps.TravelMode.DRIVING,
+                                                                })
+                                                                .then((response) => {
+                                                                    directionsRenderer.setDirections(response);
+                                                                })
+                                                                .catch((e) => window.alert("Directions request failed due to " + status));
+
+                                                        } else {
+                                                            window.alert("No vehicle results found");
+                                                        }
+                                                    })
+                                                    .catch((e) => window.alert("Vehicle Geocoder failed due to: " + e));
+
+                                            } else {
+                                                window.alert("No user results found");
+                                            }
+                                        }).catch((e) => window.alert("User Geocoder failed due to: " + e));
+                                    });
+                                }
+                            }
+                        })
+                    }
+                })
+
+            });
+        }        
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9AIXs7jB_3r8oRc1zd0i9p0nanEH5Q6M&callback=initMap" async defer></script>
+    <div id="sidebar" style="background:white; overflow: auto; max-height: 75vh;"></div>
+</div>
+
+<table id="vehiclesTable" class="table mt-4 mb-5" hidden>
+    <thead>
+        <tr>
+            <th class="text-center" scope="col">
+                <label class="datatable-sorter text-primary">Image</label>
+            </th>
+            <th class="text-center" scope="col">
+                <label class="datatable-sorter text-primary">Name</label>
+            </th>
+            <th class="text-center" scope="col">
+                <label class="datatable-sorter text-primary">Hourly price</label>
+            </th>
+            <th class="text-center" scope="col">
+                <label class="datatable-sorter text-primary">Daily price</label>
+            </th>
+            <th class="text-center" scope="col">
+                <label class="datatable-sorter text-primary">Times ordered</label>
+            </th>
+            <th class="text-center" scope="col">
+                <label class="datatable-sorter text-primary">Distance</label>
+            </th>
+            <th class="text-center" scope="col">
+                <label class="datatable-sorter text-primary">Actions</label>
+            </th>
+        </tr>
+    </thead>
+    <tbody id="tableBody">
+
+    </tbody>
+</table>
+
+<script>
+    function handleLocationError(browserHasGeolocation) {
+            browserHasGeolocation
+        ? ShowErrorMessageAfterGeolocationServiceFailed("Error: The Geolocation service failed.")
+        : ShowErrorMessageAfterGeolocationServiceFailed("Error: Your browser doesn't support geolocation.")
+    }
+</script>

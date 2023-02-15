@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using CarSharingApp.Models.MongoView;
+using CarSharingApp.Application.Contracts.Vehicle;
 using CarSharingApp.Payment;
-using CarSharingApp.Repository.MongoDbRepository;
+using CarSharingApp.Web.Clients.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,24 +10,29 @@ namespace CarSharingApp.Controllers
     [Authorize]
     public class VehicleInformationController : Controller
     {
-        private readonly MongoDbService _mongoDbService;
+        private readonly IVehicleServicePublicApiClient _vehicleServiceClient;
 
         private readonly IPaymentSessionProvider _paymentSessionProvider;
         private readonly IMapper _mapper;
 
-        public VehicleInformationController(MongoDbService mongoDbService, IMapper mapper, IPaymentSessionProvider paymentSessionProvider)
+        public VehicleInformationController(IMapper mapper, IPaymentSessionProvider paymentSessionProvider, IVehicleServicePublicApiClient vehicleServiceClient)
         {
             _mapper = mapper;
             _paymentSessionProvider = paymentSessionProvider;
 
-            _mongoDbService = mongoDbService;
+            _vehicleServiceClient = vehicleServiceClient;
         }
 
         public async Task<IActionResult> Index(string vehicleId)
         {
-            VehicleInformationModel vehicleInformationModel = await _mongoDbService.GetVehicleInformation(vehicleId);
+            var response = await _vehicleServiceClient.GetVehicleInformation(Guid.Parse(vehicleId));
 
-            return View(vehicleInformationModel);
+            response.EnsureSuccessStatusCode();
+
+            VehicleInformationResponse responseModel = await response.Content.ReadFromJsonAsync<VehicleInformationResponse>()
+                ?? throw new NullReferenceException(nameof(responseModel));
+
+            return View(responseModel);
         }
 
         [HttpPost]
@@ -71,7 +76,7 @@ namespace CarSharingApp.Controllers
         }
 
         // Partial section starts here
-
+        
         public IActionResult RentOrderPartial(string vehicleId, string vehicleName, string tariffPerHour, string tariffPerDay)
         {
             var viewModel = new PaymentModel()

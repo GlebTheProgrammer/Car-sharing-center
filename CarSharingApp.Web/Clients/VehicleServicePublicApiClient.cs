@@ -30,6 +30,15 @@ namespace CarSharingApp.Web.Clients
             return await client.DeleteAsync(vehicleId);
         }
 
+        public async Task<HttpResponseMessage> GetAllApprovedAndPublishedNearbyVehiclesMapRepresentation(GetNearbyVehiclesMapRepresentationRequest request)
+        {
+            var client = CreateNewClientInstance(clientIdentifier);
+
+            JsonContent content = JsonContent.Create(request);
+
+            return await client.PostAsync("NearbyVehiclesMapRepresentation", content);
+        }
+
         public async Task<HttpResponseMessage> GetAllApprovedAndPublishedVehiclesCatalogRepresentation()
         {
             var client = CreateNewClientInstance(clientIdentifier);
@@ -51,6 +60,13 @@ namespace CarSharingApp.Web.Clients
             JsonContent content = JsonContent.Create(request);
 
             return await client.PostAsync("CriteriaCatalogRepresentation", content);
+        }
+
+        public async Task<HttpResponseMessage> GetVehicleInformation(Guid id)
+        {
+            var client = CreateNewClientInstance(clientIdentifier);
+
+            return await client.GetAsync("Information" + $"?id={id}");
         }
 
         public async Task<HttpResponseMessage> UpdateVehicleStatus(UpdateVehicleStatusRequest request)

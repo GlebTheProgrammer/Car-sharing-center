@@ -82,16 +82,16 @@
 
                 for (let i = 0; i < data.length; i++) {
                     const marker = new google.maps.Marker(
-                        {
-                            position: new google.maps.LatLng(data[i]['latitude'], data[i]['longitude']),
-                            map: map,
-                            title: data[i]['name'],
-                            icon: {
-                                url: "/Icons/vehicleIcon.png",
-                                scaledSize: new google.maps.Size(40, 40)
-                            },
-                            animation: google.maps.Animation.DROP
-                        });
+                    {
+                        position: new google.maps.LatLng(data[i]['latitude'], data[i]['longitude']),
+                        map: map,
+                        title: data[i]['name'],
+                        icon: {
+                            url: "/Icons/vehicleIcon.png",
+                            scaledSize: new google.maps.Size(40, 40)
+                        },
+                        animation: google.maps.Animation.DROP
+                    });
 
                     google.maps.event.addListener(marker, 'mouseover', function () {
                         infoWindow.setContent(infos[i]),

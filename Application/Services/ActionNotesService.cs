@@ -21,6 +21,7 @@ namespace CarSharingApp.Application.Services
             result.ToList().Sort((x, y) => DateTime.Compare(x.ActionMadeTime, y.ActionMadeTime));
 
             return result.Reverse().Skip(skip).Take(limit).ToList();
+            //return new List<ActionNote>();
         }
 
         public async Task<List<ActionNote>> GetCustomerNotesWithLimitConnectedWithOrders(Guid customerId, int skip, int limit)
@@ -31,6 +32,7 @@ namespace CarSharingApp.Application.Services
             result.ToList().Sort((x, y) => DateTime.Compare(x.ActionMadeTime, y.ActionMadeTime));
 
             return result.Reverse().Skip(skip).Take(limit).ToList();
+            //return new List<ActionNote>();
         }
 
         public async Task<List<ActionNote>> GetCustomerNotesWithLimitConnectedWithVehicles(Guid customerId, int skip, int limit)
@@ -41,6 +43,7 @@ namespace CarSharingApp.Application.Services
             result.ToList().Sort((x, y) => DateTime.Compare(x.ActionMadeTime, y.ActionMadeTime));
 
             return result.Reverse().Skip(skip).Take(limit).ToList();
+            //return new List<ActionNote>();
         }
 
         public async Task<List<ActionNote>> GetNotesWithLimitConnectedWithAnEntityAsync(Guid entityId, int skip, int limit)
@@ -50,6 +53,7 @@ namespace CarSharingApp.Application.Services
             result.ToList().Sort((x, y) => DateTime.Compare(x.ActionMadeTime, y.ActionMadeTime));
 
             return result.Reverse().Skip(skip).Take(limit).ToList();
+            //return new List<ActionNote>();
         }
     }
 }

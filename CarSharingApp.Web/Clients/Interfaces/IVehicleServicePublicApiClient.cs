@@ -7,6 +7,8 @@ namespace CarSharingApp.Web.Clients.Interfaces
         Task<HttpResponseMessage> GetAllApprovedAndPublishedVehiclesMapRepresentation();
         Task<HttpResponseMessage> GetAllApprovedAndPublishedVehiclesCatalogRepresentation();
         Task<HttpResponseMessage> GetAllApprovedAndPublishedVehiclesWithFilterCatalogRepresentation(GetVehiclesByCriteriaRequest request);
+        Task<HttpResponseMessage> GetAllApprovedAndPublishedNearbyVehiclesMapRepresentation(GetNearbyVehiclesMapRepresentationRequest request);
+        Task<HttpResponseMessage> GetVehicleInformation(Guid id);
         Task<HttpResponseMessage> CreateNewVehicle(CreateVehicleRequest request);
         Task<HttpResponseMessage> DeleteVehicle(string vehicleId);
         Task<HttpResponseMessage> UpdateVehicleStatus(UpdateVehicleStatusRequest request);

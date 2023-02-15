@@ -10,16 +10,24 @@ using CarSharingApp.PublicApi.Primitives;
 using CarSharingApp.Domain.ValueObjects;
 using CarSharingApp.Domain.SmartEnums;
 using static CarSharingApp.Domain.Enums.FlagEnums;
+using System.Globalization;
+using Azure.Core;
 
 namespace CarSharingApp.PublicApi.Controllers
 {
     public sealed class VehiclesController : ApiController
     {
         private readonly IVehicleService _vehicleService;
+        private readonly ICustomerService _customerService;
+        private readonly ILogger<VehiclesController> _logger;
 
-        public VehiclesController(IVehicleService vehicleService)
+        public VehiclesController(IVehicleService vehicleService, 
+                                  ICustomerService customerService, 
+                                  ILogger<VehiclesController> logger)
         {
             _vehicleService = vehicleService;
+            _customerService = customerService;
+            _logger = logger;
         }
 
         [HttpPost]
@@ -37,12 +45,15 @@ namespace CarSharingApp.PublicApi.Controllers
 
             if (requestToVehicleResult.IsError)
             {
+                _logger.LogInformation("Customer with ID: {customerId} entered wrong data trying to add new vehicle.", jwtClaims.Id);
                 return Problem(requestToVehicleResult.Errors);
             }
 
             Vehicle vehicle = requestToVehicleResult.Value;
 
             await _vehicleService.CreateVehicleAsync(vehicle);
+
+            _logger.LogInformation("Customer with ID: {customerId} has successfully added new vehicle with ID: {vehicleId}.", jwtClaims.Id, vehicle.Id);
 
             return CreatedAtAction(
                         actionName: nameof(GetVehicle),
@@ -60,6 +71,37 @@ namespace CarSharingApp.PublicApi.Controllers
                 vehicle => Ok(MapVehicleResponse(vehicle)),
                 errors => Problem(errors));
         }
+
+        [HttpGet("Information")]
+        [Authorize]
+        public async Task<IActionResult> GetVehicleInformation(Guid id)
+        {
+            JwtClaims? jwtClaims = GetJwtClaims();
+
+            if (jwtClaims is null)
+            {
+                return Forbid();
+            }
+
+            ErrorOr<Vehicle> getVehicleResult = await _vehicleService.GetVehicleAsync(id);
+            if (getVehicleResult.IsError)
+            {
+                _logger.LogInformation("Failed finding information of the vehicle with ID: {vehicleId} for the customer with ID: {customerId}.", id, jwtClaims.Id);
+                return Problem(getVehicleResult.Errors);
+            }
+            Vehicle vehicle = getVehicleResult.Value;
+
+            ErrorOr<Customer> getCustomerResult = await _customerService.GetCustomerAsync(vehicle.CustomerId);
+            if (getCustomerResult.IsError)
+            {
+                _logger.LogInformation("Failed finding information of the owner with ID: {ownerId} of the vehicle with ID: {vehicleId} for the customer with ID: {customerId}.", vehicle.CustomerId, id, jwtClaims.Id);
+                return Problem(getCustomerResult.Errors);
+            }
+            Customer customer = getCustomerResult.Value;
+
+            return Ok(MapVehicleInformationResponse(vehicle, customer, jwtClaims.Id));
+        }
+
 
         [HttpGet("MapRepresentation")]
         public async Task<IActionResult> GetVehiclesMapRepresentation()
@@ -130,7 +172,10 @@ namespace CarSharingApp.PublicApi.Controllers
                 JwtClaims? jwtClaims = GetJwtClaims();
 
                 if (jwtClaims is null)
+                {
+                    _logger.LogInformation("Unauthorized user tried to get access for the filter for authorized customers only.");
                     throw new NullReferenceException(nameof(jwtClaims));
+                }
 
                 if (request.SearchAllExceptMyVehicles)
                     return Ok(MapVehicleCatalogResponse(vehiclesThatMatchCriteriaAndCategories.Where(v => v.CustomerId != Guid.Parse(jwtClaims.Id)).ToList()));
@@ -138,6 +183,42 @@ namespace CarSharingApp.PublicApi.Controllers
                     return Ok(MapVehicleCatalogResponse(vehiclesThatMatchCriteriaAndCategories.Where(v => v.CustomerId == Guid.Parse(jwtClaims.Id)).ToList()));
             }
         }
+
+        [HttpPost("NearbyVehiclesMapRepresentation")]
+        public async Task<IActionResult> GetNearbyVehiclesMapRepresentation(GetNearbyVehiclesMapRepresentationRequest request)
+        {
+            List<Vehicle> getVehiclesResult = await _vehicleService.GetAllAsync();
+
+            List<Vehicle> publisedAndApprovedVehicles = getVehiclesResult.Where(v => v.Status.IsPublished && v.Status.IsConfirmedByAdmin).ToList();
+
+            const int EarthRadiusKm = 6371;
+
+            Dictionary<Guid, double> VehicleGuid_Distance = new Dictionary<Guid, double>();
+
+            foreach (var vehicle in publisedAndApprovedVehicles)
+            {
+                var latitudeDiff = (Math.PI / 180) * double.Parse(vehicle.Location.Latitude, CultureInfo.InvariantCulture) - (Math.PI / 180) * double.Parse(request.UserLatitude, CultureInfo.InvariantCulture);
+                var longitudeDiff = (Math.PI / 180) * double.Parse(vehicle.Location.Longitude, CultureInfo.InvariantCulture) - (Math.PI / 180) * double.Parse(request.UserLongitude, CultureInfo.InvariantCulture);
+
+                var a = Math.Pow(Math.Sin(latitudeDiff / 2), 2) + Math.Cos(double.Parse(request.UserLatitude, CultureInfo.InvariantCulture)) * Math.Cos(double.Parse(vehicle.Location.Latitude, CultureInfo.InvariantCulture)) * Math.Pow(Math.Sin(longitudeDiff / 2), 2);
+                var c = 2 * Math.Asin(Math.Sqrt(a));
+                var kmDifference = c * EarthRadiusKm;
+
+                VehicleGuid_Distance.Add(vehicle.Id, kmDifference);
+            }
+
+            List<Vehicle> sortedNearbyVehicles = new List<Vehicle>();
+            List<double> kmDiffList = new List<double>(); 
+            foreach (var vehicle in VehicleGuid_Distance.OrderBy(v => v.Value).Take(request.Count))
+            {
+                sortedNearbyVehicles.Add(publisedAndApprovedVehicles.Find(v => v.Id == vehicle.Key) ??
+                    throw new Exception(nameof(vehicle)));
+                kmDiffList.Add(vehicle.Value);
+            }
+
+            return Ok(MapNearbyVehicleMapResponse(sortedNearbyVehicles, kmDiffList));
+        }
+
 
         [HttpPut("{id:guid}")]
         [Authorize]
@@ -147,6 +228,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
             if (getVehicleResult.IsError)
             {
+                _logger.LogInformation("Failed finding information of the vehicle with ID: {vehicleId} when tried to change its data.", id);
                 return Problem(getVehicleResult.Errors);
             }
 
@@ -154,6 +236,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
             if (!IsRequestAllowed(notUpdatedVehicle.CustomerId))
             {
+                _logger.LogInformation("Update vehicle with ID: {vehicleId} status request is not allowed because of missing permissions.", id);
                 return Forbid();
             }
 
@@ -168,6 +251,8 @@ namespace CarSharingApp.PublicApi.Controllers
 
             await _vehicleService.UpdateVehicleAsync(vehicle);
 
+            _logger.LogInformation("Customer with ID: {customerId} has successfully updated vehicle with ID: {vehicleId} information.", vehicle.CustomerId, vehicle.Id);
+
             return NoContent();
         }
 
@@ -179,6 +264,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
             if (getVehicleResult.IsError)
             {
+                _logger.LogInformation("Failed finding vehicle with ID: {vehicleId} when tried to change its status.", request.vehicleId);
                 return Problem(getVehicleResult.Errors);
             }
 
@@ -186,6 +272,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
             if (!IsRequestAllowed(notUpdatedVehicle.CustomerId))
             {
+                _logger.LogInformation("Update vehicle with ID: {vehicleId} status request is not allowed because of missing permissions.", request.vehicleId);
                 return Forbid();
             }
 
@@ -200,6 +287,8 @@ namespace CarSharingApp.PublicApi.Controllers
 
             await _vehicleService.UpdateVehicleStatusAsync(vehicle);
 
+            _logger.LogInformation("Customer with ID: {customerId} has successfully updated vehicle with ID: {vehicleId} status.", vehicle.CustomerId, vehicle.Id);
+
             return NoContent();
         }
 
@@ -212,6 +301,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
             if (getVehicleResult.IsError)
             {
+                _logger.LogInformation("Failed finding vehicle with ID: {vehicleId} when tried to delete it.", id);
                 return Problem(getVehicleResult.Errors);
             }
 
@@ -219,10 +309,13 @@ namespace CarSharingApp.PublicApi.Controllers
 
             if (!IsRequestAllowed(notDeletedVehicleYet.CustomerId))
             {
+                _logger.LogInformation("Delete vehicle with ID: {vehicleId} request is not allowed because of missing permissions.", id);
                 return Forbid();
             }
 
             await _vehicleService.DeleteVehicleAsync(id);
+
+            _logger.LogInformation("Customer with ID: {customerId} has successfully deleted vehicle with ID: {vehicleId}.", notDeletedVehicleYet.CustomerId, notDeletedVehicleYet.Id);
 
             return NoContent();
         }
@@ -246,6 +339,40 @@ namespace CarSharingApp.PublicApi.Controllers
                 vehicle.Status);
         }
 
+        private VehicleInformationResponse MapVehicleInformationResponse(Vehicle vehicle, Customer owner, string requestedCustomerId)
+        {
+            return new VehicleInformationResponse(
+                vehicle.Id.ToString(),
+                owner.Credentials.Login,
+                owner.Id.ToString(),
+                vehicle.Name,
+                vehicle.Image,
+                vehicle.BriefDescription,
+                vehicle.Description,
+                $"{vehicle.Tariff.HourlyRentalPrice}",
+                $"{vehicle.Tariff.DailyRentalPrice}",
+                vehicle.Location.StreetAddress,
+                vehicle.Location.AptSuiteEtc,
+                vehicle.Location.City,
+                vehicle.Location.Country.Name,
+                vehicle.Location.Latitude,
+                vehicle.Location.Longitude,
+                vehicle.Specifications.ProductionYear,
+                vehicle.Specifications.MaxSpeedKph,
+                vehicle.Specifications.ExteriorColor.Name,
+                vehicle.Specifications.InteriorColor.Name,
+                vehicle.Specifications.Drivetrain.Name,
+                vehicle.Specifications.FuelType.Name,
+                vehicle.Specifications.Transmission.Name,
+                vehicle.Specifications.Engine.Name,
+                vehicle.Specifications.VIN,
+                FlagEnums.GetListFromCategories(vehicle.Categories),
+                vehicle.TimesOrdered,
+                vehicle.PublishedTime,
+                vehicle.LastTimeOrdered,
+                vehicle.CustomerId.ToString().Equals(requestedCustomerId));
+        }
+
         private VehiclesDisplayOnMapResponse MapVehicleMapResponse(List<Vehicle> vehicles)
         {
             var resultList = new List<VehicleDisplayOnMap>();
@@ -260,6 +387,30 @@ namespace CarSharingApp.PublicApi.Controllers
             }
 
             return new VehiclesDisplayOnMapResponse(resultList);
+        }
+
+        private NearbyVehiclesDisplayOnMapResponse MapNearbyVehicleMapResponse(List<Vehicle> vehicles, List<double> kmDiffList)
+        {
+            var resultList = new List<NearbyVehicleDisplayOnMapResponse>();
+
+            int counter = 0;
+            foreach (var vehicle in vehicles)
+            {
+                string vehicleHourlPyrice = $"{vehicle.Tariff.HourlyRentalPrice}";
+                string vehicleDailyPrice = $"{vehicle.Tariff.DailyRentalPrice}";
+
+                resultList.Add(new NearbyVehicleDisplayOnMapResponse(
+                    vehicle.Name,
+                    vehicle.Image,
+                    vehicle.Location.Latitude,
+                    vehicle.Location.Longitude,
+                    vehicleHourlPyrice.Length > 3 ? vehicleHourlPyrice.Insert(vehicleHourlPyrice.Length - 3, ",") : vehicleHourlPyrice,
+                    vehicleDailyPrice.Length > 3 ? vehicleDailyPrice.Insert(vehicleDailyPrice.Length - 3, ",") : vehicleDailyPrice,
+                    vehicle.TimesOrdered,
+                    $"{kmDiffList[counter++]}"[..4]));
+            }
+
+            return new NearbyVehiclesDisplayOnMapResponse(resultList);
         }
 
         private VehiclesDisplayInCatalogResponse MapVehicleCatalogResponse(List<Vehicle> vehicles)

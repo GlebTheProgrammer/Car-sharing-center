@@ -20,6 +20,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
     <PackageReference Include="Microsoft.Identity.Web" Version="1.25.10" />
     <PackageReference Include="MongoDB.Driver" Version="2.18.0" />
+    <PackageReference Include="Seq.Extensions.Logging" Version="6.1.0" />
   </ItemGroup>
 
   <ItemGroup>
