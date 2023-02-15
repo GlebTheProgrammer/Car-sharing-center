@@ -21,7 +21,7 @@ jobs:
     
     # dotnet build and publish
     - name: Build with dotnet
-      run: dotnet build --configuration Release .\CarSharingApp.PublicApi
+      run: dotnet build --configuration Release ./CarSharingApp.PublicApi
 
     - name: dotnet publish 
       run: |
