@@ -25,7 +25,7 @@ jobs:
 
     - name: dotnet publish 
       run: |
-        dotnet publish -c Release -o dotnetcorepublicapi .\dotnet-core-webapp
+        dotnet publish -c Release -o dotnetcorepublicapi ./CarSharingApp.PublicApi
     - name: Deploy to IIS
       run: |
         iisreset /stop
