@@ -1,6 +1,7 @@
 ﻿using CarSharingApp.Application.Contracts.Customer;
 using CarSharingApp.Application.Contracts.ErrorType;
 using CarSharingApp.Web.Clients.Interfaces;
+using CarSharingApp.Web.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -40,12 +41,17 @@ namespace CarSharingApp.Controllers
         }
 
         [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        [PreventDuplicateRequest]
         public async Task<IActionResult> Register(CreateCustomerRequest createCustomerRequest)
         {
+            if (!ModelState.IsValid)
+                return View("Index", createCustomerRequest);
+
             var response = await _customerServiceClient.CreateNewCustomer(createCustomerRequest);
 
             string responseContent = await response.Content.ReadAsStringAsync();
-
+            Thread.Sleep(3000);
             switch (response.StatusCode)
             {
                 case HttpStatusCode.BadRequest:

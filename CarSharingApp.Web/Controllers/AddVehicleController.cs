@@ -27,7 +27,6 @@ namespace CarSharingApp.Controllers
             return View(createNewVehicleRequest);
         }
 
-        [HttpPost]
         public async Task<IActionResult> AddVehicle(CreateVehicleRequest createVehicleRequest, IFormFile file)
         {
             if (file is null)
