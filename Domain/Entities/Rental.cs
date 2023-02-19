@@ -1,41 +1,43 @@
 ﻿using CarSharingApp.Domain.Primitives;
+using System.ComponentModel.DataAnnotations;
 
 namespace CarSharingApp.Domain.Entities
 {
     public sealed class Rental : Entity
     {
-        public Guid RentedCustomerId { get; private set; } // 1:1
-        public Customer? RentedCustomer { get; private set; }
-        public Guid VehicleOwnerId { get; private set; } // 1:1
-        public Customer? VehicleOwner { get; private set; }
-        public Guid VehicleId { get; private set; } // 1:1
-        public Vehicle? Vehicle { get; private set; }
-        public Guid PaymentId { get; private set; } // 1:1
-        public Payment? Payment { get; private set; }
+        [Required]
+        public Guid RentedCustomerId { get; private set; }
+        [Required]
+        public Guid VehicleOwnerId { get; private set; }
+        [Required]
+        public Guid VehicleId { get; private set; }
 
-        public DateTime RentalDate { get; private set; }
-        public int RentalTimeInMinutes { get; private set; }
-        public DateTime ReturnDate { get; private set; }
+        [Required]
+        public Payment Payment { get; private set; } // 1:1 EF Core
+
+        [Required]
+        public DateTime RentalStartsDate { get; private set; }
+        [Required]
+        public DateTime RentalEndsDate { get; private set; }
+        [Required]
         public bool IsActive { get; private set; }
 
         public Rental(Guid id,
             Guid rentedCustomerId, 
             Guid vehicleOwnerId,
             Guid vehicleId,
-            Guid paymentId,
-            DateTime rentalDate, 
-            int rentalTimeInMinutes, 
-            DateTime returnDate, 
+            Payment payment,
+            DateTime rentalStartsDate,
+            DateTime rentalEndsDate, 
             bool isActive)
             : base(id)
         {
             RentedCustomerId = rentedCustomerId;
             VehicleOwnerId = vehicleOwnerId;
             VehicleId = vehicleId;
-            PaymentId = paymentId;
-            RentalDate = rentalDate;
-            RentalTimeInMinutes = rentalTimeInMinutes;
-            ReturnDate = returnDate;
+            Payment = payment;
+            RentalStartsDate = rentalStartsDate;
+            RentalEndsDate = rentalEndsDate;
             IsActive = isActive;
         }
     }

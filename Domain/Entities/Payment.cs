@@ -1,24 +1,36 @@
 ﻿using CarSharingApp.Domain.Primitives;
+using System.ComponentModel.DataAnnotations;
 
 namespace CarSharingApp.Domain.Entities
 {
     public sealed class Payment : Entity
     {
-        public DateTime Date { get; private set; }
+        [Required]
+        [MaxLength(255)]
+        public string StripeTransactionId { get; private set; }
+        [Required]
+        public DateTime PaymentDateTime { get; private set; }
+        [Required]
         public decimal Amount { get; private set; }
 
+        [Required]
         public Guid RentalId { get; private set; } // 1:1
-        public Rental? Rental { get; private set; }
+        [Required]
+        public Rental Rental { get; private set; }
 
         public Payment(Guid id,
+            string stripeTransactionId,
+            Rental rental,
             Guid rentalId,
-            DateTime date, 
+            DateTime paymentDateTime, 
             decimal amount)
             : base(id)
         {
+            StripeTransactionId = stripeTransactionId;
             RentalId = rentalId;
-            Date = date;
+            Rental = rental;
             Amount = amount;
+            PaymentDateTime = paymentDateTime;
         }
     }
 }

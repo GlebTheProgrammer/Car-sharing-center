@@ -51,7 +51,7 @@ namespace CarSharingApp.Controllers
             var response = await _customerServiceClient.CreateNewCustomer(createCustomerRequest);
 
             string responseContent = await response.Content.ReadAsStringAsync();
-            Thread.Sleep(3000);
+
             switch (response.StatusCode)
             {
                 case HttpStatusCode.BadRequest:
