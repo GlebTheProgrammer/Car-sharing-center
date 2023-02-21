@@ -33,13 +33,14 @@ builder.Services.AddSingleton<IAccountServicePublicApiClient, AccountServicePubl
 builder.Services.RegisterNewHttpClients("AccountsAPI", builder.Configuration);
 builder.Services.AddSingleton<IAzureADPublicApiClient, AzureADPublicApiClient>();
 builder.Services.RegisterNewHttpClients("AzureActiveDirectoryAPI", builder.Configuration);
+builder.Services.AddSingleton<IStripePlatformPublicApiClient, StripePlatformPublicApiClient>();
+builder.Services.RegisterNewHttpClients("PaymentsAPI", builder.Configuration);
 
 builder.Services.RegisterAzureBlobStorageClient(builder.Configuration);
 
 builder.Services.ConfigureOptions<JwtOptionsSetup>();
 builder.Services.AddTransient<IJwtProvider, JwtProvider>();
 builder.Services.AddJwtBearerAuthentication(builder.Configuration);
-
 
 
 

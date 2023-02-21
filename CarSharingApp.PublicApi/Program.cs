@@ -63,6 +63,10 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddMSSQLDBconnection(builder.Configuration);
     builder.Services.AddMSSQLRepository<ActionNote>();
     builder.Services.AddSingleton<IActionNotesService, ActionNotesService>();
+    builder.Services.AddMSSQLRepository<Payment>();
+    builder.Services.AddSingleton<IPaymentsService, PaymentsService>();
+    builder.Services.AddMSSQLRepository<Rental>();
+    builder.Services.AddSingleton<IRentalsService, RentalsService>();
 
     #endregion
 

@@ -64,6 +64,23 @@ namespace CarSharingApp.Domain.Entities
         public static ActionNote UpdatedVehicleNote(Guid actorId, string vehicleName) =>
             new(new Guid(), actorId, NoteType.UpdatedExistingVehicle.Value, $"{UpdatedVehicleNoteStr} ({vehicleName})", DateTime.Now, null);
 
+        // Rentals notes section
+        public const string RentedNewVehicleNoteStr = "You have successfully completed payment process and rented the vehicle.";
+        public const string OwnerVehicleRentedNoteStr = "Your vehicle was rented by another customer. Well done!";
+        public const string FinishedExistingRentalByYourselfNoteStr = "You have successfully finished the rental.";
+        public const string FinishedExistingRentalBySystemNoteStr = "You rental was finished by the system because of the time overdue.";
+        public const string OwnerVehicleRentalIsOverNoteStr = "Your vehichle's rental has over and now it can be rented by another customer.";
+
+        public static ActionNote RentedNewVehicleNote(Guid actorId, string vehicleName, Guid vehicleId, decimal amount) =>
+            new(new Guid(), actorId, NoteType.RentedNewVehicle.Value, $"{RentedNewVehicleNoteStr} ({vehicleName} for {amount}$)", DateTime.Now, vehicleId);
+        public static ActionNote OwnerVehicleRentedNote(Guid actorId, string vehicleName, Guid vehicleId, decimal amount) =>
+            new(new Guid(), actorId, NoteType.OwnerVehicleRented.Value, $"{OwnerVehicleRentedNoteStr} ({vehicleName} for {amount}$)", DateTime.Now, vehicleId);
+        public static ActionNote FinishedExistingRentalByYourselfNote(Guid actorId, string vehicleName, Guid vehicleId) =>
+            new(new Guid(), actorId, NoteType.CustomerHasFinishedExistingRental.Value, $"{FinishedExistingRentalByYourselfNoteStr} ({vehicleName})", DateTime.Now, vehicleId);
+        public static ActionNote FinishedExistingRentalBySystemNote(Guid actorId, string vehicleName, Guid vehicleId) =>
+            new(new Guid(), actorId, NoteType.SystemHasFinishedExistingRental.Value, $"{FinishedExistingRentalBySystemNoteStr} ({vehicleName})", DateTime.Now, vehicleId);
+        public static ActionNote OwnerVehicleRentalIsOverNote(Guid actorId, string vehicleName, Guid vehicleId) =>
+            new(new Guid(), actorId, NoteType.OwnerVehicleRentalFinished.Value, $"{OwnerVehicleRentalIsOverNoteStr} ({vehicleName})", DateTime.Now, vehicleId);
 
     }
 }

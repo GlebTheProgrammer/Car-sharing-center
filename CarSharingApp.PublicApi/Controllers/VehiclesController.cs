@@ -11,7 +11,6 @@ using CarSharingApp.Domain.ValueObjects;
 using CarSharingApp.Domain.SmartEnums;
 using static CarSharingApp.Domain.Enums.FlagEnums;
 using System.Globalization;
-using Azure.Core;
 
 namespace CarSharingApp.PublicApi.Controllers
 {

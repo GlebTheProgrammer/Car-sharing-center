@@ -331,7 +331,7 @@
 </div>
 
 <script>
-    $('#partialZone_PaymentModal').load("/VehicleInformation/RentOrderPartial", { vehicleId: "@Model.Id", vehicleName: "@Model.Name", tariffPerHour: "@Model.HourlyRentalPrice", tariffPerDay: "@Model.DailyRentalPrice" });
+    $('#partialZone_PaymentModal').load("/VehicleInformation/RentOrderPartial", { vehicleId: "@Model.Id", vehicleName: "@Model.Name", vehicleOwnerId: "@Model.CustomerId", tariffPerHour: "@Model.HourlyRentalPrice", tariffPerDay: "@Model.DailyRentalPrice" });
 </script>
 
 

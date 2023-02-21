@@ -1,13 +1,24 @@
-﻿using Stripe.Checkout;
+﻿using CarSharingApp.Application.Contracts.Payment;
+using CarSharingApp.PublicApi.Primitives;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Stripe;
+using Stripe.Checkout;
 
-namespace CarSharingApp.Payment.StripeService
+namespace CarSharingApp.PublicApi.Controllers
 {
-    public sealed class StripeSessionProvider : IPaymentSessionProvider
+    public class PaymentsController : ApiController
     {
         private const string StripePaymentProcessImage = "https://www.hotellinksolutions.com/images/learning-center/payment-101.jpg";
 
+        public PaymentsController(IConfiguration configuration)
+        {
+            StripeConfiguration.ApiKey = configuration["StripeConfig:SecretKey"];
+        }
 
-        public Session Provide(PaymentModel payment, string successUrl, string cancelationUrl)
+        [HttpPost]
+        [Authorize]
+        public IActionResult GenerateStripeSession(StripePaymentSessionRequest payment, string successUrl, string cancelationUrl)
         {
             var options = new Stripe.Checkout.SessionCreateOptions
             {
@@ -32,14 +43,20 @@ namespace CarSharingApp.Payment.StripeService
                     },
                 },
                 Mode = "payment",
-                SuccessUrl = successUrl + "sessionId={CHECKOUT_SESSION_ID}",
+                SuccessUrl = successUrl + "&sessionId={CHECKOUT_SESSION_ID}",
                 CancelUrl = cancelationUrl,
             };
 
             var service = new Stripe.Checkout.SessionService();
             Stripe.Checkout.Session session = service.Create(options);
-            
-            return session;
+
+            return Ok(MapStripePaymentSessionResponse(session));
+        }
+
+        private StripePaymentSessionResponse MapStripePaymentSessionResponse(Stripe.Checkout.Session session)
+        {
+            return new StripePaymentSessionResponse(
+                SessionUrl: session.Url);
         }
     }
 }
