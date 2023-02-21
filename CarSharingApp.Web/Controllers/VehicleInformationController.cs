@@ -1,9 +1,11 @@
-﻿using CarSharingApp.Application.Contracts.Payment;
+﻿using CarSharingApp.Application.Contracts.ErrorType;
+using CarSharingApp.Application.Contracts.Payment;
 using CarSharingApp.Application.Contracts.Rental;
 using CarSharingApp.Application.Contracts.Vehicle;
 using CarSharingApp.Web.Clients.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace CarSharingApp.Controllers
 {
@@ -38,15 +40,19 @@ namespace CarSharingApp.Controllers
             string hostedUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}";
 
             var stripeSessionUrlResponse = await _stripePlatformClient.GetStripeSessionUrl(
-                payment: paymentRequest,
-                successUrl: hostedUrl + Url.Action("SuccessfulPayment", paymentRequest),
-                cancelationUrl: hostedUrl + Url.Action("CancelledPayment", paymentRequest));
+                GenerateNewStripePaymentSessionUrlRequest(
+                    request: paymentRequest,
+                    successUrl: hostedUrl + Url.Action("SuccessfulPayment", paymentRequest),
+                    cancelationUrl: hostedUrl + Url.Action("CancelledPayment", paymentRequest)));
 
-            string stripeSessionUrl = await stripeSessionUrlResponse.Content.ReadAsStringAsync();
+            string responseContent = await stripeSessionUrlResponse.Content.ReadAsStringAsync();
 
-            Response.Headers.Add("Location", stripeSessionUrl);
+            StripePaymentSessionResponse stripeSessionUrl = JsonSerializer.Deserialize<StripePaymentSessionResponse>(responseContent) 
+                ?? throw new NotImplementedException(nameof(CreateCheckoutSession));
 
-            return Redirect(stripeSessionUrl);
+            Response.Headers.Add("Location", stripeSessionUrl.SessionUrl);
+
+            return Redirect(stripeSessionUrl.SessionUrl);
         }
 
         public async Task<IActionResult> SuccessfulPayment(StripePaymentSessionRequest completedPayment, string sessionId)
@@ -104,8 +110,27 @@ namespace CarSharingApp.Controllers
                 
         }
 
+        private StripePaymentSessionUrlRequest GenerateNewStripePaymentSessionUrlRequest(
+            StripePaymentSessionRequest request, string successUrl, string cancelationUrl)
+        {
+            return new StripePaymentSessionUrlRequest(
+                VehicleId: request.VehicleId,
+                VehicleOwnerId: request.VehicleOwnerId,
+                VehicleName: request.VehicleName,
+                Amount: request.Amount,
+                TariffPerHour: request.TariffPerHour,
+                TariffPerDay: request.TariffPerDay,
+                StartHour: request.StartHour,
+                StartDay: request.StartDay,
+                StartMonth: request.StartMonth,
+                EndHour: request.EndHour,
+                EndDay: request.EndDay,
+                EndMonth: request.EndMonth,
+                SuccessUrl: successUrl,
+                CancelationUrl: cancelationUrl);
+
+        }
+
         #endregion
-
-
     }
 }

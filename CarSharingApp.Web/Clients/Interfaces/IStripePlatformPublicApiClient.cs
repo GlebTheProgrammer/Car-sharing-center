@@ -4,6 +4,6 @@ namespace CarSharingApp.Web.Clients.Interfaces
 {
     public interface IStripePlatformPublicApiClient
     {
-        Task<HttpResponseMessage> GetStripeSessionUrl(StripePaymentSessionRequest payment, string successUrl, string cancelationUrl);
+        Task<HttpResponseMessage> GetStripeSessionUrl(StripePaymentSessionUrlRequest request);
     }
 }

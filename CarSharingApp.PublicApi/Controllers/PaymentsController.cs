@@ -18,7 +18,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [HttpPost]
         [Authorize]
-        public IActionResult GenerateStripeSession(StripePaymentSessionRequest payment, string successUrl, string cancelationUrl)
+        public IActionResult GenerateStripeSession(StripePaymentSessionUrlRequest payment)
         {
             var options = new Stripe.Checkout.SessionCreateOptions
             {
@@ -43,8 +43,8 @@ namespace CarSharingApp.PublicApi.Controllers
                     },
                 },
                 Mode = "payment",
-                SuccessUrl = successUrl + "&sessionId={CHECKOUT_SESSION_ID}",
-                CancelUrl = cancelationUrl,
+                SuccessUrl = payment.SuccessUrl + "&sessionId={CHECKOUT_SESSION_ID}",
+                CancelUrl = payment.CancelationUrl,
             };
 
             var service = new Stripe.Checkout.SessionService();

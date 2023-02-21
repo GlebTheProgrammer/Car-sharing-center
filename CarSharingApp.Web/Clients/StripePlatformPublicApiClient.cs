@@ -13,13 +13,11 @@ namespace CarSharingApp.Web.Clients
         {
         }
 
-        public async Task<HttpResponseMessage> GetStripeSessionUrl(StripePaymentSessionRequest payment, string successUrl, string cancelationUrl)
+        public async Task<HttpResponseMessage> GetStripeSessionUrl(StripePaymentSessionUrlRequest request)
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            List<object> parameters = new() { payment, successUrl, cancelationUrl };
-
-            JsonContent content = JsonContent.Create(parameters);
+            JsonContent content = JsonContent.Create(request);
 
             return await client.PostAsync(client.BaseAddress, content);
         }
