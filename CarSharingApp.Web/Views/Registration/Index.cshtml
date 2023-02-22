@@ -194,7 +194,11 @@
                 <hr>
 
                 <div class="col-12 text-center">
-                    <button class="btn btn-primary w-25 mb-4" type="submit">Submit form</button>
+                    <button id="submitFormBtn" class="btn btn-primary w-25 mb-4" type="submit">Submit form</button>
+                    <button id="processFormBtn" class="btn btn-primary w-25 mb-4" hidden disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Processing...
+                    </button>
                 </div>
 
                 <div id="serverErrors" class="visually-hidden">
@@ -235,6 +239,22 @@
 <script src="~/js/registrationPage.js" asp-append-version="true"></script>
 
 <script>
+    document.addEventListener("abort", () => {
+        alert("aborted");
+    });
+
+    function ChangeSubmitButtonContent(hasLoading){
+        const submitFormButtonElement = document.getElementById("submitFormBtn");
+        const processFormButtonElement = document.getElementById("processFormBtn");
+        if (hasLoading){
+            submitFormButtonElement.setAttribute("hidden", "");
+            processFormButtonElement.removeAttribute("hidden");
+        } else {
+            processFormButtonElement.setAttribute("hidden", "");
+            submitFormButtonElement.removeAttribute("hidden");
+        }
+    }
+
     (() => {
         'use strict'
 
@@ -245,8 +265,10 @@
                 if (!form.checkValidity()) {
                     event.preventDefault()
                     event.stopPropagation()
+                    ChangeSubmitButtonContent(false);
+                } else {
+                    ChangeSubmitButtonContent(true);
                 }
-                
                 form.classList.add('was-validated')
             }, false)
         })
@@ -255,6 +277,7 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
+        ChangeSubmitButtonContent(false);
         const serverErrorSpans = document.getElementById('serverErrors').querySelectorAll("span");
         
         Array.from(serverErrorSpans).forEach(errorSpan => {

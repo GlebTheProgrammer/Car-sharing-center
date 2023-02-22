@@ -1,7 +1,6 @@
 ﻿using CarSharingApp.Application.Contracts.Vehicle;
 using CarSharingApp.Web.Clients.Interfaces;
 using CarSharingApp.Web.Primitives;
-using System.Text;
 
 namespace CarSharingApp.Web.Clients
 {

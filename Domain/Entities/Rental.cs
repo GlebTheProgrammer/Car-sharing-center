@@ -1,42 +1,78 @@
 ﻿using CarSharingApp.Domain.Primitives;
+using CarSharingApp.Domain.ValidationErrors;
+using ErrorOr;
+using System.ComponentModel.DataAnnotations;
 
 namespace CarSharingApp.Domain.Entities
 {
     public sealed class Rental : Entity
     {
-        public Guid RentedCustomerId { get; private set; } // 1:1
-        public Customer? RentedCustomer { get; private set; }
-        public Guid VehicleOwnerId { get; private set; } // 1:1
-        public Customer? VehicleOwner { get; private set; }
-        public Guid VehicleId { get; private set; } // 1:1
-        public Vehicle? Vehicle { get; private set; }
-        public Guid PaymentId { get; private set; } // 1:1
-        public Payment? Payment { get; private set; }
+        [Required]
+        public Guid RentedCustomerId { get; private set; }
+        [Required]
+        public Guid VehicleOwnerId { get; private set; }
+        [Required]
+        public Guid VehicleId { get; private set; }
 
-        public DateTime RentalDate { get; private set; }
-        public int RentalTimeInMinutes { get; private set; }
-        public DateTime ReturnDate { get; private set; }
+        public Payment? Payment { get; private set; } // 1:1 EF Core
+
+        [Required]
+        public DateTime RentalStartsDateTime { get; private set; }
+        [Required]
+        public DateTime RentalEndsDateTime { get; private set; }
+        [Required]
         public bool IsActive { get; private set; }
 
-        public Rental(Guid id,
+        private Rental(Guid id,
             Guid rentedCustomerId, 
             Guid vehicleOwnerId,
             Guid vehicleId,
-            Guid paymentId,
-            DateTime rentalDate, 
-            int rentalTimeInMinutes, 
-            DateTime returnDate, 
-            bool isActive)
+            DateTime rentalStartsDateTime,
+            DateTime rentalEndsDateTime)
             : base(id)
         {
             RentedCustomerId = rentedCustomerId;
             VehicleOwnerId = vehicleOwnerId;
             VehicleId = vehicleId;
-            PaymentId = paymentId;
-            RentalDate = rentalDate;
-            RentalTimeInMinutes = rentalTimeInMinutes;
-            ReturnDate = returnDate;
-            IsActive = isActive;
+            RentalStartsDateTime = rentalStartsDateTime;
+            RentalEndsDateTime = rentalEndsDateTime;
+            IsActive = false;
+        }
+
+        public static ErrorOr<Rental> Create(
+            Guid rentedCustomerId,
+            Guid vehicleOwnerId,
+            Guid vehicleId,
+            DateTime rentalStartsDateTime,
+            DateTime rentalEndsDateTime,
+            Guid? id = null)
+        {
+            List<Error> errors = new();
+
+            if (rentalStartsDateTime >= rentalEndsDateTime)
+            {
+                errors.Add(DomainErrors.Rental.InvalidRentalStartsEndsDateTime);
+            }
+
+            if (errors.Count > 0)
+            {
+                return errors;
+            }
+
+            return new Rental(
+                id ?? Guid.NewGuid(),
+                rentedCustomerId,
+                vehicleOwnerId,
+                vehicleId,
+                rentalStartsDateTime,
+                rentalEndsDateTime);
+        }
+
+        public static Rental Finish(Rental rentalToFinish)
+        {
+            rentalToFinish.IsActive = false;
+
+            return rentalToFinish;
         }
     }
 }

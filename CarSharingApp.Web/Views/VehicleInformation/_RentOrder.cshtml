@@ -1,5 +1,4 @@
-﻿@using CarSharingApp.Payment;
-@model PaymentModel
+﻿@model CarSharingApp.Application.Contracts.Payment.StripePaymentSessionRequest;
 
 <form asp-controller="VehicleInformation" asp-action="CreateCheckoutSession" method="post">
     <!-- Modal -->
@@ -69,16 +68,17 @@
 
                     <div class="d-flex justify-content-between">
                         <p class="small mb-0 text-secondary">Hourly payment</p>
-                        <p id="totalHourlyPrice" class="small mb-0 text-secondary">$@(Model.Tariff.TariffPerHour).00</p>
+                        <p id="totalHourlyPrice" class="small mb-0 text-secondary">$@(Model.TariffPerHour).00</p>
                     </div>
 
                     <div class="d-flex justify-content-between">
                         <p class="fw-bold text-secondary">Total</p>
-                        <p id="totalPrice" class="fw-bold" style="color: #257cfd;">$@(Model.Tariff.TariffPerHour).00</p>
+                        <p id="totalPrice" class="fw-bold" style="color: #257cfd;">$@(Model.TariffPerHour).00</p>
 
                         <input asp-for="VehicleId" class="visually-hidden" type="text" id="vehicleIdInput" value="@Model.VehicleId" readonly />
+                        <input asp-for="VehicleOwnerId" class="visually-hidden" type="text" id="vehicleOwnerIdInput" value="@Model.VehicleOwnerId" readonly />
 
-                        <input asp-for="Amount" class="visually-hidden" type="text" id="totalPriceInput" placeholder="amount" value="@Model.Tariff.TariffPerHour" readonly />
+                        <input asp-for="Amount" class="visually-hidden" type="text" id="totalPriceInput" placeholder="amount" value="@Model.TariffPerHour" readonly />
                         <input asp-for="VehicleName" class="visually-hidden" type="text" value="@Model.VehicleName" readonly />
 
                         <input asp-for="StartMonth" class="visually-hidden" type="text" id="startMonthInput" value="@DateTime.Now.AddMinutes(60).ToString("MMMM")" readonly />
@@ -88,8 +88,8 @@
                         <input asp-for="StartHour" class="visually-hidden" type="text" id="startHourInput" value="@DateTime.Now.AddMinutes(60).Hour" readonly />
                         <input asp-for="EndHour" class="visually-hidden" type="text" id="endHourInput" value="@DateTime.Now.AddMinutes(120).Hour" readonly />
 
-                        <input asp-for="Tariff.TariffPerHour" class="visually-hidden" type="number" id="tariffHourInput" value="@Model.Tariff.TariffPerHour" readonly />
-                        <input asp-for="Tariff.TariffPerDay" class="visually-hidden" type="number" id="tariffDayInput" value="@Model.Tariff.TariffPerDay" readonly />
+                        <input asp-for="TariffPerHour" class="visually-hidden" type="number" id="tariffHourInput" value="@Model.TariffPerHour" readonly />
+                        <input asp-for="TariffPerDay" class="visually-hidden" type="number" id="tariffDayInput" value="@Model.TariffPerDay" readonly />
 
                     </div>
 
@@ -111,8 +111,8 @@
 
         var datetimesStartsStr = $('#datetimesStarts').data('daterangepicker').startDate.toString();
         var datetimesEndsStr = $('#datetimesEnds').data('daterangepicker').startDate.toString();
-        var vehicleHourlyTariff = parseInt("@Model.Tariff.TariffPerHour");
-        var vehicleDailyTariff = parseInt("@Model.Tariff.TariffPerDay");
+        var vehicleHourlyTariff = parseInt("@Model.TariffPerHour");
+        var vehicleDailyTariff = parseInt("@Model.TariffPerDay");
 
         CalculateVehicleUsagePeriodAndSetUpAllInputs(datetimesStartsStr, datetimesEndsStr, vehicleHourlyTariff, vehicleDailyTariff);
     });

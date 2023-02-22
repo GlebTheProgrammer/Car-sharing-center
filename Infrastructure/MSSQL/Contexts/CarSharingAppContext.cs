@@ -11,5 +11,7 @@ namespace CarSharingApp.Infrastructure.MSSQL.Contexts
         }
 
         public DbSet<ActionNote> ActionNotes { get; set; }
+        public DbSet<Rental> Rentals { get; set; }
+        public DbSet<Payment> Payments { get; set; }
     }
 }

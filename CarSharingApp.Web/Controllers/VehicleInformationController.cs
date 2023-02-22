@@ -1,9 +1,11 @@
-﻿using AutoMapper;
+﻿using CarSharingApp.Application.Contracts.ErrorType;
+using CarSharingApp.Application.Contracts.Payment;
+using CarSharingApp.Application.Contracts.Rental;
 using CarSharingApp.Application.Contracts.Vehicle;
-using CarSharingApp.Payment;
 using CarSharingApp.Web.Clients.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace CarSharingApp.Controllers
 {
@@ -11,16 +13,13 @@ namespace CarSharingApp.Controllers
     public class VehicleInformationController : Controller
     {
         private readonly IVehicleServicePublicApiClient _vehicleServiceClient;
+        private readonly IStripePlatformPublicApiClient _stripePlatformClient;
 
-        private readonly IPaymentSessionProvider _paymentSessionProvider;
-        private readonly IMapper _mapper;
-
-        public VehicleInformationController(IMapper mapper, IPaymentSessionProvider paymentSessionProvider, IVehicleServicePublicApiClient vehicleServiceClient)
+        public VehicleInformationController(IVehicleServicePublicApiClient vehicleServiceClient, 
+                                            IStripePlatformPublicApiClient stripePlatformClient)
         {
-            _mapper = mapper;
-            _paymentSessionProvider = paymentSessionProvider;
-
             _vehicleServiceClient = vehicleServiceClient;
+            _stripePlatformClient = stripePlatformClient;
         }
 
         public async Task<IActionResult> Index(string vehicleId)
@@ -36,22 +35,27 @@ namespace CarSharingApp.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateCheckoutSession(PaymentModel paymentModel)
+        public async Task<IActionResult> CreateCheckoutSession(StripePaymentSessionRequest paymentRequest)
         {
             string hostedUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}";
-            var paymentUrlModel = _mapper.Map<PaymentUrlModel>(paymentModel);
 
-            Stripe.Checkout.Session session = _paymentSessionProvider.Provide(
-                payment: paymentModel,
-                successUrl: hostedUrl + Url.Action("SuccessfulPayment", paymentUrlModel),
-                cancelationUrl: hostedUrl + Url.Action("CancelledPayment", paymentUrlModel));
+            var stripeSessionUrlResponse = await _stripePlatformClient.GetStripeSessionUrl(
+                GenerateNewStripePaymentSessionUrlRequest(
+                    request: paymentRequest,
+                    successUrl: hostedUrl + Url.Action("SuccessfulPayment", paymentRequest),
+                    cancelationUrl: hostedUrl + Url.Action("CancelledPayment", paymentRequest)));
 
-            Response.Headers.Add("Location", session.Url);
+            string responseContent = await stripeSessionUrlResponse.Content.ReadAsStringAsync();
 
-            return Redirect(session.Url);
+            StripePaymentSessionResponse stripeSessionUrl = JsonSerializer.Deserialize<StripePaymentSessionResponse>(responseContent) 
+                ?? throw new NotImplementedException(nameof(CreateCheckoutSession));
+
+            Response.Headers.Add("Location", stripeSessionUrl.SessionUrl);
+
+            return Redirect(stripeSessionUrl.SessionUrl);
         }
 
-        public async Task<IActionResult> SuccessfulPayment(PaymentUrlModel payment)
+        public async Task<IActionResult> SuccessfulPayment(StripePaymentSessionRequest completedPayment, string sessionId)
         {
             //await _mongoDbService
 
@@ -68,29 +72,65 @@ namespace CarSharingApp.Controllers
             return RedirectToAction("Index", "Catalog");
         }
 
-        public IActionResult CancelledPayment(PaymentUrlModel payment)
+        public IActionResult CancelledPayment(StripePaymentSessionRequest cancelledPayment)
         {
             HttpContext.Session.SetString("CancelledPayment", "true");
 
-            return RedirectToAction("Index","VehicleInformation", new { vehicleId = payment.VehicleId });
+            return RedirectToAction("Index","VehicleInformation", new { vehicleId = cancelledPayment.VehicleId });
         }
 
-        // Partial section starts here
-        
-        public IActionResult RentOrderPartial(string vehicleId, string vehicleName, string tariffPerHour, string tariffPerDay)
+        #region Partial section starts here
+
+        public IActionResult RentOrderPartial(string vehicleId, string vehicleName, string vehicleOwnerId, string tariffPerHour, string tariffPerDay)
         {
-            var viewModel = new PaymentModel()
+            var viewModel = new StripePaymentSessionRequest()
             {
                 VehicleId = vehicleId,
                 VehicleName = vehicleName,
-                Tariff = new()
-                {
-                    TariffPerHour = decimal.Parse(tariffPerHour),
-                    TariffPerDay = decimal.Parse(tariffPerDay)
-                }
+                VehicleOwnerId = vehicleOwnerId,
+                TariffPerHour = decimal.Parse(tariffPerHour),
+                TariffPerDay = decimal.Parse(tariffPerDay)
             };
 
             return PartialView("_RentOrder", viewModel);
         }
+
+        #endregion
+
+        #region Models parsing
+
+        private CreateNewRentalRequest GenerateNewRequest(StripePaymentSessionRequest request)
+        {
+            throw new NotImplementedException();
+            //return new CreateNewRentalRequest(
+            //    VehicleId: request.VehicleId,
+            //    VehicleName: request.VehicleName,
+            //    VehicleOwnerId: request.VehicleOwnerId,
+            //    Amount: decimal.Parse(request.Amount),
+                
+        }
+
+        private StripePaymentSessionUrlRequest GenerateNewStripePaymentSessionUrlRequest(
+            StripePaymentSessionRequest request, string successUrl, string cancelationUrl)
+        {
+            return new StripePaymentSessionUrlRequest(
+                VehicleId: request.VehicleId,
+                VehicleOwnerId: request.VehicleOwnerId,
+                VehicleName: request.VehicleName,
+                Amount: request.Amount,
+                TariffPerHour: request.TariffPerHour,
+                TariffPerDay: request.TariffPerDay,
+                StartHour: request.StartHour,
+                StartDay: request.StartDay,
+                StartMonth: request.StartMonth,
+                EndHour: request.EndHour,
+                EndDay: request.EndDay,
+                EndMonth: request.EndMonth,
+                SuccessUrl: successUrl,
+                CancelationUrl: cancelationUrl);
+
+        }
+
+        #endregion
     }
 }

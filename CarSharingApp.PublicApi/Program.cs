@@ -1,3 +1,7 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: https://pvs-studio.com
+
 using CarSharingApp.Application.Interfaces;
 using CarSharingApp.Application.Services;
 using CarSharingApp.Domain.Entities;
@@ -59,6 +63,10 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddMSSQLDBconnection(builder.Configuration);
     builder.Services.AddMSSQLRepository<ActionNote>();
     builder.Services.AddSingleton<IActionNotesService, ActionNotesService>();
+    builder.Services.AddMSSQLRepository<Payment>();
+    builder.Services.AddSingleton<IPaymentsService, PaymentsService>();
+    builder.Services.AddMSSQLRepository<Rental>();
+    builder.Services.AddSingleton<IRentalsService, RentalsService>();
 
     #endregion
 
@@ -103,7 +111,7 @@ var app = builder.Build();
         config.SwaggerEndpoint("/swagger/v1/swagger.json", "Car Sharing Application Public API");
     });
 
-    //app.UseHttpsRedirection();
+    app.UseHttpsRedirection();
     app.UseAuthentication();
     app.UseAuthorization();
 
