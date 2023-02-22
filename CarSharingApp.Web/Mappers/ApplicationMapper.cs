@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using CarSharingApp.Models.Mongo;
 using CarSharingApp.Models.MongoView;
-using CarSharingApp.Payment;
 
 namespace CarSharingApp.Mappers
 {
@@ -10,7 +9,6 @@ namespace CarSharingApp.Mappers
         public ApplicationMapper()
         {
             // From -> Into
-            CreateMap<PaymentModel, PaymentUrlModel>();
             CreateMap<VehicleCreateModel, Specifications>();
             CreateMap<VehicleCreateModel, Vehicle>();
             CreateMap<CustomerRegisterModel, Customer>();

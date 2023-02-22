@@ -2,7 +2,6 @@
 using CarSharingApp.Models.Mongo;
 using CarSharingApp.Models.MongoView;
 using CarSharingApp.OptionsSetup;
-using CarSharingApp.Payment;
 using CarSharingApp.Services;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
@@ -291,32 +290,6 @@ namespace CarSharingApp.Repository.MongoDbRepository
             vehicleInformationModel.OwnerUsername = vehicleOwner.Username;
 
             return vehicleInformationModel;
-        }
-
-        public async Task StartNewRental(string customerId, PaymentUrlModel paymentInfo)
-        {
-            Customer customer = await _customersCollection.Find(c => c.Id == customerId).FirstOrDefaultAsync();
-            Vehicle rentedVehicle = await _vehiclesCollection.Find(v => v.Id == paymentInfo.VehicleId).FirstOrDefaultAsync();
-            Customer vehicleOwner = await _customersCollection.Find(c => c.Id == rentedVehicle.OwnerId).FirstOrDefaultAsync();
-
-            DateTime rentalStartDate = new DateTime(year: DateTime.Now.Year, month: int.Parse(paymentInfo.StartMonth), day: int.Parse(paymentInfo.StartDay), hour: int.Parse(paymentInfo.StartHour), 0, 0);
-
-            //Rental rental = new Rental()
-            //{
-            //    CustomerId = customer.Id,
-            //    RentedVehicleId = rentedVehicle.Id,
-            //    RentedVehicleName = rentedVehicle.Name,
-            //    RentalDate = rentalStartDate,
-            //    ReturnDate = rentalStartDate.AddDays(paymentInfo.) 
-            //    IsActive = true
-            //}
-
-            //Transaction transaction = new Transaction()
-            //{
-            //    Amount = paymentInfo.Amount,
-            //    RentalId
-            //}
-
         }
     }
 }

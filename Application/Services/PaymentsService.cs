@@ -10,9 +10,9 @@ namespace CarSharingApp.Application.Services
         public ErrorOr<Payment> From(CreateNewRentalRequest request)
         {
             return Payment.Create(
-                stripeTransactionId: request.StripeTransactionId,
+                stripeTransactionId: request.StripePaymentId,
                 paymentDateTime: request.PaymentDateTime,
-                request.Amount);
+                request.PaymentAmount);
         }
     }
 }

@@ -18,7 +18,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [HttpPost]
         [Authorize]
-        public IActionResult GenerateStripeSession(StripePaymentSessionUrlRequest payment)
+        public async Task<IActionResult> GenerateStripeSession(StripePaymentSessionUrlRequest payment)
         {
             var options = new Stripe.Checkout.SessionCreateOptions
             {
@@ -48,15 +48,44 @@ namespace CarSharingApp.PublicApi.Controllers
             };
 
             var service = new Stripe.Checkout.SessionService();
-            Stripe.Checkout.Session session = service.Create(options);
+            Stripe.Checkout.Session session = await service.CreateAsync(options);
 
             return Ok(MapStripePaymentSessionResponse(session));
+        }
+
+        [Authorize]
+        [HttpGet("PaymentDetails")]
+        public async Task<IActionResult> GetStripePaymentInfo(string sessionId)
+        {
+            var sessionService = new Stripe.Checkout.SessionService();
+            Stripe.Checkout.Session getSessionResponse = await sessionService.GetAsync(sessionId);
+
+            if (getSessionResponse is null)
+                return NotFound(sessionId);
+
+            var paymentIntentId = getSessionResponse.PaymentIntentId;
+
+            var paymentService = new PaymentIntentService();
+            var paymentIntent = paymentService.Get(paymentIntentId);
+
+            if (paymentIntent is null)
+                return NotFound(paymentIntent);
+
+            return Ok(MapStripePaymentDetailsResponse(paymentIntent));
         }
 
         private StripePaymentSessionResponse MapStripePaymentSessionResponse(Stripe.Checkout.Session session)
         {
             return new StripePaymentSessionResponse(
                 SessionUrl: session.Url);
+        }
+
+        private StripePaymentDetailsResponse MapStripePaymentDetailsResponse(PaymentIntent paymentIntent)
+        {
+            return new StripePaymentDetailsResponse(
+                PaymentId: paymentIntent.Id,
+                Amount: paymentIntent.Amount,
+                PaymentDateTime: paymentIntent.Created);
         }
     }
 }

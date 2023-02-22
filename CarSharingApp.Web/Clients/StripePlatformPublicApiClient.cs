@@ -13,6 +13,13 @@ namespace CarSharingApp.Web.Clients
         {
         }
 
+        public async Task<HttpResponseMessage> GetStripePaymentDetails(string sessionId)
+        {
+            var client = CreateNewClientInstance(clientIdentifier);
+
+            return await client.GetAsync("PaymentDetails" + $"?sessionId={sessionId}");
+        }
+
         public async Task<HttpResponseMessage> GetStripeSessionUrl(StripePaymentSessionUrlRequest request)
         {
             var client = CreateNewClientInstance(clientIdentifier);

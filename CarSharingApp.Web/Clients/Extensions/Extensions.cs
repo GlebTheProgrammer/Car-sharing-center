@@ -2,7 +2,6 @@
 using CarSharingApp.Web.Clients.Interfaces;
 using Polly;
 using Polly.Contrib.WaitAndRetry;
-using Stripe;
 
 namespace CarSharingApp.Web.Clients.Extensions
 {
@@ -30,18 +29,6 @@ namespace CarSharingApp.Web.Clients.Extensions
             services.AddSingleton(s => new BlobServiceClient(configuration["AzureBlobStorage:ConnectionString"]));
 
             services.AddSingleton<IAzureBlobStoragePublicApiClient, BlobStoragePublicApiClient>();
-
-            return services;
-        }
-
-        public static IServiceCollection RegisterStripePlatformClient<T>(this IServiceCollection services, T configuration)
-            where T : IConfigurationBuilder, IConfigurationRoot, IDisposable
-        {
-            StripeConfiguration.ApiKey = "sk_test_51M6B0AGBXizEWSwDh5mkyk4o3DvKzmywGwJh7Fg2cpd9mxmhLiIPkARsFcvN3Yov0Qyshlqu8gITm3NGPPReXtbW00dvIu6aGa";
-
-            services.AddSingleton(s => new BlobServiceClient(configuration["AzureBlobStorage:ConnectionString"]));
-
-            services.AddSingleton<IStripePlatformPublicApiClient, StripePlatformPublicApiClient>();
 
             return services;
         }

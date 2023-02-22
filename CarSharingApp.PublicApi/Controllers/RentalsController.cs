@@ -1,6 +1,5 @@
 ﻿using CarSharingApp.Application.Contracts.Rental;
 using CarSharingApp.Application.Interfaces;
-using CarSharingApp.Application.Services;
 using CarSharingApp.Domain.Entities;
 using CarSharingApp.Infrastructure.Authentication;
 using CarSharingApp.PublicApi.Primitives;
@@ -10,15 +9,15 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CarSharingApp.PublicApi.Controllers
 {
-    public class RentalsController : ApiController
+    public sealed class RentalsController : ApiController
     {
         private readonly IRentalsService _rentalsService;
         private readonly IPaymentsService _paymentsService;
-        private readonly ILogger _logger;
+        private readonly ILogger<RentalsController> _logger;
 
         public RentalsController(IRentalsService rentalsService, 
-                                 IPaymentsService paymentsService, 
-                                 ILogger logger)
+                                 IPaymentsService paymentsService,
+                                 ILogger<RentalsController> logger)
         {
             _rentalsService = rentalsService;
             _paymentsService = paymentsService;
@@ -57,12 +56,10 @@ namespace CarSharingApp.PublicApi.Controllers
 
             await _rentalsService.SubmitNewRental(rental, payment);
 
-            //return CreatedAtAction(
-            //    actionName: nameof(GetRental),
-            //    routeValues: new { id = rental.Id },
-            //    value: MapRentalResponse(rental));
-
-            throw new NotImplementedException();
+            return CreatedAtAction(
+                actionName: nameof(GetRental),
+                routeValues: new { id = rental.Id },
+                value: MapRentalResponse(rental));
         }
 
         [HttpGet("{id:guid}")]
@@ -71,12 +68,33 @@ namespace CarSharingApp.PublicApi.Controllers
         {
             ErrorOr<Rental> getRentalResult = await _rentalsService.GetRentalAsync(id);
 
-            //return getRentalResult.Match(
-            //    rental => Ok(MapRentalResponse(rental)),
-            //    errors => Problem(errors));
-
-            throw new NotImplementedException();
+            return getRentalResult.Match(
+                rental => Ok(MapRentalResponse(rental)),
+                errors => Problem(errors));
         }
+
+        #region Mappind
+
+        private RentalResponse MapRentalResponse(Rental rental)
+        {
+            RentalPaymentResponse payment = new RentalPaymentResponse(
+                PaymentId: rental.Payment?.Id.ToString() ?? throw new NotImplementedException(nameof(rental.Payment)),
+                StripeTransactionId: rental.Payment.StripeTransactionId,
+                PaymentDateTime: rental.Payment.PaymentDateTime,
+                Amount: rental.Payment.Amount);
+
+            return new RentalResponse(
+                RentalId: rental.Id.ToString(),
+                RentedCustomerId: rental.RentedCustomerId.ToString(),
+                VehicleOwnerId: rental.VehicleOwnerId.ToString(),
+                VehicleId: rental.VehicleId.ToString(),
+                Payment: payment,
+                RentalStartsDateTime: rental.RentalStartsDateTime,
+                RentalEndsDateTime: rental.RentalEndsDateTime,
+                IsActive: rental.IsActive);
+        }
+
+        #endregion
 
     }
 }

@@ -4,10 +4,10 @@
         string VehicleId,
         string VehicleName,
         string VehicleOwnerId,
-        decimal Amount,
+        long PaymentAmount,
         DateTime PaymentDateTime,
         DateTime RentalStartsDateTime,
         DateTime RentalEndsDateTime,
-        string StripeTransactionId
+        string StripePaymentId
     );
 }

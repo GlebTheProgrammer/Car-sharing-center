@@ -1,10 +1,10 @@
-﻿using CarSharingApp.Application.Contracts.ErrorType;
-using CarSharingApp.Application.Contracts.Payment;
+﻿using CarSharingApp.Application.Contracts.Payment;
 using CarSharingApp.Application.Contracts.Rental;
 using CarSharingApp.Application.Contracts.Vehicle;
 using CarSharingApp.Web.Clients.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 using System.Text.Json;
 
 namespace CarSharingApp.Controllers
@@ -14,12 +14,15 @@ namespace CarSharingApp.Controllers
     {
         private readonly IVehicleServicePublicApiClient _vehicleServiceClient;
         private readonly IStripePlatformPublicApiClient _stripePlatformClient;
+        private readonly IRentalServicePublicApiClient _rentalServiceClient;
 
         public VehicleInformationController(IVehicleServicePublicApiClient vehicleServiceClient, 
-                                            IStripePlatformPublicApiClient stripePlatformClient)
+                                            IStripePlatformPublicApiClient stripePlatformClient,
+                                            IRentalServicePublicApiClient rentalServiceClient)
         {
             _vehicleServiceClient = vehicleServiceClient;
             _stripePlatformClient = stripePlatformClient;
+            _rentalServiceClient = rentalServiceClient;
         }
 
         public async Task<IActionResult> Index(string vehicleId)
@@ -57,17 +60,21 @@ namespace CarSharingApp.Controllers
 
         public async Task<IActionResult> SuccessfulPayment(StripePaymentSessionRequest completedPayment, string sessionId)
         {
-            //await _mongoDbService
+            var paymentDetailsResponse = await _stripePlatformClient.GetStripePaymentDetails(sessionId);
+            string paymentDetailsResponseContent = await paymentDetailsResponse.Content.ReadAsStringAsync();
 
-            //var compleatedOrder = _orderProvider.Provide(payment, (int)_userStatusProvider.GetUserId());
+            StripePaymentDetailsResponse stripePaymentDetails = JsonSerializer.Deserialize<StripePaymentDetailsResponse>(paymentDetailsResponseContent)
+                ?? throw new NotImplementedException(nameof(SuccessfulPayment));
 
-            //_repositoryManager.OrdersRepository.AddNewOrder(compleatedOrder);
+            var submitNewRentalResponse = await _rentalServiceClient.CreateRentalRequest(
+                GenerateNewRequest(
+                    request: completedPayment,
+                    paymentResponse: stripePaymentDetails));
 
-            //_repositoryManager.VehiclesRepository.ChangeVehicleIsOrderedState(payment.VehicleId, true);
+            string submitNewRentalResponseContent = await submitNewRentalResponse.Content.ReadAsStringAsync();
 
-            //_userStatusProvider.ChangeCompletedPaymentProcessState(true);
-
-            //_repositoryManager.ClientsRepository.IncreaseClientsVehiclesSharedAndOrderedCount((int)_userStatusProvider.GetUserId(), _repositoryManager.VehiclesRepository.GetVehicleById(payment.VehicleId).OwnerId);
+            RentalResponse newRental = JsonSerializer.Deserialize<RentalResponse>(submitNewRentalResponseContent)
+                ?? throw new NotImplementedException(nameof(SuccessfulPayment));
 
             return RedirectToAction("Index", "Catalog");
         }
@@ -99,15 +106,32 @@ namespace CarSharingApp.Controllers
 
         #region Models parsing
 
-        private CreateNewRentalRequest GenerateNewRequest(StripePaymentSessionRequest request)
+        private CreateNewRentalRequest GenerateNewRequest(StripePaymentSessionRequest request, StripePaymentDetailsResponse paymentResponse)
         {
-            throw new NotImplementedException();
-            //return new CreateNewRentalRequest(
-            //    VehicleId: request.VehicleId,
-            //    VehicleName: request.VehicleName,
-            //    VehicleOwnerId: request.VehicleOwnerId,
-            //    Amount: decimal.Parse(request.Amount),
-                
+            DateTime rentalStartsDateTime = DateTime.Now;
+            DateTime rentalEndsDateTime;
+
+            int rentalStartsMonth = DateTime.ParseExact(request.StartMonth, "MMMM", CultureInfo.CurrentCulture).Month;
+            int rentalEndsMonth = DateTime.ParseExact(request.EndMonth, "MMMM", CultureInfo.CurrentCulture).Month;
+
+            if (rentalEndsMonth < rentalStartsMonth) // Rental ends after new year
+            {
+                rentalEndsDateTime = new DateTime(year: DateTime.Now.Year + 1, month: rentalEndsMonth, day: int.Parse(request.EndDay), hour: int.Parse(request.EndHour), minute: 0, second: 0);
+            }
+            else // Rental ends in the same year when started
+            {
+                rentalEndsDateTime = new DateTime(year: DateTime.Now.Year, month: rentalEndsMonth, day: int.Parse(request.EndDay), hour: int.Parse(request.EndHour), minute: 0, second: 0);
+            }
+
+            return new CreateNewRentalRequest(
+                VehicleId: request.VehicleId,
+                VehicleName: request.VehicleName,
+                VehicleOwnerId: request.VehicleOwnerId,
+                PaymentAmount: paymentResponse.Amount / 100,
+                PaymentDateTime: paymentResponse.PaymentDateTime,
+                RentalStartsDateTime: rentalStartsDateTime,
+                RentalEndsDateTime: rentalEndsDateTime,
+                StripePaymentId: paymentResponse.PaymentId);
         }
 
         private StripePaymentSessionUrlRequest GenerateNewStripePaymentSessionUrlRequest(

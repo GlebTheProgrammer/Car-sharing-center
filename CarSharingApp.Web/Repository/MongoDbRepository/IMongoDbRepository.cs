@@ -1,6 +1,5 @@
 ﻿using CarSharingApp.Models.Mongo;
 using CarSharingApp.Models.MongoView;
-using CarSharingApp.Payment;
 
 namespace CarSharingApp.Repository.MongoDbRepository
 {
@@ -30,6 +29,5 @@ namespace CarSharingApp.Repository.MongoDbRepository
         public Task<VehicleEditModel> GetVehicle_EditRepresentation(string vehicleId);
         public Task EditVehicleData(VehicleEditModel vehicleEditModel);
         public Task<VehicleInformationModel> GetVehicleInformation(string vehicleId);
-        public Task StartNewRental(string customerId, PaymentUrlModel paymentInfo);
     }
 }

@@ -1,9 +1,6 @@
 ﻿using CarSharingApp.Login;
 using CarSharingApp.Login.Authentication;
 using CarSharingApp.OptionsSetup;
-using CarSharingApp.Payment;
-using CarSharingApp.Payment.StripeService;
-using Stripe;
 using CarSharingApp.Middlewares;
 using CarSharingApp.Repository.MongoDbRepository;
 using CarSharingApp.Web.Clients;
@@ -35,6 +32,8 @@ builder.Services.AddSingleton<IAzureADPublicApiClient, AzureADPublicApiClient>()
 builder.Services.RegisterNewHttpClients("AzureActiveDirectoryAPI", builder.Configuration);
 builder.Services.AddSingleton<IStripePlatformPublicApiClient, StripePlatformPublicApiClient>();
 builder.Services.RegisterNewHttpClients("PaymentsAPI", builder.Configuration);
+builder.Services.AddSingleton<IRentalServicePublicApiClient, RentalServicePublicApiClient>();
+builder.Services.RegisterNewHttpClients("RentalsAPI", builder.Configuration);
 
 builder.Services.RegisterAzureBlobStorageClient(builder.Configuration);
 
@@ -61,9 +60,6 @@ builder.Services.AddSession(options =>
 });
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
-// Dependency injection is here
-builder.Services.AddSingleton<IPaymentSessionProvider, StripeSessionProvider>();
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -100,8 +96,6 @@ app.UseAuthentication();
 app.UseRouting();
 app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 app.UseAuthorization();
-
-StripeConfiguration.ApiKey = "sk_test_51M6B0AGBXizEWSwDh5mkyk4o3DvKzmywGwJh7Fg2cpd9mxmhLiIPkARsFcvN3Yov0Qyshlqu8gITm3NGPPReXtbW00dvIu6aGa";
 
 app.MapControllerRoute(
     name: "default",
