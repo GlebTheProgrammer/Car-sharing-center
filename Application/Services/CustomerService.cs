@@ -96,6 +96,14 @@ namespace CarSharingApp.Application.Services
             return Result.Updated;
         }
 
+        public async Task<Updated> UpdateCustomerStatusAsync(Customer customer)
+        {
+            await _customerRepository.UpdateAsync(customer);
+            await _noteRepository.CreateAsync(ActionNote.UpdatedCustomerStatisticsNote(customer.Id));
+
+            return Result.Updated;
+        }
+
         public async Task<ErrorOr<string>> CompareCustomerOldPasswordWithExistingOne(Guid id, string oldPassword)
         {
             Customer? customer = await _customerRepository.GetAsync(id);

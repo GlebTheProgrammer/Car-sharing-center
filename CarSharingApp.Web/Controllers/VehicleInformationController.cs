@@ -152,7 +152,6 @@ namespace CarSharingApp.Controllers
                 EndMonth: request.EndMonth,
                 SuccessUrl: successUrl,
                 CancelationUrl: cancelationUrl);
-
         }
 
         #endregion
