@@ -76,6 +76,8 @@ namespace CarSharingApp.Controllers
             RentalResponse newRental = JsonSerializer.Deserialize<RentalResponse>(submitNewRentalResponseContent)
                 ?? throw new NotImplementedException(nameof(SuccessfulPayment));
 
+            HttpContext.Session.SetString("CompletedPayment", "true");
+
             return RedirectToAction("Index", "Catalog");
         }
 
@@ -111,8 +113,8 @@ namespace CarSharingApp.Controllers
             DateTime rentalStartsDateTime = DateTime.Now;
             DateTime rentalEndsDateTime;
 
-            int rentalStartsMonth = DateTime.ParseExact(request.StartMonth, "MMMM", CultureInfo.CurrentCulture).Month;
-            int rentalEndsMonth = DateTime.ParseExact(request.EndMonth, "MMMM", CultureInfo.CurrentCulture).Month;
+            int rentalStartsMonth = DateTime.ParseExact(request.StartMonth, "MMM", CultureInfo.InvariantCulture).Month;
+            int rentalEndsMonth = DateTime.ParseExact(request.EndMonth, "MMM", CultureInfo.InvariantCulture).Month;
 
             if (rentalEndsMonth < rentalStartsMonth) // Rental ends after new year
             {

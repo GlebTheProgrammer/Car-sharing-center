@@ -323,5 +323,9 @@
             ShowPurchaseCancelledMessage();
             @{Accessor?.HttpContext?.Session.Remove("CancelledPayment");}
         }
+        if (@(Accessor?.HttpContext?.Session.GetString("CompletedPayment") == null ? "false" : "true")) {
+            ShowPurchaseCompletedMessage();
+            @{Accessor?.HttpContext?.Session.Remove("CompletedPayment");}
+        }
     });
 </script>

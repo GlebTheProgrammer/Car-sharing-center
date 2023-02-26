@@ -101,13 +101,12 @@ namespace CarSharingApp.PublicApi.Controllers
             return Ok(MapVehicleInformationResponse(vehicle, customer, jwtClaims.Id));
         }
 
-
         [HttpGet("MapRepresentation")]
         public async Task<IActionResult> GetVehiclesMapRepresentation()
         {
             List<Vehicle> getVehiclesResult = await _vehicleService.GetAllAsync();
 
-            return Ok(MapVehicleMapResponse(getVehiclesResult.Where(v => v.Status.IsPublished && v.Status.IsConfirmedByAdmin).ToList()));
+            return Ok(MapVehicleMapResponse(getVehiclesResult.Where(v => v.Status.IsPublished && v.Status.IsConfirmedByAdmin && !v.Status.IsOrdered).ToList()));
         }
 
         [HttpGet("CatalogRepresentation")]
@@ -115,7 +114,7 @@ namespace CarSharingApp.PublicApi.Controllers
         {
             List<Vehicle> getVehiclesResult = await _vehicleService.GetAllAsync();
 
-            return Ok(MapVehicleCatalogResponse(getVehiclesResult.Where(v => v.Status.IsPublished && v.Status.IsConfirmedByAdmin).ToList()));
+            return Ok(MapVehicleCatalogResponse(getVehiclesResult.Where(v => v.Status.IsPublished && v.Status.IsConfirmedByAdmin && !v.Status.IsOrdered).ToList()));
         }
 
         [HttpPost("CriteriaCatalogRepresentation")]
@@ -123,7 +122,7 @@ namespace CarSharingApp.PublicApi.Controllers
         {
             List<Vehicle> getVehiclesResult = await _vehicleService.GetAllAsync();
 
-            List<Vehicle> publisedAndApprovedVehicles = getVehiclesResult.Where(v => v.Status.IsPublished && v.Status.IsConfirmedByAdmin).ToList();
+            List<Vehicle> publisedAndApprovedVehicles = getVehiclesResult.Where(v => v.Status.IsPublished && v.Status.IsConfirmedByAdmin && !v.Status.IsOrdered).ToList();
 
             bool tryParseHourlyPrice = decimal.TryParse(request.MaxHourlyRentalPrice, out decimal maxHourlyPrice);
             if (!tryParseHourlyPrice || maxHourlyPrice == 0)
@@ -188,7 +187,7 @@ namespace CarSharingApp.PublicApi.Controllers
         {
             List<Vehicle> getVehiclesResult = await _vehicleService.GetAllAsync();
 
-            List<Vehicle> publisedAndApprovedVehicles = getVehiclesResult.Where(v => v.Status.IsPublished && v.Status.IsConfirmedByAdmin).ToList();
+            List<Vehicle> publisedAndApprovedVehicles = getVehiclesResult.Where(v => v.Status.IsPublished && v.Status.IsConfirmedByAdmin && !v.Status.IsOrdered).ToList();
 
             const int EarthRadiusKm = 6371;
 

@@ -96,10 +96,9 @@ namespace CarSharingApp.Application.Services
             return Result.Updated;
         }
 
-        public async Task<Updated> UpdateCustomerStatusAsync(Customer customer)
+        public async Task<Updated> UpdateCustomerStatisticsAsync(Customer customer)
         {
             await _customerRepository.UpdateAsync(customer);
-            await _noteRepository.CreateAsync(ActionNote.UpdatedCustomerStatisticsNote(customer.Id));
 
             return Result.Updated;
         }

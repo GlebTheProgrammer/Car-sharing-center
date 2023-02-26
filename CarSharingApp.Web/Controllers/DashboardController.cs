@@ -44,7 +44,12 @@ namespace CarSharingApp.Web.Controllers
             return View(responseModel);
         }
 
-        // Partial views rendering goes below
+        #region Partial views rendering
+
+        public async Task<IActionResult> RentalsArticlePartil(string searchBy, string searchInput, int page = 1, int pageSize = 3)
+        {
+
+        }
 
         public async Task<IActionResult> VehiclesArticlePartial(string searchBy, string searchInput, int page = 1, int pageSize = 3)
         {
@@ -117,7 +122,9 @@ namespace CarSharingApp.Web.Controllers
             return PartialView("_StatisticsArticle", responseModel);
         }
 
-        // Partial views actions go below
+        #endregion
+
+        #region Partial views actions
 
         public async Task<IActionResult> DeleteVehicleAndRenderVehiclesArticlePartial(string vehicleId, string vehicleImage, string searchBy, string searchInput)
         {
@@ -154,5 +161,6 @@ namespace CarSharingApp.Web.Controllers
             return Json(new { data = true });
         }
 
+        #endregion
     }
 }

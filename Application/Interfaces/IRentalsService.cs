@@ -9,6 +9,7 @@ namespace CarSharingApp.Application.Interfaces
         Task<Created> SubmitNewRental(Rental rental, Payment payment);
         Task FinishExistingRental(Guid rentalId, bool hasFinishedByTheCustomer);
         Task<ErrorOr<Rental>> GetRentalAsync(Guid id);
+        Task<List<Rental>> GetAllCustomerRentalsAsync(Guid customerId);
 
         ErrorOr<Rental> From(CreateNewRentalRequest request, Guid rentedCustomerId);
     }

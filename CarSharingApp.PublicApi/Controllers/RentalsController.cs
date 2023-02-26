@@ -92,7 +92,17 @@ namespace CarSharingApp.PublicApi.Controllers
             }
             Vehicle vehicle = requestToVehicleResult.Value;
 
-            await _customerService.Upd
+            // Update both customer models with new statistics
+            await _customerService.UpdateCustomerStatisticsAsync(
+                UpdateCustomerStatisticsWithAdditionalVehicle(vehicleRentedCustomer, isVehicleOwner: false).Value);
+            await _customerService.UpdateCustomerStatisticsAsync(
+                UpdateCustomerStatisticsWithAdditionalVehicle(vehicleOwnerCustomer, isVehicleOwner: true).Value);
+
+            // Update vehicle model with new status and timesOrdered value
+            await _vehicleService.UpdateVehicleStatusAsync(
+                ChangeVehicleStatusAsRented(vehicle).Value);
+
+            // Save new rental
             await _rentalsService.SubmitNewRental(rental, payment);
 
             return CreatedAtAction(

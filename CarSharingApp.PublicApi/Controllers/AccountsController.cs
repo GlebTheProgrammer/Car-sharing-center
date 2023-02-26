@@ -15,17 +15,20 @@ namespace CarSharingApp.PublicApi.Controllers
     {
         private readonly ICustomerService _customerService;
         private readonly IVehicleService _vehicleService;
+        private readonly IRentalsService _rentalsService;
         private readonly IActionNotesService _notesService;
         private readonly ILogger<AccountsController> _logger;
 
         public AccountsController(
             ICustomerService customerService,
             IVehicleService vehicleService,
+            IRentalsService rentalsService,
             IActionNotesService notesService,
             ILogger<AccountsController> logger)
         {
             _customerService = customerService;
             _vehicleService = vehicleService;
+            _rentalsService = rentalsService;
             _notesService = notesService;
             _logger = logger;
         }
@@ -143,6 +146,23 @@ namespace CarSharingApp.PublicApi.Controllers
             List<Vehicle> vehicles = await _vehicleService.GetAllCustomerVehiclesAsync(Guid.Parse(jwtClaims.Id));
 
             return Ok(MapAccountVehiclesDataResponse(vehicles));
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("[action]")]
+        public async Task<IActionResult> AccountRentals()
+        {
+            JwtClaims? jwtClaims = GetJwtClaims();
+
+            if (jwtClaims is null)
+            {
+                return Forbid();
+            }
+
+            _logger.LogInformation("Customer with ID: {customerId} asked for account rentals data.", jwtClaims.Id);
+
+            List<Rental> rentals = await _rentalsService.
         }
 
         private AccountVehiclesDataResponse MapAccountVehiclesDataResponse(List<Vehicle> vehicles)

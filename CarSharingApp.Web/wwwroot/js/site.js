@@ -216,12 +216,28 @@ function ShowPurchaseCancelledMessage() {
 
 // Function to show message about completed order payment process
 function ShowPurchaseCompletedMessage() {
-    Swal.fire({
-        title: "Congratulations!",
+
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-primary',
+            cancelButton: 'btn btn-secondary'
+        }
+    })
+
+    swalWithBootstrapButtons.fire({
+        title: 'Congratulations!',
         text: "You have successfully completed payment process. Check new order in your Account.",
         icon: 'success',
-        confirmButtonColor: '#007aff'
-    });
+        showCancelButton: true,
+        confirmButtonColor: '#007aff',
+        confirmButtonText: 'Check',
+        cancelButtonText: 'Later',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = '/Dashboard/';
+        }
+    })
 }
 
 // Function to show message about successful rental finish

@@ -83,6 +83,13 @@ namespace CarSharingApp.Application.Services
                 return ApplicationErrors.Rental.NotFound;
         }
 
+        public async Task<List<Rental>> GetAllCustomerRentalsAsync(Guid customerId)
+        {
+            var result = await _rentalsRepository.GetAllAsync(r => r.RentedCustomerId == customerId);
+
+            return result.ToList();
+        }
+
         public ErrorOr<Rental> From(CreateNewRentalRequest request, Guid rentedCustomerId)
         {
             return Rental.Create(
