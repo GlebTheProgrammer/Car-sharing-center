@@ -162,7 +162,10 @@ namespace CarSharingApp.PublicApi.Controllers
 
             _logger.LogInformation("Customer with ID: {customerId} asked for account rentals data.", jwtClaims.Id);
 
-            List<Rental> rentals = await _rentalsService.
+            List<Rental> rentals = await _rentalsService.GetAllCustomerRentalsAsync(Guid.Parse(jwtClaims.Id));
+            List<Vehicle> vehicles = await _vehicleService.GetAllAsync();
+
+            return Ok(MapAccountRentalsDataResponse(rentals, vehicles));
         }
 
         private AccountVehiclesDataResponse MapAccountVehiclesDataResponse(List<Vehicle> vehicles)
@@ -185,6 +188,30 @@ namespace CarSharingApp.PublicApi.Controllers
             }
 
             return new AccountVehiclesDataResponse(accountVehicleDatas);
+        }
+
+        private AccountRentalsDataResponse MapAccountRentalsDataResponse(List<Rental> rentals, List<Vehicle> vehicles)
+        {
+            List<AccountRentalData> accountRentalDatas = new List<AccountRentalData>();
+            Vehicle vehicle;
+
+            foreach (Rental rental in rentals)
+            {
+                vehicle = vehicles.FirstOrDefault(v => v.Id == rental.VehicleId)
+                    ?? throw new NullReferenceException(nameof(MapAccountRentalsDataResponse));
+
+                accountRentalDatas.Add(new AccountRentalData(
+                    RentalId: rental.Id.ToString(),
+                    VehicleName: vehicle.Name,
+                    VehicleImage: vehicle.Image,
+                    Amount: $"{rental.Payment?.Amount}",
+                    RentedDateTime: rental.RentalStartsDateTime,
+                    TimeLeftInMinutes: Convert.ToInt32((rental.RentalEndsDateTime - rental.RentalStartsDateTime).TotalMinutes),
+                    ExpiresDateTime: rental.RentalEndsDateTime,
+                    IsActive: rental.IsActive));
+            }
+
+            return new AccountRentalsDataResponse(accountRentalDatas);
         }
 
         private AccountStatisticsDataResponse MapAccountStatisticsDataResponse(Customer customer, List<Vehicle> vehicles)

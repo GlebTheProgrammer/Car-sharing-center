@@ -110,11 +110,18 @@ namespace CarSharingApp.Controllers
 
         private CreateNewRentalRequest GenerateNewRequest(StripePaymentSessionRequest request, StripePaymentDetailsResponse paymentResponse)
         {
-            DateTime rentalStartsDateTime = DateTime.Now;
+            DateTime rentalStartsDateTime;
             DateTime rentalEndsDateTime;
 
             int rentalStartsMonth = DateTime.ParseExact(request.StartMonth, "MMM", CultureInfo.InvariantCulture).Month;
             int rentalEndsMonth = DateTime.ParseExact(request.EndMonth, "MMM", CultureInfo.InvariantCulture).Month;
+
+            rentalStartsDateTime = new DateTime(year: DateTime.Now.Year, month: rentalStartsMonth, day: int.Parse(request.StartDay), hour: int.Parse(request.StartHour), minute: 0, second: 0);
+
+            if (rentalStartsDateTime < DateTime.Now) // Rental has to start in the next year
+            {
+                rentalStartsDateTime = new DateTime(year: DateTime.Now.Year + 1, month: rentalStartsMonth, day: int.Parse(request.StartDay), hour: int.Parse(request.StartHour), minute: 0, second: 0);
+            }
 
             if (rentalEndsMonth < rentalStartsMonth) // Rental ends after new year
             {
