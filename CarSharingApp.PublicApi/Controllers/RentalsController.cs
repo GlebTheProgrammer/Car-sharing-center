@@ -1,4 +1,5 @@
 ﻿using CarSharingApp.Application.Contracts.Rental;
+using CarSharingApp.Application.Contracts.Vehicle;
 using CarSharingApp.Application.Interfaces;
 using CarSharingApp.Domain.Entities;
 using CarSharingApp.Domain.Enums;
@@ -120,6 +121,43 @@ namespace CarSharingApp.PublicApi.Controllers
             return getRentalResult.Match(
                 rental => Ok(MapRentalResponse(rental)),
                 errors => Problem(errors));
+        }
+
+        [HttpPut("[action]")]
+        [Authorize]
+        public async Task<IActionResult> FinishExistingRental(FinishExistingRentalRequest request)
+        {
+            ErrorOr<Rental> getRentalResult = await _rentalsService.GetRentalAsync(Guid.Parse(request.rentalId));
+            if (getRentalResult.IsError)
+            {
+                _logger.LogError("Failed finding rental with ID: {rentalId} when tried to finish it.", request.rentalId);
+                return Problem(getRentalResult.Errors);
+            }
+            Rental notFinishedRental = getRentalResult.Value;
+
+            ErrorOr<Vehicle> getVehicleResult = await _vehicleService.GetVehicleAsync(notFinishedRental.VehicleId);
+            if (getVehicleResult.IsError)
+            {
+                _logger.LogError("Failed finding vehicle with ID: {vehicleId} when tried to finish existing rental.", notFinishedRental.VehicleId.ToString());
+                return Problem(getVehicleResult.Errors);
+            }
+            Vehicle notUpdatedVehicle = getVehicleResult.Value;
+
+            ErrorOr<Vehicle> requestToVehicleResult = _vehicleService.From(notUpdatedVehicle, new UpdateVehicleStatusRequest(notFinishedRental.VehicleId.ToString(),
+                IsOrdered: false, IsPublished: true, IsConfirmedByAdmin: true));
+
+            if (requestToVehicleResult.IsError)
+            {
+                return Problem(requestToVehicleResult.Errors);
+            }
+            Vehicle updatedVehicle = requestToVehicleResult.Value;
+
+            await _rentalsService.FinishExistingRental(Guid.Parse(request.rentalId), hasFinishedByTheCustomer: true);
+            await _vehicleService.UpdateVehicleStatusAsync(updatedVehicle);
+
+            _logger.LogInformation("Customer with ID: {customerId} has successfully finished rental with ID: {rentalId}.", notFinishedRental.RentedCustomerId, notFinishedRental.Id);
+
+            return NoContent();
         }
 
         #region Mapping from server models to response models

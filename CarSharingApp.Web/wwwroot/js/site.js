@@ -82,6 +82,46 @@ function ShowSuccessfulMessageAfterVehicleWasDeleted() {
     });
 }
 
+// Function to show message about successful vehicle deletion
+function ShowSuccessfulMessageAfterRentalWasFinished() {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-start',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    });
+
+    Toast.fire({
+        icon: 'success',
+        title: 'Rental was finished successfully.'
+    });
+}
+
+// Function to show message about successful rental deletion
+function ShowSuccessfulMessageAfterRentalWasDeleted() {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-start',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    });
+
+    Toast.fire({
+        icon: 'success',
+        title: 'Rental information was deleted successfully.'
+    });
+}
+
 // Function to show user an alert press logout button
 function ShowLogoutConfirmationAlert() {
     Swal.fire({

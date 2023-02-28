@@ -33,6 +33,13 @@ namespace CarSharingApp.Web.Clients
             return await client.GetAsync("AccountStatistics");
         }
 
+        public async Task<HttpResponseMessage> GetCustomerRentalsAccountRepresentation()
+        {
+            var client = CreateNewClientInstance(clientIdentifier);
+
+            return await client.GetAsync("AccountRentals");
+        }
+
         public async Task<HttpResponseMessage> GetCustomerVehiclesAccountRepresentation()
         {
             var client = CreateNewClientInstance(clientIdentifier);

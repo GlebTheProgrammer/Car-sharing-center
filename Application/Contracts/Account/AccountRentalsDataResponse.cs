@@ -11,7 +11,8 @@ namespace CarSharingApp.Application.Contracts.Account
         [property: JsonPropertyName("vehicleName")] string VehicleName,
         [property: JsonPropertyName("vehicleImage")] string VehicleImage,
         [property: JsonPropertyName("amount")] string Amount,
-        [property: JsonPropertyName("rentedDateTime")] DateTime RentedDateTime,
+        [property: JsonPropertyName("rentalMadeDateTime")] DateTime RentalMadeDateTime,
+        [property: JsonPropertyName("startsDateTime")] DateTime StartsDateTime,
         [property: JsonPropertyName("timeLeftInMinutes")] int TimeLeftInMinutes,
         [property: JsonPropertyName("expiresDateTime")] DateTime ExpiresDateTime,
         [property: JsonPropertyName("isActive")] bool IsActive

@@ -16,6 +16,7 @@ namespace CarSharingApp.PublicApi.Controllers
         private readonly ICustomerService _customerService;
         private readonly IVehicleService _vehicleService;
         private readonly IRentalsService _rentalsService;
+        private readonly IPaymentsService _paymentsService;
         private readonly IActionNotesService _notesService;
         private readonly ILogger<AccountsController> _logger;
 
@@ -23,12 +24,14 @@ namespace CarSharingApp.PublicApi.Controllers
             ICustomerService customerService,
             IVehicleService vehicleService,
             IRentalsService rentalsService,
+            IPaymentsService paymentsService,
             IActionNotesService notesService,
             ILogger<AccountsController> logger)
         {
             _customerService = customerService;
             _vehicleService = vehicleService;
             _rentalsService = rentalsService;
+            _paymentsService = paymentsService;
             _notesService = notesService;
             _logger = logger;
         }
@@ -163,9 +166,8 @@ namespace CarSharingApp.PublicApi.Controllers
             _logger.LogInformation("Customer with ID: {customerId} asked for account rentals data.", jwtClaims.Id);
 
             List<Rental> rentals = await _rentalsService.GetAllCustomerRentalsAsync(Guid.Parse(jwtClaims.Id));
-            List<Vehicle> vehicles = await _vehicleService.GetAllAsync();
 
-            return Ok(MapAccountRentalsDataResponse(rentals, vehicles));
+            return Ok(await MapAccountRentalsDataResponse(rentals));
         }
 
         private AccountVehiclesDataResponse MapAccountVehiclesDataResponse(List<Vehicle> vehicles)
@@ -190,22 +192,27 @@ namespace CarSharingApp.PublicApi.Controllers
             return new AccountVehiclesDataResponse(accountVehicleDatas);
         }
 
-        private AccountRentalsDataResponse MapAccountRentalsDataResponse(List<Rental> rentals, List<Vehicle> vehicles)
+        private async Task<AccountRentalsDataResponse> MapAccountRentalsDataResponse(List<Rental> rentals)
         {
             List<AccountRentalData> accountRentalDatas = new List<AccountRentalData>();
-            Vehicle vehicle;
+            ErrorOr<Vehicle> vehicle;
+            ErrorOr<Payment> payment;
 
             foreach (Rental rental in rentals)
             {
-                vehicle = vehicles.FirstOrDefault(v => v.Id == rental.VehicleId)
-                    ?? throw new NullReferenceException(nameof(MapAccountRentalsDataResponse));
+                vehicle = await _vehicleService.GetVehicleAsync(rental.VehicleId);
+                payment = await _paymentsService.GetByRentalIdAsync(rental.Id);
+
+                if (vehicle.IsError || payment.IsError)
+                    throw new NullReferenceException(nameof(MapAccountRentalsDataResponse));
 
                 accountRentalDatas.Add(new AccountRentalData(
                     RentalId: rental.Id.ToString(),
-                    VehicleName: vehicle.Name,
-                    VehicleImage: vehicle.Image,
-                    Amount: $"{rental.Payment?.Amount}",
-                    RentedDateTime: rental.RentalStartsDateTime,
+                    VehicleName: vehicle.Value.Name,
+                    VehicleImage: vehicle.Value.Image,
+                    Amount: $"{payment.Value.Amount}",
+                    RentalMadeDateTime: payment.Value.PaymentDateTime,
+                    StartsDateTime: rental.RentalStartsDateTime,
                     TimeLeftInMinutes: Convert.ToInt32((rental.RentalEndsDateTime - rental.RentalStartsDateTime).TotalMinutes),
                     ExpiresDateTime: rental.RentalEndsDateTime,
                     IsActive: rental.IsActive));

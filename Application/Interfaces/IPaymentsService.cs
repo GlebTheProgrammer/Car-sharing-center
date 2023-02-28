@@ -6,6 +6,8 @@ namespace CarSharingApp.Application.Interfaces
 {
     public interface IPaymentsService
     {
+        Task<ErrorOr<Payment>> GetByRentalIdAsync(Guid rentalId);
+
         ErrorOr<Payment> From(CreateNewRentalRequest request);
     }
 }

@@ -327,5 +327,9 @@
             ShowPurchaseCompletedMessage();
             @{Accessor?.HttpContext?.Session.Remove("CompletedPayment");}
         }
+        if (@(Accessor?.HttpContext?.Session.GetString("FinishedRental") == null ? "false" : "true")) {
+            ShowSuccessfulMessageAfterRentalWasFinished();
+            @{Accessor?.HttpContext?.Session.Remove("FinishedRental");}
+        }
     });
 </script>

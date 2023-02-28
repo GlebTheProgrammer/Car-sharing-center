@@ -5,6 +5,7 @@ using CarSharingApp.Web.Clients.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
+using CarSharingApp.Application.Contracts.Rental;
 
 namespace CarSharingApp.Web.Controllers
 {
@@ -13,14 +14,17 @@ namespace CarSharingApp.Web.Controllers
     {
         private readonly IAccountServicePublicApiClient _accountServiceClient;
         private readonly IVehicleServicePublicApiClient _vehicleServiceClient;
+        private readonly IRentalServicePublicApiClient _rentalServiceClient;
         private readonly IAzureBlobStoragePublicApiClient _blobStorageClient;
 
         public DashboardController(IAccountServicePublicApiClient accountServiceClient, 
                                    IVehicleServicePublicApiClient vehicleServiceClient,
+                                   IRentalServicePublicApiClient rentalServiceClient,
                                    IAzureBlobStoragePublicApiClient blobStorageClient)
         {
             _accountServiceClient = accountServiceClient;
             _vehicleServiceClient = vehicleServiceClient;
+            _rentalServiceClient = rentalServiceClient;
             _blobStorageClient = blobStorageClient;
         }
 
@@ -46,9 +50,52 @@ namespace CarSharingApp.Web.Controllers
 
         #region Partial views rendering
 
-        public async Task<IActionResult> RentalsArticlePartil(string searchBy, string searchInput, int page = 1, int pageSize = 3)
+        public async Task<IActionResult> RentalsArticlePartial(string searchBy, string searchInput, int page = 1, int pageSize = 3)
         {
+            var response = await _accountServiceClient.GetCustomerRentalsAccountRepresentation();
 
+            response.EnsureSuccessStatusCode();
+
+            AccountRentalsDataResponse responseModel = await response.Content.ReadFromJsonAsync<AccountRentalsDataResponse>()
+                ?? throw new NullReferenceException(nameof(responseModel));
+
+            ViewBag.SearchBy = searchBy;
+            ViewBag.SearchRentalInput = searchInput;
+
+            if (page < 1)
+                page = 1;
+
+            if (searchBy == "Amount" && searchInput != null)
+            {
+                var partialViewModel = responseModel.Rentals.Where(r => r.Amount.StartsWith(searchInput)).ToList();
+
+                Pager pager = new Pager(partialViewModel.Count(), page, pageSize);
+                int rentalsSkip = (page - 1) * pageSize;
+                ViewBag.Pager = pager;
+                ViewBag.RentalsCount = partialViewModel.Count();
+
+                return PartialView("_RentalsArticle", partialViewModel.Skip(rentalsSkip).Take(pager.PageSize).ToList());
+            }
+            else if (searchBy == "VehicleName" && searchInput != null)
+            {
+                var partialViewModel = responseModel.Rentals.Where(r => r.VehicleName.StartsWith(searchInput)).ToList();
+
+                Pager pager = new Pager(partialViewModel.Count(), page, pageSize);
+                int rentalsSkip = (page - 1) * pageSize;
+                ViewBag.Pager = pager;
+                ViewBag.RentalsCount = partialViewModel.Count();
+
+                return PartialView("_RentalsArticle", partialViewModel.Skip(rentalsSkip).Take(pager.PageSize).ToList());
+            }
+            else
+            {
+                Pager pager = new Pager(responseModel.Rentals.Count(), page, pageSize);
+                int rentalsSkip = (page - 1) * pageSize;
+                ViewBag.Pager = pager;
+                ViewBag.RentalsCount = responseModel.Rentals.Count();
+
+                return PartialView("_RentalsArticle", responseModel.Rentals.Skip(rentalsSkip).Take(pager.PageSize).ToList());
+            }
         }
 
         public async Task<IActionResult> VehiclesArticlePartial(string searchBy, string searchInput, int page = 1, int pageSize = 3)
@@ -149,6 +196,18 @@ namespace CarSharingApp.Web.Controllers
             response.EnsureSuccessStatusCode();
 
             return Redirect($"/Dashboard/VehiclesArticlePartial?searchBy={searchBy}&searchInput={searchInput}");
+        }
+
+        public async Task<IActionResult> FinishRental(string rentalId, string searchBy, string searchInput)
+        {
+            var requestModel = new FinishExistingRentalRequest(rentalId);
+
+            var response = await _rentalServiceClient.FinishRentalRequest(requestModel);
+            response.EnsureSuccessStatusCode();
+
+            HttpContext.Session.SetString("FinishedRental", "True");
+
+            return Redirect($"/Dashboard/RentalsArticlePartial?searchBy={searchBy}&searchInput={searchInput}");
         }
 
         [HttpGet]

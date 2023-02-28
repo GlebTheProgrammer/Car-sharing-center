@@ -14,8 +14,8 @@ namespace CarSharingApp.Infrastructure.MSSQL
         {
             services.AddDbContext<CarSharingAppContext>(options => options.UseSqlServer
                 (configuration.GetConnectionString("MSSQL")), 
-                contextLifetime: ServiceLifetime.Singleton,
-                optionsLifetime: ServiceLifetime.Singleton);
+                contextLifetime: ServiceLifetime.Transient,
+                optionsLifetime: ServiceLifetime.Transient);
 
             return services;
         }
