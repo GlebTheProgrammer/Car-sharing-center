@@ -44,7 +44,7 @@ jobs:
         iisreset /start
     
     - name: Curl PublicAPI as a smoke test
-      run: curl http://carsharingapp.norwayeast.cloudapp.azure.com:20001/swagger
+      run: curl https://carsharingapp.norwayeast.cloudapp.azure.com:21001/swagger
 
     - name: Curl Web application as a smoke test
-      run: curl http://carsharingapp.norwayeast.cloudapp.azure.com:20002
+      run: curl https://carsharingapp.norwayeast.cloudapp.azure.com:21002
