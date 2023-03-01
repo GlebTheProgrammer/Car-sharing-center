@@ -28,6 +28,7 @@ var builder = WebApplication.CreateBuilder(args);
     #region Middlewares
 
     builder.Services.AddTransient<GlobalExceptionHandlingMiddleware>();
+    builder.Services.AddHostedService<TimeOutRentalsCheckMiddleware>();
 
     #endregion
 

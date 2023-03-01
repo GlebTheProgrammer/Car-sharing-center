@@ -53,7 +53,7 @@ namespace CarSharingApp.Application.Services
         public async Task<Created> SubmitNewRental(Rental rental, Payment payment)
         {
             // Create 1:1 Dependency
-            await _rentalsRepository.CreateAsync(rental);
+            //await _rentalsRepository.CreateAsync(rental);
             await _paymentsRepository.CreateAsync(Payment.CombinePaymentWithARental(payment, rental));
 
             Vehicle rentedVehicle = await _vehiclesRepository.GetAsync(rental.VehicleId);
@@ -98,6 +98,13 @@ namespace CarSharingApp.Application.Services
                 vehicleId: Guid.Parse(request.VehicleId),
                 rentalStartsDateTime: request.RentalStartsDateTime,
                 rentalEndsDateTime: request.RentalEndsDateTime);
+        }
+
+        public async Task<List<Rental>> GetAllExpiredAndActiveRentals()
+        {
+            var result = await _rentalsRepository.GetAllAsync(r => r.IsActive && r.RentalEndsDateTime < DateTime.Now);
+
+            return result.ToList();
         }
     }
 }

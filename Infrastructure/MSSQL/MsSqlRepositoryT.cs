@@ -22,7 +22,7 @@ namespace CarSharingApp.Infrastructure.MSSQL
                 throw new ArgumentNullException(nameof(entity));
             }
 
-            await _context.Set<T>().AddAsync(entity);
+            await _context.Set<T>().AddRangeAsync(entity);
             await _context.SaveChangesAsync();
         }
 

@@ -113,8 +113,8 @@ namespace CarSharingApp.Controllers
             DateTime rentalStartsDateTime;
             DateTime rentalEndsDateTime;
 
-            int rentalStartsMonth = DateTime.ParseExact(request.StartMonth, "MMM", CultureInfo.InvariantCulture).Month;
-            int rentalEndsMonth = DateTime.ParseExact(request.EndMonth, "MMM", CultureInfo.InvariantCulture).Month;
+            int rentalStartsMonth = DateTime.ParseExact(request.StartMonth, "MMMM", CultureInfo.CurrentCulture).Month;
+            int rentalEndsMonth = DateTime.ParseExact(request.EndMonth, "MMMM", CultureInfo.CurrentCulture).Month;
 
             rentalStartsDateTime = new DateTime(year: DateTime.Now.Year, month: rentalStartsMonth, day: int.Parse(request.StartDay), hour: int.Parse(request.StartHour), minute: 0, second: 0);
 
