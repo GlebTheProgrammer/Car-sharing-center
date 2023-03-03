@@ -29,6 +29,7 @@ namespace CarSharingApp.Controllers
 
         public async Task<IActionResult> AddVehicle(CreateVehicleRequest createVehicleRequest, IFormFile file)
         {
+            
             if (file is null)
                 throw new Exception("Image can't be null");
 

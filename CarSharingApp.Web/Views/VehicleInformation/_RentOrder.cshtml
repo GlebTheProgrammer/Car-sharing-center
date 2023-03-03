@@ -81,8 +81,8 @@
                         <input asp-for="Amount" class="visually-hidden" type="text" id="totalPriceInput" placeholder="amount" value="@Model.TariffPerHour" readonly />
                         <input asp-for="VehicleName" class="visually-hidden" type="text" value="@Model.VehicleName" readonly />
 
-                        <input asp-for="StartMonth" class="visually-hidden" type="text" id="startMonthInput" value="@DateTime.Now.AddMinutes(60).ToString("MMMM")" readonly />
-                        <input asp-for="EndMonth" class="visually-hidden" type="text" id="endMonthInput" value="@DateTime.Now.AddMinutes(120).ToString("MMMM")" readonly />
+                        <input asp-for="StartMonth" class="visually-hidden" type="text" id="startMonthInput" value="@DateTime.Now.AddMinutes(60).ToString("MMM")" readonly />
+                        <input asp-for="EndMonth" class="visually-hidden" type="text" id="endMonthInput" value="@DateTime.Now.AddMinutes(120).ToString("MMM")" readonly />
                         <input asp-for="StartDay" class="visually-hidden" type="text" id="startDayInput" value="@DateTime.Now.AddMinutes(60).Day" readonly />
                         <input asp-for="EndDay" class="visually-hidden" type="text" id="endDayInput" value="@DateTime.Now.AddMinutes(120).Day" readonly />
                         <input asp-for="StartHour" class="visually-hidden" type="text" id="startHourInput" value="@DateTime.Now.AddMinutes(60).Hour" readonly />

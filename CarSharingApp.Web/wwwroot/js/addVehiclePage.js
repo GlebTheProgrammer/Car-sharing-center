@@ -11,20 +11,62 @@ addEventListener("beforeunload", () => {
     localStorage.removeItem("marker-long");
 });
 
+// Image analizer section starts here
+
 // Function for selecting user image and displaying it
 function onFileSelected(event) {
     var file = document.getElementById("ImageFileInputErrorValidationCustom");
+
     if (file.files.length == 0) {
+        alert("Error occured when uploaded file. Please, try again");
+        file.value = '';
         return;
     }
 
     var selectedFile = event.target.files[0];
+    var selectedFileName = selectedFile.name;
+    var selectedFileExtension = selectedFileName.split('.')[selectedFileName.split('.').length - 1].toLowerCase();
+
+    //handleChange(file);
+
+    //return;
+
+    if (selectedFileExtension.length > 5) {
+        alert("Uploaded file has wrong extension. Please try again");
+        file.value = '';
+        return;
+    }
+
+    if (selectedFileName.length - selectedFileExtension.length > 30) {
+        alert("File name can't be more then 30 characters long'. Please, try again");
+        file.value = '';
+        return;
+    }
+
+    var iConvert = (selectedFile.size / 1048576).toFixed(2); // size in mb
+
+    if (iConvert > 30) {
+        alert("File size can't be more then 30 MB'. Please, try again");
+        file.value = '';
+        return;
+    }
+
     var reader = new FileReader();
 
     var imgtag = document.getElementById("carImage");
-    imgtag.title = selectedFile.name;
+    imgtag.title = selectedFileName;
 
     reader.onload = function (event) {
+
+        var arrayBuffer = this.result,
+            array = new Uint8Array(arrayBuffer),
+            binaryString = String.fromCharCode.apply(null, array);
+
+        console.log(arrayBuffer);
+        console.log(array);
+        console.log(binaryString);
+
+        return;
 
         const imageInputElement = document.getElementById("imageInputErrorValidationCustom");
         imageInputElement.value = event.target.result;
@@ -35,11 +77,45 @@ function onFileSelected(event) {
         const uploadButtonElement = document.getElementById("unloadImageButton");
         uploadButtonElement.removeAttribute("disabled");
 
+        alert(event.target.result[1]);
+
         imgtag.src = event.target.result;
     };
 
     reader.readAsDataURL(selectedFile);
 }
+
+function check(headers) {
+    return (buffers, options = {
+        offset: 0
+    }) => headers.every((header, index) => header === buffers[options.offset + index]);
+}
+
+function readBuffer(file, start = 0, end = 2) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+            resolve(reader.result);
+        }
+            ;
+        reader.onerror = reject;
+        reader.readAsArrayBuffer(file.slice(start, end));
+    }
+    );
+}
+
+const isPNG = check([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+
+async function handleChange(event) {
+    const file = event.target.files[0];
+    const buffers = await readBuffer(file, 0, 8);
+    const uint8Array = new Uint8Array(buffers);
+    alert(`The type of ${file.name} is：${isPNG(uint8Array) ? "image/png" : 'Pizdec = '+file.type}`);
+}
+
+// Image analizer section ends here
+
+
 
 function UnloadImage() {
     var form = document.getElementById("createNewVehicleForm");

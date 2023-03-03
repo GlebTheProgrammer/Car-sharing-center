@@ -24,7 +24,7 @@
                 <div class="row justify-content-center mt-3">
                     <div class="col-md-12 col-lg-10 col-12">
                         <div class="input-group"> 
-                            <input id="ImageFileInputErrorValidationCustom" type="file" name="file" onchange="onFileSelected(event)" accept="image/png, image/jpeg" class="form-control" required onclick="SetInputAsRequireValidation(this)" />
+                            <input id="ImageFileInputErrorValidationCustom" type="file" name="file" onchange="handleChange(event)" accept="image/png, image/jpeg" class="form-control" required onclick="SetInputAsRequireValidation(this)" />
                             <button class="btn btn-outline-secondary" type="button" id="unloadImageButton" onclick="UnloadImage();" disabled>Unload</button>
                             <div class="valid-feedback">
                                 Uploaded successfully!

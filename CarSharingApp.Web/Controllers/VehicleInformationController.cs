@@ -15,14 +15,17 @@ namespace CarSharingApp.Controllers
         private readonly IVehicleServicePublicApiClient _vehicleServiceClient;
         private readonly IStripePlatformPublicApiClient _stripePlatformClient;
         private readonly IRentalServicePublicApiClient _rentalServiceClient;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         public VehicleInformationController(IVehicleServicePublicApiClient vehicleServiceClient, 
                                             IStripePlatformPublicApiClient stripePlatformClient,
-                                            IRentalServicePublicApiClient rentalServiceClient)
+                                            IRentalServicePublicApiClient rentalServiceClient,
+                                            IWebHostEnvironment webHostEnvironment)
         {
             _vehicleServiceClient = vehicleServiceClient;
             _stripePlatformClient = stripePlatformClient;
             _rentalServiceClient = rentalServiceClient;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public async Task<IActionResult> Index(string vehicleId)
@@ -113,8 +116,19 @@ namespace CarSharingApp.Controllers
             DateTime rentalStartsDateTime;
             DateTime rentalEndsDateTime;
 
-            int rentalStartsMonth = DateTime.ParseExact(request.StartMonth, "MMMM", CultureInfo.CurrentCulture).Month;
-            int rentalEndsMonth = DateTime.ParseExact(request.EndMonth, "MMMM", CultureInfo.CurrentCulture).Month;
+            int rentalStartsMonth;
+            int rentalEndsMonth;
+
+            try
+            {
+                rentalStartsMonth = DateTime.ParseExact(request.StartMonth, "MMM", CultureInfo.InvariantCulture).Month;
+                rentalEndsMonth = DateTime.ParseExact(request.EndMonth, "MMM", CultureInfo.InvariantCulture).Month;
+            }
+            catch (Exception)
+            {
+                rentalStartsMonth = DateTime.ParseExact(request.StartMonth, "MMM", CultureInfo.CurrentCulture).Month;
+                rentalEndsMonth = DateTime.ParseExact(request.EndMonth, "MMM", CultureInfo.CurrentCulture).Month;
+            }
 
             rentalStartsDateTime = new DateTime(year: DateTime.Now.Year, month: rentalStartsMonth, day: int.Parse(request.StartDay), hour: int.Parse(request.StartHour), minute: 0, second: 0);
 
