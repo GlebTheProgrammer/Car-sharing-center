@@ -13,78 +13,6 @@ addEventListener("beforeunload", () => {
 
 // Image analizer section starts here
 
-// Function for selecting user image and displaying it
-function onFileSelected(event) {
-    var file = document.getElementById("ImageFileInputErrorValidationCustom");
-
-    if (file.files.length == 0) {
-        alert("Error occured when uploaded file. Please, try again");
-        file.value = '';
-        return;
-    }
-
-    var selectedFile = event.target.files[0];
-    var selectedFileName = selectedFile.name;
-    var selectedFileExtension = selectedFileName.split('.')[selectedFileName.split('.').length - 1].toLowerCase();
-
-    //handleChange(file);
-
-    //return;
-
-    if (selectedFileExtension.length > 5) {
-        alert("Uploaded file has wrong extension. Please try again");
-        file.value = '';
-        return;
-    }
-
-    if (selectedFileName.length - selectedFileExtension.length > 30) {
-        alert("File name can't be more then 30 characters long'. Please, try again");
-        file.value = '';
-        return;
-    }
-
-    var iConvert = (selectedFile.size / 1048576).toFixed(2); // size in mb
-
-    if (iConvert > 30) {
-        alert("File size can't be more then 30 MB'. Please, try again");
-        file.value = '';
-        return;
-    }
-
-    var reader = new FileReader();
-
-    var imgtag = document.getElementById("carImage");
-    imgtag.title = selectedFileName;
-
-    reader.onload = function (event) {
-
-        var arrayBuffer = this.result,
-            array = new Uint8Array(arrayBuffer),
-            binaryString = String.fromCharCode.apply(null, array);
-
-        console.log(arrayBuffer);
-        console.log(array);
-        console.log(binaryString);
-
-        return;
-
-        const imageInputElement = document.getElementById("imageInputErrorValidationCustom");
-        imageInputElement.value = event.target.result;
-
-        const noImageElement = document.getElementById("noCarImage");
-        noImageElement.style.display = "none";
-
-        const uploadButtonElement = document.getElementById("unloadImageButton");
-        uploadButtonElement.removeAttribute("disabled");
-
-        alert(event.target.result[1]);
-
-        imgtag.src = event.target.result;
-    };
-
-    reader.readAsDataURL(selectedFile);
-}
-
 function check(headers) {
     return (buffers, options = {
         offset: 0
@@ -105,19 +33,127 @@ function readBuffer(file, start = 0, end = 2) {
 }
 
 const isPNG = check([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+const isJPEG = check([0xff, 0xd8, 0xff]);
 
 async function handleChange(event) {
-    const file = event.target.files[0];
-    const buffers = await readBuffer(file, 0, 8);
-    const uint8Array = new Uint8Array(buffers);
-    alert(`The type of ${file.name} is：${isPNG(uint8Array) ? "image/png" : 'Pizdec = '+file.type}`);
+
+    var fileName = document.getElementById("ImageFileInputErrorValidationCustom");
+
+    var selectedFile = event.target.files[0];
+    var selectedFileName = selectedFile.name;
+    var selectedFileExtension = selectedFileName.split('.')[selectedFileName.split('.').length - 1].toLowerCase();
+
+    const pngImageBuffer = await readBuffer(selectedFile, 0, 8);
+    const pngUint8Array = new Uint8Array(pngImageBuffer);
+    const jpegImageBuffer = await readBuffer(selectedFile, 0, 3);
+    const jpegUint8Array = new Uint8Array(jpegImageBuffer);
+
+    // Check file first bytes to check if its a real png/jpeg image 
+    if (!(isPNG(pngUint8Array) || isJPEG(jpegUint8Array))) {
+        UnloadImage(true, `The type of selected file is not PNG or JPEG.`);
+        return;
+    }
+
+    // Check for the file extension
+    if (selectedFileExtension.length > 5) {
+        UnloadImage(true, `Image extension is wrong. Please try again.`);
+        return;
+    }
+
+    // Check file name length
+    if (selectedFileName.length - selectedFileExtension.length > 30) {
+        UnloadImage(true, `Image name can't be more then 30 characters long. Please, try again.`);
+        return;
+    }
+
+    // Check file size
+    var iConvert = (selectedFile.size / 1048576).toFixed(2); // size in mb
+    if (iConvert > 30) {
+        UnloadImage(true, `Image size can't be more then 30 MB. Please, try again.`);
+        return;
+    }
+
+    var reader = new FileReader();
+
+    var imgtag = document.getElementById("carImage");
+    imgtag.title = selectedFileName;
+
+    reader.onload = function (event) {
+
+        const imageInputElement = document.getElementById("imageInputErrorValidationCustom");
+        imageInputElement.value = event.target.result;
+
+        const noImageElement = document.getElementById("noCarImage");
+        noImageElement.style.display = "none";
+
+        const uploadButtonElement = document.getElementById("unloadImageButton");
+        uploadButtonElement.removeAttribute("disabled");
+
+        imgtag.src = event.target.result;
+    };
+
+    reader.readAsDataURL(selectedFile);
+
+    ShowSuccessImageUploadMessage(`Image was uploaded successfully.`)
+}
+
+function getEverythingBack() {
+    var imgtag = document.getElementById("carImage");
+    imgtag.title = "";
+    const imageInputElement = document.getElementById("imageInputErrorValidationCustom");
+    imageInputElement.value = "";
+    const noImageElement = document.getElementById("noCarImage");
+    noImageElement.style.display = "";
+    const uploadButtonElement = document.getElementById("unloadImageButton");
+    uploadButtonElement.setAttribute("disabled", "true");
+    imgtag.src = "";
+}
+
+// Function to show message about error in image upload 
+function ShowErrorImageUploadMessage(message) {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-start',
+        showConfirmButton: false,
+        timer: 5000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    });
+
+    Toast.fire({
+        icon: 'error',
+        title: message
+    });
+}
+
+// Function to show message about error in image upload 
+function ShowSuccessImageUploadMessage(message) {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-start',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    });
+
+    Toast.fire({
+        icon: 'success',
+        title: message
+    });
 }
 
 // Image analizer section ends here
 
 
 
-function UnloadImage() {
+function UnloadImage(isError, message) {
     var form = document.getElementById("createNewVehicleForm");
     form.reset();
 
@@ -134,6 +170,12 @@ function UnloadImage() {
     uploadButtonElement.setAttribute("disabled", "");
 
     imgtag.removeAttribute("src");
+
+    if (isError) {
+        ShowErrorImageUploadMessage(message);
+    } else {
+        ShowSuccessImageUploadMessage(message);
+    }
 }
 
 // Section for working with googleMaps starts here
