@@ -14,11 +14,14 @@ namespace CarSharingApp.Controllers
         private readonly IVehicleServicePublicApiClient _vehicleServiceClient;
         private readonly IAzureBlobStoragePublicApiClient _blobStorageClient;
 
-        public AddVehicleController(IVehicleServicePublicApiClient vehicleServiceClient, IAzureBlobStoragePublicApiClient blobStorageClient)
+        public AddVehicleController(IVehicleServicePublicApiClient vehicleServiceClient, 
+                                    IAzureBlobStoragePublicApiClient blobStorageClient)
         {
             _vehicleServiceClient = vehicleServiceClient;
             _blobStorageClient = blobStorageClient;
         }
+
+        #region AddVehicle View action methods section
 
         public IActionResult Index()
         {
@@ -69,6 +72,10 @@ namespace CarSharingApp.Controllers
             return RedirectToAction("Index", "Catalog");
         }
 
+        #endregion
+
+        #region Requests configuration section
+
         private CreateVehicleRequest ConfigureNewCreateVehicleRequest(CreateVehicleRequest? requestFromView = null, string? image = null)
         {
             return new CreateVehicleRequest(
@@ -95,5 +102,7 @@ namespace CarSharingApp.Controllers
                 VIN: requestFromView?.VIN ?? string.Empty,
                 Categories: requestFromView?.Categories ?? string.Empty);
         }
+
+        #endregion
     }
 }

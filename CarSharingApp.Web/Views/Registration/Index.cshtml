@@ -101,7 +101,7 @@
 
                 <div class="col-12">
                     <label for="phoneNumberErrorValidationCustom" class="form-label">PhoneNumber <label class="text-danger">*</label></label>
-                    <input asp-for="PhoneNumber" type="tel" class="form-control" id="phoneNumberErrorValidationCustom" pattern="^[\\+]?[(]?[0-9]{1,3}[)]?[-\\s\\.]?[0-9]{3}[-\\s\\.]?[0-9]{4,6}$" required onclick="SetInputAsRequireValidation(this)">
+                    <input asp-for="PhoneNumber" type="tel" class="form-control" id="phoneNumberErrorValidationCustom" pattern="\(?\+[0-9]{1,3}\)? ?-?[0-9]{1,3} ?-?[0-9]{3,5} ?-?[0-9]{4}( ?-?[0-9]{3})? ?(\w{1,10}\s?\d{1,6})?" required onclick="SetInputAsRequireValidation(this)">
                     <div class="valid-feedback">
                         Looks good!
                     </div>

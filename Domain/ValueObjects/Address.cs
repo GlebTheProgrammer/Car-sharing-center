@@ -9,7 +9,7 @@ namespace CarSharingApp.Domain.ValueObjects
     {
         public const int MinStreetAddressLength = 5;
         public const int MaxStreetAddressLength = 25;
-        public const int MinAptSuitEtcLength = 3;
+        public const int MinAptSuitEtcLength = 1;
         public const int MaxAptSuitEtcLength = 25;
         public const int MinCityLength = 5;
         public const int MaxCityLength = 25;
