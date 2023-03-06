@@ -12,6 +12,14 @@ namespace CarSharingApp.Web.Controllers.Handle
 
             switch (statusCode)
             {
+                case 400:
+                    ViewBag.ErrorDescription = "Wrong HTTP request was sent to the server or has invalid syntax";
+                    return View("BadRequest");
+
+                case 401:
+                    ViewBag.ErrorDescription = "Access is allowed only for registered users";
+                    return View("Unauthorized");
+
                 case 404:
                     ViewBag.ErrorDescription = "Sorry but the page you are looking for does not exist, have been removed, name changed or is temporarily unavailable";
                     return View("NotFound");

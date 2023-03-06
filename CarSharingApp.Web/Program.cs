@@ -1,7 +1,6 @@
 ﻿using CarSharingApp.Login;
 using CarSharingApp.Login.Authentication;
 using CarSharingApp.OptionsSetup;
-using CarSharingApp.Middlewares;
 using CarSharingApp.Repository.MongoDbRepository;
 using CarSharingApp.Web.Clients;
 using CarSharingApp.Web.Clients.Interfaces;
@@ -72,7 +71,7 @@ var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
+    app.UseExceptionHandler("/home/error");
     app.UseHsts();
 }
 
@@ -93,11 +92,11 @@ app.Use(async (context, next) =>
 app.UseStaticFiles();
 app.UseAuthentication();
 app.UseRouting();
-app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 app.UseAuthorization();
+//app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/");
 
 app.Run();

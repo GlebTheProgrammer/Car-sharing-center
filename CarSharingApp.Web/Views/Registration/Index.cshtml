@@ -21,7 +21,7 @@
 
                 <div class="col-6">
                     <label for="firstNameErrorValidationCustom" class="form-label">First name <label class="text-danger">*</label></label>
-                    <input asp-for="FirstName" type="text" class="form-control" id="firstNameErrorValidationCustom" required onclick="SetInputAsRequireValidation(this)">
+                    <input asp-for="FirstName" type="text" class="form-control" id="firstNameErrorValidationCustom" maxlength="255" required onclick="SetInputAsRequireValidation(this)">
                     <div class="valid-feedback">
                         Looks good!
                     </div>
@@ -31,7 +31,7 @@
                 </div>
                 <div class="col-6">
                     <label for="lastNameErrorValidationCustom" class="form-label">Last name <label class="text-danger">*</label></label>
-                    <input asp-for="LastName" type="text" class="form-control" id="lastNameErrorValidationCustom" required onclick="SetInputAsRequireValidation(this)">
+                    <input asp-for="LastName" type="text" class="form-control" id="lastNameErrorValidationCustom" maxlength="255" required onclick="SetInputAsRequireValidation(this)">
                     <div class="valid-feedback">
                         <span>Looks good!</span>
                     </div>
@@ -59,7 +59,7 @@
                 </div>
                 <div class="col-4">
                     <label for="cityErrorValidationCustom" class="form-label">City <label class="text-danger">*</label></label>
-                    <input asp-for="City" type="text" class="form-control" id="cityErrorValidationCustom" required onclick="SetInputAsRequireValidation(this)">
+                    <input asp-for="City" type="text" class="form-control" id="cityErrorValidationCustom" maxlength="50" required onclick="SetInputAsRequireValidation(this)">
                     <div class="valid-feedback">
                         Looks good!
                     </div>
@@ -69,7 +69,7 @@
                 </div>
                 <div class="col-4">
                     <label for="zipPostCodeErrorValidationCustom" class="form-label">ZIP/postcode <label class="text-danger">*</label></label>
-                    <input asp-for="ZipPostCode" type="text" class="form-control" id="zipPostCodeErrorValidationCustom" required onclick="SetInputAsRequireValidation(this)">
+                    <input asp-for="ZipPostCode" type="text" class="form-control" id="zipPostCodeErrorValidationCustom" maxlength="50" required onclick="SetInputAsRequireValidation(this)">
                     <div class="valid-feedback">
                         Looks good!
                     </div>
@@ -80,7 +80,7 @@
 
                 <div class="col-6">
                     <label for="streetAddressErrorValidationCustom" class="form-label">Street address <label class="text-danger">*</label></label>
-                    <input asp-for="StreetAddress" type="text" class="form-control" id="streetAddressErrorValidationCustom" required onclick="SetInputAsRequireValidation(this)">
+                    <input asp-for="StreetAddress" type="text" class="form-control" id="streetAddressErrorValidationCustom" maxlength="100" required onclick="SetInputAsRequireValidation(this)">
                     <div class="valid-feedback">
                         Looks good!
                     </div>
@@ -90,7 +90,7 @@
                 </div>
                 <div class="col-6">
                     <label for="aptSuiteEtcErrorValidationCustom" class="form-label">Apt, suite, etc. <label class="text-danger">*</label></label>
-                    <input asp-for="AptSuiteEtc" type="text" class="form-control" id="aptSuiteEtcErrorValidationCustom" required onclick="SetInputAsRequireValidation(this)">
+                    <input asp-for="AptSuiteEtc" type="text" class="form-control" id="aptSuiteEtcErrorValidationCustom" maxlength="100" required onclick="SetInputAsRequireValidation(this)">
                     <div class="valid-feedback">
                         Looks good!
                     </div>
@@ -112,7 +112,7 @@
 
                 <div class="col-12">
                     <label for="driverLicenseErrorValidationCustom" class="form-label">Driver License Identifier <label class="text-danger">*</label></label>
-                    <input asp-for="DriverLicenseIdentifier" type="text" class="form-control" id="driverLicenseErrorValidationCustom" required onclick="SetInputAsRequireValidation(this)">
+                    <input asp-for="DriverLicenseIdentifier" type="text" class="form-control" id="driverLicenseErrorValidationCustom" maxlength="50" required onclick="SetInputAsRequireValidation(this)">
                     <div class="valid-feedback">
                         Looks good!
                     </div>
@@ -138,7 +138,7 @@
 
                 <div class="col-12">
                     <label for="emailErrorValidationCustom" class="form-label">Email <label class="text-danger">*</label></label>
-                    <input asp-for="Email" type="email" class="form-control" id="emailErrorValidationCustom" required onclick="SetInputAsRequireValidation(this)">
+                    <input asp-for="Email" type="email" class="form-control" id="emailErrorValidationCustom" maxlength="255" required onclick="SetInputAsRequireValidation(this)">
                     <div class="valid-feedback">
                         Looks good!
                     </div>
@@ -149,7 +149,7 @@
 
                 <div class="col-12">
                     <label for="passwordErrorValidationCustom" class="form-label">Password <label class="text-danger">*</label></label>
-                    <input asp-for="Password" type="password" value="@Model.Password" class="form-control" id="passwordErrorValidationCustom" pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@@$%^&*-]).{8,}$" required onclick="SetInputAsRequireValidation(this)">
+                    <input asp-for="Password" type="password" value="@Model.Password" class="form-control" id="passwordErrorValidationCustom" maxlength="255" pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@@$%^&*-]).{8,}$" required onclick="SetInputAsRequireValidation(this)">
                     <div class="valid-feedback">
                         Looks good!
                     </div>
@@ -159,7 +159,7 @@
                 </div>
                 <div class="col-12">
                     <label for="confirmPasswordErrorValidationCustom" class="form-label">Confirm password</label>
-                    <input asp-for="ConfirmPassword" type="password" value="@Model.ConfirmPassword" class="form-control" id="confirmPasswordErrorValidationCustom" required onclick="SetInputAsRequireValidation(this)">
+                    <input asp-for="ConfirmPassword" type="password" value="@Model.ConfirmPassword" class="form-control" id="confirmPasswordErrorValidationCustom" maxlength="255" required onclick="SetInputAsRequireValidation(this)">
                     <div class="valid-feedback">
                         Looks good!
                     </div>
@@ -239,10 +239,6 @@
 <script src="~/js/registrationPage.js" asp-append-version="true"></script>
 
 <script>
-    document.addEventListener("abort", () => {
-        alert("aborted");
-    });
-
     function ChangeSubmitButtonContent(hasLoading){
         const submitFormButtonElement = document.getElementById("submitFormBtn");
         const processFormButtonElement = document.getElementById("processFormBtn");

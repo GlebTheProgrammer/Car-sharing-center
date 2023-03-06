@@ -1,7 +1,6 @@
 ﻿using CarSharingApp.Application.Contracts.Authorization;
 using CarSharingApp.Application.Contracts.ErrorType;
 using CarSharingApp.Web.Clients.Interfaces;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -9,19 +8,19 @@ using System.Text.Json;
 
 namespace CarSharingApp.Controllers
 {
+    [Route("signIn")]
     public class SignInController : Controller
     {
         private readonly IAuthorizationServicePublicApiClient _authorizationServiceClient;
-        private readonly IAzureADPublicApiClient _azureAdClient;
 
-        public SignInController(IAuthorizationServicePublicApiClient authorizationServiceClient, IAzureADPublicApiClient azureAdClient)
+        public SignInController(IAuthorizationServicePublicApiClient authorizationServiceClient)
         {
             _authorizationServiceClient = authorizationServiceClient;
-            _azureAdClient = azureAdClient;
         }
 
         [AllowAnonymous]
-        public IActionResult Index(string returnUrl)
+        [HttpGet]
+        public IActionResult Index()
         {
             var authorizationRequest = new AuthorizationRequest
             {
@@ -32,71 +31,8 @@ namespace CarSharingApp.Controllers
             return View(authorizationRequest);
         }
 
-        //[AllowAnonymous]
-        //public async Task<IActionResult> TrySignIn(AuthorizationRequest request)
-        //{
-        //    var response = await _authorizationServiceClient.TryAuthorize(request);
-
-        //    switch (response.StatusCode)
-        //    {
-        //        case HttpStatusCode.ServiceUnavailable:
-        //        case HttpStatusCode.Forbidden:
-        //            {
-        //                string responseContent = await response.Content.ReadAsStringAsync();
-
-        //                ValidationError validationError = JsonSerializer.Deserialize<ValidationError>(responseContent) ?? new ValidationError();
-
-        //                ModelState.AddModelError(nameof(request.Password), validationError.Title);
-
-        //                return View("Index", request);
-        //            }
-        //        default:
-        //            break;
-        //    }
-
-        //    SuccessfulAuthorizationResponse responseModel = await response.Content.ReadFromJsonAsync<SuccessfulAuthorizationResponse>()
-        //        ?? throw new NullReferenceException(nameof(responseModel));
-
-        //    string resultUri = _azureAdClient.RequestAuthorizationCode();
-
-        //    return Redirect(resultUri);
-        //}
-
-        //public void AuthenticationCode(string code, string state)
-        //{
-        //    _azureAdClient.RequestAccessToken(code, state);
-
-        //    return;
-        //}
-
-        //public void AuthenticationCode(string code, string state, string id_token)
-        //{
-        //    _azureAdClient.RequestAccessToken(code, id_token);
-
-        //    return;
-        //}
-
-        //public IActionResult Token(string access_token, string token_type, int expires_in, string scope, string refresh_token, string id_token)
-        //{
-        //    if (access_token == null || token_type == null || expires_in == 0 || scope == null || refresh_token == null || id_token == null)
-        //    {
-        //        return RedirectToAction("TrySignIn");
-        //    }
-
-        //    return View();
-        //}
-
-
-        //[Authorize]
-        //public async Task<IActionResult> Logout()
-        //{
-        //    await HttpContext.SignOutAsync();
-
-        //    HttpContext.Session.SetString("LoggedOut", "true");
-
-        //    return RedirectToAction("Index", "SignIn");
-        //}
-
+        [AllowAnonymous]
+        [HttpPost]
         public async Task<IActionResult> TrySignIn(AuthorizationRequest request)
         {
             var response = await _authorizationServiceClient.TryAuthorize(request);
@@ -128,6 +64,10 @@ namespace CarSharingApp.Controllers
             return RedirectToAction("Index", "Dashboard");
         }
 
+
+        [Authorize]
+        [HttpGet]
+        [Route("[action]")]
         public IActionResult Logout()
         {
             HttpContext.Session.Remove("JWToken");
