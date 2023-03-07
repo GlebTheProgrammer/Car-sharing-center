@@ -1,6 +1,7 @@
 ﻿using CarSharingApp.Application.Contracts.Authorization;
 using CarSharingApp.Application.Contracts.ErrorType;
 using CarSharingApp.Web.Clients.Interfaces;
+using CarSharingApp.Web.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -33,7 +34,9 @@ namespace CarSharingApp.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> TrySignIn(AuthorizationRequest request)
+        [ValidateAntiForgeryToken]
+        [PreventDuplicateRequest]
+        public async Task<IActionResult> TrySignIn([FromForm] AuthorizationRequest request)
         {
             var response = await _authorizationServiceClient.TryAuthorize(request);
 
@@ -64,10 +67,9 @@ namespace CarSharingApp.Controllers
             return RedirectToAction("Index", "Dashboard");
         }
 
-
         [Authorize]
         [HttpGet]
-        [Route("[action]")]
+        [Route("logout")]
         public IActionResult Logout()
         {
             HttpContext.Session.Remove("JWToken");

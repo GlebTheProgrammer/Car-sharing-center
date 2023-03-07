@@ -245,9 +245,9 @@
         $('#searchRentalButton').click(function () {
             var value = $("#searchRentalInput").val();
             if (document.getElementById("searchRentalByVehicleNameRadio").checked) {
-                $('#rentalsPartialZone').load("/Dashboard/RentalsArticlePartial?searchBy=VehicleName&searchInput=" + value);
+                $('#rentalsPartialZone').load("/dashboard/rentalsPartial?searchBy=VehicleName&searchInput=" + value);
             } else if (document.getElementById("searchRentalByAmountRadio").checked) {
-                $('#rentalsPartialZone').load("/Dashboard/RentalsArticlePartial?searchBy=Amount&searchInput=" + value);
+                $('#rentalsPartialZone').load("/dashboard/rentalsPartial?searchBy=Amount&searchInput=" + value);
             }
         })
     });
@@ -256,9 +256,9 @@
     function ChangeRentalsPage(pageNumber) {
         var value = $("#searchRentalInput").val();
         if (document.getElementById("searchRentalByVehicleNameRadio").checked) {
-            $('#rentalsPartialZone').load("/Dashboard/RentalsArticlePartial?searchBy=VehicleName&searchInput=" + value + "&page=" + pageNumber);
+            $('#rentalsPartialZone').load("/dashboard/rentalsPartial?searchBy=VehicleName&searchInput=" + value + "&page=" + pageNumber);
         } else if (document.getElementById("searchRentalByAmountRadio").checked) {
-            $('#rentalsPartialZone').load("/Dashboard/RentalsArticlePartial?searchBy=Amount&searchInput=" + value + "&page=" + pageNumber);
+            $('#rentalsPartialZone').load("/dashboard/rentalsPartial?searchBy=Amount&searchInput=" + value + "&page=" + pageNumber);
         }
     };
 
@@ -299,13 +299,13 @@
     function FinishRental(rentalId) {
         var value = $("#searchRentalInput").val();
         if (document.getElementById("searchRentalByVehicleNameRadio").checked) {
-            $('#rentalsPartialZone').load("/Dashboard/FinishRental?rentalId=" + rentalId + "&searchBy=Name&searchInput=" + value, function (responseTxt, statusTxt, xhr) {
+            $('#rentalsPartialZone').load("/dashboard/finishAndRenderPartial/rental?rentalId=" + rentalId + "&searchBy=Name&searchInput=" + value, function (responseTxt, statusTxt, xhr) {
                 if (statusTxt === "success") {
                     UpdateNotesArticle();
                 }
             });
         } else if (document.getElementById("searchRentalByAmountRadio").checked) {
-            $('#rentalsPartialZone').load("/Dashboard/FinishRental?rentalId=" + rentalId + "&searchBy=Name&searchInput=" + value, function (responseTxt, statusTxt, xhr) {
+            $('#rentalsPartialZone').load("/dashboard/finishAndRenderPartial/rental?rentalId=" + rentalId + "&searchBy=Name&searchInput=" + value, function (responseTxt, statusTxt, xhr) {
                 if (statusTxt === "success") {
                     UpdateNotesArticle();
                 }
@@ -314,7 +314,7 @@
     }
 
     function UpdateNotesArticle() {
-        $('#notesPartialZone').load("/Dashboard/NotesArticlePartial?type=All");
+        $('#notesPartialZone').load("/dashboard/notesPartial?type=All");
     }
 </script>
 
@@ -328,9 +328,9 @@
 
             var value = $("#searchRentalInput").val();
             if (document.getElementById("searchRentalByVehicleNameRadio").checked) {
-                $('#rentalsPartialZone').load("/Dashboard/RentalsArticlePartial?searchBy=VehicleName&searchInput=" + value + "&page=" + "@(pager.CurrentPage)");
+                $('#rentalsPartialZone').load("/dashboard/rentalsPartial?searchBy=VehicleName&searchInput=" + value + "&page=" + "@(pager.CurrentPage)");
             } else if (document.getElementById("searchRentalByAmountRadio").checked) {
-                $('#rentalsPartialZone').load("/Dashboard/RentalsArticlePartial?searchBy=Amount&searchInput=" + value + "&page=" + "@(pager.CurrentPage)");
+                $('#rentalsPartialZone').load("/dashboard/rentalsPartial?searchBy=Amount&searchInput=" + value + "&page=" + "@(pager.CurrentPage)");
             }
         }
         checkMinutes.prevTime = now;

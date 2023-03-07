@@ -134,7 +134,7 @@ function ShowLogoutConfirmationAlert() {
         confirmButtonText: 'Yes'
     }).then((result) => {
         if (result.isConfirmed) {
-            window.location.href = '/SignIn/Logout'
+            window.location.href = '/signIn/logout'
         }
     });
 }
@@ -239,7 +239,7 @@ function ShowSuccessfulCarSharingMessage() {
         reverseButtons: true
     }).then((result) => {
         if (result.isConfirmed) {
-            window.location.href = '/Dashboard/';
+            window.location.href = '/dashboard/';
         }
     })
 }
@@ -275,7 +275,7 @@ function ShowPurchaseCompletedMessage() {
         reverseButtons: true
     }).then((result) => {
         if (result.isConfirmed) {
-            window.location.href = '/Dashboard/';
+            window.location.href = '/dashboard/';
         }
     })
 }

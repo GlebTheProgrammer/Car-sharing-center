@@ -200,29 +200,29 @@
 
 
 <script>
-    $('#notesPartialZone').load("/Dashboard/NotesArticlePartial?type=All");
-    $('#statisticsPartialZone').load("/Dashboard/StatisticsArticlePartial");
-    $('#vehiclesPartialZone').load("/Dashboard/VehiclesArticlePartial");
-    $('#rentalsPartialZone').load("/Dashboard/RentalsArticlePartial");
+    $('#notesPartialZone').load("/dashboard/notesPartial?type=All");
+    $('#statisticsPartialZone').load("/dashboard/statisticsPartial");
+    $('#vehiclesPartialZone').load("/dashboard/vehiclesPartial");
+    $('#rentalsPartialZone').load("/dashboard/rentalsPartial");
 
     $(function(){
         $('#showAllNotesBtn').click(function(){
-            $('#notesPartialZone').load("/Dashboard/NotesArticlePartial?type=All");
+            $('#notesPartialZone').load("/dashboard/notesPartial?type=All");
         })
     });
     $(function () {
         $('#showAccountNotesBtn').click(function () {
-            $('#notesPartialZone').load("/Dashboard/NotesArticlePartial?type=Account");
+            $('#notesPartialZone').load("/dashboard/notesPartial?type=Account");
         })
     });
     $(function(){
         $('#showVehiclesNotesBtn').click(function () {
-            $('#notesPartialZone').load("/Dashboard/NotesArticlePartial?type=Vehicles");
+            $('#notesPartialZone').load("/dashboard/notesPartial?type=Vehicles");
         })
     });
     $(function(){
         $('#showOrdersNotesBtn').click(function(){
-            $('#notesPartialZone').load("/Dashboard/NotesArticlePartial?type=Orders");
+            $('#notesPartialZone').load("/dashboard/notesPartial?type=Orders");
         })
     });
 </script>

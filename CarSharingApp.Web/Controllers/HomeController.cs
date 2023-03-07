@@ -8,6 +8,7 @@ using System.Net;
 
 namespace CarSharingApp.Controllers
 {
+    [AllowAnonymous]
     public class HomeController : Controller
     {
         private readonly IVehicleServicePublicApiClient _vehicleServiceClient;
@@ -17,7 +18,7 @@ namespace CarSharingApp.Controllers
             _vehicleServiceClient = vehicleServiceClient;
         }
 
-        [AllowAnonymous]
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var response = await _vehicleServiceClient.GetAllApprovedAndPublishedVehiclesMapRepresentation();
@@ -41,7 +42,6 @@ namespace CarSharingApp.Controllers
             return View(viewModel);
         }
 
-        [AllowAnonymous]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

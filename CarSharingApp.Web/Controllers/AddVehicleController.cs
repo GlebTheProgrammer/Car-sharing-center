@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace CarSharingApp.Controllers
 {
     [Authorize]
+    [Route("vehicle/share")]
     public sealed class AddVehicleController : Controller
     {
         private readonly IVehicleServicePublicApiClient _vehicleServiceClient;
@@ -23,6 +24,7 @@ namespace CarSharingApp.Controllers
 
         #region AddVehicle View action methods section
 
+        [HttpGet]
         public IActionResult Index()
         {
             var createNewVehicleRequest = ConfigureNewCreateVehicleRequest();
@@ -30,9 +32,10 @@ namespace CarSharingApp.Controllers
             return View(createNewVehicleRequest);
         }
 
-        public async Task<IActionResult> AddVehicle(CreateVehicleRequest createVehicleRequest, IFormFile file)
+        [HttpPost]
+        public async Task<IActionResult> AddVehicle([FromForm] CreateVehicleRequest createVehicleRequest, 
+                                                    [FromForm] IFormFile file)
         {
-            
             if (file is null)
                 throw new Exception("Image can't be null");
 
@@ -76,6 +79,7 @@ namespace CarSharingApp.Controllers
 
         #region Requests configuration section
 
+        [NonAction]
         private CreateVehicleRequest ConfigureNewCreateVehicleRequest(CreateVehicleRequest? requestFromView = null, string? image = null)
         {
             return new CreateVehicleRequest(

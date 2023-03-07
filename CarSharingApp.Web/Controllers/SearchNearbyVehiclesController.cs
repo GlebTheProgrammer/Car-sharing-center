@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CarSharingApp.Web.Controllers
 {
+    [AllowAnonymous]
+    [Route("nearbyVehicles")]
     public class SearchNearbyVehiclesController : Controller
     {
         private readonly IVehicleServicePublicApiClient _vehicleServiceClient;
@@ -14,7 +16,7 @@ namespace CarSharingApp.Web.Controllers
             _vehicleServiceClient = vehicleServiceClient;
         }
 
-        [AllowAnonymous]
+        [HttpGet]
         public IActionResult Index()
         {
             return View();
@@ -22,6 +24,8 @@ namespace CarSharingApp.Web.Controllers
 
         #region Partial views rendering 
 
+        [HttpGet]
+        [Route("mapPartial")]
         public async Task<IActionResult> RenderMapPartial()
         {
             var response = await _vehicleServiceClient.GetAllApprovedAndPublishedVehiclesMapRepresentation();
@@ -38,7 +42,13 @@ namespace CarSharingApp.Web.Controllers
 
         #endregion
 
-        public async Task<JsonResult> GetNearbyVehicles(string latitude, string longitude, int vehiclesCount)
+        #region Partial views actions
+
+        [HttpGet]
+        [Route("getNearbyVehicles")]
+        public async Task<JsonResult> GetNearbyVehicles([FromQuery] string latitude, 
+                                                        [FromQuery] string longitude, 
+                                                        [FromQuery] int vehiclesCount)
         {
             var requestModel = new GetNearbyVehiclesMapRepresentationRequest(latitude, longitude, vehiclesCount);
 
@@ -52,5 +62,7 @@ namespace CarSharingApp.Web.Controllers
             var resStr = await response.Content.ReadAsStringAsync();
             return Json(responseModel);
         }
+
+        #endregion
     }
 }

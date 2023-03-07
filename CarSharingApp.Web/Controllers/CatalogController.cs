@@ -1,10 +1,13 @@
 ﻿using CarSharingApp.Application.Contracts.Vehicle;
 using CarSharingApp.Web.Clients.Interfaces;
 using CarSharingApp.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarSharingApp.Controllers
 {
+    [AllowAnonymous]
+    [Route("catalog")]
     public class CatalogController : Controller
     {
         private readonly IVehicleServicePublicApiClient _vehicleServiceClient;
@@ -14,14 +17,20 @@ namespace CarSharingApp.Controllers
             _vehicleServiceClient = vehicleServiceClient;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             return View();
         }
 
-        // Partial views rendering goes below
+        #region Partial views rendering
 
-        public async Task<IActionResult> VehiclesCatalogPartial(string searchBy, string searchInput, int page = 1, int pageSize = 9)
+        [HttpGet]
+        [Route("vehiclesPartial")]
+        public async Task<IActionResult> VehiclesCatalogPartial([FromQuery] string searchBy, 
+                                                                [FromQuery] string searchInput, 
+                                                                [FromQuery] int page = 1, 
+                                                                [FromQuery] int pageSize = 9)
         {
             var response = await _vehicleServiceClient.GetAllApprovedAndPublishedVehiclesCatalogRepresentation();
             var viewModel = await RenderCatalog(searchBy, searchInput, page, pageSize, response);
@@ -29,12 +38,24 @@ namespace CarSharingApp.Controllers
             return PartialView("_VehiclesCatalog", viewModel);
         }
 
+        [HttpGet]
+        [Route("advancedFilterPartial")]
         public IActionResult FilterModalPartial()
         {
             return PartialView("_FilterModal");
         }
 
-        public async Task<IActionResult> AdvancedSearch(GetVehiclesByCriteriaRequest request, string searchBy, string searchInput, int page = 1, int pageSize = 9)
+        #endregion
+
+        #region Partial views actions
+
+        [HttpGet]
+        [Route("search")]
+        public async Task<IActionResult> AdvancedSearch([FromQuery] GetVehiclesByCriteriaRequest request, 
+                                                        [FromQuery] string searchBy, 
+                                                        [FromQuery] string searchInput, 
+                                                        [FromQuery] int page = 1, 
+                                                        [FromQuery] int pageSize = 9)
         {
             var response = await _vehicleServiceClient.GetAllApprovedAndPublishedVehiclesWithFilterCatalogRepresentation(request);
             var viewModel = await RenderCatalog(searchBy, searchInput, page, pageSize, response);
@@ -42,6 +63,11 @@ namespace CarSharingApp.Controllers
             return PartialView("_VehiclesCatalog", viewModel);
         }
 
+        #endregion
+
+        #region Helper methods
+
+        [NonAction]
         private async Task<List<VehicleDisplayInCatalog>> RenderCatalog(string searchBy, string searchInput, int page, int pageSize, HttpResponseMessage response)
         {
             response.EnsureSuccessStatusCode();
@@ -70,6 +96,7 @@ namespace CarSharingApp.Controllers
             return partialViewModel.Skip(vehiclesSkip).Take(pager.PageSize).ToList();
         }
 
+        [NonAction]
         private List<VehicleDisplayInCatalog> GetViewModel(VehiclesDisplayInCatalogResponse serverResponse, string searchCriteria, string searchInput)
         {
             switch (searchCriteria)
@@ -84,5 +111,7 @@ namespace CarSharingApp.Controllers
                     return new List<VehicleDisplayInCatalog>();
             }
         }
+
+        #endregion
     }
 }

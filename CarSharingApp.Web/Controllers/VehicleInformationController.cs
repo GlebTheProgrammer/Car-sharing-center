@@ -10,6 +10,7 @@ using System.Text.Json;
 namespace CarSharingApp.Controllers
 {
     [Authorize]
+    [Route("vehicle")]
     public class VehicleInformationController : Controller
     {
         private readonly IVehicleServicePublicApiClient _vehicleServiceClient;
@@ -28,7 +29,9 @@ namespace CarSharingApp.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public async Task<IActionResult> Index(string vehicleId)
+        [HttpGet]
+        [Route("information")]
+        public async Task<IActionResult> Index([FromQuery] string vehicleId)
         {
             var response = await _vehicleServiceClient.GetVehicleInformation(Guid.Parse(vehicleId));
 
@@ -41,7 +44,8 @@ namespace CarSharingApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCheckoutSession(StripePaymentSessionRequest paymentRequest)
+        [Route("payment/session")]
+        public async Task<IActionResult> CreateCheckoutSession([FromForm] StripePaymentSessionRequest paymentRequest)
         {
             string hostedUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}";
 
@@ -61,7 +65,10 @@ namespace CarSharingApp.Controllers
             return Redirect(stripeSessionUrl.SessionUrl);
         }
 
-        public async Task<IActionResult> SuccessfulPayment(StripePaymentSessionRequest completedPayment, string sessionId)
+        [HttpGet]
+        [Route("payment/compleated")]
+        public async Task<IActionResult> SuccessfulPayment([FromQuery] StripePaymentSessionRequest completedPayment, 
+                                                           [FromQuery] string sessionId)
         {
             var paymentDetailsResponse = await _stripePlatformClient.GetStripePaymentDetails(sessionId);
             string paymentDetailsResponseContent = await paymentDetailsResponse.Content.ReadAsStringAsync();
@@ -84,7 +91,9 @@ namespace CarSharingApp.Controllers
             return RedirectToAction("Index", "Catalog");
         }
 
-        public IActionResult CancelledPayment(StripePaymentSessionRequest cancelledPayment)
+        [HttpGet]
+        [Route("payment/cancelled")]
+        public IActionResult CancelledPayment([FromQuery] StripePaymentSessionRequest cancelledPayment)
         {
             HttpContext.Session.SetString("CancelledPayment", "true");
 
@@ -93,7 +102,12 @@ namespace CarSharingApp.Controllers
 
         #region Partial section starts here
 
-        public IActionResult RentOrderPartial(string vehicleId, string vehicleName, string vehicleOwnerId, string tariffPerHour, string tariffPerDay)
+        [Route("rentalPartial")]
+        public IActionResult RentOrderPartial([FromForm] string vehicleId, 
+                                              [FromForm] string vehicleName, 
+                                              [FromForm] string vehicleOwnerId, 
+                                              [FromForm] string tariffPerHour, 
+                                              [FromForm] string tariffPerDay)
         {
             var viewModel = new StripePaymentSessionRequest()
             {
@@ -109,8 +123,9 @@ namespace CarSharingApp.Controllers
 
         #endregion
 
-        #region Models parsing
+        #region Models parsing section starts here
 
+        [NonAction]
         private CreateNewRentalRequest GenerateNewRequest(StripePaymentSessionRequest request, StripePaymentDetailsResponse paymentResponse)
         {
             DateTime rentalStartsDateTime;
@@ -157,6 +172,7 @@ namespace CarSharingApp.Controllers
                 StripePaymentId: paymentResponse.PaymentId);
         }
 
+        [NonAction]
         private StripePaymentSessionUrlRequest GenerateNewStripePaymentSessionUrlRequest(
             StripePaymentSessionRequest request, string successUrl, string cancelationUrl)
         {

@@ -197,9 +197,9 @@
         $('#searchButton').click(function () {
             var value = $("#searchInput").val();
             if (document.getElementById("searchByNameRadio").checked){
-                $('#vehiclesPartialZone').load("/Dashboard/VehiclesArticlePartial?searchBy=Name&searchInput=" + value);
+                $('#vehiclesPartialZone').load("/dashboard/vehiclesPartial?searchBy=Name&searchInput=" + value);
             } else if (document.getElementById("searchByPriceRadio").checked) {
-                $('#vehiclesPartialZone').load("/Dashboard/VehiclesArticlePartial?searchBy=Price&searchInput=" + value);
+                $('#vehiclesPartialZone').load("/dashboard/vehiclesPartial?searchBy=Price&searchInput=" + value);
             }
         })
     });
@@ -208,9 +208,9 @@
     function ChangePage(pageNumber){
         var value = $("#searchInput").val();
         if (document.getElementById("searchByNameRadio").checked) {
-            $('#vehiclesPartialZone').load("/Dashboard/VehiclesArticlePartial?searchBy=Name&searchInput=" + value + "&page=" + pageNumber);
+            $('#vehiclesPartialZone').load("/dashboard/vehiclesPartial?searchBy=Name&searchInput=" + value + "&page=" + pageNumber);
         } else if (document.getElementById("searchByPriceRadio").checked) {
-            $('#vehiclesPartialZone').load("/Dashboard/VehiclesArticlePartial?searchBy=Price&searchInput=" + value + "&page=" + pageNumber);
+            $('#vehiclesPartialZone').load("/dashboard/vehiclesPartial?searchBy=Price&searchInput=" + value + "&page=" + pageNumber);
         }
     };
 
@@ -229,14 +229,14 @@
             if (result.isConfirmed) {
                 var value = $("#searchInput").val();
                 if (document.getElementById("searchByNameRadio").checked) {
-                    $('#vehiclesPartialZone').load("/Dashboard/DeleteVehicleAndRenderVehiclesArticlePartial?vehicleId=" + vehicleId + "&vehicleImage=" + vehicleImage + "&searchBy=Name&searchInput=" + value, function (responseTxt, statusTxt, xhr) {
+                    $('#vehiclesPartialZone').load("/dashboard/deleteAndRenderPartial/vehicle?vehicleId=" + vehicleId + "&vehicleImage=" + vehicleImage + "&searchBy=Name&searchInput=" + value, function (responseTxt, statusTxt, xhr) {
                         if (statusTxt === "success") {
                             UpdateStatisticsAndNotesArticles();
                             ShowSuccessfulMessageAfterVehicleWasDeleted();
                         }
                     });
                 } else if (document.getElementById("searchByPriceRadio").checked) {
-                    $('#vehiclesPartialZone').load("/Dashboard/DeleteVehicleAndRenderVehiclesArticlePartial?vehicleId=" + vehicleId + "&vehicleImage=" + vehicleImage + "&searchBy=Price&searchInput=" + value, function (responseTxt, statusTxt, xhr) {
+                    $('#vehiclesPartialZone').load("/dashboard/deleteAndRenderPartial/vehicle?vehicleId=" + vehicleId + "&vehicleImage=" + vehicleImage + "&searchBy=Price&searchInput=" + value, function (responseTxt, statusTxt, xhr) {
                         if (statusTxt === "success") {
                             UpdateStatisticsAndNotesArticles();
                             ShowSuccessfulMessageAfterVehicleWasDeleted();
@@ -251,13 +251,13 @@
     function UpdateVehicleStatus(vehicleId, isConfirmedByAdmin, isPublished, isOrdered){
         var value = $("#searchInput").val();
         if (document.getElementById("searchByNameRadio").checked) {
-            $('#vehiclesPartialZone').load("/Dashboard/UpdateVehicleStatus?vehicleId=" + vehicleId + "&isConfirmedByAdmin=" + isConfirmedByAdmin + "&isPublished=" + isPublished + "&isOrdered=" + isOrdered + "&searchBy=Name&searchInput=" + value, function (responseTxt, statusTxt, xhr) {
+            $('#vehiclesPartialZone').load("/dashboard/updateAndRenderPartial/vehicle/status?vehicleId=" + vehicleId + "&isConfirmedByAdmin=" + isConfirmedByAdmin + "&isPublished=" + isPublished + "&isOrdered=" + isOrdered + "&searchBy=Name&searchInput=" + value, function (responseTxt, statusTxt, xhr) {
                 if (statusTxt === "success") {
                     UpdateStatisticsArticle();
                 }
             });
         } else if (document.getElementById("searchByPriceRadio").checked) {
-            $('#vehiclesPartialZone').load("/Dashboard/UpdateVehicleStatus?vehicleId=" + vehicleId + "&isConfirmedByAdmin=" + isConfirmedByAdmin + "&isPublished=" + isPublished + "&isOrdered=" + isOrdered + "&searchBy=Name&searchInput=" + value, function (responseTxt, statusTxt, xhr) {
+            $('#vehiclesPartialZone').load("/dashboard/updateAndRenderPartial/vehicle/status?vehicleId=" + vehicleId + "&isConfirmedByAdmin=" + isConfirmedByAdmin + "&isPublished=" + isPublished + "&isOrdered=" + isOrdered + "&searchBy=Name&searchInput=" + value, function (responseTxt, statusTxt, xhr) {
                 if (statusTxt === "success") {
                     UpdateStatisticsArticle();
                 }
@@ -266,10 +266,10 @@
     }
 
     function UpdateStatisticsAndNotesArticles(){
-        $('#notesPartialZone').load("/Dashboard/NotesArticlePartial?type=All");
-        $('#statisticsPartialZone').load("/Dashboard/StatisticsArticlePartial");
+        $('#notesPartialZone').load("/dashboard/notesPartial?type=All");
+        $('#statisticsPartialZone').load("/dashboard/statisticsPartial");
     }
     function UpdateStatisticsArticle() {
-        $('#statisticsPartialZone').load("/Dashboard/StatisticsArticlePartial");
+        $('#statisticsPartialZone').load("/dashboard/statisticsPartial");
     }
 </script>

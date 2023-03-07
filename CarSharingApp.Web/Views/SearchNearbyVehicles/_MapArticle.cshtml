@@ -130,7 +130,7 @@
                             ShowErrorMessageAfterGeolocationServiceFailed("You have to pan your current location before trying search.");
                             throw "User side geolocation error.";
                         } else {
-                            return fetch('/SearchNearbyVehicles/GetNearbyVehicles?latitude=' + userCurrentLatitude + '&longitude=' + userCurrentLongitude + '&vehiclesCount=' + vehiclesNumber)
+                            return fetch('/nearbyVehicles/getNearbyVehicles?latitude=' + userCurrentLatitude + '&longitude=' + userCurrentLongitude + '&vehiclesCount=' + vehiclesNumber)
                                 .then(response => {
                                     if (!response.ok) {
                                         throw new Error(response.statusText)

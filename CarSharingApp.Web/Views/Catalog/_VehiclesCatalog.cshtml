@@ -122,11 +122,11 @@ else
         $('#searchButton').click(function () {
             var value = $("#searchInput").val();
             if (document.getElementById("searchByNameRadio").checked) {
-                $('#vehiclesPartialZone').load("/Catalog/VehiclesCatalogPartial?searchBy=Name&searchInput=" + value);
+                $('#vehiclesPartialZone').load("/catalog/vehiclesPartial?searchBy=Name&searchInput=" + value);
             } else if (document.getElementById("searchByPriceRadio").checked) {
-                $('#vehiclesPartialZone').load("/Catalog/VehiclesCatalogPartial?searchBy=Price&searchInput=" + value);
+                $('#vehiclesPartialZone').load("/catalog/vehiclesPartial?searchBy=Price&searchInput=" + value);
             } else if (document.getElementById("searchByBriefDescriptionRadio").checked) {
-                $('#vehiclesPartialZone').load("/Catalog/VehiclesCatalogPartial?searchBy=BriefDescription&searchInput=" + value);
+                $('#vehiclesPartialZone').load("/catalog/vehiclesPartial?searchBy=BriefDescription&searchInput=" + value);
             }
         })
     });
@@ -135,11 +135,11 @@ else
     function ChangePage(pageNumber) {
         var value = $("#searchInput").val();
         if (document.getElementById("searchByNameRadio").checked) {
-            $('#vehiclesPartialZone').load("/Catalog/VehiclesCatalogPartial?searchBy=Name&searchInput=" + value + "&page=" + pageNumber);
+            $('#vehiclesPartialZone').load("/catalog/vehiclesPartial?searchBy=Name&searchInput=" + value + "&page=" + pageNumber);
         } else if (document.getElementById("searchByPriceRadio").checked) {
-            $('#vehiclesPartialZone').load("/Catalog/VehiclesCatalogPartial?searchBy=Price&searchInput=" + value + "&page=" + pageNumber);
+            $('#vehiclesPartialZone').load("/catalog/vehiclesPartial?searchBy=Price&searchInput=" + value + "&page=" + pageNumber);
         } else if (document.getElementById("searchByBriefDescriptionRadio").checked) {
-            $('#vehiclesPartialZone').load("/Catalog/VehiclesCatalogPartial?searchBy=BriefDescription&searchInput=" + value + "&page=" + pageNumber);
+            $('#vehiclesPartialZone').load("/catalog/vehiclesPartial?searchBy=BriefDescription&searchInput=" + value + "&page=" + pageNumber);
         }
     };
 </script>

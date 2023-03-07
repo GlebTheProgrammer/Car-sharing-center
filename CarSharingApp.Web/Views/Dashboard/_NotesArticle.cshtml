@@ -40,14 +40,14 @@
     function TryRedirect(id){
         $.ajax({
             type: 'GET',
-            url: 'Dashboard/CheckIfVehicleExists',
+            url: 'dashboard/checkAvailability/vehicle',
             contentType: "application/json; charset=utf-8",
             data: {id: id},
             cache: false,
             async: true,
             success: function(data) {
                 if (data) {
-                    window.location.href = "/VehicleInformation?vehicleId=" + id
+                    window.location.href = "/vehicle/information?vehicleId=" + id
                 }
             },
             error: function (xhr, textStatus, errorThrown) {
