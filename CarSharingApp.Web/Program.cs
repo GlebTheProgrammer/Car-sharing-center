@@ -1,8 +1,4 @@
-﻿using CarSharingApp.Login;
-using CarSharingApp.Login.Authentication;
-using CarSharingApp.OptionsSetup;
-using CarSharingApp.Repository.MongoDbRepository;
-using CarSharingApp.Web.Clients;
+﻿using CarSharingApp.Web.Clients;
 using CarSharingApp.Web.Clients.Interfaces;
 using CarSharingApp.Web.Clients.Extensions;
 using CarSharingApp.Web.OptionsSetup;
@@ -36,8 +32,6 @@ builder.Services.RegisterNewHttpClients("RentalsAPI", builder.Configuration);
 
 builder.Services.RegisterAzureBlobStorageClient(builder.Configuration);
 
-builder.Services.ConfigureOptions<JwtOptionsSetup>();
-builder.Services.AddTransient<IJwtProvider, JwtProvider>();
 builder.Services.AddJwtBearerAuthentication(builder.Configuration);
 
 
@@ -58,14 +52,7 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(60);
 });
 
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-// DB configuration section
-builder.Services.Configure<CarSharingDatabaseSettings>(
-    builder.Configuration.GetSection("CarSharingLocalDB"));
-builder.Services.AddSingleton<MongoDbService>();
 
 var app = builder.Build();
 
@@ -93,7 +80,6 @@ app.UseStaticFiles();
 app.UseAuthentication();
 app.UseRouting();
 app.UseAuthorization();
-//app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
 app.MapControllerRoute(
     name: "default",

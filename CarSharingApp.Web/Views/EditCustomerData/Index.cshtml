@@ -1,4 +1,4 @@
-﻿@model CarSharingApp.Models.MongoView.CustomerEditModel
+﻿@*@model CarSharingApp.Models.MongoView.CustomerEditModel*@
 
 
 <section>
@@ -157,7 +157,7 @@
                                 <p class="mb-0">First Name</p>
                             </div>
                             <div class="col-sm-6 d-flex flex-column justify-content-center">
-                                <span asp-validation-for="FirstName" id="FirstNameError" class="text-danger text-center flex-column"></span>
+@*                                <span asp-validation-for="FirstName" id="FirstNameError" class="text-danger text-center flex-column"></span>*@
                                 <label id="FirstNameText" class="text-muted mb-0">@Model.FirstName</label>
                                 <input id="FirstNameInput" type="text" class="form-control visually-hidden" required maxlength="255" pattern="[A-Za-zа-яА-Я]{1,255}" onfocus="HideErrorSpan('FirstNameError')">
                             </div>
@@ -174,7 +174,7 @@
                                 <p class="mb-0">Last Name</p>
                             </div>
                             <div class="col-sm-6 d-flex flex-column justify-content-center">
-                                <span asp-validation-for="LastName" id="LastNameError" class="text-danger text-center flex-column"></span>
+@*                                <span asp-validation-for="LastName" id="LastNameError" class="text-danger text-center flex-column"></span>*@
                                 <label id="LastNameText" class="text-muted mb-0">@Model.LastName</label>
                                 <input id="LastNameInput" type="text" class="form-control visually-hidden" required maxlength="255" pattern="[A-Za-zа-яА-Я]{1,255}" onfocus="HideErrorSpan('LastNameError')">
                             </div>
@@ -191,7 +191,7 @@
                                 <p class="mb-0">Username</p>
                             </div>
                             <div class="col-sm-6 d-flex flex-column justify-content-center">
-                                <span asp-validation-for="Username" id="UsernameError" class="text-danger text-center flex-column"></span>
+@*                                <span asp-validation-for="Username" id="UsernameError" class="text-danger text-center flex-column"></span>*@
                                 <label id="UsernameText" class="text-muted mb-0">@Model.Username</label>
                                 <input id="UsernameInput" type="text" class="form-control visually-hidden" required maxlength="255" pattern="[A-Za-z0-9а-яА-Я_-]{1,255}" onfocus="HideErrorSpan('UsernameError')">
                             </div>
@@ -208,7 +208,7 @@
                                 <p class="mb-0">Email</p>
                             </div>
                             <div class="col-sm-6 d-flex flex-column justify-content-center">
-                                <span asp-validation-for="Email" id="EmailError" class="text-danger text-center flex-column"></span>
+@*                                <span asp-validation-for="Email" id="EmailError" class="text-danger text-center flex-column"></span>*@
                                 <label id="EmailText" class="text-muted mb-0">@Model.Email</label>
                                 <input id="EmailInput" type="email" class="form-control visually-hidden" required maxlength="255" pattern="[a-z0-9._%+-]+@@[a-z0-9.-]+\.[a-z]{2,4}$" onfocus="HideErrorSpan('EmailError')">
                             </div>
@@ -225,7 +225,7 @@
                                 <p class="mb-0">Phone Number</p>
                             </div>
                             <div class="col-sm-6 d-flex flex-column justify-content-center">
-                                <span asp-validation-for="PhoneNumber" id="PhoneNumberError" class="text-danger text-center flex-column"></span>
+@*                                <span asp-validation-for="PhoneNumber" id="PhoneNumberError" class="text-danger text-center flex-column"></span>*@
                                 <label id="PhoneNumberText" class="text-muted mb-0">@Model.PhoneNumber</label>
                                 <input id="PhoneNumberInput" type="tel" class="form-control visually-hidden" required maxlength="255" pattern="[+][0-9]{12}" onfocus="HideErrorSpan('PhoneNumberError')">
                             </div>
@@ -242,7 +242,7 @@
                                 <p class="mb-0">Driver's License</p>
                             </div>
                             <div class="col-sm-6 d-flex flex-column justify-content-center">
-                                <span asp-validation-for="DriverLicenseIdentifier" id="DriverLicenseError" class="text-danger text-center flex-column"></span>
+@*                                <span asp-validation-for="DriverLicenseIdentifier" id="DriverLicenseError" class="text-danger text-center flex-column"></span>*@
                                 <label id="DriverLicenseText" class="text-muted mb-0">@Model.DriverLicenseIdentifier</label>
                                 <input id="DriverLicenseInput" type="text" class="form-control visually-hidden" required maxlength="12" pattern="[a-zA-Z0-9]{4,12}" onfocus="HideErrorSpan('DriverLicenseError')">
                             </div>
@@ -287,7 +287,7 @@
                                 <p class="mb-0">Account Description</p>
                             </div>
                             <div class="col-sm-6 d-flex flex-column justify-content-center">
-                                <span asp-validation-for="AccountDescription" id="AccountDescriptionError" class="text-danger text-center flex-column"></span>
+@*                                <span asp-validation-for="AccountDescription" id="AccountDescriptionError" class="text-danger text-center flex-column"></span>*@
                                 <label id="AccountDescriptionText" class="text-muted mb-0">@Model.AccountDescription</label>
                                 <input id="AccountDescriptionInput" type="text" class="form-control visually-hidden" required maxlength="80" onfocus="HideErrorSpan('AccountDescriptionError')">
                             </div>
@@ -301,7 +301,7 @@
                 </div>
 
                 <form id="userEditedDataForm" asp-controller="EditCustomerData" asp-action="EditCustomerData" method="post" enctype="multipart/form-data" class="visually-hidden">
-                    <input id="ModelFirstName" asp-for="FirstName" value="@Model.FirstName" class="form-control" readonly="readonly"/>
+@*                    <input id="ModelFirstName" asp-for="FirstName" value="@Model.FirstName" class="form-control" readonly="readonly"/>
                     <input id="ModelLastName" asp-for="LastName" value="@Model.LastName" class="form-control" readonly="readonly" />
                     <input id="ModelUsername" asp-for="Username" value="@Model.Username" class="form-control" readonly="readonly" />
                     <input id="ModelEmail" asp-for="Email" value="@Model.Email" class="form-control" readonly="readonly" />
@@ -310,7 +310,7 @@
                     <input id="ModelIsAcceptedNewsSharing" asp-for="IsAcceptedNewsSharing" type="checkbox" class="custom-control-input" readonly="readonly" >
                     <input id="ModelAccountDescription" asp-for="AccountDescription" value="@Model.AccountDescription" class="form-control" readonly="readonly" />
                     <input id="ModelUserImage" asp-for="CustomerImage" value="@Model.CustomerImage" class="form-control" readonly="readonly" />
-                    <input id="ModelId" asp-for="CustomerId" value="@Model.CustomerId" class="form-control" readonly="readonly" />
+                    <input id="ModelId" asp-for="CustomerId" value="@Model.CustomerId" class="form-control" readonly="readonly" />*@
                 </form>
 
             </div>

@@ -1,4 +1,4 @@
-﻿@model CarSharingApp.Models.MongoView.VehicleEditModel
+﻿@*@model CarSharingApp.Models.MongoView.VehicleEditModel*@
 
 
 <section>
@@ -91,7 +91,7 @@
                                 <p class="mb-0">Brief Description</p>
                             </div>
                             <div class="col-sm-6 d-flex flex-column justify-content-center">
-                                <span asp-validation-for="BriefDescription" id="BriefDescriptionError" class="text-danger text-center flex-column"></span>
+                                @*<span asp-validation-for="BriefDescription" id="BriefDescriptionError" class="text-danger text-center flex-column"></span>*@
                                 <label id="BriefDescriptionText" class="text-muted mb-0">@Model.BriefDescription</label>
                                 <textarea id="BriefDescriptionInput" type="text" class="form-control visually-hidden" required minlength="10" maxlength="50" rows="4" style="resize: none;" onfocus="HideErrorSpan('BriefDescriptionError')" onkeydown="CheckTextAreaInput(event)"></textarea>
                             </div>
@@ -108,7 +108,7 @@
                                 <p class="mb-0">Description</p>
                             </div>
                             <div class="col-sm-6 d-flex flex-column justify-content-center">
-                                <span asp-validation-for="Description" id="DescriptionError" class="text-danger text-center flex-column"></span>
+                              @*  <span asp-validation-for="Description" id="DescriptionError" class="text-danger text-center flex-column"></span>*@
                                 <label id="DescriptionText" class="text-muted mb-0">@Model.Description</label>
                                 <textarea id="DescriptionInput" type="text" class="form-control visually-hidden" required minlength="30" maxlength="255" rows="9" style="resize: none;" onfocus="HideErrorSpan('DescriptionError')" onkeydown="CheckTextAreaInput(event)"></textarea>
                             </div>
@@ -125,7 +125,7 @@
                                 <p class="mb-0">Hourly Price ($)</p>
                             </div>
                             <div class="col-sm-6 d-flex flex-column justify-content-center">
-                                <span asp-validation-for="Tariff.TariffPerHour" id="HourTariffError" class="text-danger text-center flex-column"></span>
+                                @*<span asp-validation-for="Tariff.TariffPerHour" id="HourTariffError" class="text-danger text-center flex-column"></span>*@
                                 <label id="HourTariffText" class="text-muted mb-0">@Model.Tariff.TariffPerHour</label>
                                 <input id="HourTariffInput" type="number" class="form-control visually-hidden" required min="1" max="9999" onfocus="HideErrorSpan('HourTariffError')">
                             </div>
@@ -142,7 +142,7 @@
                                 <p class="mb-0">Daily Price ($)</p>
                             </div>
                             <div class="col-sm-6 d-flex flex-column justify-content-center">
-                                <span asp-validation-for="Tariff.TariffPerDay" id="DailyTariffError" class="text-danger text-center flex-column"></span>
+                                @*<span asp-validation-for="Tariff.TariffPerDay" id="DailyTariffError" class="text-danger text-center flex-column"></span>*@
                                 <label id="DailyTariffText" class="text-muted mb-0">@Model.Tariff.TariffPerDay</label>
                                 <input id="DailyTariffInput" type="number" class="form-control visually-hidden" required min="1" max="9999" onfocus="HideErrorSpan('DailyTariffError')">
                             </div>
@@ -202,7 +202,7 @@
                                 </div>
 
                                 <div class="mt-3">
-                                    <span asp-validation-for="Location.Address" id="AddressError" class="text-danger text-center d-flex justify-content-center"></span>
+                                   @* <span asp-validation-for="Location.Address" id="AddressError" class="text-danger text-center d-flex justify-content-center"></span>*@
                                     <div class="d-flex flex-row">
                                         <input id="AddressInput" type="text" class="form-control visually-hidden" required maxlength="255" onfocus="HideErrorSpan('AddressError')">
                                         <button id="SearchAddressBtn" class="btn btn-outline-primary ml-2 visually-hidden" type="button" onclick="setUpTheMarker()">Search</button>
@@ -222,16 +222,16 @@
                 </div>
 
                 <form id="vehicleEditedDataForm" asp-controller="EditVehicleData" asp-action="EditVehicleData" method="post" enctype="multipart/form-data" class="visually-hidden">
-                    <input id="ModelBriefDescription" asp-for="BriefDescription" value="@Model.BriefDescription" class="form-control" readonly="readonly" />
+@*                    <input id="ModelBriefDescription" asp-for="BriefDescription" value="@Model.BriefDescription" class="form-control" readonly="readonly" />
                     <input id="ModelDescription" asp-for="Description" value="@Model.Description" class="form-control" readonly="readonly" />
                     <input id="ModelHourTariff" asp-for="Tariff.TariffPerHour" value="@Model.Tariff.TariffPerHour" class="form-control" readonly="readonly" />
                     <input id="ModelDailyTariff" asp-for="Tariff.TariffPerDay" value="@Model.Tariff.TariffPerDay" class="form-control" readonly="readonly" />
                     <input id="ModelAddress" asp-for="Location.Address" value="@Model.Location.Address" class="form-control" readonly="readonly" />
                     <input id="ModelLocationLatitude" asp-for="Location.Latitude" value="@Model.Location.Latitude" class="form-control" readonly="readonly" />
-                    <input id="ModelLocationLongitude" asp-for="Location.Longitude" value="@Model.Location.Longitude" class="form-control" readonly="readonly" />
+                    <input id="ModelLocationLongitude" asp-for="Location.Longitude" value="@Model.Location.Longitude" class="form-control" readonly="readonly" />*@
 
                     <!-- User can't change this fields -->
-                    <input id="ModelId" asp-for="VehicleId" value="@Model.VehicleId" class="form-control" readonly="readonly" />
+@*                    <input id="ModelId" asp-for="VehicleId" value="@Model.VehicleId" class="form-control" readonly="readonly" />
                     <input id="ModelName" asp-for="Name" value="@Model.Name" class="form-control" readonly="readonly" />
                     <input id="ModelImage" asp-for="Image" value="@Model.Image" class="form-control" readonly="readonly" />
 
@@ -243,7 +243,7 @@
                     <input id="ModelFuelType" asp-for="FuelType" value="@Model.FuelType" class="form-control" readonly="readonly" />
                     <input id="ModelTransmission" asp-for="Transmission" value="@Model.Transmission" class="form-control" readonly="readonly" />
                     <input id="ModelEngine" asp-for="Engine" value="@Model.Engine" class="form-control" readonly="readonly" />
-                    <input id="ModelVIN" asp-for="VIN" value="@Model.VIN" class="form-control" readonly="readonly" />
+                    <input id="ModelVIN" asp-for="VIN" value="@Model.VIN" class="form-control" readonly="readonly" />*@
                 </form>
 
             </div>
