@@ -11,7 +11,7 @@ using CarSharingApp.Application.ServiceErrors;
 
 namespace CarSharingApp.PublicApi.Controllers
 {
-    public class AccountsController : ApiController
+    public sealed class AccountsController : ApiController
     {
         private readonly ICustomerService _customerService;
         private readonly IVehicleService _vehicleService;

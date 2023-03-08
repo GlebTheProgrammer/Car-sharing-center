@@ -4,7 +4,7 @@ using CarSharingApp.Web.Primitives;
 
 namespace CarSharingApp.Web.Clients
 {
-    public class StripePlatformPublicApiClient : PublicApiClient, IStripePlatformPublicApiClient
+    public sealed class StripePlatformPublicApiClient : PublicApiClient, IStripePlatformPublicApiClient
     {
         private const string clientIdentifier = "PaymentsAPI";
 

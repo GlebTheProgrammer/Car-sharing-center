@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CarSharingApp.Web.Controllers.Handle
 {
-    public class ErrorController : Controller
+    public sealed class ErrorController : Controller
     {
         [Route("error/{statusCode}")]
         public IActionResult HttpStatusCodeHandler(int statusCode)

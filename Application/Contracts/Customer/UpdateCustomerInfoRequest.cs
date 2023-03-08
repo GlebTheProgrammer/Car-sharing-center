@@ -1,6 +1,6 @@
 ﻿namespace CarSharingApp.Application.Contracts.Customer
 {
-    public record UpdateCustomerInfoRequest(
+    public sealed record UpdateCustomerInfoRequest(
         string FirstName,
         string LastName,
         string StreetAddress,

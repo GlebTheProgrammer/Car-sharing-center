@@ -8,7 +8,7 @@ namespace CarSharingApp.Controllers
 {
     [AllowAnonymous]
     [Route("catalog")]
-    public class CatalogController : Controller
+    public sealed class CatalogController : Controller
     {
         private readonly IVehicleServicePublicApiClient _vehicleServiceClient;
 

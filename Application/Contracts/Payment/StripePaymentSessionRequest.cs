@@ -1,6 +1,6 @@
 ﻿namespace CarSharingApp.Application.Contracts.Payment
 {
-    public class StripePaymentSessionRequest 
+    public sealed class StripePaymentSessionRequest 
     {
         public string VehicleId { get; set; } = null!;
         public string VehicleOwnerId { get; set; } = null!;

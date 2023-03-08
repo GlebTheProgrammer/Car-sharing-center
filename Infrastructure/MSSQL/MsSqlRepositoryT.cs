@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace CarSharingApp.Infrastructure.MSSQL
 {
-    public class MsSqlRepository<T> : IRepository<T> where T : Entity
+    public sealed class MsSqlRepository<T> : IRepository<T> where T : Entity
     {
         private readonly CarSharingAppContext _context;
 

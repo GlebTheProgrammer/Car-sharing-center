@@ -1,6 +1,6 @@
 ﻿namespace CarSharingApp.Application.Contracts.Vehicle
 {
-    public record UpdateVehicleStatusRequest(
+    public sealed record UpdateVehicleStatusRequest(
         string vehicleId,
 
         bool IsOrdered,

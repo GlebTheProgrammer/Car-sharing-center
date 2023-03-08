@@ -2,7 +2,7 @@
 
 namespace CarSharingApp.Application.Contracts.Rental
 {
-    public record RentalResponse(
+    public sealed record RentalResponse(
         [property: JsonPropertyName("rentalId")] string RentalId,
         [property: JsonPropertyName("rentedCustomerId")] string RentedCustomerId,
         [property: JsonPropertyName("vehicleOwnerId")] string VehicleOwnerId,
@@ -13,7 +13,7 @@ namespace CarSharingApp.Application.Contracts.Rental
         [property: JsonPropertyName("isActive")] bool IsActive
     );
 
-    public record RentalPaymentResponse(
+    public sealed record RentalPaymentResponse(
         [property: JsonPropertyName("paymentId")] string PaymentId,
         [property: JsonPropertyName("stripeTransactionId")] string StripeTransactionId,
         [property: JsonPropertyName("paymentDateTime")] DateTime PaymentDateTime,

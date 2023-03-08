@@ -3,7 +3,7 @@
 namespace CarSharingApp.Web.Extensions
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
-    public class PreventDuplicateRequestAttribute : ActionFilterAttribute
+    public sealed class PreventDuplicateRequestAttribute : ActionFilterAttribute
     {
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {

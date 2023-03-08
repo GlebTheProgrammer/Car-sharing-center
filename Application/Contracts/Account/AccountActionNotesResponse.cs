@@ -2,11 +2,11 @@
 
 namespace CarSharingApp.Application.Contracts.Account
 {
-    public record AccountActionNotesResponse(
+    public sealed record AccountActionNotesResponse(
         [property: JsonPropertyName("actionNotes")] List<NoteToBeDisplayedInAccount> ActionNotes
     );
 
-    public record NoteToBeDisplayedInAccount(
+    public sealed record NoteToBeDisplayedInAccount(
         [property: JsonPropertyName("actorId")] Guid ActorId,
         [property: JsonPropertyName("note")] string Note,
         [property: JsonPropertyName("type")] string Type,

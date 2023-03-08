@@ -2,7 +2,7 @@
 
 namespace CarSharingApp.Controllers
 {
-    public class EditVehicleDataController : Controller
+    public sealed class EditVehicleDataController : Controller
     {
         //private readonly MongoDbService _mongoDbService;
 

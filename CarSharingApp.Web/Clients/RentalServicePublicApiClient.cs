@@ -4,7 +4,7 @@ using CarSharingApp.Web.Primitives;
 
 namespace CarSharingApp.Web.Clients
 {
-    public class RentalServicePublicApiClient : PublicApiClient, IRentalServicePublicApiClient
+    public sealed class RentalServicePublicApiClient : PublicApiClient, IRentalServicePublicApiClient
     {
         private const string clientIdentifier = "RentalsAPI";
 

@@ -12,7 +12,7 @@ namespace CarSharingApp.Controllers
 {
     [Authorize]
     [Route("vehicle")]
-    public class VehicleInformationController : Controller
+    public sealed class VehicleInformationController : Controller
     {
         private readonly IVehicleServicePublicApiClient _vehicleServiceClient;
         private readonly IStripePlatformPublicApiClient _stripePlatformClient;

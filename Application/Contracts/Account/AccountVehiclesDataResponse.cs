@@ -2,11 +2,11 @@
 
 namespace CarSharingApp.Application.Contracts.Account
 {
-    public record AccountVehiclesDataResponse(
+    public sealed record AccountVehiclesDataResponse(
         [property: JsonPropertyName("vehicles")] List<AccountVehicleData> Vehicles
     );
 
-    public record AccountVehicleData(
+    public sealed record AccountVehicleData(
         [property: JsonPropertyName("vehicleId")] string VehicleId,
         [property: JsonPropertyName("name")] string Name,
         [property: JsonPropertyName("image")] string Image,

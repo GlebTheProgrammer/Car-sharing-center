@@ -8,7 +8,7 @@ using ErrorOr;
 
 namespace CarSharingApp.Application.Services
 {
-    public class VehicleService : IVehicleService
+    public sealed class VehicleService : IVehicleService
     {
         private readonly IRepository<Vehicle> _vehicleRepository;
         private readonly IRepository<ActionNote> _noteRepository;

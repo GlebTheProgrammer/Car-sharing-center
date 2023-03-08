@@ -2,7 +2,7 @@
 
 namespace CarSharingApp.Controllers.Handle
 {
-    public class CustomExceptionHandleController : Controller
+    public sealed class CustomExceptionHandleController : Controller
     {
         public IActionResult Unauthorized401Error()
         {

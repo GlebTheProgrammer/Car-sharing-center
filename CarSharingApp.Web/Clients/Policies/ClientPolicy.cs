@@ -4,7 +4,7 @@ using Polly.Retry;
 
 namespace CarSharingApp.Web.Clients.Policies
 {
-    public class ClientPolicy
+    public sealed class ClientPolicy
     {
         public AsyncRetryPolicy<HttpResponseMessage> ImmediateHttpRetry { get; }
         public AsyncRetryPolicy<HttpResponseMessage> LinearHttpRetry { get; }

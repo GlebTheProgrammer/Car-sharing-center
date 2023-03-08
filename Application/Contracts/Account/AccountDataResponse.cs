@@ -2,14 +2,14 @@
 
 namespace CarSharingApp.Application.Contracts.Account
 {
-    public record AccountDataResponse(
+    public sealed record AccountDataResponse(
         [property: JsonPropertyName("customer")] CustomerToBeDisplayedInAccount Customer,
         [property: JsonPropertyName("vehicles")] List<VehicleToBeDisplayedInAccount> Vehicles
     );
 
     // Subentities are below
 
-    public record CustomerToBeDisplayedInAccount(
+    public sealed record CustomerToBeDisplayedInAccount(
         [property: JsonPropertyName("id")] Guid Id,
         [property: JsonPropertyName("firstName")] string FirstName,
         [property: JsonPropertyName("lastName")] string LastName,
@@ -26,7 +26,7 @@ namespace CarSharingApp.Application.Contracts.Account
         [property: JsonPropertyName("vehiclesShared")] int VehiclesShared
     );
 
-    public record VehicleToBeDisplayedInAccount(
+    public sealed record VehicleToBeDisplayedInAccount(
         [property: JsonPropertyName("image")] string Image,
         [property: JsonPropertyName("name")] string Name,
         [property: JsonPropertyName("hourlyTariff")] decimal HourlyTariff,

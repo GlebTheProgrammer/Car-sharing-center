@@ -9,7 +9,7 @@ using System.Net;
 namespace CarSharingApp.Controllers
 {
     [AllowAnonymous]
-    public class HomeController : Controller
+    public sealed class HomeController : Controller
     {
         private readonly IVehicleServicePublicApiClient _vehicleServiceClient;
 

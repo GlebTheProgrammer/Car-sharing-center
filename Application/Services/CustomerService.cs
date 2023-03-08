@@ -8,7 +8,7 @@ using CarSharingApp.Domain.ValueObjects;
 
 namespace CarSharingApp.Application.Services
 {
-    public class CustomerService : ICustomerService
+    public sealed class CustomerService : ICustomerService
     {
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<ActionNote> _noteRepository;

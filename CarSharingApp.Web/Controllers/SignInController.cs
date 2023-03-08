@@ -10,7 +10,7 @@ using System.Text.Json;
 namespace CarSharingApp.Controllers
 {
     [Route("signIn")]
-    public class SignInController : Controller
+    public sealed class SignInController : Controller
     {
         private readonly IAuthorizationServicePublicApiClient _authorizationServiceClient;
 

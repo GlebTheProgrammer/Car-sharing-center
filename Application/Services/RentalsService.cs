@@ -7,7 +7,7 @@ using CarSharingApp.Application.ServiceErrors;
 
 namespace CarSharingApp.Application.Services
 {
-    public class RentalsService : IRentalsService
+    public sealed class RentalsService : IRentalsService
     {
         private readonly IRepository<Rental> _rentalsRepository;
         private readonly IRepository<Payment> _paymentsRepository;

@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CarSharingApp.Infrastructure.Middlewares
 {
-    public class TimeOutRentalsCheckMiddleware : IHostedService, IDisposable
+    public sealed class TimeOutRentalsCheckMiddleware : IHostedService, IDisposable
     {
         private int executionCount = 0;
         private readonly ILogger<TimeOutRentalsCheckMiddleware> _logger;

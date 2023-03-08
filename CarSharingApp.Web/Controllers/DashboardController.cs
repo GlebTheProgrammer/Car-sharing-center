@@ -11,7 +11,7 @@ namespace CarSharingApp.Web.Controllers
 {
     [Authorize]
     [Route("dashboard")]
-    public class DashboardController : Controller
+    public sealed class DashboardController : Controller
     {
         private readonly IAccountServicePublicApiClient _accountServiceClient;
         private readonly IVehicleServicePublicApiClient _vehicleServiceClient;

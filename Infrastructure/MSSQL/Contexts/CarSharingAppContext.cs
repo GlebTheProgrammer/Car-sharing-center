@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CarSharingApp.Infrastructure.MSSQL.Contexts
 {
-    public class CarSharingAppContext : DbContext
+    public sealed class CarSharingAppContext : DbContext
     {
         public CarSharingAppContext(DbContextOptions<CarSharingAppContext> options)
             : base(options)

@@ -7,7 +7,7 @@ using Stripe.Checkout;
 
 namespace CarSharingApp.PublicApi.Controllers
 {
-    public class PaymentsController : ApiController
+    public sealed class PaymentsController : ApiController
     {
         private const string StripePaymentProcessImage = "https://www.hotellinksolutions.com/images/learning-center/payment-101.jpg";
 

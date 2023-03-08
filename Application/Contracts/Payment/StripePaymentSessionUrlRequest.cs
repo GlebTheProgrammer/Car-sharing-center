@@ -1,6 +1,6 @@
 ﻿namespace CarSharingApp.Application.Contracts.Payment
 {
-    public record StripePaymentSessionUrlRequest(
+    public sealed record StripePaymentSessionUrlRequest(
         string VehicleId,
         string VehicleOwnerId,
         string VehicleName,

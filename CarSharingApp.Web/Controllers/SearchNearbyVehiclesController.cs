@@ -7,7 +7,7 @@ namespace CarSharingApp.Web.Controllers
 {
     [AllowAnonymous]
     [Route("nearbyVehicles")]
-    public class SearchNearbyVehiclesController : Controller
+    public sealed class SearchNearbyVehiclesController : Controller
     {
         private readonly IVehicleServicePublicApiClient _vehicleServiceClient;
 

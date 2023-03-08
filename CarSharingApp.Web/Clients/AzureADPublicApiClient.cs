@@ -3,7 +3,7 @@ using CarSharingApp.Web.Primitives;
 
 namespace CarSharingApp.Web.Clients
 {
-    public class AzureADPublicApiClient : PublicApiClient, IAzureADPublicApiClient
+    public sealed class AzureADPublicApiClient : PublicApiClient, IAzureADPublicApiClient
     {
         private const string clientIdentifier = "AzureActiveDirectoryAPI";
 

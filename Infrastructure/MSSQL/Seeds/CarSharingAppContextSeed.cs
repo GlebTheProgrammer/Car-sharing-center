@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CarSharingApp.Infrastructure.MSSQL.Seeds
 {
-    public class CarSharingAppContextSeed
+    public sealed class CarSharingAppContextSeed
     {
         public static async Task SeedAsync(CarSharingAppContext carSharingAppContext,
                                            ILogger logger,

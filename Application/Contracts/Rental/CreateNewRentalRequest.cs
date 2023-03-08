@@ -1,6 +1,6 @@
 ﻿namespace CarSharingApp.Application.Contracts.Rental
 {
-    public record CreateNewRentalRequest(
+    public sealed record CreateNewRentalRequest(
         string VehicleId,
         string VehicleName,
         string VehicleOwnerId,

@@ -24,31 +24,6 @@ namespace CarSharingApp.PublicApi.Controllers
             _logger = logger;
         }
 
-        //[HttpPost]
-        //[Microsoft.AspNetCore.Authorization.AllowAnonymous]
-        //public async Task<IActionResult> Authorize(AuthorizationRequest request)
-        //{
-        //    ErrorOr<Credentials> requestToCredentialsResult = _authorizationService.From(request);
-
-        //    if (requestToCredentialsResult.IsError)
-        //    {
-        //        return Problem(requestToCredentialsResult.Errors);
-        //    }
-
-        //    Credentials credentials = requestToCredentialsResult.Value;
-
-        //    ErrorOr<Customer> loginResult = await _authorizationService.TryLogin(credentials);
-
-        //    if (loginResult.IsError)
-        //    {
-        //        return Problem(loginResult.Errors);
-        //    }
-
-        //    Customer customer = loginResult.Value;
-
-        //    return Ok(value: MapAuthorizationResponse(customer));
-        //}
-
         [HttpPost]
         [Microsoft.AspNetCore.Authorization.AllowAnonymous]
         public async Task<IActionResult> GenerateToken(AuthorizationRequest request)

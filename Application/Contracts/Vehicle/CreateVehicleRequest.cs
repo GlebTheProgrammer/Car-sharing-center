@@ -1,6 +1,6 @@
 ﻿namespace CarSharingApp.Application.Contracts.Vehicle
 {
-    public record CreateVehicleRequest(
+    public sealed record CreateVehicleRequest(
         string Name, 
         string Image,
         string BriefDescription,

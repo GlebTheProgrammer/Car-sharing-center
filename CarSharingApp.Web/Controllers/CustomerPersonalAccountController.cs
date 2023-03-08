@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CarSharingApp.Controllers
 {
     [Authorize]
-    public class CustomerPersonalAccountController : Controller
+    public sealed class CustomerPersonalAccountController : Controller
     {
         //private readonly MongoDbService _mongoDbService;
 

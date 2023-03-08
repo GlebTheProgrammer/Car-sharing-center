@@ -31,7 +31,6 @@ builder.Services.AddSingleton<IRentalServicePublicApiClient, RentalServicePublic
 builder.Services.RegisterNewHttpClients("RentalsAPI", builder.Configuration);
 
 builder.Services.RegisterAzureBlobStorageClient(builder.Configuration);
-
 builder.Services.AddJwtBearerAuthentication(builder.Configuration);
 
 

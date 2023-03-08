@@ -6,7 +6,7 @@ using System.Text.Json;
 
 namespace CarSharingApp.Infrastructure.Middlewares
 {
-    public class GlobalExceptionHandlingMiddleware : IMiddleware
+    public sealed class GlobalExceptionHandlingMiddleware : IMiddleware
     {
         private readonly ILogger<GlobalExceptionHandlingMiddleware> _logger;
 

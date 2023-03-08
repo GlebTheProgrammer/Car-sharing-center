@@ -7,7 +7,7 @@ using ErrorOr;
 
 namespace CarSharingApp.Application.Services
 {
-    public class PaymentsService : IPaymentsService
+    public sealed class PaymentsService : IPaymentsService
     {
         private readonly IRepository<Payment> _paymentRepository;
 

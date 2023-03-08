@@ -1,6 +1,6 @@
 ﻿namespace CarSharingApp.Application.Contracts.Rental
 {
-    public record FinishExistingRentalRequest(
+    public sealed record FinishExistingRentalRequest(
         string rentalId
     );
 }
