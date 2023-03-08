@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
+﻿using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace CarSharingApp.Web.Extensions
 {
@@ -15,13 +14,13 @@ namespace CarSharingApp.Web.Extensions
                 var currentToken = context.HttpContext.Request.Form["__RequestVerificationToken"].ToString();
                 var lastToken = context.HttpContext.Session.GetString("LastProcessedToken");
 
-                if (lastToken == currentToken)
+                if (currentToken != null && currentToken.Equals(lastToken))
                 {
                     context.ModelState.AddModelError(string.Empty, "Looks like you accidentally submitted the same form twice.");
                 }
                 else
                 {
-                    context.HttpContext.Session.SetString("LastProcessedToken", currentToken);
+                    context.HttpContext.Session.SetString("LastProcessedToken", currentToken ?? throw new ArgumentNullException(nameof(currentToken)));
                     await context.HttpContext.Session.CommitAsync();
                 }
             }

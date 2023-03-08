@@ -5,6 +5,7 @@ using System.Net;
 using CarSharingApp.Application.Contracts.ErrorType;
 using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
+using CarSharingApp.Web.Extensions;
 
 namespace CarSharingApp.Controllers
 {
@@ -33,6 +34,8 @@ namespace CarSharingApp.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        [PreventDuplicateRequest]
         public async Task<IActionResult> AddVehicle([FromForm] CreateVehicleRequest createVehicleRequest, 
                                                     [FromForm] IFormFile file)
         {

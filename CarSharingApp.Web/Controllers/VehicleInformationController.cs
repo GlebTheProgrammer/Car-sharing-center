@@ -2,6 +2,7 @@
 using CarSharingApp.Application.Contracts.Rental;
 using CarSharingApp.Application.Contracts.Vehicle;
 using CarSharingApp.Web.Clients.Interfaces;
+using CarSharingApp.Web.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
@@ -44,6 +45,8 @@ namespace CarSharingApp.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
+        [PreventDuplicateRequest]
         [Route("payment/session")]
         public async Task<IActionResult> CreateCheckoutSession([FromForm] StripePaymentSessionRequest paymentRequest)
         {

@@ -1,7 +1,6 @@
 ﻿using Azure.Storage.Blobs;
 using CarSharingApp.Web.Clients.Interfaces;
-using Polly;
-using Polly.Contrib.WaitAndRetry;
+using CarSharingApp.Web.Clients.Policies;
 
 namespace CarSharingApp.Web.Clients.Extensions
 {
@@ -15,10 +14,9 @@ namespace CarSharingApp.Web.Clients.Extensions
             {
                 client.BaseAddress = new Uri(configuration[$"Clients:{identifier}:BaseAddress"]
                     ?? throw new ArgumentNullException(identifier));
-            })
-            .AddTransientHttpErrorPolicy(
-            polictBuilder =>
-                polictBuilder.WaitAndRetryAsync(Backoff.DecorrelatedJitterBackoffV2(TimeSpan.FromSeconds(1), 4)));
+            }).AddPolicyHandler(
+                request => request.Method == HttpMethod.Get ? new ClientPolicy(3).BackoffHttpRetry 
+                                                            : new ClientPolicy(3).BackoffHttpRetry);
 
             return services;
         }

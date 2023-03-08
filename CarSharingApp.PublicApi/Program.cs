@@ -8,7 +8,6 @@ using CarSharingApp.Domain.Entities;
 using CarSharingApp.Infrastructure.MongoDB;
 using CarSharingApp.Infrastructure.AzureKeyVault;
 using CarSharingApp.Infrastructure.MSSQL;
-using CarSharingApp.Infrastructure.AzureAD;
 using CarSharingApp.Infrastructure.Authentication;
 using CarSharingApp.Infrastructure.Authentication.Options;
 using CarSharingApp.Infrastructure.MSSQL.Contexts;
@@ -20,7 +19,6 @@ var builder = WebApplication.CreateBuilder(args);
 {
     #region Logger
 
-    builder.Services.AddLogging();
     builder.Logging.ConfigureLogging();
 
     #endregion
@@ -78,7 +76,6 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.ConfigureOptions<JwtOptionsSetup>();
     builder.Services.AddTransient<IJwtProvider, JwtProvider>();
     builder.Services.AddJwtBearerAuthentication(builder.Configuration);
-    //builder.Services.ConfigureAzureAD(builder.Configuration);
 
     #endregion
 }
@@ -86,8 +83,6 @@ var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 {
     app.Logger.LogInformation("App created...");
-
-    app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
     app.Logger.LogInformation("Seeding Database...");
 
@@ -115,6 +110,8 @@ var app = builder.Build();
     app.UseHttpsRedirection();
     app.UseAuthentication();
     app.UseAuthorization();
+
+    app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 
     app.MapControllers();
 

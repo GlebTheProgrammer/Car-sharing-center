@@ -36,8 +36,10 @@ namespace CarSharingApp.Infrastructure.Middlewares
                 };
 
                 string json = JsonSerializer.Serialize(problem);
-                await context.Response.WriteAsync(json);
+
                 context.Response.ContentType = "application/json";
+
+                await context.Response.WriteAsync(json);
             }
         }
     }

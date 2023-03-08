@@ -102,7 +102,7 @@ namespace CarSharingApp.PublicApi.Controllers
         }
 
         [HttpGet("MapRepresentation")]
-        public async Task<IActionResult> GetVehiclesMapRepresentation()
+        public async Task<ActionResult> GetVehiclesMapRepresentation()
         {
             List<Vehicle> getVehiclesResult = await _vehicleService.GetAllAsync();
 
