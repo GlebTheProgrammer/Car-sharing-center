@@ -143,7 +143,7 @@ namespace CarSharingApp.PublicApi.Controllers
             }
             Vehicle notUpdatedVehicle = getVehicleResult.Value;
 
-            ErrorOr<Vehicle> requestToVehicleResult = _vehicleService.From(notUpdatedVehicle, new UpdateVehicleStatusRequest(notFinishedRental.VehicleId.ToString(),
+            ErrorOr<Vehicle> requestToVehicleResult = _vehicleService.From(notUpdatedVehicle, new UpdateVehicleStatusRequest(
                 IsOrdered: false, IsPublished: true, IsConfirmedByAdmin: true));
 
             if (requestToVehicleResult.IsError)

@@ -25,7 +25,7 @@ namespace CarSharingApp.PublicApi.Controllers
                                   ILogger<VehiclesController> logger)
         {
             _vehicleService = vehicleService;
-            _customerService = customerService;
+            _customerService = customerService;                             
             _logger = logger;
         }
 
@@ -71,7 +71,7 @@ namespace CarSharingApp.PublicApi.Controllers
                 errors => Problem(errors));
         }
 
-        [HttpGet("Information")]
+        [HttpGet("Information/{id:guid}")]
         [Authorize]
         public async Task<IActionResult> GetVehicleInformation(Guid id)
         {
@@ -101,7 +101,9 @@ namespace CarSharingApp.PublicApi.Controllers
             return Ok(MapVehicleInformationResponse(vehicle, customer, jwtClaims.Id));
         }
 
-        [HttpGet("MapRepresentation")]
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("MapRepresentation")]
         public async Task<ActionResult> GetVehiclesMapRepresentation()
         {
             List<Vehicle> getVehiclesResult = await _vehicleService.GetAllAsync();
@@ -109,7 +111,9 @@ namespace CarSharingApp.PublicApi.Controllers
             return Ok(MapVehicleMapResponse(getVehiclesResult.Where(v => v.Status.IsPublished && v.Status.IsConfirmedByAdmin && !v.Status.IsOrdered).ToList()));
         }
 
-        [HttpGet("CatalogRepresentation")]
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("CatalogRepresentation")]
         public async Task<IActionResult> GetVehiclesCatalogRepresentation()
         {
             List<Vehicle> getVehiclesResult = await _vehicleService.GetAllAsync();
@@ -117,8 +121,10 @@ namespace CarSharingApp.PublicApi.Controllers
             return Ok(MapVehicleCatalogResponse(getVehiclesResult.Where(v => v.Status.IsPublished && v.Status.IsConfirmedByAdmin && !v.Status.IsOrdered).ToList()));
         }
 
-        [HttpPost("CriteriaCatalogRepresentation")]
-        public async Task<IActionResult> GetVehiclesByCriteria(GetVehiclesByCriteriaRequest request)
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("CriteriaCatalogRepresentation")]
+        public async Task<IActionResult> GetVehiclesByCriteria([FromQuery] GetVehiclesByCriteriaRequest request)
         {
             List<Vehicle> getVehiclesResult = await _vehicleService.GetAllAsync();
 
@@ -182,8 +188,10 @@ namespace CarSharingApp.PublicApi.Controllers
             }
         }
 
-        [HttpPost("NearbyVehiclesMapRepresentation")]
-        public async Task<IActionResult> GetNearbyVehiclesMapRepresentation(GetNearbyVehiclesMapRepresentationRequest request)
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("NearbyMapRepresentation")]
+        public async Task<IActionResult> GetNearbyVehiclesMapRepresentation([FromQuery] GetNearbyVehiclesMapRepresentationRequest request)
         {
             List<Vehicle> getVehiclesResult = await _vehicleService.GetAllAsync();
 
@@ -220,7 +228,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [HttpPut("{id:guid}")]
         [Authorize]
-        public async Task<IActionResult> UpdateVehicleInfo(Guid id, UpdateVehicleInfoRequest request)
+        public async Task<IActionResult> UpdateVehicle(Guid id, UpdateVehicleRequest request)
         {
             ErrorOr<Vehicle> getVehicleResult = await _vehicleService.GetVehicleAsync(id);
 
@@ -254,15 +262,15 @@ namespace CarSharingApp.PublicApi.Controllers
             return NoContent();
         }
 
-        [HttpPut("[action]")]
+        [HttpPut("Status/{id}")]
         [Authorize]
-        public async Task<IActionResult> UpdateVehicleStatus(UpdateVehicleStatusRequest request)
+        public async Task<IActionResult> UpdateVehicleStatus([FromQuery] Guid id, [FromBody] UpdateVehicleStatusRequest request)
         {
-            ErrorOr<Vehicle> getVehicleResult = await _vehicleService.GetVehicleAsync(Guid.Parse(request.vehicleId));
+            ErrorOr<Vehicle> getVehicleResult = await _vehicleService.GetVehicleAsync(id);
 
             if (getVehicleResult.IsError)
             {
-                _logger.LogInformation("Failed finding vehicle with ID: {vehicleId} when tried to change its status.", request.vehicleId);
+                _logger.LogInformation("Failed finding vehicle with ID: {vehicleId} when tried to change its status.", id);
                 return Problem(getVehicleResult.Errors);
             }
 
@@ -270,7 +278,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
             if (!IsRequestAllowed(notUpdatedVehicle.CustomerId))
             {
-                _logger.LogInformation("Update vehicle with ID: {vehicleId} status request is not allowed because of missing permissions.", request.vehicleId);
+                _logger.LogInformation("Update vehicle with ID: {vehicleId} status request is not allowed because of missing permissions.", id);
                 return Forbid();
             }
 
@@ -318,6 +326,9 @@ namespace CarSharingApp.PublicApi.Controllers
             return NoContent();
         }
 
+        #region Response mapping section
+
+        [NonAction]
         private VehicleResponse MapVehicleResponse(Vehicle vehicle)
         {
             return new VehicleResponse(
@@ -337,6 +348,7 @@ namespace CarSharingApp.PublicApi.Controllers
                 vehicle.Status);
         }
 
+        [NonAction]
         private VehicleInformationResponse MapVehicleInformationResponse(Vehicle vehicle, Customer owner, string requestedCustomerId)
         {
             return new VehicleInformationResponse(
@@ -371,6 +383,7 @@ namespace CarSharingApp.PublicApi.Controllers
                 vehicle.CustomerId.ToString().Equals(requestedCustomerId));
         }
 
+        [NonAction]
         private VehiclesDisplayOnMapResponse MapVehicleMapResponse(List<Vehicle> vehicles)
         {
             var resultList = new List<VehicleDisplayOnMap>();
@@ -387,6 +400,7 @@ namespace CarSharingApp.PublicApi.Controllers
             return new VehiclesDisplayOnMapResponse(resultList);
         }
 
+        [NonAction]
         private NearbyVehiclesDisplayOnMapResponse MapNearbyVehicleMapResponse(List<Vehicle> vehicles, List<double> kmDiffList)
         {
             var resultList = new List<NearbyVehicleDisplayOnMapResponse>();
@@ -411,6 +425,7 @@ namespace CarSharingApp.PublicApi.Controllers
             return new NearbyVehiclesDisplayOnMapResponse(resultList);
         }
 
+        [NonAction]
         private VehiclesDisplayInCatalogResponse MapVehicleCatalogResponse(List<Vehicle> vehicles)
         {
             var resultList = new List<VehicleDisplayInCatalog>();
@@ -430,6 +445,11 @@ namespace CarSharingApp.PublicApi.Controllers
             return new VehiclesDisplayInCatalogResponse(resultList);
         }
 
+        #endregion
+
+        #region Controller helper methods section
+
+        [NonAction]
         private bool IsRequestAllowed(Guid requestedId)
         {
             JwtClaims? jwtClaims = GetJwtClaims();
@@ -441,5 +461,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
             return true;
         }
+
+        #endregion
     }
 }

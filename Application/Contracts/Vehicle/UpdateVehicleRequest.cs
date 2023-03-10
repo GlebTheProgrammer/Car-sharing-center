@@ -1,6 +1,6 @@
 ﻿namespace CarSharingApp.Application.Contracts.Vehicle
 {
-    public sealed record UpdateVehicleInfoRequest(
+    public sealed record UpdateVehicleRequest(
         string BriefDescription,
         string Description,
         decimal HourlyRentalPrice,

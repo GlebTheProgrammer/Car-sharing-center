@@ -18,7 +18,7 @@ namespace CarSharingApp.Application.Interfaces
         Task<Deleted> DeleteVehicleAsync(Guid id);
 
         ErrorOr<Vehicle> From(Guid customerId, CreateVehicleRequest request);
-        ErrorOr<Vehicle> From(Vehicle vehicle, UpdateVehicleInfoRequest request);
+        ErrorOr<Vehicle> From(Vehicle vehicle, UpdateVehicleRequest request);
         ErrorOr<Vehicle> From(Vehicle vehicle, UpdateVehicleStatusRequest request);
     }
 }

@@ -170,6 +170,8 @@ namespace CarSharingApp.PublicApi.Controllers
             return Ok(await MapAccountRentalsDataResponse(rentals));
         }
 
+        #region Response mapping section
+
         private AccountVehiclesDataResponse MapAccountVehiclesDataResponse(List<Vehicle> vehicles)
         {
             List<AccountVehicleData> accountVehicleDatas = new List<AccountVehicleData>();
@@ -277,9 +279,6 @@ namespace CarSharingApp.PublicApi.Controllers
             return new AccountActionNotesResponse(MapListOfNotes(notes));
         }
 
-
-
-
         private List<NoteToBeDisplayedInAccount> MapListOfNotes(IReadOnlyCollection<ActionNote> notes)
         {
             List<NoteToBeDisplayedInAccount> notesToBeDisplayedInAccount = new List<NoteToBeDisplayedInAccount>();
@@ -295,5 +294,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
             return notesToBeDisplayedInAccount;
         }
+
+        #endregion
     }
 }

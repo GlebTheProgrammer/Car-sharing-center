@@ -1,4 +1,6 @@
-﻿namespace CarSharingApp.Application.Contracts.Vehicle
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CarSharingApp.Application.Contracts.Vehicle
 {
     public sealed record GetVehiclesByCriteriaRequest(
         string MaxHourlyRentalPrice,

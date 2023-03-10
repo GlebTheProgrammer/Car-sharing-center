@@ -131,7 +131,7 @@ namespace CarSharingApp.Application.Services
                 request.Categories.Split(',').ToList());
         }
 
-        public ErrorOr<Vehicle> From(Vehicle vehicle, UpdateVehicleInfoRequest request)
+        public ErrorOr<Vehicle> From(Vehicle vehicle, UpdateVehicleRequest request)
         {
             return Vehicle.Create(
                 vehicle.CustomerId,

@@ -53,7 +53,7 @@ namespace CarSharingApp.Infrastructure.Middlewares
                         Vehicle vehicleToUpdate = getVehicleResult.Value;
 
                         await _rentalsService.FinishExistingRental(expiredRental.Id, false);
-                        await _vehicleService.UpdateVehicleStatusAsync(_vehicleService.From(vehicleToUpdate, new UpdateVehicleStatusRequest(vehicleToUpdate.Id.ToString(),
+                        await _vehicleService.UpdateVehicleStatusAsync(_vehicleService.From(vehicleToUpdate, new UpdateVehicleStatusRequest(
                             IsOrdered: false, IsPublished: true, IsConfirmedByAdmin: true)).Value);
 
                         _logger.LogInformation("Timed Out Rentals Checkout Service has finished rental with ID: {rentalId} and changed vehicle with ID: {vehicleId} status successfully.", expiredRental.Id, expiredRental.VehicleId);
