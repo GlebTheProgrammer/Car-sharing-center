@@ -243,7 +243,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
             if (!IsRequestAllowed(notUpdatedVehicle.CustomerId))
             {
-                _logger.LogInformation("Update vehicle with ID: {vehicleId} status request is not allowed because of missing permissions.", id);
+                _logger.LogInformation("Update vehicle with  ID: {vehicleId} status request is not allowed because of missing permissions.", id);
                 return Forbid();
             }
 

@@ -74,8 +74,8 @@ namespace CarSharingApp.Web.Clients
         public async Task<HttpResponseMessage> UpdateVehicleStatus(Guid id, UpdateVehicleStatusRequest request)
         {
             var client = CreateNewClientInstance(clientIdentifier);
-
-            string requestUri = $"UpdateVehicleStatus?id={id}";
+            
+            string requestUri = $"Status/{id}";
 
             JsonContent content = JsonContent.Create(request);
 

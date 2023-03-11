@@ -34,7 +34,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> CreateNewRental(CreateNewRentalRequest request)
+        public async Task<IActionResult> CreateNewRental([FromBody] CreateNewRentalRequest request)
         {
             JwtClaims? jwtClaims = GetJwtClaims();
 
@@ -114,7 +114,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [HttpGet("{id:guid}")]
         [Authorize]
-        public async Task<IActionResult> GetRental(Guid id)
+        public async Task<IActionResult> GetRental([FromRoute] Guid id)
         {
             ErrorOr<Rental> getRentalResult = await _rentalsService.GetRentalAsync(id);
 
@@ -123,14 +123,14 @@ namespace CarSharingApp.PublicApi.Controllers
                 errors => Problem(errors));
         }
 
-        [HttpPut("[action]")]
+        [HttpPut("Finish/{id:guid}")]
         [Authorize]
-        public async Task<IActionResult> FinishExistingRental(FinishExistingRentalRequest request)
+        public async Task<IActionResult> FinishExistingRental([FromRoute] Guid id)
         {
-            ErrorOr<Rental> getRentalResult = await _rentalsService.GetRentalAsync(Guid.Parse(request.rentalId));
+            ErrorOr<Rental> getRentalResult = await _rentalsService.GetRentalAsync(id);
             if (getRentalResult.IsError)
             {
-                _logger.LogError("Failed finding rental with ID: {rentalId} when tried to finish it.", request.rentalId);
+                _logger.LogError("Failed finding rental with ID: {rentalId} when tried to finish it.", id);
                 return Problem(getRentalResult.Errors);
             }
             Rental notFinishedRental = getRentalResult.Value;
@@ -152,7 +152,7 @@ namespace CarSharingApp.PublicApi.Controllers
             }
             Vehicle updatedVehicle = requestToVehicleResult.Value;
 
-            await _rentalsService.FinishExistingRental(Guid.Parse(request.rentalId), hasFinishedByTheCustomer: true);
+            await _rentalsService.FinishExistingRental(id, hasFinishedByTheCustomer: true);
             await _vehicleService.UpdateVehicleStatusAsync(updatedVehicle);
 
             _logger.LogInformation("Customer with ID: {customerId} has successfully finished rental with ID: {rentalId}.", notFinishedRental.RentedCustomerId, notFinishedRental.Id);

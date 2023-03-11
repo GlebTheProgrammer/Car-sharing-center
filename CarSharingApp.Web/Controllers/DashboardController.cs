@@ -230,9 +230,7 @@ namespace CarSharingApp.Web.Controllers
                                                       [FromQuery] string searchBy, 
                                                       [FromQuery] string searchInput)
         {
-            var requestModel = new FinishExistingRentalRequest(rentalId);
-
-            var response = await _rentalServiceClient.FinishRentalRequest(requestModel);
+            var response = await _rentalServiceClient.FinishRentalRequest(Guid.Parse(rentalId));
             response.EnsureSuccessStatusCode();
 
             HttpContext.Session.SetString("FinishedRental", "True");

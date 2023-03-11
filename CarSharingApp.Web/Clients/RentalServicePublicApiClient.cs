@@ -22,13 +22,13 @@ namespace CarSharingApp.Web.Clients
             return await client.PostAsync(client.BaseAddress, content);
         }
 
-        public async Task<HttpResponseMessage> FinishRentalRequest(FinishExistingRentalRequest request)
+        public async Task<HttpResponseMessage> FinishRentalRequest(Guid id)
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            JsonContent content = JsonContent.Create(request);
+            string requestUri = $"Finish/{id}";
 
-            return await client.PutAsync("FinishExistingRental", content);
+            return await client.PutAsync(requestUri, null);
         }
     }
 }
