@@ -1,5 +1,6 @@
 ﻿using CarSharingApp.Application.Contracts.Vehicle;
 using CarSharingApp.Web.Clients.Interfaces;
+using CarSharingApp.Web.Helpers;
 using CarSharingApp.Web.Primitives;
 
 namespace CarSharingApp.Web.Clients
@@ -33,9 +34,9 @@ namespace CarSharingApp.Web.Clients
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            JsonContent content = JsonContent.Create(request);
-
-            return await client.PostAsync("NearbyVehiclesMapRepresentation", content);
+            string requestUri = MyCustomQueryBuilder.Build("NearbyMapRepresentation", request);
+            
+            return await client.GetAsync(requestUri);
         }
 
         public async Task<HttpResponseMessage> GetAllApprovedAndPublishedVehiclesCatalogRepresentation()
@@ -56,25 +57,29 @@ namespace CarSharingApp.Web.Clients
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            JsonContent content = JsonContent.Create(request);
+            string requestUri = MyCustomQueryBuilder.Build("CriteriaCatalogRepresentation", request);
 
-            return await client.PostAsync("CriteriaCatalogRepresentation", content);
+            return await client.GetAsync(requestUri);
         }
 
         public async Task<HttpResponseMessage> GetVehicleInformation(Guid id)
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            return await client.GetAsync("Information" + $"?id={id}");
+            string requestUri = $"Information?id={id}";
+
+            return await client.GetAsync(requestUri);
         }
 
-        public async Task<HttpResponseMessage> UpdateVehicleStatus(UpdateVehicleStatusRequest request)
+        public async Task<HttpResponseMessage> UpdateVehicleStatus(Guid id, UpdateVehicleStatusRequest request)
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
+            string requestUri = $"UpdateVehicleStatus?id={id}";
+
             JsonContent content = JsonContent.Create(request);
 
-            return await client.PutAsync("UpdateVehicleStatus", content);
+            return await client.PutAsync(requestUri, content);
         }
     }
 }

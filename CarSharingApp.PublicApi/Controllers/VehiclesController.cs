@@ -31,7 +31,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> CreateVehicle(CreateVehicleRequest request)
+        public async Task<IActionResult> CreateVehicle([FromBody] CreateVehicleRequest request)
         {
             JwtClaims? jwtClaims = GetJwtClaims();
 
@@ -62,7 +62,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [HttpGet("{id:guid}")]
         [Authorize]
-        public async Task<IActionResult> GetVehicle(Guid id)
+        public async Task<IActionResult> GetVehicle([FromRoute] Guid id)
         {
             ErrorOr<Vehicle> getVehicleResult = await _vehicleService.GetVehicleAsync(id);
 
@@ -73,7 +73,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [HttpGet("Information/{id:guid}")]
         [Authorize]
-        public async Task<IActionResult> GetVehicleInformation(Guid id)
+        public async Task<IActionResult> GetVehicleInformation([FromRoute] Guid id)
         {
             JwtClaims? jwtClaims = GetJwtClaims();
 
@@ -228,7 +228,8 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [HttpPut("{id:guid}")]
         [Authorize]
-        public async Task<IActionResult> UpdateVehicle(Guid id, UpdateVehicleRequest request)
+        public async Task<IActionResult> UpdateVehicle([FromRoute] Guid id, 
+                                                       [FromBody] UpdateVehicleRequest request)
         {
             ErrorOr<Vehicle> getVehicleResult = await _vehicleService.GetVehicleAsync(id);
 
@@ -262,9 +263,10 @@ namespace CarSharingApp.PublicApi.Controllers
             return NoContent();
         }
 
-        [HttpPut("Status/{id}")]
+        [HttpPut("Status/{id:guid}")]
         [Authorize]
-        public async Task<IActionResult> UpdateVehicleStatus([FromQuery] Guid id, [FromBody] UpdateVehicleStatusRequest request)
+        public async Task<IActionResult> UpdateVehicleStatus([FromRoute] Guid id, 
+                                                             [FromBody] UpdateVehicleStatusRequest request)
         {
             ErrorOr<Vehicle> getVehicleResult = await _vehicleService.GetVehicleAsync(id);
 
@@ -301,7 +303,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [HttpDelete("{id:guid}")]
         [Authorize]
-        public async Task<IActionResult> DeleteVehicle(Guid id)
+        public async Task<IActionResult> DeleteVehicle([FromRoute] Guid id)
         {
             ErrorOr<Vehicle> getVehicleResult = await _vehicleService.GetVehicleAsync(id);
 

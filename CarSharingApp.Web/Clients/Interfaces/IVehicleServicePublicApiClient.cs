@@ -11,6 +11,6 @@ namespace CarSharingApp.Web.Clients.Interfaces
         Task<HttpResponseMessage> GetVehicleInformation(Guid id);
         Task<HttpResponseMessage> CreateNewVehicle(CreateVehicleRequest request);
         Task<HttpResponseMessage> DeleteVehicle(string vehicleId);
-        Task<HttpResponseMessage> UpdateVehicleStatus(UpdateVehicleStatusRequest request);
+        Task<HttpResponseMessage> UpdateVehicleStatus(Guid id, UpdateVehicleStatusRequest request);
     }
 }

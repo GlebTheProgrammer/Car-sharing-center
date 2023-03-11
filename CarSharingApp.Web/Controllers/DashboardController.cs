@@ -206,7 +206,7 @@ namespace CarSharingApp.Web.Controllers
 
         [HttpGet]
         [Route("updateAndRenderPartial/vehicle/status")]
-        public async Task<IActionResult> UpdateVehicleStatus([FromQuery] string vehicleId, 
+        public async Task<IActionResult> UpdateVehicleStatus([FromQuery] string vehicleId,
                                                              [FromQuery] string isConfirmedByAdmin, 
                                                              [FromQuery] string isPublished, 
                                                              [FromQuery] string isOrdered,
@@ -214,12 +214,11 @@ namespace CarSharingApp.Web.Controllers
                                                              [FromQuery] string searchInput)
         {
             var requestModel = new UpdateVehicleStatusRequest(
-                vehicleId,
                 bool.Parse(isOrdered),
                 bool.Parse(isPublished),
                 bool.Parse(isConfirmedByAdmin));
 
-            var response = await _vehicleServiceClient.UpdateVehicleStatus(requestModel);
+            var response = await _vehicleServiceClient.UpdateVehicleStatus(Guid.Parse(vehicleId), requestModel);
             response.EnsureSuccessStatusCode();
 
             return Redirect($"/dashboard/vehiclesPartial?searchBy={searchBy}&searchInput={searchInput}");
