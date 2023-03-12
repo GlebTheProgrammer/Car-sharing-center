@@ -162,6 +162,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
         #region Mapping from server models to response models
 
+        [NonAction]
         private RentalResponse MapRentalResponse(Rental rental)
         {
             RentalPaymentResponse payment = new RentalPaymentResponse(
@@ -185,6 +186,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
         #region Mapping on the server side 
 
+        [NonAction]
         private ErrorOr<Vehicle> ChangeVehicleStatusAsRented(Vehicle vehicle)
         {
             return Vehicle.Create(
@@ -220,6 +222,7 @@ namespace CarSharingApp.PublicApi.Controllers
                 vehicle.LastTimeOrdered);
         }
 
+        [NonAction]
         private ErrorOr<Customer> UpdateCustomerStatisticsWithAdditionalVehicle(Customer customer, bool isVehicleOwner)
         {
             return Customer.Create(
@@ -244,6 +247,5 @@ namespace CarSharingApp.PublicApi.Controllers
         }
 
         #endregion
-
     }
 }

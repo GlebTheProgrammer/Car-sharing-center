@@ -16,9 +16,10 @@ namespace CarSharingApp.PublicApi.Controllers
             StripeConfiguration.ApiKey = configuration["StripeConfig:SecretKey"];
         }
 
-        [HttpPost]
         [Authorize]
-        public async Task<IActionResult> GenerateStripeSession(StripePaymentSessionUrlRequest payment)
+        [HttpGet]
+        [Route("Session")]
+        public async Task<IActionResult> GenerateStripeSession([FromQuery] StripePaymentSessionUrlRequest payment)
         {
             var options = new Stripe.Checkout.SessionCreateOptions
             {
@@ -54,14 +55,14 @@ namespace CarSharingApp.PublicApi.Controllers
         }
 
         [Authorize]
-        [HttpGet("PaymentDetails")]
-        public async Task<IActionResult> GetStripePaymentInfo(string sessionId)
+        [HttpGet("Session/Details/{id}")]
+        public async Task<IActionResult> GetStripePaymentInfo([FromRoute] string id)
         {
             var sessionService = new Stripe.Checkout.SessionService();
-            Stripe.Checkout.Session getSessionResponse = await sessionService.GetAsync(sessionId);
+            Stripe.Checkout.Session getSessionResponse = await sessionService.GetAsync(id);
 
             if (getSessionResponse is null)
-                return NotFound(sessionId);
+                return NotFound(id);
 
             var paymentIntentId = getSessionResponse.PaymentIntentId;
 
@@ -74,12 +75,16 @@ namespace CarSharingApp.PublicApi.Controllers
             return Ok(MapStripePaymentDetailsResponse(paymentIntent));
         }
 
+        #region Response mapping section
+
+        [NonAction]
         private StripePaymentSessionResponse MapStripePaymentSessionResponse(Stripe.Checkout.Session session)
         {
             return new StripePaymentSessionResponse(
                 SessionUrl: session.Url);
         }
 
+        [NonAction]
         private StripePaymentDetailsResponse MapStripePaymentDetailsResponse(PaymentIntent paymentIntent)
         {
             return new StripePaymentDetailsResponse(
@@ -87,5 +92,7 @@ namespace CarSharingApp.PublicApi.Controllers
                 Amount: paymentIntent.Amount,
                 PaymentDateTime: paymentIntent.Created);
         }
+
+        #endregion
     }
 }

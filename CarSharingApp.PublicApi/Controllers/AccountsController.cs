@@ -38,7 +38,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [HttpGet]
         [Authorize]
-        [Route("[action]")]
+        [Route("Customer/Information")]
         public async Task<IActionResult> AccountData()
         {
             JwtClaims? jwtClaims = GetJwtClaims();
@@ -64,10 +64,9 @@ namespace CarSharingApp.PublicApi.Controllers
             return Ok(MapAccountDataResponse(customer, vehicles));
         }
 
-        [HttpGet]
+        [HttpGet("Customer/Notes/{type}")]
         [Authorize]
-        [Route("[action]")]
-        public async Task<IActionResult> AccountNotes(string type)
+        public async Task<IActionResult> AccountNotes([FromRoute] string type)
         {
             JwtClaims? jwtClaims = GetJwtClaims();
 
@@ -107,7 +106,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [HttpGet]
         [Authorize]
-        [Route("[action]")]
+        [Route("Customer/Statistics")]
         public async Task<IActionResult> AccountStatistics()
         {
             JwtClaims? jwtClaims = GetJwtClaims();
@@ -134,7 +133,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [HttpGet]
         [Authorize]
-        [Route("[action]")]
+        [Route("Customer/Vehicles")]
         public async Task<IActionResult> AccountVehicles()
         {
             JwtClaims? jwtClaims = GetJwtClaims();
@@ -153,7 +152,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [HttpGet]
         [Authorize]
-        [Route("[action]")]
+        [Route("Customer/Rentals")]
         public async Task<IActionResult> AccountRentals()
         {
             JwtClaims? jwtClaims = GetJwtClaims();
@@ -172,6 +171,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
         #region Response mapping section
 
+        [NonAction]
         private AccountVehiclesDataResponse MapAccountVehiclesDataResponse(List<Vehicle> vehicles)
         {
             List<AccountVehicleData> accountVehicleDatas = new List<AccountVehicleData>();
@@ -194,6 +194,7 @@ namespace CarSharingApp.PublicApi.Controllers
             return new AccountVehiclesDataResponse(accountVehicleDatas);
         }
 
+        [NonAction]
         private async Task<AccountRentalsDataResponse> MapAccountRentalsDataResponse(List<Rental> rentals)
         {
             List<AccountRentalData> accountRentalDatas = new List<AccountRentalData>();
@@ -223,6 +224,7 @@ namespace CarSharingApp.PublicApi.Controllers
             return new AccountRentalsDataResponse(accountRentalDatas);
         }
 
+        [NonAction]
         private AccountStatisticsDataResponse MapAccountStatisticsDataResponse(Customer customer, List<Vehicle> vehicles)
         {
             int sharedVehicles = customer.Statistics.VehiclesShared;
@@ -236,6 +238,7 @@ namespace CarSharingApp.PublicApi.Controllers
                 sharedVehicles > rentedVehicles ? rentedVehicles * 100 / sharedVehicles : sharedVehicles * 100 / rentedVehicles);
         }
 
+        [NonAction]
         private AccountDataResponse MapAccountDataResponse(Customer customer, IReadOnlyCollection<Vehicle> vehicles)
         {
             CustomerToBeDisplayedInAccount customerToBeDisplayedInAccount = new(
@@ -274,11 +277,13 @@ namespace CarSharingApp.PublicApi.Controllers
                 vehiclesToBeDisplayed);
         }
 
+        [NonAction]
         private AccountActionNotesResponse MapAccountActionNotesResponse(List<ActionNote> notes)
         {
             return new AccountActionNotesResponse(MapListOfNotes(notes));
         }
 
+        [NonAction]
         private List<NoteToBeDisplayedInAccount> MapListOfNotes(IReadOnlyCollection<ActionNote> notes)
         {
             List<NoteToBeDisplayedInAccount> notesToBeDisplayedInAccount = new List<NoteToBeDisplayedInAccount>();

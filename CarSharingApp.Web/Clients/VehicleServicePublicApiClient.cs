@@ -66,7 +66,7 @@ namespace CarSharingApp.Web.Clients
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            string requestUri = $"Information?id={id}";
+            string requestUri = $"Information/{id}";
 
             return await client.GetAsync(requestUri);
         }

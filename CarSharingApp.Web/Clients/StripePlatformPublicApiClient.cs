@@ -1,5 +1,6 @@
 ﻿using CarSharingApp.Application.Contracts.Payment;
 using CarSharingApp.Web.Clients.Interfaces;
+using CarSharingApp.Web.Helpers;
 using CarSharingApp.Web.Primitives;
 
 namespace CarSharingApp.Web.Clients
@@ -17,16 +18,18 @@ namespace CarSharingApp.Web.Clients
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            return await client.GetAsync("PaymentDetails" + $"?sessionId={sessionId}");
+            string requestUri = $"Session/Details/{sessionId}";
+
+            return await client.GetAsync(requestUri);
         }
 
         public async Task<HttpResponseMessage> GetStripeSessionUrl(StripePaymentSessionUrlRequest request)
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            JsonContent content = JsonContent.Create(request);
+            string requestUri = MyCustomQueryBuilder.Build("Session", request);
 
-            return await client.PostAsync(client.BaseAddress, content);
+            return await client.GetAsync(requestUri);
         }
     }
 }

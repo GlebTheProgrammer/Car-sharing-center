@@ -1,7 +1,6 @@
 ﻿using CarSharingApp.Application.Contracts.Customer;
 using CarSharingApp.Application.Interfaces;
 using CarSharingApp.Domain.Entities;
-using CarSharingApp.Infrastructure.Authentication;
 using CarSharingApp.PublicApi.Primitives;
 using ErrorOr;
 using Microsoft.AspNetCore.Authorization;
@@ -23,7 +22,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> CreateCustomer(CreateCustomerRequest request)
+        public async Task<IActionResult> CreateCustomer([FromBody] CreateCustomerRequest request)
         {
             ErrorOr<Customer> requestToCustomerResult = _customerService.From(request);
 
@@ -47,7 +46,7 @@ namespace CarSharingApp.PublicApi.Controllers
                 errors => Problem(errors));
         }
 
-        [HttpGet("NewCustomerRequestTemplate")]
+        [HttpGet("Template")]
         [AllowAnonymous]
         public IActionResult GetCreateNewCustomerRequestTemplate()
         {
@@ -73,7 +72,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [HttpGet("{id:guid}")]
         [Authorize]
-        public async Task<IActionResult> GetCustomer(Guid id)
+        public async Task<IActionResult> GetCustomer([FromRoute] Guid id)
         {
             ErrorOr<Customer> getCustomerResult = await _customerService.GetCustomerAsync(id);
 
@@ -82,9 +81,10 @@ namespace CarSharingApp.PublicApi.Controllers
                 errors => Problem(errors));
         }
         
-        [HttpPut("Info/{id:guid}")]
+        [HttpPut("Information/{id:guid}")]
         [Authorize]
-        public async Task<IActionResult> UpdateCustomerInfo(Guid id, UpdateCustomerInfoRequest request)
+        public async Task<IActionResult> UpdateCustomerInfo([FromRoute] Guid id, 
+                                                            [FromBody] UpdateCustomerInfoRequest request)
         {
             ErrorOr<Customer> getCustomerResult = await _customerService.GetCustomerAsync(id);
 
@@ -114,7 +114,8 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [HttpPut("Credentials/{id:guid}")]
         [Authorize]
-        public async Task<IActionResult> UpdateCustomerCredentials(Guid id, UpdateCustomerCredentialsRequest request)
+        public async Task<IActionResult> UpdateCustomerCredentials([FromRoute] Guid id, 
+                                                                   [FromBody] UpdateCustomerCredentialsRequest request)
         {
             ErrorOr<Customer> getCustomerResult = await _customerService.GetCustomerAsync(id);
 
@@ -144,7 +145,8 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [HttpPut("Password/{id:guid}")]
         [Authorize]
-        public async Task<IActionResult> UpdateCustomerPassword(Guid id, UpdateCustomerPasswordRequest request)
+        public async Task<IActionResult> UpdateCustomerPassword([FromRoute] Guid id, 
+                                                                [FromBody] UpdateCustomerPasswordRequest request)
         {
             ErrorOr<Customer> getCustomerResult = await _customerService.GetCustomerAsync(id);
 
@@ -180,7 +182,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [HttpDelete("{id:guid}")]
         [Authorize]
-        public async Task<IActionResult> DeleteCustomer(Guid id)
+        public async Task<IActionResult> DeleteCustomer([FromRoute] Guid id)
         {
             ErrorOr<Customer> getCustomerResult = await _customerService.GetCustomerAsync(id);
 
@@ -197,6 +199,9 @@ namespace CarSharingApp.PublicApi.Controllers
             return NoContent();
         }
 
+        #region Response mapping section
+
+        [NonAction]
         private static CustomerResponse MapCustomerResponse(Customer customer)
         {
             return new CustomerResponse(
@@ -211,5 +216,7 @@ namespace CarSharingApp.PublicApi.Controllers
                 customer.HasAcceptedNewsSharing,
                 customer.Credentials);
         }
+
+        #endregion
     }
 }

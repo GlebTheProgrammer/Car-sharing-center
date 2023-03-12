@@ -16,35 +16,37 @@ namespace CarSharingApp.Web.Clients
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            return await client.GetAsync("AccountNotes" + $"?type={type}");
+            string requestUri = $"Customer/Notes/{type}";
+
+            return await client.GetAsync(requestUri);
         }
 
         public async Task<HttpResponseMessage> GetCustomerAccountData()
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            return await client.GetAsync("AccountData");
+            return await client.GetAsync("Customer/Information");
         }
 
         public async Task<HttpResponseMessage> GetCustomerAccountStatistics()
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            return await client.GetAsync("AccountStatistics");
+            return await client.GetAsync("Customer/Statistics");
         }
 
         public async Task<HttpResponseMessage> GetCustomerRentalsAccountRepresentation()
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            return await client.GetAsync("AccountRentals");
+            return await client.GetAsync("Customer/Rentals");
         }
 
         public async Task<HttpResponseMessage> GetCustomerVehiclesAccountRepresentation()
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            return await client.GetAsync("AccountVehicles");
+            return await client.GetAsync("Customer/Vehicles");
         }
     }
 }

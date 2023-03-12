@@ -24,9 +24,10 @@ namespace CarSharingApp.PublicApi.Controllers
             _logger = logger;
         }
 
-        [HttpPost]
+        [HttpGet]
         [Microsoft.AspNetCore.Authorization.AllowAnonymous]
-        public async Task<IActionResult> GenerateToken(AuthorizationRequest request)
+        [Route("JWToken")]
+        public async Task<IActionResult> GenerateToken([FromQuery] AuthorizationRequest request)
         {
             ErrorOr<Credentials> requestToCredentialsResult = _authorizationService.From(request);
 
@@ -56,17 +57,14 @@ namespace CarSharingApp.PublicApi.Controllers
                 value: MapTokenResponse(JWToken));
         }
 
+        #region Response mapping section
+
+        [NonAction]
         private static TokenResponse MapTokenResponse(string Token)
         {
             return new TokenResponse(Token);
         }
 
-        private static SuccessfulAuthorizationResponse MapAuthorizationResponse(Customer customer)
-        {
-            return new SuccessfulAuthorizationResponse(
-                customer.Id.ToString(),
-                customer.Credentials.Login,
-                customer.Credentials.Email);
-        }
+        #endregion
     }
 }
