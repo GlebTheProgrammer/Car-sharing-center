@@ -334,5 +334,21 @@
             ShowSuccessfulMessageAfterRentalWasFinished();
             @{Accessor?.HttpContext?.Session.Remove("FinishedRental");}
         }
+        if (@(Accessor?.HttpContext?.Session.GetString("Unauthorized401Error") == null ? "false" : "true")) {
+            ShowUnauthorizedErrorMessage();
+            @{Accessor?.HttpContext?.Session.Remove("Unauthorized401Error");}
+        }
+        if (@(Accessor?.HttpContext?.Session.GetString("Forbidden403Error") == null ? "false" : "true")) {
+            ShowForbiddenErrorMessage();
+            @{Accessor?.HttpContext?.Session.Remove("Forbidden403Error");}
+        }
+        if (@(Accessor?.HttpContext?.Session.GetString("NotFound404Error") == null ? "false" : "true")) {
+            ShowNotFoundErrorMessage();
+            @{Accessor?.HttpContext?.Session.Remove("NotFound404Error");}
+        }
+        if (@(Accessor?.HttpContext?.Session.GetString("InternalServer500Error") == null ? "false" : "true")) {
+            ShowInternalServerErrorMessage();
+            @{Accessor?.HttpContext?.Session.Remove("InternalServer500Error");}
+        }
     });
 </script>

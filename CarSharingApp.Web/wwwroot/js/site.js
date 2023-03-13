@@ -320,3 +320,114 @@ function ThrowSignInErrorMessage() {
         confirmButtonColor: '#007aff'
     });
 }
+
+//Function to show message about Unauthorized 401 error
+function ShowUnauthorizedErrorMessage() {
+
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-primary',
+            cancelButton: 'btn btn-secondary'
+        }
+    })
+
+    swalWithBootstrapButtons.fire({
+        title: '401 Unauthorized',
+        text: "We couldn't validate your credentials. Please sign in and then try again.",
+        icon: 'error',
+        showCancelButton: true,
+        confirmButtonColor: '#007aff',
+        confirmButtonText: 'Sign in',
+        cancelButtonText: 'Later',
+        timer: 10000,
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = '/signIn/';
+        }
+    })
+}
+
+//Function to show message about Unauthorized 401 error
+function ShowForbiddenErrorMessage() {
+
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-primary',
+            cancelButton: 'btn btn-secondary'
+        }
+    })
+
+    swalWithBootstrapButtons.fire({
+        title: '401 Unauthorized',
+        text: "We couldn't validate your credentials. Please sign in and then try again.",
+        icon: 'error',
+        showCancelButton: true,
+        confirmButtonColor: '#007aff',
+        confirmButtonText: 'Sign in',
+        cancelButtonText: 'Later',
+        timer: 10000,
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = '/signIn/';
+        }
+    })
+}
+
+//Function to show message about Forbidden 403 error
+function ShowForbiddenErrorMessage() {
+
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-primary',
+            cancelButton: 'btn btn-secondary'
+        }
+    })
+
+    swalWithBootstrapButtons.fire({
+        title: '403 Forbidden',
+        text: "Sorry but you don't have permission to access this area.",
+        icon: 'warning',
+        confirmButtonColor: '#007aff',
+        timer: 10000
+    })
+}
+
+//Function to show message about NotFound 404 error
+function ShowNotFoundErrorMessage() {
+
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-primary',
+            cancelButton: 'btn btn-secondary'
+        }
+    })
+
+    swalWithBootstrapButtons.fire({
+        title: '404 Not Found',
+        text: "Sorry but there is no information about what you are looking for.",
+        icon: 'question',
+        confirmButtonColor: '#007aff',
+        timer: 10000
+    })
+}
+
+//Function to show message about Internal Server Error 500 and Service Unavailable 503 error
+function ShowInternalServerErrorMessage() {
+
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-primary',
+            cancelButton: 'btn btn-secondary'
+        }
+    })
+
+    swalWithBootstrapButtons.fire({
+        title: '500 Server Error',
+        text: "Something has happened on the server side or it might be overloaded. Please try againg later.",
+        icon: 'error',
+        confirmButtonColor: '#007aff',
+        timer: 10000
+    })
+}

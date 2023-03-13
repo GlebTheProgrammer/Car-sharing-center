@@ -1,15 +1,18 @@
 ﻿using CarSharingApp.Application.Contracts.Vehicle;
 using CarSharingApp.Models;
 using CarSharingApp.Web.Clients.Interfaces;
+using CarSharingApp.Web.Controllers.Handle;
+using CarSharingApp.Web.Helpers;
+using CarSharingApp.Web.Helpers.Models;
+using CarSharingApp.Web.Primitives;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using System.Net;
 
 namespace CarSharingApp.Controllers
 {
     [AllowAnonymous]
-    public sealed class HomeController : Controller
+    public sealed class HomeController : WebAppController
     {
         private readonly IVehicleServicePublicApiClient _vehicleServiceClient;
 
@@ -23,18 +26,18 @@ namespace CarSharingApp.Controllers
         {
             var response = await _vehicleServiceClient.GetAllApprovedAndPublishedVehiclesMapRepresentation();
 
-            switch (response.StatusCode)
+            if (!response.IsSuccessStatusCode)
             {
-                case HttpStatusCode.Unauthorized:
-                    return RedirectToAction("Unauthorized401Error", "CustomExceptionHandle");
+                MyControllerContext context = GenerateControllerContext();
+                var errorResponseViewModel = MyCustomResponseAnalyzer.Analize(myControllerContext: context,
+                                                                        response: response,
+                                                                        onErrorStatusCode_ViewName: "Index",
+                                                                        onErrorStatusCode_ViewModel: new List<VehicleDisplayOnMap>());
 
-                default:
-                    break;
+                return errorResponseViewModel ?? throw new NullReferenceException(nameof(errorResponseViewModel));
             }
 
-            response.EnsureSuccessStatusCode();
-
-            VehiclesDisplayOnMapResponse responseModel = await response.Content.ReadFromJsonAsync<VehiclesDisplayOnMapResponse>() 
+            VehiclesDisplayOnMapResponse responseModel = await response.Content.ReadFromJsonAsync<VehiclesDisplayOnMapResponse>()
                 ?? throw new NullReferenceException(nameof(responseModel));
 
             var viewModel = responseModel.Vehicles;
