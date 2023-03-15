@@ -151,7 +151,7 @@ namespace CarSharingApp.Domain.Entities
                 tariffCreateRequest.Value,
                 locationCreateRequest.Value,
                 timesOrdered,
-                publishedTime ?? DateTime.Now,
+                publishedTime ?? DateTime.UtcNow,
                 lastTimeOrdered ?? null,
                 statusCreateRequest.Value,
                 specificationsCreateRequest.Value,

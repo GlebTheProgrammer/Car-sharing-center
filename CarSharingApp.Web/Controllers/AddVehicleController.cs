@@ -42,7 +42,7 @@ namespace CarSharingApp.Controllers
             if (file is null)
                 throw new Exception("Image can't be null");
 
-            DateTime dateTime = DateTime.Now;
+            DateTime dateTime = DateTime.UtcNow;
             string imageName = $"{dateTime.Hour}_{dateTime.Minute}_{dateTime.Second}_{file.FileName}";
 
             var response = await _vehicleServiceClient.CreateNewVehicle(ConfigureNewCreateVehicleRequest(createVehicleRequest, imageName));

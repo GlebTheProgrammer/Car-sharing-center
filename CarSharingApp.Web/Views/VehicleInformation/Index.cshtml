@@ -20,7 +20,7 @@
 
             <article class="blog-post mt-2">
                 <h2 class="blog-post-title">@Model.Name</h2>
-                <p class="blog-post-meta">Published: @(Model.PublishedTime.ToString("dd/MM/yyyy")) by <a href="@Url.Action("Index", "CustomerProfile", new {vehicleId = Model.Id})">@Model.CustomerLogin</a></p>
+                <p class="blog-post-meta">Published: @(TimeZoneInfo.ConvertTimeFromUtc(Model.PublishedTime, TimeZoneInfo.Local).ToString("dd/MM/yyyy")) by <a href="@Url.Action("Index", "CustomerProfile", new {vehicleId = Model.Id})">@Model.CustomerLogin</a></p>
 
                 <p>@Model.Description</p>
                 <hr>

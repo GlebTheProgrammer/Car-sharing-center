@@ -27,7 +27,7 @@ namespace CarSharingApp.Infrastructure.Middlewares
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Timed Out Rentals Checkout Service has started at {startedDateTime}.", DateTime.Now);
+            _logger.LogInformation("Timed Out Rentals Checkout Service has started at {startedDateTime}.", DateTime.UtcNow);
 
             _timer = new Timer(AnalyzeExpiredRentals, null, TimeSpan.Zero,
                 TimeSpan.FromMinutes(1));
@@ -77,7 +77,7 @@ namespace CarSharingApp.Infrastructure.Middlewares
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Timed Out Rentals Checkout Service was stopped at {stoppedDateTime}.", DateTime.Now);
+            _logger.LogInformation("Timed Out Rentals Checkout Service was stopped at {stoppedDateTime}.", DateTime.UtcNow);
 
             _timer?.Change(Timeout.Infinite, 0);
 

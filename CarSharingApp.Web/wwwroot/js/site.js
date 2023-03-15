@@ -340,6 +340,7 @@ function ShowUnauthorizedErrorMessage() {
         confirmButtonText: 'Sign in',
         cancelButtonText: 'Later',
         timer: 10000,
+        timerProgressBar: true,
         reverseButtons: true
     }).then((result) => {
         if (result.isConfirmed) {
@@ -367,6 +368,7 @@ function ShowForbiddenErrorMessage() {
         confirmButtonText: 'Sign in',
         cancelButtonText: 'Later',
         timer: 10000,
+        timerProgressBar: true,
         reverseButtons: true
     }).then((result) => {
         if (result.isConfirmed) {
@@ -390,7 +392,8 @@ function ShowForbiddenErrorMessage() {
         text: "Sorry but you don't have permission to access this area.",
         icon: 'warning',
         confirmButtonColor: '#007aff',
-        timer: 10000
+        timer: 10000,
+        timerProgressBar: true
     })
 }
 
@@ -409,7 +412,8 @@ function ShowNotFoundErrorMessage() {
         text: "Sorry but there is no information about what you are looking for.",
         icon: 'question',
         confirmButtonColor: '#007aff',
-        timer: 10000
+        timer: 10000,
+        timerProgressBar: true
     })
 }
 
@@ -428,6 +432,7 @@ function ShowInternalServerErrorMessage() {
         text: "Something has happened on the server side or it might be overloaded. Please try againg later.",
         icon: 'error',
         confirmButtonColor: '#007aff',
-        timer: 10000
+        timer: 10000,
+        timerProgressBar: true
     })
 }

@@ -42,7 +42,7 @@ namespace CarSharingApp.Web.Helpers
                 case HttpStatusCode.InternalServerError:
                     {
                         myControllerContext.Controller.HttpContext.Session.SetString("InternalServer500Error", "true");
-                        break;
+                        return myControllerContext.RedirectToAction("HttpStatusCodeHandler", "Error", new { statusCode = 500 });
                     }
 
                 default:

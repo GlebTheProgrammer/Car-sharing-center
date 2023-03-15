@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Stripe;
 using Stripe.Checkout;
+using System.Web;
 
 namespace CarSharingApp.PublicApi.Controllers
 {
@@ -21,6 +22,9 @@ namespace CarSharingApp.PublicApi.Controllers
         [Route("Session")]
         public async Task<IActionResult> GenerateStripeSession([FromQuery] StripePaymentSessionUrlRequest payment)
         {
+            string a = HttpUtility.UrlDecode(payment.SuccessUrl);
+            string b = HttpUtility.UrlDecode(payment.CancelationUrl);
+
             var options = new Stripe.Checkout.SessionCreateOptions
             {
                 LineItems = new List<SessionLineItemOptions>
@@ -36,7 +40,7 @@ namespace CarSharingApp.PublicApi.Controllers
                                 Name = $"Order for {payment.VehicleName}",
                                 Images = new List<string> { StripePaymentProcessImage },
                                 Description = $"You are going to pay for the use of the «{payment.VehicleName}» transport within the specified period: " +
-                                $"from {payment.StartMonth} {payment.StartDay}, {payment.StartHour}:00 till {payment.EndMonth} {payment.EndDay}, {payment.EndHour}:00. " +
+                                $"from {TimeZoneInfo.ConvertTimeToUtc(payment.RentalStartsDateTimeUTC):dddd, dd MMMM yyyy HH:mm} till {TimeZoneInfo.ConvertTimeToUtc(payment.RentalEndsDateTimeUTC):dddd, dd MMMM yyyy HH:mm}. " +
                                 $"For the overdue time, the customer is responsible to the vehicle's owner."
                             },
                         },
@@ -44,8 +48,8 @@ namespace CarSharingApp.PublicApi.Controllers
                     },
                 },
                 Mode = "payment",
-                SuccessUrl = payment.SuccessUrl + "&sessionId={CHECKOUT_SESSION_ID}",
-                CancelUrl = payment.CancelationUrl,
+                SuccessUrl = HttpUtility.UrlDecode(payment.SuccessUrl) + "&sessionId={CHECKOUT_SESSION_ID}",
+                CancelUrl = HttpUtility.UrlDecode(payment.CancelationUrl),
             };
 
             var service = new Stripe.Checkout.SessionService();

@@ -102,7 +102,7 @@ namespace CarSharingApp.Application.Services
 
         public async Task<List<Rental>> GetAllExpiredAndActiveRentals()
         {
-            var result = await _rentalsRepository.GetAllAsync(r => r.IsActive && r.RentalEndsDateTime < DateTime.Now);
+            var result = await _rentalsRepository.GetAllAsync(r => r.IsActive && r.RentalEndsDateTime < DateTime.UtcNow);
 
             return result.ToList();
         }

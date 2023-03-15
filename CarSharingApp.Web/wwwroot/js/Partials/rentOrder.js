@@ -63,11 +63,7 @@ function CalculateVehicleUsagePeriodAndSetUpAllInputs(datetimesStartsStr, dateti
 
     document.getElementById("totalPriceInput").value = totalPrice;
 
-    document.getElementById("startMonthInput").value = arrayStarts[1];
-    document.getElementById("endMonthInput").value = arrayEnds[1];
-    document.getElementById("startDayInput").value = dayStartsInt;
-    document.getElementById("endDayInput").value = dayEndsInt;
-    document.getElementById("startHourInput").value = timeStartsInt;
-    document.getElementById("endHourInput").value = timeEndsInt;
+    document.getElementById("rentalStartsDateTimeLocalStrInput").value = datetimesStartsStr;
+    document.getElementById("rentalEndsDateTimeLocalStrInput").value = datetimesEndsStr;
 
 }

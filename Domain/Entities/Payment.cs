@@ -40,7 +40,7 @@ namespace CarSharingApp.Domain.Entities
         {
             List<Error> errors = new();
 
-            if (DateTime.Now < paymentDateTime)
+            if (DateTime.UtcNow < paymentDateTime)
             {
                 errors.Add(DomainErrors.Payment.InvalidPaymentDateTime);
             }

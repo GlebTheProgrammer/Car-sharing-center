@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
 using System.Text.Json;
+using System.Web;
 
 namespace CarSharingApp.Controllers
 {
@@ -50,13 +51,25 @@ namespace CarSharingApp.Controllers
         [Route("payment/session")]
         public async Task<IActionResult> CreateCheckoutSession([FromForm] StripePaymentSessionRequest paymentRequest)
         {
+            var rentalStartsLocalDateTimeStr = paymentRequest.RentalStartsDateTimeLocalStr.Substring(0, paymentRequest.RentalStartsDateTimeLocalStr.IndexOf("GMT")-1);
+            DateTime rentalStartsUtcDateTime = TimeZoneInfo.ConvertTimeToUtc(DateTime.ParseExact(rentalStartsLocalDateTimeStr, "ddd MMM dd yyyy HH:mm:ss", CultureInfo.InvariantCulture), TimeZoneInfo.Local);
+            var rentalEndsLocalDateTimeStr = paymentRequest.RentalEndsDateTimeLocalStr.Substring(0, paymentRequest.RentalEndsDateTimeLocalStr.IndexOf("GMT") - 1);
+            DateTime rentalEndsUtcDateTime = DateTime.ParseExact(rentalEndsLocalDateTimeStr, "ddd MMM dd yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+
             string hostedUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}";
+
+            string successResultUrl = HttpUtility.UrlPathEncode(hostedUrl + Url.Action("SuccessfulPayment", paymentRequest) 
+                ?? throw new ArgumentNullException(nameof(paymentRequest)));
+            string cancelledResultUrl = HttpUtility.UrlEncode(hostedUrl + Url.Action("CancelledPayment", paymentRequest) 
+                ?? throw new ArgumentNullException(nameof(paymentRequest)));
 
             var stripeSessionUrlResponse = await _stripePlatformClient.GetStripeSessionUrl(
                 GenerateNewStripePaymentSessionUrlRequest(
                     request: paymentRequest,
-                    successUrl: hostedUrl + Url.Action("SuccessfulPayment", paymentRequest),
-                    cancelationUrl: hostedUrl + Url.Action("CancelledPayment", paymentRequest)));
+                    rentalStartsUtcDateTime: rentalStartsUtcDateTime,
+                    rentalEndsUtcDateTime: rentalEndsUtcDateTime,
+                    successUrl: successResultUrl,
+                    cancelationUrl: cancelledResultUrl));
 
             string responseContent = await stripeSessionUrlResponse.Content.ReadAsStringAsync();
 
@@ -96,7 +109,7 @@ namespace CarSharingApp.Controllers
 
         [HttpGet]
         [Route("payment/cancelled")]
-        public IActionResult CancelledPayment([FromQuery] StripePaymentSessionRequest cancelledPayment)
+        public IActionResult CancelledPayment(/*[FromQuery]*/ StripePaymentSessionRequest cancelledPayment)
         {
             HttpContext.Session.SetString("CancelledPayment", "true");
 
@@ -131,53 +144,54 @@ namespace CarSharingApp.Controllers
         [NonAction]
         private CreateNewRentalRequest GenerateNewRequest(StripePaymentSessionRequest request, StripePaymentDetailsResponse paymentResponse)
         {
-            DateTime rentalStartsDateTime;
-            DateTime rentalEndsDateTime;
+            throw new Exception();
+            //DateTime rentalStartsDateTime;
+            //DateTime rentalEndsDateTime;
 
-            int rentalStartsMonth;
-            int rentalEndsMonth;
+            //int rentalStartsMonth;
+            //int rentalEndsMonth;
 
-            try
-            {
-                rentalStartsMonth = DateTime.ParseExact(request.StartMonth, "MMM", CultureInfo.InvariantCulture).Month;
-                rentalEndsMonth = DateTime.ParseExact(request.EndMonth, "MMM", CultureInfo.InvariantCulture).Month;
-            }
-            catch (Exception)
-            {
-                rentalStartsMonth = DateTime.ParseExact(request.StartMonth, "MMM", CultureInfo.CurrentCulture).Month;
-                rentalEndsMonth = DateTime.ParseExact(request.EndMonth, "MMM", CultureInfo.CurrentCulture).Month;
-            }
+            //try
+            //{
+            //    rentalStartsMonth = DateTime.ParseExact(request.StartMonth, "MMM", CultureInfo.InvariantCulture).Month;
+            //    rentalEndsMonth = DateTime.ParseExact(request.EndMonth, "MMM", CultureInfo.InvariantCulture).Month;
+            //}
+            //catch (Exception)
+            //{
+            //    rentalStartsMonth = DateTime.ParseExact(request.StartMonth, "MMM", CultureInfo.CurrentCulture).Month;
+            //    rentalEndsMonth = DateTime.ParseExact(request.EndMonth, "MMM", CultureInfo.CurrentCulture).Month;
+            //}
 
-            rentalStartsDateTime = new DateTime(year: DateTime.Now.Year, month: rentalStartsMonth, day: int.Parse(request.StartDay), hour: int.Parse(request.StartHour), minute: 0, second: 0);
+            //rentalStartsDateTime = new DateTime(year: DateTime.Now.Year, month: rentalStartsMonth, day: int.Parse(request.StartDay), hour: int.Parse(request.StartHour), minute: 0, second: 0);
 
-            if (rentalStartsDateTime < DateTime.Now) // Rental has to start in the next year
-            {
-                rentalStartsDateTime = new DateTime(year: DateTime.Now.Year + 1, month: rentalStartsMonth, day: int.Parse(request.StartDay), hour: int.Parse(request.StartHour), minute: 0, second: 0);
-            }
+            //if (rentalStartsDateTime < DateTime.Now) // Rental has to start in the next year
+            //{
+            //    rentalStartsDateTime = new DateTime(year: DateTime.Now.Year + 1, month: rentalStartsMonth, day: int.Parse(request.StartDay), hour: int.Parse(request.StartHour), minute: 0, second: 0);
+            //}
 
-            if (rentalEndsMonth < rentalStartsMonth) // Rental ends after new year
-            {
-                rentalEndsDateTime = new DateTime(year: DateTime.Now.Year + 1, month: rentalEndsMonth, day: int.Parse(request.EndDay), hour: int.Parse(request.EndHour), minute: 0, second: 0);
-            }
-            else // Rental ends in the same year when started
-            {
-                rentalEndsDateTime = new DateTime(year: DateTime.Now.Year, month: rentalEndsMonth, day: int.Parse(request.EndDay), hour: int.Parse(request.EndHour), minute: 0, second: 0);
-            }
+            //if (rentalEndsMonth < rentalStartsMonth) // Rental ends after new year
+            //{
+            //    rentalEndsDateTime = new DateTime(year: DateTime.Now.Year + 1, month: rentalEndsMonth, day: int.Parse(request.EndDay), hour: int.Parse(request.EndHour), minute: 0, second: 0);
+            //}
+            //else // Rental ends in the same year when started
+            //{
+            //    rentalEndsDateTime = new DateTime(year: DateTime.Now.Year, month: rentalEndsMonth, day: int.Parse(request.EndDay), hour: int.Parse(request.EndHour), minute: 0, second: 0);
+            //}
 
-            return new CreateNewRentalRequest(
-                VehicleId: request.VehicleId,
-                VehicleName: request.VehicleName,
-                VehicleOwnerId: request.VehicleOwnerId,
-                PaymentAmount: paymentResponse.Amount / 100,
-                PaymentDateTime: paymentResponse.PaymentDateTime,
-                RentalStartsDateTime: rentalStartsDateTime,
-                RentalEndsDateTime: rentalEndsDateTime,
-                StripePaymentId: paymentResponse.PaymentId);
+            //return new CreateNewRentalRequest(
+            //    VehicleId: request.VehicleId,
+            //    VehicleName: request.VehicleName,
+            //    VehicleOwnerId: request.VehicleOwnerId,
+            //    PaymentAmount: paymentResponse.Amount / 100,
+            //    PaymentDateTime: paymentResponse.PaymentDateTime,
+            //    RentalStartsDateTime: rentalStartsDateTime,
+            //    RentalEndsDateTime: rentalEndsDateTime,
+            //    StripePaymentId: paymentResponse.PaymentId);
         }
 
         [NonAction]
         private StripePaymentSessionUrlRequest GenerateNewStripePaymentSessionUrlRequest(
-            StripePaymentSessionRequest request, string successUrl, string cancelationUrl)
+            StripePaymentSessionRequest request, string successUrl, string cancelationUrl, DateTime rentalStartsUtcDateTime, DateTime rentalEndsUtcDateTime)
         {
             return new StripePaymentSessionUrlRequest(
                 VehicleId: request.VehicleId,
@@ -186,12 +200,8 @@ namespace CarSharingApp.Controllers
                 Amount: request.Amount,
                 TariffPerHour: request.TariffPerHour,
                 TariffPerDay: request.TariffPerDay,
-                StartHour: request.StartHour,
-                StartDay: request.StartDay,
-                StartMonth: request.StartMonth,
-                EndHour: request.EndHour,
-                EndDay: request.EndDay,
-                EndMonth: request.EndMonth,
+                RentalStartsDateTimeUTC: rentalStartsUtcDateTime,
+                RentalEndsDateTimeUTC: rentalEndsUtcDateTime,
                 SuccessUrl: successUrl,
                 CancelationUrl: cancelationUrl);
         }

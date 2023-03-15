@@ -8,7 +8,7 @@ namespace CarSharingApp.Domain.ValueObjects
 {
     public sealed class Specifications : ValueObject
     {
-        public static readonly int MaxProductionYear = DateTime.Now.Year;
+        public static readonly int MaxProductionYear = DateTime.UtcNow.Year;
         public const int MinProductionYear = 2000;
         public const int MaxPossibleSpeed = 1000;
         public const int MinPossibleSpeed = 200;

@@ -7,12 +7,8 @@
         string Amount,
         decimal TariffPerHour,
         decimal TariffPerDay,
-        string StartHour,
-        string StartDay,
-        string StartMonth,
-        string EndHour,
-        string EndDay,
-        string EndMonth,
+        DateTime RentalStartsDateTimeUTC,
+        DateTime RentalEndsDateTimeUTC,
         string SuccessUrl,
         string CancelationUrl
     );
