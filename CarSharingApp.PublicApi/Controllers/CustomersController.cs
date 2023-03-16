@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CarSharingApp.PublicApi.Controllers
 {
+    [Route("api/customers")]
     public sealed class CustomersController : ApiController
     {
         private readonly ICustomerService _customerService;
@@ -46,7 +47,7 @@ namespace CarSharingApp.PublicApi.Controllers
                 errors => Problem(errors));
         }
 
-        [HttpGet("Template")]
+        [HttpGet("template")]
         [AllowAnonymous]
         public IActionResult GetCreateNewCustomerRequestTemplate()
         {
@@ -81,7 +82,7 @@ namespace CarSharingApp.PublicApi.Controllers
                 errors => Problem(errors));
         }
         
-        [HttpPut("Information/{id:guid}")]
+        [HttpPut("{id:guid}/information")]
         [Authorize]
         public async Task<IActionResult> UpdateCustomerInfo([FromRoute] Guid id, 
                                                             [FromBody] UpdateCustomerInfoRequest request)
@@ -112,7 +113,7 @@ namespace CarSharingApp.PublicApi.Controllers
             return NoContent();
         }
 
-        [HttpPut("Credentials/{id:guid}")]
+        [HttpPut("{id:guid}/credentials")]
         [Authorize]
         public async Task<IActionResult> UpdateCustomerCredentials([FromRoute] Guid id, 
                                                                    [FromBody] UpdateCustomerCredentialsRequest request)
@@ -143,7 +144,7 @@ namespace CarSharingApp.PublicApi.Controllers
             return NoContent();
         }
 
-        [HttpPut("Password/{id:guid}")]
+        [HttpPut("{id:guid}/password")]
         [Authorize]
         public async Task<IActionResult> UpdateCustomerPassword([FromRoute] Guid id, 
                                                                 [FromBody] UpdateCustomerPasswordRequest request)

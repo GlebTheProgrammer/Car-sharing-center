@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CarSharingApp.PublicApi.Controllers
 {
+    [Route("api/authorization")]
     public sealed class AuthorizationController : ApiController
     {
         private readonly IJwtProvider _jwtProvider;
@@ -26,7 +27,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [HttpGet]
         [Microsoft.AspNetCore.Authorization.AllowAnonymous]
-        [Route("JWToken")]
+        [Route("jwToken")]
         public async Task<IActionResult> GenerateToken([FromQuery] AuthorizationRequest request)
         {
             ErrorOr<Credentials> requestToCredentialsResult = _authorizationService.From(request);

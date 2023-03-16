@@ -4,10 +4,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Stripe;
 using Stripe.Checkout;
+using System.Globalization;
 using System.Web;
 
 namespace CarSharingApp.PublicApi.Controllers
 {
+    [Route("api/payments")]
     public sealed class PaymentsController : ApiController
     {
         private const string StripePaymentProcessImage = "https://www.hotellinksolutions.com/images/learning-center/payment-101.jpg";
@@ -19,12 +21,9 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [Authorize]
         [HttpGet]
-        [Route("Session")]
+        [Route("session")]
         public async Task<IActionResult> GenerateStripeSession([FromQuery] StripePaymentSessionUrlRequest payment)
         {
-            string a = HttpUtility.UrlDecode(payment.SuccessUrl);
-            string b = HttpUtility.UrlDecode(payment.CancelationUrl);
-
             var options = new Stripe.Checkout.SessionCreateOptions
             {
                 LineItems = new List<SessionLineItemOptions>
@@ -40,7 +39,7 @@ namespace CarSharingApp.PublicApi.Controllers
                                 Name = $"Order for {payment.VehicleName}",
                                 Images = new List<string> { StripePaymentProcessImage },
                                 Description = $"You are going to pay for the use of the «{payment.VehicleName}» transport within the specified period: " +
-                                $"from {TimeZoneInfo.ConvertTimeToUtc(payment.RentalStartsDateTimeUTC):dddd, dd MMMM yyyy HH:mm} till {TimeZoneInfo.ConvertTimeToUtc(payment.RentalEndsDateTimeUTC):dddd, dd MMMM yyyy HH:mm}. " +
+                                $"from {DateTime.Parse(payment.RentalStartsDateTimeUTC, CultureInfo.InvariantCulture):dddd, dd MMMM yyyy HH:mm} till {DateTime.Parse(payment.RentalEndsDateTimeUTC, CultureInfo.InvariantCulture):dddd, dd MMMM yyyy HH:mm}. " +
                                 $"For the overdue time, the customer is responsible to the vehicle's owner."
                             },
                         },
@@ -59,7 +58,7 @@ namespace CarSharingApp.PublicApi.Controllers
         }
 
         [Authorize]
-        [HttpGet("Session/Details/{id}")]
+        [HttpGet("session/{id}/details")]
         public async Task<IActionResult> GetStripePaymentInfo([FromRoute] string id)
         {
             var sessionService = new Stripe.Checkout.SessionService();

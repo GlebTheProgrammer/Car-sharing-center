@@ -18,7 +18,7 @@ namespace CarSharingApp.Web.Clients
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            string requestUri = $"Session/Details/{sessionId}";
+            string requestUri = $"session/{sessionId}/details";
 
             return await client.GetAsync(requestUri);
         }
@@ -27,7 +27,7 @@ namespace CarSharingApp.Web.Clients
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            string requestUri = MyCustomQueryBuilder.Build("Session", request);
+            string requestUri = MyCustomQueryBuilder.Build("session", request);
 
             return await client.GetAsync(requestUri);
         }

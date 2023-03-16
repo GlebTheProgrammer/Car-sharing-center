@@ -18,7 +18,7 @@ namespace CarSharingApp.Web.Clients
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            string requestUri = MyCustomQueryBuilder.Build("JWToken", request);
+            string requestUri = MyCustomQueryBuilder.Build("jwToken", request);
 
             return await client.GetAsync(requestUri);
         }

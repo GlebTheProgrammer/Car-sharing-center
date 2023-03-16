@@ -11,6 +11,7 @@ using CarSharingApp.Application.ServiceErrors;
 
 namespace CarSharingApp.PublicApi.Controllers
 {
+    [Route("api/accounts")]
     public sealed class AccountsController : ApiController
     {
         private readonly ICustomerService _customerService;
@@ -38,7 +39,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [HttpGet]
         [Authorize]
-        [Route("Customer/Information")]
+        [Route("customer/information")]
         public async Task<IActionResult> AccountData()
         {
             JwtClaims? jwtClaims = GetJwtClaims();
@@ -64,7 +65,7 @@ namespace CarSharingApp.PublicApi.Controllers
             return Ok(MapAccountDataResponse(customer, vehicles));
         }
 
-        [HttpGet("Customer/Notes/{type}")]
+        [HttpGet("customer/notes/{type}")]
         [Authorize]
         public async Task<IActionResult> AccountNotes([FromRoute] string type)
         {
@@ -106,7 +107,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [HttpGet]
         [Authorize]
-        [Route("Customer/Statistics")]
+        [Route("customer/statistics")]
         public async Task<IActionResult> AccountStatistics()
         {
             JwtClaims? jwtClaims = GetJwtClaims();
@@ -133,7 +134,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [HttpGet]
         [Authorize]
-        [Route("Customer/Vehicles")]
+        [Route("customer/vehicles")]
         public async Task<IActionResult> AccountVehicles()
         {
             JwtClaims? jwtClaims = GetJwtClaims();
@@ -152,7 +153,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [HttpGet]
         [Authorize]
-        [Route("Customer/Rentals")]
+        [Route("customer/rentals")]
         public async Task<IActionResult> AccountRentals()
         {
             JwtClaims? jwtClaims = GetJwtClaims();

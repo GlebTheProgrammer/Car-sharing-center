@@ -14,6 +14,7 @@ using System.Globalization;
 
 namespace CarSharingApp.PublicApi.Controllers
 {
+    [Route("api/vehicles")]
     public sealed class VehiclesController : ApiController
     {
         private readonly IVehicleService _vehicleService;
@@ -71,7 +72,7 @@ namespace CarSharingApp.PublicApi.Controllers
                 errors => Problem(errors));
         }
 
-        [HttpGet("Information/{id:guid}")]
+        [HttpGet("{id:guid}/information")]
         [Authorize]
         public async Task<IActionResult> GetVehicleInformation([FromRoute] Guid id)
         {
@@ -103,7 +104,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        [Route("MapRepresentation")]
+        [Route("mapRepresentation")]
         public async Task<ActionResult> GetVehiclesMapRepresentation()
         {
             List<Vehicle> getVehiclesResult = await _vehicleService.GetAllAsync();
@@ -113,7 +114,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        [Route("CatalogRepresentation")]
+        [Route("catalogRepresentation")]
         public async Task<IActionResult> GetVehiclesCatalogRepresentation()
         {
             List<Vehicle> getVehiclesResult = await _vehicleService.GetAllAsync();
@@ -123,7 +124,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        [Route("CriteriaCatalogRepresentation")]
+        [Route("criteriaCatalogRepresentation")]
         public async Task<IActionResult> GetVehiclesByCriteria([FromQuery] GetVehiclesByCriteriaRequest request)
         {
             List<Vehicle> getVehiclesResult = await _vehicleService.GetAllAsync();
@@ -190,7 +191,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        [Route("NearbyMapRepresentation")]
+        [Route("nearbyMapRepresentation")]
         public async Task<IActionResult> GetNearbyVehiclesMapRepresentation([FromQuery] GetNearbyVehiclesMapRepresentationRequest request)
         {
             List<Vehicle> getVehiclesResult = await _vehicleService.GetAllAsync();
@@ -263,7 +264,7 @@ namespace CarSharingApp.PublicApi.Controllers
             return NoContent();
         }
 
-        [HttpPut("Status/{id:guid}")]
+        [HttpPut("{id:guid}/status")]
         [Authorize]
         public async Task<IActionResult> UpdateVehicleStatus([FromRoute] Guid id, 
                                                              [FromBody] UpdateVehicleStatusRequest request)

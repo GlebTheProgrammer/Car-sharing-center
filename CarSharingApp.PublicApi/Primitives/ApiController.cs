@@ -8,7 +8,6 @@ using System.Security.Claims;
 namespace CarSharingApp.PublicApi.Primitives
 {
     [ApiController]
-    [Route("[controller]")]
     public abstract class ApiController : ControllerBase
     {
         protected IActionResult Problem(List<Error> errors)

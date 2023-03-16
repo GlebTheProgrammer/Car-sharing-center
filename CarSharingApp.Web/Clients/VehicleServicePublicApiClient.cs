@@ -34,7 +34,7 @@ namespace CarSharingApp.Web.Clients
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            string requestUri = MyCustomQueryBuilder.Build("NearbyMapRepresentation", request);
+            string requestUri = MyCustomQueryBuilder.Build("nearbyMapRepresentation", request);
             
             return await client.GetAsync(requestUri);
         }
@@ -43,21 +43,21 @@ namespace CarSharingApp.Web.Clients
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            return await client.GetAsync("CatalogRepresentation");
+            return await client.GetAsync("catalogRepresentation");
         }
 
         public async Task<HttpResponseMessage> GetAllApprovedAndPublishedVehiclesMapRepresentation()
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            return await client.GetAsync("MapRepresentation");
+            return await client.GetAsync("mapRepresentation");
         }
 
         public async Task<HttpResponseMessage> GetAllApprovedAndPublishedVehiclesWithFilterCatalogRepresentation(GetVehiclesByCriteriaRequest request)
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            string requestUri = MyCustomQueryBuilder.Build("CriteriaCatalogRepresentation", request);
+            string requestUri = MyCustomQueryBuilder.Build("criteriaCatalogRepresentation", request);
 
             return await client.GetAsync(requestUri);
         }
@@ -66,7 +66,7 @@ namespace CarSharingApp.Web.Clients
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            string requestUri = $"Information/{id}";
+            string requestUri = $"{id}/information";
 
             return await client.GetAsync(requestUri);
         }
@@ -75,7 +75,7 @@ namespace CarSharingApp.Web.Clients
         {
             var client = CreateNewClientInstance(clientIdentifier);
             
-            string requestUri = $"Status/{id}";
+            string requestUri = $"{id}/status";
 
             JsonContent content = JsonContent.Create(request);
 

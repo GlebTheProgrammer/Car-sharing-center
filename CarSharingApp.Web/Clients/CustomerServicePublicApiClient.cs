@@ -26,7 +26,7 @@ namespace CarSharingApp.Web.Clients
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            return await client.GetAsync("Template");
+            return await client.GetAsync("template");
         }
     }
 }

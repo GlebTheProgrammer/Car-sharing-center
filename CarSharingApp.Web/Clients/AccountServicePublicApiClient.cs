@@ -16,7 +16,7 @@ namespace CarSharingApp.Web.Clients
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            string requestUri = $"Customer/Notes/{type}";
+            string requestUri = $"customer/notes/{type}";
 
             return await client.GetAsync(requestUri);
         }
@@ -25,28 +25,28 @@ namespace CarSharingApp.Web.Clients
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            return await client.GetAsync("Customer/Information");
+            return await client.GetAsync("customer/information");
         }
 
         public async Task<HttpResponseMessage> GetCustomerAccountStatistics()
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            return await client.GetAsync("Customer/Statistics");
+            return await client.GetAsync("customer/statistics");
         }
 
         public async Task<HttpResponseMessage> GetCustomerRentalsAccountRepresentation()
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            return await client.GetAsync("Customer/Rentals");
+            return await client.GetAsync("customer/rentals");
         }
 
         public async Task<HttpResponseMessage> GetCustomerVehiclesAccountRepresentation()
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            return await client.GetAsync("Customer/Vehicles");
+            return await client.GetAsync("customer/vehicles");
         }
     }
 }

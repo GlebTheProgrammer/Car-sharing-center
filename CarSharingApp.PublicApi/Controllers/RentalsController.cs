@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CarSharingApp.PublicApi.Controllers
 {
+    [Route("api/rentals")]
     public sealed class RentalsController : ApiController
     {
         private readonly IRentalsService _rentalsService;
@@ -123,7 +124,7 @@ namespace CarSharingApp.PublicApi.Controllers
                 errors => Problem(errors));
         }
 
-        [HttpPut("Finish/{id:guid}")]
+        [HttpPut("{id:guid}/finish")]
         [Authorize]
         public async Task<IActionResult> FinishExistingRental([FromRoute] Guid id)
         {

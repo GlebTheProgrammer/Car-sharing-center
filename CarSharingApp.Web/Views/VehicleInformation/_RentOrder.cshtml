@@ -65,33 +65,6 @@
                         });
                     </script>
 
-                    <input type="text" name="datetimesez" />
-
-                    <script>
-                        $(function () {
-                            $('input[name="datetimesez"]').daterangepicker({
-                                ranges: {
-                                    '1 Hour': [moment().startOf('hour').add(1, 'hour'), moment().startOf('hour').add(2, 'hour')],
-                                    '6 Hours': [moment().startOf('hour').add(1, 'hour'), moment().startOf('hour').add(7, 'hour')],
-                                    '12 Hours': [moment().startOf('hour').add(1, 'hour'), moment().startOf('hour').add(13, 'hour')],
-                                    '1 Day': [moment().startOf('hour').add(1, 'hour'), moment().startOf('hour').add(25, 'hour')],
-                                    '3 Days': [moment().startOf('hour').add(1, 'hour'), moment().startOf('hour').add(73, 'hour')],
-                                    '1 Week': [moment().startOf('hour').add(1, 'hour'), moment().startOf('hour').add(169, 'hour')]
-                                },
-                                timePicker: true,
-                                startDate: moment().startOf('hour').add(1, 'hour'),
-                                endDate: moment().startOf('hour').add(2, 'hour'),
-                                minDate: moment().startOf('hour').add(1, 'hour'),
-                                maxDate: moment().startOf('hour').add(7, 'day').add(1, 'hour'),
-                                timePickerIncrement: 60,
-                                timePicker24Hour: true,
-                                locale: {
-                                    format: 'M/DD hh:mm A'
-                                }
-                            });
-                        });
-                    </script>
-
                     <p class="mb-0" style="color: #257cfd;">Payment summary</p>
                     <hr class="mt-2 mb-4"
                         style="height: 0; background-color: transparent; opacity: .75; border-top: 2px dashed #9e9e9e;">
@@ -119,8 +92,12 @@
                         <input asp-for="TariffPerHour" class="visually-hidden" type="number" id="tariffHourInput" value="@Model.TariffPerHour" readonly />
                         <input asp-for="TariffPerDay" class="visually-hidden" type="number" id="tariffDayInput" value="@Model.TariffPerDay" readonly />
 
-                        <input asp-for="RentalStartsDateTimeLocalStr" class="visually-hidden" type="text" id="rentalStartsDateTimeLocalStrInput" value="@DateTime.Now.AddMinutes(60)" readonly />
-                        <input asp-for="RentalEndsDateTimeLocalStr" class="visually-hidden" type="text" id="rentalEndsDateTimeLocalStrInput" value="@DateTime.Now.AddMinutes(60)" readonly />
+                        @{
+                            DateTime utcNow = DateTime.UtcNow;
+                        }
+
+                        <input asp-for="RentalStartsDateTimeLocalStr" class="visually-hidden" type="text" id="rentalStartsDateTimeLocalStrInput" value="@(TimeZoneInfo.ConvertTimeFromUtc(new DateTime(utcNow.Year, utcNow.Month, utcNow.Day, utcNow.Hour, 0, 0), TimeZoneInfo.Local).AddHours(1).ToString("HH:mm dd MMMM yyyy", System.Globalization.CultureInfo.InvariantCulture))" />
+                        <input asp-for="RentalEndsDateTimeLocalStr" class="visually-hidden" type="text" id="rentalEndsDateTimeLocalStrInput" value="@(TimeZoneInfo.ConvertTimeFromUtc(new DateTime(utcNow.Year, utcNow.Month, utcNow.Day, utcNow.Hour, 0, 0), TimeZoneInfo.Local).AddHours(2).ToString("HH:mm dd MMMM yyyy", System.Globalization.CultureInfo.InvariantCulture))" />
                     </div>
 
                 </div>
@@ -143,6 +120,8 @@
         var datetimesEndsStr = $('#datetimesEnds').data('daterangepicker').endDate.toString();
         var vehicleHourlyTariff = parseInt("@Model.TariffPerHour");
         var vehicleDailyTariff = parseInt("@Model.TariffPerDay");
+
+        document.getElementById("datetimesEnds").value = $('#datetimesEnds').data('daterangepicker').endDate.format('HH:mm DD MMMM YYYY');
 
         CalculateVehicleUsagePeriodAndSetUpAllInputs(datetimesStartsStr, datetimesEndsStr, vehicleHourlyTariff, vehicleDailyTariff);
     });
