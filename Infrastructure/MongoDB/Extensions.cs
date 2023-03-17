@@ -16,8 +16,9 @@ namespace CarSharingApp.Infrastructure.MongoDB
         public static IServiceCollection AddMongo(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment hostEnvironment)
         {
             BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
-            
-            services.AddSingleton(s =>
+
+            //services.AddSingleton(s =>
+            services.AddTransient(s =>
             {
                 MongoClient mongoClient = new MongoClient();
 
@@ -34,7 +35,8 @@ namespace CarSharingApp.Infrastructure.MongoDB
 
         public static IServiceCollection AddMongoRepository<T>(this IServiceCollection services, string collectionName) where T : Entity
         {
-            services.AddSingleton<IRepository<T>>(s =>
+            //services.AddSingleton<IRepository<T>>(s =>
+            services.AddTransient<IRepository<T>>(s =>
             {
                 var database = s.GetService<IMongoDatabase>();
                 return new MongoRepository<T>(database, collectionName);

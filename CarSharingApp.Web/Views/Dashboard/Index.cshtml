@@ -16,7 +16,7 @@
                             <label class="mt-2" style="font-size: 15px;">@Model.Customer.Email</label>
                             <label style="font-size: 15px;">@($"{Model.Customer.Country}, {Model.Customer.City}, {Model.Customer.StreetAddress} {Model.Customer.AptSuiteEtc}")</label>
                             <label style="font-size: 15px;">@Model.Customer.PhoneNumber</label>
-                            <button class="btn btn-sm btn-outline-secondary mt-3" type="button" style="width: 200px;" data-toggle="collapse">
+                            <button class="btn btn-sm btn-outline-secondary mt-3" type="button" style="width: 200px;" data-toggle="collapse" onclick="location.href='@Url.Action("Index","EditCustomerData")'">
                                 Edit account info
                                 <i class="fa-solid fa-square-pen ms-2"></i>
                             </button>

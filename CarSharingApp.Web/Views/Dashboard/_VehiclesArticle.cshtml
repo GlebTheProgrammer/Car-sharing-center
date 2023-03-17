@@ -74,7 +74,7 @@
                                 <td class="text-center">@vehicle.Name</td>
                                 <td class="text-center">$@(vehicle.HourlyPrice.Length > 3 ? vehicle.HourlyPrice.Insert(vehicle.HourlyPrice.Length - 3, ",") : vehicle.HourlyPrice)</td>
                                 <td class="text-center">$@(vehicle.DailyPrice.Length > 3 ? vehicle.DailyPrice.Insert(vehicle.DailyPrice.Length - 3, ",") : vehicle.DailyPrice)</td>
-                                <td class="text-center">@vehicle.PublishedTime.ToString("dd/MM/yyyy")</td>
+                                <td class="text-center">@(TimeZoneInfo.ConvertTimeFromUtc(vehicle.PublishedTime, TimeZoneInfo.Local).ToString("dd/MM/yyyy"))</td>
                                 <td class="text-center">@vehicle.TimesOrdered</td>
 
                                 @if (!vehicle.IsConfirmedByAdmin)

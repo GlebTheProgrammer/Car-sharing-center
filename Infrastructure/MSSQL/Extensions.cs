@@ -22,7 +22,8 @@ namespace CarSharingApp.Infrastructure.MSSQL
 
         public static IServiceCollection AddMSSQLRepository<T>(this IServiceCollection services) where T : Entity
         {
-            services.AddSingleton<IRepository<T>, MsSqlRepository<T>>();
+            //services.AddSingleton<IRepository<T>, MsSqlRepository<T>>();
+            services.AddTransient<IRepository<T>, MsSqlRepository<T>>();
 
             return services;
         }

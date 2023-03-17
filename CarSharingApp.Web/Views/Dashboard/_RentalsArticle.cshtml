@@ -76,20 +76,20 @@
                                 <td class="text-center"><img src="@(_configuration["AzureBlobStorage:VehiclesImagesPath"] + rental.VehicleImage)" class="rounded-circle" style="max-height: 30px; width: auto;" loading="lazy" /></td>
                                 <td class="text-center">@rental.VehicleName</td>
                                 <td class="text-center">$@(rental.Amount)</td>
-                                <td class="text-center">@rental.RentalMadeDateTime.ToString("dd/MM/yyyy")</td>
-                                <td class="text-center">@rental.StartsDateTime.ToString("dd/MM/yyyy hh:mm tt")</td>
+                                <td class="text-center">@(TimeZoneInfo.ConvertTimeFromUtc(rental.RentalMadeDateTime, TimeZoneInfo.Local).ToString("dd/MM/yyyy"))</td>
+                                <td class="text-center">@(TimeZoneInfo.ConvertTimeFromUtc(rental.StartsDateTime, TimeZoneInfo.Local).ToString("dd/MM/yyyy hh:mm tt"))</td>
                                 @{
-                                    DateTime now = DateTime.Now;
+                                    DateTime utcNow = DateTime.UtcNow;
                                     System.Text.StringBuilder builder = new System.Text.StringBuilder();
-                                    if (now > rental.StartsDateTime && now < rental.ExpiresDateTime && rental.IsActive)
+                                    if (utcNow > rental.StartsDateTime && utcNow < rental.ExpiresDateTime && rental.IsActive)
                                     {
-                                        TimeSpan span = rental.ExpiresDateTime.Subtract(now);
+                                        TimeSpan span = rental.ExpiresDateTime.Subtract(utcNow);
                                         builder.Append(span.Days == 0 ? "" : $"{span.Days} days ");
                                         builder.Append(span.Hours == 0 ? "" : $"{span.Hours} hours ");
                                         builder.Append(span.Minutes == 0 ? "" : $"{span.Minutes + 1} min ");
                                         builder.Append(span.Days == 0 && span.Hours == 0 && span.Minutes == 0 && span.Seconds != 0 ? "1 min" : "");
                                     }
-                                    else if (now < rental.StartsDateTime && rental.IsActive)
+                                    else if (utcNow < rental.StartsDateTime && rental.IsActive)
                                     {
                                         TimeSpan span = rental.ExpiresDateTime.Subtract(rental.StartsDateTime);
                                         builder.Append(span.Days == 0 ? "" : $"{span.Days} days ");
@@ -103,9 +103,9 @@
                                     }
                                     <td class="text-center">@builder.ToString()</td>
                                 }
-                                <td class="text-center">@rental.ExpiresDateTime.ToString("dd/MM/yyyy hh:mm tt")</td>
+                                <td class="text-center">@(TimeZoneInfo.ConvertTimeFromUtc(rental.ExpiresDateTime, TimeZoneInfo.Local).ToString("dd/MM/yyyy hh:mm tt"))</td>
 
-                                @if (rental.IsActive && DateTime.Now < rental.StartsDateTime)
+                                @if (rental.IsActive && DateTime.UtcNow < rental.StartsDateTime)
                                 {
                                     <!--Rental has not started yet-->
                                     <td class="text-center"><div class="badge bg-primary text-white rounded-pill">Forthcoming</div></td>
@@ -121,7 +121,7 @@
                                         </div>
                                     </td>
                                 }
-                                else if (rental.IsActive && DateTime.Now >= rental.StartsDateTime && (rental.ExpiresDateTime - DateTime.Now).TotalMinutes >= 60)
+                                else if (rental.IsActive && DateTime.UtcNow >= rental.StartsDateTime && (rental.ExpiresDateTime - DateTime.UtcNow).TotalMinutes >= 60)
                                 {
                                      <!--Rental has started-->
                                     <td class="text-center"><div class="badge bg-success text-white rounded-pill">Active</div></td>
@@ -138,7 +138,7 @@
                                         </div>
                                     </td>
                                 }
-                                else if (rental.IsActive && DateTime.Now >= rental.StartsDateTime && (rental.ExpiresDateTime - DateTime.Now).TotalMinutes < 60)
+                                else if (rental.IsActive && DateTime.UtcNow >= rental.StartsDateTime && (rental.ExpiresDateTime - DateTime.UtcNow).TotalMinutes < 60)
                                 {
                                     <!--Rental is gonna be expired in less then 60 minutes-->
                                     <td class="text-center"><div class="badge bg-warning text-white rounded-pill">Expires</div></td>

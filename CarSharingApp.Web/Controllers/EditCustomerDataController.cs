@@ -1,26 +1,33 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using CarSharingApp.Application.Contracts.Customer;
+using CarSharingApp.Web.Clients.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarSharingApp.Controllers
 {
     [Authorize]
+    [Route("edit/information")]
     public sealed class EditCustomerDataController : Controller
     {
-        //private readonly MongoDbService _mongoDbService;
+        private readonly ICustomerServicePublicApiClient _customerServiceClient;
 
-        //public EditCustomerDataController(MongoDbService mongoDbService)
-        //{
-        //    _mongoDbService = mongoDbService;
-        //}
+        public EditCustomerDataController(ICustomerServicePublicApiClient customerServiceClient)
+        {
+            _customerServiceClient = customerServiceClient;
+        }
 
-        //public async Task<IActionResult> Index()
-        //{
-        //    string customerId = new JwtSecurityTokenHandler().ReadJwtToken(HttpContext.Session.GetString("JWToken")).Claims.First(c => c.Type == JwtRegisteredClaimNames.Sub).Value;
+        public async Task<IActionResult> Index()
+        {
 
-        //    CustomerEditModel customerEditModel = await _mongoDbService.GetCustomer_EditRepresentation(customerId);
+            var response = await _customerServiceClient.GetCustomerInformation();
 
-        //    return View(customerEditModel);
-        //}
+            response.EnsureSuccessStatusCode();
+
+            CustomerResponse responseModel = await response.Content.ReadFromJsonAsync<CustomerResponse>()
+                ?? throw new NullReferenceException(nameof(responseModel));
+
+            return View(responseModel);
+        }
 
         //public async Task<IActionResult> EditCustomerData(CustomerEditModel customerEditModel)
         //{

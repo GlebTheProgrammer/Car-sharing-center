@@ -1,6 +1,7 @@
 ﻿using CarSharingApp.Application.Contracts.Customer;
 using CarSharingApp.Application.Interfaces;
 using CarSharingApp.Domain.Entities;
+using CarSharingApp.Infrastructure.Authentication;
 using CarSharingApp.PublicApi.Primitives;
 using ErrorOr;
 using Microsoft.AspNetCore.Authorization;
@@ -76,6 +77,25 @@ namespace CarSharingApp.PublicApi.Controllers
         public async Task<IActionResult> GetCustomer([FromRoute] Guid id)
         {
             ErrorOr<Customer> getCustomerResult = await _customerService.GetCustomerAsync(id);
+
+            return getCustomerResult.Match(
+                customer => Ok(MapCustomerResponse(customer)),
+                errors => Problem(errors));
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("current/information")]
+        public async Task<IActionResult> GetCustomerInformation()
+        {
+            JwtClaims? jwtClaims = GetJwtClaims();
+
+            if (jwtClaims is null)
+            {
+                return Forbid();
+            }
+
+            ErrorOr<Customer> getCustomerResult = await _customerService.GetCustomerAsync(Guid.Parse(jwtClaims.Id));
 
             return getCustomerResult.Match(
                 customer => Ok(MapCustomerResponse(customer)),

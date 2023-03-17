@@ -96,8 +96,8 @@
                             DateTime utcNow = DateTime.UtcNow;
                         }
 
-                        <input asp-for="RentalStartsDateTimeLocalStr" class="visually-hidden" type="text" id="rentalStartsDateTimeLocalStrInput" value="@(TimeZoneInfo.ConvertTimeFromUtc(new DateTime(utcNow.Year, utcNow.Month, utcNow.Day, utcNow.Hour, 0, 0), TimeZoneInfo.Local).AddHours(1).ToString("HH:mm dd MMMM yyyy", System.Globalization.CultureInfo.InvariantCulture))" />
-                        <input asp-for="RentalEndsDateTimeLocalStr" class="visually-hidden" type="text" id="rentalEndsDateTimeLocalStrInput" value="@(TimeZoneInfo.ConvertTimeFromUtc(new DateTime(utcNow.Year, utcNow.Month, utcNow.Day, utcNow.Hour, 0, 0), TimeZoneInfo.Local).AddHours(2).ToString("HH:mm dd MMMM yyyy", System.Globalization.CultureInfo.InvariantCulture))" />
+                        <input asp-for="RentalStartsDateTimeLocalStr" class="visually-hidden" type="text" id="rentalStartsDateTimeLocalStrInput" value="@(TimeZoneInfo.ConvertTimeFromUtc(new DateTime(utcNow.Year, utcNow.Month, utcNow.Day, utcNow.Hour, 0, 0), TimeZoneInfo.Local).AddHours(1).ToString("ddd MMM dd yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture))" />
+                        <input asp-for="RentalEndsDateTimeLocalStr" class="visually-hidden" type="text" id="rentalEndsDateTimeLocalStrInput" value="@(TimeZoneInfo.ConvertTimeFromUtc(new DateTime(utcNow.Year, utcNow.Month, utcNow.Day, utcNow.Hour, 0, 0), TimeZoneInfo.Local).AddHours(2).ToString("ddd MMM dd yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture))" />
                     </div>
 
                 </div>

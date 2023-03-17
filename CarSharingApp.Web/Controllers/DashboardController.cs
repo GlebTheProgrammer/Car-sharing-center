@@ -5,7 +5,6 @@ using CarSharingApp.Web.Clients.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
-using CarSharingApp.Application.Contracts.Rental;
 
 namespace CarSharingApp.Web.Controllers
 {

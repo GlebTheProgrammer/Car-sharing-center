@@ -3,6 +3,7 @@ using CarSharingApp.Application.Contracts.Rental;
 using CarSharingApp.Application.Contracts.Vehicle;
 using CarSharingApp.Web.Clients.Interfaces;
 using CarSharingApp.Web.Extensions;
+using CarSharingApp.Web.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
@@ -51,10 +52,9 @@ namespace CarSharingApp.Controllers
         [Route("payment/session")]
         public async Task<IActionResult> CreateCheckoutSession([FromForm] StripePaymentSessionRequest paymentRequest)
         {
-            var rentalStartsLocalDateTimeStr = paymentRequest.RentalStartsDateTimeLocalStr.Substring(0, paymentRequest.RentalStartsDateTimeLocalStr.IndexOf("GMT")-1);
-            DateTime rentalStartsLocalDateTime = DateTime.ParseExact(rentalStartsLocalDateTimeStr, "ddd MMM dd yyyy HH:mm:ss", CultureInfo.InvariantCulture);
-            var rentalEndsLocalDateTimeStr = paymentRequest.RentalEndsDateTimeLocalStr.Substring(0, paymentRequest.RentalEndsDateTimeLocalStr.IndexOf("GMT") - 1);
-            DateTime rentalEndsLocalDateTime = DateTime.ParseExact(rentalEndsLocalDateTimeStr, "ddd MMM dd yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+            DateTime rentalStartsLocalDateTime = MyCustomDateTimeProvider.ParseFromViewIntoCurrentCustomerLocalDateTime(paymentRequest.RentalStartsDateTimeLocalStr);
+            DateTime rentalEndsLocalDateTime = MyCustomDateTimeProvider.ParseFromViewIntoCurrentCustomerLocalDateTime(paymentRequest.RentalEndsDateTimeLocalStr);
+
             string hostedUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}";
 
             string successResultUrl = HttpUtility.UrlEncode(hostedUrl + Url.Action("SuccessfulPayment", paymentRequest) 
@@ -143,10 +143,8 @@ namespace CarSharingApp.Controllers
         [NonAction]
         private CreateNewRentalRequest GenerateNewRequest(StripePaymentSessionRequest request, StripePaymentDetailsResponse paymentResponse)
         {
-            var rentalStartsLocalDateTimeStr = request.RentalStartsDateTimeLocalStr.Substring(0, request.RentalStartsDateTimeLocalStr.IndexOf("GMT") - 1);
-            DateTime rentalStartsUtcDateTime = TimeZoneInfo.ConvertTimeToUtc(DateTime.ParseExact(rentalStartsLocalDateTimeStr, "ddd MMM dd yyyy HH:mm:ss", CultureInfo.InvariantCulture), TimeZoneInfo.Local);
-            var rentalEndsLocalDateTimeStr = request.RentalEndsDateTimeLocalStr.Substring(0, request.RentalEndsDateTimeLocalStr.IndexOf("GMT") - 1);
-            DateTime rentalEndsUtcDateTime = TimeZoneInfo.ConvertTimeToUtc(DateTime.ParseExact(rentalEndsLocalDateTimeStr, "ddd MMM dd yyyy HH:mm:ss", CultureInfo.InvariantCulture), TimeZoneInfo.Local);
+            DateTime rentalStartsUtcDateTime = MyCustomDateTimeProvider.ParseFromLocalToUtcDateTime(request.RentalStartsDateTimeLocalStr);
+            DateTime rentalEndsUtcDateTime = MyCustomDateTimeProvider.ParseFromLocalToUtcDateTime(request.RentalEndsDateTimeLocalStr);
 
             return new CreateNewRentalRequest(
                 VehicleId: request.VehicleId,
