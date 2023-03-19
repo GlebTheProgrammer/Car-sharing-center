@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CarSharingApp.Controllers
 {
     [Authorize]
-    [Route("edit/information")]
+    [Route("customer/current/edit")]
     public sealed class EditCustomerDataController : Controller
     {
         private readonly ICustomerServicePublicApiClient _customerServiceClient;
@@ -16,41 +16,59 @@ namespace CarSharingApp.Controllers
             _customerServiceClient = customerServiceClient;
         }
 
+        [HttpGet]
+        [Route("information")]
         public async Task<IActionResult> Index()
         {
-
             var response = await _customerServiceClient.GetCustomerInformation();
 
             response.EnsureSuccessStatusCode();
 
-            CustomerResponse responseModel = await response.Content.ReadFromJsonAsync<CustomerResponse>()
+            CustomerDataResponse responseModel = await response.Content.ReadFromJsonAsync<CustomerDataResponse>()
                 ?? throw new NullReferenceException(nameof(responseModel));
 
             return View(responseModel);
         }
 
-        //public async Task<IActionResult> EditCustomerData(CustomerEditModel customerEditModel)
-        //{
-        //    if (!ModelState.IsValid)
-        //        return View("Index", customerEditModel);
+        [HttpPost]
+        [Route("information")]
+        public async Task<IActionResult> Edit([FromForm] CustomerDataResponse request)
+        {
+            if (!ModelState.IsValid)
+                return View("Index", request);
 
-        //    await _mongoDbService.EditCustomerData(customerEditModel);
+            var response = await _customerServiceClient.EditCustomerInformation(
+                MapUpdateCustomerInfoRequest(request));
 
-        //    HttpContext.Session.SetString("ChangedAccountData", "true");
+            HttpContext.Session.SetString("ChangedAccountData", "true");
 
-        //    return RedirectToAction("Index");
-        //}
+            return RedirectToAction("Index");
+        }
 
-        //[HttpPost]
-        //public async Task<IActionResult> ChangePassword(string newPassword)
-        //{
-        //    string userId = new JwtSecurityTokenHandler().ReadJwtToken(HttpContext.Session.GetString("JWToken")).Claims.First(c => c.Type == JwtRegisteredClaimNames.Sub).Value;
+        [HttpPost]
+        [Route("password")]
+        public IActionResult ChangePassword([FromForm] string newPassword)
+        {
 
-        //    await _mongoDbService.ChangePassword(userId, newPassword);
+            //string userId = new JwtSecurityTokenHandler().ReadJwtToken(HttpContext.Session.GetString("JWToken")).Claims.First(c => c.Type == JwtRegisteredClaimNames.Sub).Value;
 
-        //    HttpContext.Session.SetString("ChangedPassword", "true");
+            //await _mongoDbService.ChangePassword(userId, newPassword);
 
-        //    return RedirectToAction("Index");
-        //}
+            //HttpContext.Session.SetString("ChangedPassword", "true");
+
+            return RedirectToAction("Index");
+        }
+
+        private UpdateCustomerInfoRequest MapUpdateCustomerInfoRequest(CustomerDataResponse response)
+        {
+            return new UpdateCustomerInfoRequest(
+                response.FirstName,
+                response.LastName,
+                response.PhoneNumber,
+                response.DriverLicenseIdentifier,
+                response.HasAcceptedNewsSharing,
+                response.ProfileDescription,
+                response.Image);
+        }
     }
 }

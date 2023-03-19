@@ -7,5 +7,6 @@ namespace CarSharingApp.Web.Clients.Interfaces
         Task<HttpResponseMessage> CreateNewCustomer(CreateCustomerRequest request);
         Task<HttpResponseMessage> GetCreateNewCustomerRequestTemplate();
         Task<HttpResponseMessage> GetCustomerInformation();
+        Task<HttpResponseMessage> EditCustomerInformation(UpdateCustomerInfoRequest request);
     }
 }

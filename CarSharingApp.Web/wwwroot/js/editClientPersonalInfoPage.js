@@ -16,18 +16,29 @@ function ShowCancelChangesConfirmationAlert() {
 }
 
 // Function for working with change password
-function SubmitChangePasswordForm(e) {
-    e.preventDefault();
-    if (document.getElementById("newPassword").value === document.getElementById("confirmNewPassword").value) {
-        document.getElementById("ChangePasswordForm").submit();
+function SubmitChangePasswordForm(form) {
+    alert("yo");
+    if (!form.checkValidity()) {
+        alert("yo1");
+        event.preventDefault();
+        event.stopPropagation();
     }
     else {
-        document.getElementById("ConfirmPasswordError").setAttribute("class", "text-danger text-center");
+        alert("yo2");
+        event.preventDefault();
+        if (document.getElementById("newPassword").value === document.getElementById("confirmNewPassword").value) {
+            alert("yo3");
+            document.getElementById("ChangePasswordForm").submit();
+        }
+        else {
+            document.getElementById("confirmPassword").setAttribute("class", "form-control is-invalid");
+        }
     }
+    form.classList.add('was-validated');
 }
 
 // Function for setting input as the specific image src value
-function SetUpImageDependsOnTheModal() {
+function SetUpImageDependsOnTheModal(azureStoragePath) {
     var imageInput = document.getElementById("ModelUserImage");
     var userImage = document.getElementById("UserImage");
 
@@ -48,31 +59,31 @@ function SetUpImageDependsOnTheModal() {
     var image7Radio = document.getElementById("flexRadioPicture7");
 
     if (image1Radio.checked) {
-        imageInput.value = image1;
+        imageInput.value = image1.toString().replace(azureStoragePath, "");
         userImage.setAttribute("src", image1);
     }
     if (image2Radio.checked) {
-        imageInput.value = image2;
+        imageInput.value = image2.toString().replace(azureStoragePath, "");
         userImage.setAttribute("src", image2);
     }
     if (image3Radio.checked) {
-        imageInput.value = image3;
+        imageInput.value = image3.toString().replace(azureStoragePath, "");
         userImage.setAttribute("src", image3);
     }
     if (image4Radio.checked) {
-        imageInput.value = image4;
+        imageInput.value = image4.toString().replace(azureStoragePath, "");
         userImage.setAttribute("src", image4);
     }
     if (image5Radio.checked) {
-        imageInput.value = image5;
+        imageInput.value = image5.toString().replace(azureStoragePath, "");
         userImage.setAttribute("src", image5);
     }
     if (image6Radio.checked) {
-        imageInput.value = image6;
+        imageInput.value = image6.toString().replace(azureStoragePath, "");
         userImage.setAttribute("src", image6);
     }
     if (image7Radio.checked) {
-        imageInput.value = image7;
+        imageInput.value = image7.toString().replace(azureStoragePath, "");
         userImage.setAttribute("src", image7);
     }
 }
@@ -109,21 +120,29 @@ function ShowInputField(target) {
 }
 
 // Function for hiding input field
-function HideInputField(target) {
+function HideInputField(target, form) {
 
-    var text = document.getElementById(target + "Text");
-    var changeBtn = document.getElementById("Change" + target + "Btn");
-    var input = document.getElementById(target + "Input");
-    var saveBtn = document.getElementById("Save" + target + "Btn");
+    if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+    } else {
+        var text = document.getElementById(target + "Text");
+        var changeBtn = document.getElementById("Change" + target + "Btn");
+        var input = document.getElementById(target + "Input");
+        var saveBtn = document.getElementById("Save" + target + "Btn");
 
-    text.textContent = input.value;
-    SetModelValue(target);
+        text.textContent = input.value;
+        SetModelValue(target);
 
-    input.setAttribute("class", "visually-hidden");
-    saveBtn.setAttribute("class", "visually-hidden");
+        input.setAttribute("class", "visually-hidden");
+        saveBtn.setAttribute("class", "visually-hidden");
 
-    text.setAttribute("class", "text-muted mb-0");
-    changeBtn.setAttribute("class", "btn btn-outline-warning");
+        text.setAttribute("class", "text-muted mb-0");
+        changeBtn.setAttribute("class", "btn btn-outline-warning");
+
+        event.preventDefault();
+    }
+    form.classList.add('was-validated');
 }
 
 // Function for setting form input value

@@ -98,7 +98,7 @@ namespace CarSharingApp.PublicApi.Controllers
             ErrorOr<Customer> getCustomerResult = await _customerService.GetCustomerAsync(Guid.Parse(jwtClaims.Id));
 
             return getCustomerResult.Match(
-                customer => Ok(MapCustomerResponse(customer)),
+                customer => Ok(MapCustomerDataResponse(customer)),
                 errors => Problem(errors));
         }
         
@@ -112,6 +112,43 @@ namespace CarSharingApp.PublicApi.Controllers
             if (getCustomerResult.IsError)
             {
                 _logger.LogInformation("Failed finding customer with ID: {customerId} when trying to update data.", id);
+                return Problem(getCustomerResult.Errors);
+            }
+
+            Customer notUpdatedCustomerYet = getCustomerResult.Value;
+
+            ErrorOr<Customer> requestToCustomerResult = _customerService.From(notUpdatedCustomerYet, request);
+
+            if (requestToCustomerResult.IsError)
+            {
+                return Problem(requestToCustomerResult.Errors);
+            }
+
+            Customer customer = requestToCustomerResult.Value;
+
+            await _customerService.UpdateCustomerInfoAsync(customer);
+
+            _logger.LogInformation("Customer with ID: {registeredCustomerId} has successfully updated his data.", customer.Id);
+
+            return NoContent();
+        }
+
+        [HttpPut("current/information")]
+        [Authorize]
+        public async Task<IActionResult> UpdateCurrentCustomerInfo([FromBody] UpdateCustomerInfoRequest request)
+        {
+            JwtClaims? jwtClaims = GetJwtClaims();
+
+            if (jwtClaims is null)
+            {
+                return Forbid();
+            }
+
+            ErrorOr<Customer> getCustomerResult = await _customerService.GetCustomerAsync(Guid.Parse(jwtClaims.Id));
+
+            if (getCustomerResult.IsError)
+            {
+                _logger.LogInformation("Failed finding customer with ID: {customerId} when trying to update data.", jwtClaims.Id);
                 return Problem(getCustomerResult.Errors);
             }
 
@@ -236,6 +273,21 @@ namespace CarSharingApp.PublicApi.Controllers
                 customer.Statistics,
                 customer.HasAcceptedNewsSharing,
                 customer.Credentials);
+        }
+
+        [NonAction]
+        private static CustomerDataResponse MapCustomerDataResponse(Customer customer)
+        {
+            return new CustomerDataResponse(
+                customer.FirstName,
+                customer.LastName,
+                customer.PhoneNumber,
+                customer.DriverLicenseIdentifier,
+                customer.Profile.Description,
+                customer.Profile.Image,
+                customer.Credentials.Login,
+                customer.Credentials.Email,
+                customer.HasAcceptedNewsSharing);
         }
 
         #endregion

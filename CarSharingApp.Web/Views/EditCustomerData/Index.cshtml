@@ -1,6 +1,6 @@
 ﻿@inject IConfiguration _configuration;
 
-@model CarSharingApp.Application.Contracts.Customer.CustomerResponse
+@model CarSharingApp.Application.Contracts.Customer.CustomerDataResponse
 
 
 <section>
@@ -9,7 +9,7 @@
             <div class="col-lg-4">
                 <div class="card mb-4 mt-3">
                     <div class="card-body text-center">
-                        <img id="UserImage" src="@(string.Join("", _configuration["AzureBlobStorage:CustomersAccountImagesPath"], Model.Profile.Image))" alt="avatar"
+                        <img id="UserImage" src="@(string.Join("", _configuration["AzureBlobStorage:CustomersAccountImagesPath"], Model.Image))" alt="avatar"
                              class="rounded-circle img-fluid" style="width: 150px;">
                         <h5 class="mt-2 mb-3">Account Image</h5>
                         <div class="d-flex justify-content-center flex-column mb-2">
@@ -28,28 +28,28 @@
                                         <div class="modal-body">
                                             <div class="container marketing mt-2">
                                                 <div class="row">
-                                                    <div class="col-lg-4 text-center">
-                                                        <img id="Image1" class="rounded-circle" src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1.webp" width="140" height="140">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioPicture1">
+                                                    <div class="col-lg-4 text-center mb-3">
+                                                        <img id="Image1" name="image1.png" class="rounded-circle" src="@(string.Join("", _configuration["AzureBlobStorage:CustomersAccountImagesPath"], "image1.png"))" width="140" height="140">
+                                                        <div class="form-check d-flex flex-row justify-content-center mt-2">
+                                                            <input class="form-check-input me-2" type="radio" name="flexRadioDefault" id="flexRadioPicture1">
                                                             <label class="form-check-label" for="flexRadioPicture1">
                                                                 Picture 1
                                                             </label>
                                                         </div>
                                                     </div>
-                                                    <div class="col-lg-4 text-center">
-                                                        <img id="Image2" class="rounded-circle" src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2.webp" width="140" height="140">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioPicture2">
+                                                    <div class="col-lg-4 text-center mb-3">
+                                                        <img id="Image2" name="image2.png" class="rounded-circle" src="@(string.Join("", _configuration["AzureBlobStorage:CustomersAccountImagesPath"], "image2.png"))" width="140" height="140">
+                                                        <div class="form-check d-flex justify-content-center mt-2">
+                                                            <input class="form-check-input me-2" type="radio" name="flexRadioDefault" id="flexRadioPicture2">
                                                             <label class="form-check-label" for="flexRadioPicture2">
                                                                 Picture 2
                                                             </label>
                                                         </div>
                                                     </div>
-                                                    <div class="col-lg-4 text-center">
-                                                        <img id="Image3" class="rounded-circle" src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" width="140" height="140">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioPicture3">
+                                                    <div class="col-lg-4 text-center mb-3">
+                                                        <img id="Image3" name="image3.png" class="rounded-circle" src="@(string.Join("", _configuration["AzureBlobStorage:CustomersAccountImagesPath"], "image3.png"))" width="140" height="140">
+                                                        <div class="form-check d-flex justify-content-center mt-2">
+                                                            <input class="form-check-input me-2" type="radio" name="flexRadioDefault" id="flexRadioPicture3">
                                                             <label class="form-check-label" for="flexRadioPicture3">
                                                                 Picture 3
                                                             </label>
@@ -57,28 +57,28 @@
                                                     </div>
                                                 </div>
                                                 <div class="row mt-2">
-                                                    <div class="col-lg-4 text-center">
-                                                        <img id="Image4" class="rounded-circle" src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava4.webp" width="140" height="140">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioPicture4">
+                                                    <div class="col-lg-4 text-center mb-3">
+                                                        <img id="Image4" name="image4.png" class="rounded-circle" src="@(string.Join("", _configuration["AzureBlobStorage:CustomersAccountImagesPath"], "image4.png"))" width="140" height="140">
+                                                        <div class="form-check d-flex justify-content-center mt-2">
+                                                            <input class="form-check-input me-2" type="radio" name="flexRadioDefault" id="flexRadioPicture4">
                                                             <label class="form-check-label" for="flexRadioPicture4">
                                                                 Picture 4
                                                             </label>
                                                         </div>
                                                     </div>
-                                                    <div class="col-lg-4 text-center">
-                                                        <img id="Image5" class="rounded-circle" src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava5.webp" width="140" height="140">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioPicture5">
+                                                    <div class="col-lg-4 text-center mb-3">
+                                                        <img id="Image5" name="image5.png" class="rounded-circle" src="@(string.Join("", _configuration["AzureBlobStorage:CustomersAccountImagesPath"], "image5.png"))" width="140" height="140">
+                                                        <div class="form-check d-flex justify-content-center mt-2">
+                                                            <input class="form-check-input me-2" type="radio" name="flexRadioDefault" id="flexRadioPicture5">
                                                             <label class="form-check-label" for="flexRadioPicture5">
                                                                 Picture 5
                                                             </label>
                                                         </div>
                                                     </div>
-                                                    <div class="col-lg-4 text-center">
-                                                        <img id="Image6" class="rounded-circle" src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava6.webp" width="140" height="140">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioPicture6">
+                                                    <div class="col-lg-4 text-center mb-3">
+                                                        <img id="Image6" name="image6.png" class="rounded-circle" src="@(string.Join("", _configuration["AzureBlobStorage:CustomersAccountImagesPath"], "image6.png"))" width="140" height="140">
+                                                        <div class="form-check d-flex justify-content-center mt-2">
+                                                            <input class="form-check-input me-2" type="radio" name="flexRadioDefault" id="flexRadioPicture6">
                                                             <label class="form-check-label" for="flexRadioPicture6">
                                                                 Picture 6
                                                             </label>
@@ -86,10 +86,10 @@
                                                     </div>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-lg-12 text-center">
-                                                        <img id="Image7" class="rounded-circle" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTdmrjoiXGVFEcd1cX9Arb1itXTr2u8EKNpw&usqp=CAU" width="140" height="140">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioPicture7">
+                                                    <div class="col-lg-12 text-center mb-3">
+                                                        <img id="Image7" name="image7.png" class="rounded-circle" src="@(string.Join("", _configuration["AzureBlobStorage:CustomersAccountImagesPath"], "image7.png"))" width="140" height="140">
+                                                        <div class="form-check d-flex justify-content-center mt-2">
+                                                            <input class="form-check-input me-2" type="radio" name="flexRadioDefault" id="flexRadioPicture7">
                                                             <label class="form-check-label" for="flexRadioPicture7">
                                                                 Picture 7
                                                             </label>
@@ -106,28 +106,39 @@
                                 </div>
                             </div>
 
-                            <button type="button" class="btn btn-outline-primary mb-3" data-toggle="modal" data-target="#changePasswordModal">Change Password</button>
+                            <button type="button" class="btn btn-outline-primary mb-3" data-bs-toggle="modal" data-bs-target="#changePasswordModal">Change Password</button>
 
                             <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
+                                <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="changePasswordModalLabel">Change Password Form</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
-                                        <form id="ChangePasswordForm" asp-controller="EditCustomerData" asp-action="ChangePassword" method="post" enctype="multipart/form-data" onsubmit="SubmitChangePasswordForm(event)">
+                                        <form class="needs-validation" id="ChangePasswordForm" asp-controller="EditCustomerData" asp-action="ChangePassword" target="votar" method="post" enctype="multipart/form-data" onsubmit="SubmitChangePasswordForm(this)" novalidate>
                                             <div class="modal-body">
-                                                    <div class="form-group">
-                                                        <label class="col-form-label d-flex justify-content-start">New password:</label>
-                                                        <input name="newPassword" type="password" class="form-control" id="newPassword" required maxlength="50">
+                                                <div class="form-group">
+
+                                                    <label for="passwordErrorValidationCustom" class="col-form-label d-flex justify-content-start">Password <label class="text-danger">*</label></label>
+                                                    <input type="password" name="newPassword" class="form-control" id="newPassword" maxlength="255" pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@@$%^&*-]).{8,}$" required>
+                                                    <div class="valid-feedback">
+                                                        Looks good!
                                                     </div>
-                                                    <div class="form-group">
-                                                        <label class="col-form-label d-flex justify-content-start">Confirm new password:</label>
-                                                        <input type="password" class="form-control" id="confirmNewPassword" required maxlength="50" onfocus="HideErrorSpan('ConfirmPasswordError')">
-                                                        <span id="ConfirmPasswordError" class="text-danger text-center visually-hidden">Value must be the same as in Password Field</span>
+                                                    <div id="passwordError" class="invalid-feedback">
+                                                        Password must have: Minimum 8 characters, at least one uppercase and lowercase English letter, at least one digit and special character.
                                                     </div>
+
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="confirmPasswordErrorValidationCustom" class="form-label">Confirm password</label>
+                                                    <input type="password" class="form-control" id="confirmPassword" maxlength="255" required onclick="HideValidationError('confirmPassword')">
+                                                    <div class="valid-feedback">
+                                                        Looks good!
+                                                    </div>
+                                                    <div id="confirmPasswordError" class="invalid-feedback">
+                                                        Password does not match the above one.
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
@@ -140,7 +151,7 @@
 
                             <buton type="button" class="btn btn-outline-danger mb-3" onclick="ShowCancelChangesConfirmationAlert()">Cancel Changes</buton>
                             <button type="submit" form="userEditedDataForm" value="Submit" class="btn btn-outline-success mb-3">Save Changes</button>
-                            <a asp-action="Index" asp-controller="CustomerPersonalAccount" type="button" class="btn btn-outline-secondary">Get Back</a>
+                            <a asp-action="Index" asp-controller="Dashboard" type="button" class="btn btn-outline-secondary">Get Back</a>
                         </div>
                     </div>
                 </div>
@@ -154,103 +165,156 @@
 
                         <iframe name="votar" style="display: none;"></iframe>
 
-                        <form class="row" method="post" target="votar" onsubmit="HideInputField('FirstName')">
+                        <form class="row needs-validation" method="post" target="votar" onsubmit="HideInputField('FirstName', this)" novalidate>
                             <div class="col-sm-3 d-flex align-items-center">
                                 <p class="mb-0">First Name</p>
                             </div>
+
                             <div class="col-sm-6 d-flex flex-column justify-content-center">
-                                <span asp-validation-for="FirstName" id="FirstNameError" class="text-danger text-center flex-column"></span>
                                 <label id="FirstNameText" class="text-muted mb-0">@Model.FirstName</label>
-                                <input id="FirstNameInput" type="text" class="form-control visually-hidden" required maxlength="255" pattern="[A-Za-zа-яА-Я]{1,255}" onfocus="HideErrorSpan('FirstNameError')">
+                                <input id="FirstNameInput" type="text" class="form-control visually-hidden" required minlength="1" maxlength="20" pattern="^[^±!@@£$%^&*_+§¡€#¢§¶•ªº«\\/<>?:;|=.,]{1,20}$">
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
+                                <div id="firstNameErrorValidation" class="invalid-feedback">
+                                    Please provide a valid First name.
+                                </div>
                             </div>
                             <div class="col-sm-3 d-flex align-items-center justify-content-center">
-                                <button id="ChangeFirstNameBtn" type="button" class="btn btn-outline-warning" onclick="ShowInputField('FirstName')"><i class="far fa-pen-to-square pr-2 text-center"></i>Change</button>
-                                <button id="SaveFirstNameBtn" type="submit" class="btn btn-outline-success visually-hidden"><i class="fa-regular fa-circle-check pr-2 text-center"></i>Save</button>
+                                <button id="ChangeFirstNameBtn" type="button" class="btn btn-outline-warning" onclick="ShowInputField('FirstName')"><i class="far fa-pen-to-square me-2 text-center"></i>Change</button>
+                                <button id="SaveFirstNameBtn" type="submit" class="btn btn-outline-success visually-hidden"><i class="fa-regular fa-circle-check me-2 text-center"></i>Save</button>
                             </div>
                         </form>
 
                         <hr class="featurette-divider">
 
-                        <form class="row" method="post" target="votar" onsubmit="HideInputField('LastName')">
+                        <form class="row needs-validation" method="post" target="votar" onsubmit="HideInputField('LastName', this)" novalidate>
                             <div class="col-sm-3 d-flex align-items-center">
                                 <p class="mb-0">Last Name</p>
                             </div>
                             <div class="col-sm-6 d-flex flex-column justify-content-center">
-                                <span asp-validation-for="LastName" id="LastNameError" class="text-danger text-center flex-column"></span>
                                 <label id="LastNameText" class="text-muted mb-0">@Model.LastName</label>
-                                <input id="LastNameInput" type="text" class="form-control visually-hidden" required maxlength="255" pattern="[A-Za-zа-яА-Я]{1,255}" onfocus="HideErrorSpan('LastNameError')">
+                                <input id="LastNameInput" type="text" class="form-control visually-hidden" required minlength="1" maxlength="20" pattern="^[^±!@@£$%^&*_+§¡€#¢§¶•ªº«\\/<>?:;|=.,]{1,20}$">
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
+                                <div id="lastNameErrorValidation" class="invalid-feedback">
+                                    Please provide a valid Last name.
+                                </div>
                             </div>
                             <div class="col-sm-3 d-flex align-items-center justify-content-center">
-                                <button id="ChangeLastNameBtn" type="button" class="btn btn-outline-warning" onclick="ShowInputField('LastName')"><i class="far fa-pen-to-square pr-2 text-center"></i>Change</button>
-                                <button id="SaveLastNameBtn" type="submit" class="btn btn-outline-success visually-hidden"><i class="fa-regular fa-circle-check pr-2 text-center"></i>Save</button>
+                                <button id="ChangeLastNameBtn" type="button" class="btn btn-outline-warning" onclick="ShowInputField('LastName')"><i class="far fa-pen-to-square me-2 text-center"></i>Change</button>
+                                <button id="SaveLastNameBtn" type="submit" class="btn btn-outline-success visually-hidden"><i class="fa-regular fa-circle-check me-2 text-center"></i>Save</button>
                             </div>
                         </form>
 
                         <hr class="featurette-divider">
 
-                        <form class="row" method="post" target="votar" onsubmit="HideInputField('Username')">
+                        <form class="row needs-validation" method="post" target="votar" onsubmit="HideInputField('Username', this)" novalidate>
                             <div class="col-sm-3 d-flex align-items-center">
                                 <p class="mb-0">Username</p>
                             </div>
                             <div class="col-sm-6 d-flex flex-column justify-content-center">
-                                <span asp-validation-for="Credentials.Login" id="UsernameError" class="text-danger text-center flex-column"></span>
-                                <label id="UsernameText" class="text-muted mb-0">@Model.Credentials.Login</label>
-                                <input id="UsernameInput" type="text" class="form-control visually-hidden" required maxlength="255" pattern="[A-Za-z0-9а-яА-Я_-]{1,255}" onfocus="HideErrorSpan('UsernameError')">
+                                <label id="UsernameText" class="text-muted mb-0">@Model.Login</label>
+                                <input id="UsernameInput" type="text" class="form-control visually-hidden" required minlength="5" maxlength="15" pattern="[^\s]+">
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
+                                <div id="usernameErrorValidation" class="invalid-feedback">
+                                    Please provide a valid User name (Must be only one word).
+                                </div>
                             </div>
                             <div class="col-sm-3 d-flex align-items-center justify-content-center">
-                                <button id="ChangeUsernameBtn" type="button" class="btn btn-outline-warning" onclick="ShowInputField('Username')"><i class="far fa-pen-to-square pr-2 text-center"></i>Change</button>
-                                <button id="SaveUsernameBtn" type="submit" class="btn btn-outline-success visually-hidden"><i class="fa-regular fa-circle-check pr-2 text-center"></i>Save</button>
+                                <button id="ChangeUsernameBtn" type="button" class="btn btn-outline-warning" onclick="ShowInputField('Username')"><i class="far fa-pen-to-square me-2 text-center"></i>Change</button>
+                                <button id="SaveUsernameBtn" type="submit" class="btn btn-outline-success visually-hidden"><i class="fa-regular fa-circle-check me-2 text-center"></i>Save</button>
                             </div>
                         </form>
 
                         <hr class="featurette-divider">
 
-                        <form class="row" method="post" target="votar" onsubmit="HideInputField('Email')">
+                        <form class="row" method="post" target="votar" onsubmit="HideInputField('Email', this)" novalidate>
                             <div class="col-sm-3 d-flex align-items-center">
                                 <p class="mb-0">Email</p>
                             </div>
                             <div class="col-sm-6 d-flex flex-column justify-content-center">
-                                <span asp-validation-for="Credentials.Email" id="EmailError" class="text-danger text-center flex-column"></span>
-                                <label id="EmailText" class="text-muted mb-0">@Model.Credentials.Email</label>
-                                <input id="EmailInput" type="email" class="form-control visually-hidden" required maxlength="255" pattern="[a-z0-9._%+-]+@@[a-z0-9.-]+\.[a-z]{2,4}$" onfocus="HideErrorSpan('EmailError')">
+                                <label id="EmailText" class="text-muted mb-0">@Model.Email</label>
+                                <input id="EmailInput" type="email" class="form-control visually-hidden" required maxlength="255" pattern="^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$">
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
+                                <div id="emailErrorValidation" class="invalid-feedback">
+                                    Please provide a valid Email address.
+                                </div>
                             </div>
                             <div class="col-sm-3 d-flex align-items-center justify-content-center">
-                                <button id="ChangeEmailBtn" type="button" class="btn btn-outline-warning" onclick="ShowInputField('Email')"><i class="far fa-pen-to-square pr-2 text-center"></i>Change</button>
-                                <button id="SaveEmailBtn" type="submit" class="btn btn-outline-success visually-hidden"><i class="fa-regular fa-circle-check pr-2 text-center"></i>Save</button>
+                                <button id="ChangeEmailBtn" type="button" class="btn btn-outline-warning" onclick="ShowInputField('Email')"><i class="far fa-pen-to-square me-2 text-center"></i>Change</button>
+                                <button id="SaveEmailBtn" type="submit" class="btn btn-outline-success visually-hidden"><i class="fa-regular fa-circle-check me-2 text-center"></i>Save</button>
                             </div>
                         </form>
 
                         <hr class="featurette-divider">
 
-                        <form class="row" method="post" target="votar" onsubmit="HideInputField('PhoneNumber')">
+                        <form class="row" method="post" target="votar" onsubmit="HideInputField('PhoneNumber', this)" novalidate>
                             <div class="col-sm-3 d-flex align-items-center">
                                 <p class="mb-0">Phone Number</p>
                             </div>
                             <div class="col-sm-6 d-flex flex-column justify-content-center">
-                                <span asp-validation-for="PhoneNumber" id="PhoneNumberError" class="text-danger text-center flex-column"></span>
                                 <label id="PhoneNumberText" class="text-muted mb-0">@Model.PhoneNumber</label>
-                                <input id="PhoneNumberInput" type="tel" class="form-control visually-hidden" required maxlength="255" pattern="[+][0-9]{12}" onfocus="HideErrorSpan('PhoneNumberError')">
+                                <input id="PhoneNumberInput" type="tel" class="form-control visually-hidden" required pattern="\\(?\\+[0-9]{1,3}\\)? ?-?[0-9]{1,3} ?-?[0-9]{3,5} ?-?[0-9]{4}( ?-?[0-9]{3})? ?(\\w{1,10}\\s?\\d{1,6})?">
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
+                                <div id="phoneNumberErrorValidation" class="invalid-feedback">
+                                    Please provide a valid Phone number.
+                                </div>
                             </div>
                             <div class="col-sm-3 d-flex align-items-center justify-content-center">
-                                <button id="ChangePhoneNumberBtn" type="button" class="btn btn-outline-warning" onclick="ShowInputField('PhoneNumber')"><i class="far fa-pen-to-square pr-2 text-center"></i>Change</button>
-                                <button id="SavePhoneNumberBtn" type="submit" class="btn btn-outline-success visually-hidden"><i class="fa-regular fa-circle-check pr-2 text-center"></i>Save</button>
+                                <button id="ChangePhoneNumberBtn" type="button" class="btn btn-outline-warning" onclick="ShowInputField('PhoneNumber')"><i class="far fa-pen-to-square me-2 text-center"></i>Change</button>
+                                <button id="SavePhoneNumberBtn" type="submit" class="btn btn-outline-success visually-hidden"><i class="fa-regular fa-circle-check me-2 text-center"></i>Save</button>
                             </div>
                         </form>
 
                         <hr class="featurette-divider">
 
-                        <form class="row" method="post" target="votar" onsubmit="HideInputField('DriverLicense')">
+                        <form class="row" method="post" target="votar" onsubmit="HideInputField('DriverLicense', this)" novalidate>
                             <div class="col-sm-3 d-flex align-items-center">
                                 <p class="mb-0">Driver's License</p>
                             </div>
                             <div class="col-sm-6 d-flex flex-column justify-content-center">
-                                <span asp-validation-for="DriverLicenseIdentifier" id="DriverLicenseError" class="text-danger text-center flex-column"></span>
                                 <label id="DriverLicenseText" class="text-muted mb-0">@Model.DriverLicenseIdentifier</label>
-                                <input id="DriverLicenseInput" type="text" class="form-control visually-hidden" required maxlength="12" pattern="[a-zA-Z0-9]{4,12}" onfocus="HideErrorSpan('DriverLicenseError')">
+                                <input id="DriverLicenseInput" type="text" class="form-control visually-hidden" required maxlength="50">
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
+                                <div id="driverLicenseErrorValidation" class="invalid-feedback">
+                                    Please provide a valid Driver license.
+                                </div>
                             </div>
                             <div class="col-sm-3 d-flex align-items-center justify-content-center">
-                                <button id="ChangeDriverLicenseBtn" type="button" class="btn btn-outline-warning" onclick="ShowInputField('DriverLicense')"><i class="far fa-pen-to-square pr-2 text-center"></i>Change</button>
-                                <button id="SaveDriverLicenseBtn" type="submit" class="btn btn-outline-success visually-hidden"><i class="fa-regular fa-circle-check pr-2 text-center"></i>Save</button>
+                                <button id="ChangeDriverLicenseBtn" type="button" class="btn btn-outline-warning" onclick="ShowInputField('DriverLicense')"><i class="far fa-pen-to-square me-2 text-center"></i>Change</button>
+                                <button id="SaveDriverLicenseBtn" type="submit" class="btn btn-outline-success visually-hidden"><i class="fa-regular fa-circle-check me-2 text-center"></i>Save</button>
+                            </div>
+                        </form>
+
+                        <hr class="featurette-divider">
+
+                        <form class="row" method="post" target="votar" onsubmit="HideInputField('AccountDescription', this)" novalidate>
+                            <div class="col-sm-3 d-flex align-items-center">
+                                <p class="mb-0">Account Description</p>
+                            </div>
+                            <div class="col-sm-6 d-flex flex-column justify-content-center">
+                                <label id="AccountDescriptionText" class="text-muted mb-0">@Model.ProfileDescription</label>
+                                <input id="AccountDescriptionInput" type="text" class="form-control visually-hidden" required minlength="5" maxlength="100">
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
+                                <div id="profileDescriptionErrorValidation" class="invalid-feedback">
+                                    Please provide a valid Profile description (Must be more then 5 and less then 100 symbols).
+                                </div>
+                            </div>
+                            <div class="col-sm-3 d-flex align-items-center justify-content-center">
+                                <button id="ChangeAccountDescriptionBtn" type="button" class="btn btn-outline-warning" onclick="ShowInputField('AccountDescription')"><i class="far fa-pen-to-square me-2 text-center"></i>Change</button>
+                                <button id="SaveAccountDescriptionBtn" type="submit" class="btn btn-outline-success visually-hidden"><i class="fa-regular fa-circle-check me-2 text-center"></i>Save</button>
                             </div>
                         </form>
 
@@ -265,7 +329,7 @@
                                 @if(Model.HasAcceptedNewsSharing)
                                 {
                                     <input type="radio" class="btn-check" name="options-outlined" id="success-outlined" autocomplete="off" onclick="ChangeIsAcceptingNewsModelState('True')" checked>
-                                    <label class="btn btn-outline-success mr-2 mb-0" for="success-outlined">Accept</label>
+                                    <label class="btn btn-outline-success me-2 mb-0" for="success-outlined">Accept</label>
 
                                     <input type="radio" class="btn-check" name="options-outlined" id="danger-outlined" autocomplete="off" onclick="ChangeIsAcceptingNewsModelState('False')">
                                     <label class="btn btn-outline-danger mb-0" for="danger-outlined">Reject</label>
@@ -273,46 +337,27 @@
                                 else
                                 {
                                     <input type="radio" class="btn-check" name="options-outlined" id="success-outlined" autocomplete="off" onclick="ChangeIsAcceptingNewsModelState('True')">
-                                    <label class="btn btn-outline-success mr-2 mb-0" for="success-outlined">Accept</label>
+                                    <label class="btn btn-outline-success me-2 mb-0" for="success-outlined">Accept</label>
 
                                     <input type="radio" class="btn-check" name="options-outlined" id="danger-outlined" autocomplete="off" onclick="ChangeIsAcceptingNewsModelState('False')" checked>
                                     <label class="btn btn-outline-danger mb-0" for="danger-outlined">Reject</label>
                                 }
-
                             </div>
                         </div>
-
-                        <hr class="featurette-divider">
-
-                        <form class="row" method="post" target="votar" onsubmit="HideInputField('AccountDescription')">
-                            <div class="col-sm-3 d-flex align-items-center">
-                                <p class="mb-0">Account Description</p>
-                            </div>
-                            <div class="col-sm-6 d-flex flex-column justify-content-center">
-                                <span asp-validation-for="Profile.Description" id="AccountDescriptionError" class="text-danger text-center flex-column"></span>
-                                <label id="AccountDescriptionText" class="text-muted mb-0">@Model.Profile.Description</label>
-                                <input id="AccountDescriptionInput" type="text" class="form-control visually-hidden" required maxlength="80" onfocus="HideErrorSpan('AccountDescriptionError')">
-                            </div>
-                            <div class="col-sm-3 d-flex align-items-center justify-content-center">
-                                <button id="ChangeAccountDescriptionBtn" type="button" class="btn btn-outline-warning" onclick="ShowInputField('AccountDescription')"><i class="far fa-pen-to-square pr-2 text-center"></i>Change</button>
-                                <button id="SaveAccountDescriptionBtn" type="submit" class="btn btn-outline-success visually-hidden"><i class="fa-regular fa-circle-check pr-2 text-center"></i>Save</button>
-                            </div>
-                        </form>
 
                     </div>
                 </div>
 
-                <form id="userEditedDataForm" asp-controller="EditCustomerData" asp-action="EditCustomerData" method="post" enctype="multipart/form-data" class="visually-hidden">
+                <form id="userEditedDataForm" asp-controller="EditCustomerData" asp-action="Edit" method="post" enctype="multipart/form-data" class="visually-hidden">
                     <input id="ModelFirstName" asp-for="FirstName" value="@Model.FirstName" class="form-control" readonly="readonly"/>
                     <input id="ModelLastName" asp-for="LastName" value="@Model.LastName" class="form-control" readonly="readonly" />
-                    <input id="ModelUsername" asp-for="Credentials.Login" value="@Model.Credentials.Login" class="form-control" readonly="readonly" />
-                    <input id="ModelEmail" asp-for="Credentials.Email" value="@Model.Credentials.Email" class="form-control" readonly="readonly" />
+                    <input id="ModelUsername" asp-for="Login" value="@Model.Login" class="form-control" readonly="readonly" />
+                    <input id="ModelEmail" asp-for="Email" value="@Model.Email" class="form-control" readonly="readonly" />
                     <input id="ModelPhoneNumber" asp-for="PhoneNumber" value="@Model.PhoneNumber" class="form-control" readonly="readonly" />
                     <input id="ModelDriverLicense" asp-for="DriverLicenseIdentifier" value="@Model.DriverLicenseIdentifier" class="form-control" readonly="readonly" />
                     <input id="ModelIsAcceptedNewsSharing" asp-for="HasAcceptedNewsSharing" type="checkbox" class="custom-control-input" readonly="readonly" >
-                    <input id="ModelAccountDescription" asp-for="Profile.Description" value="@Model.Profile.Description" class="form-control" readonly="readonly" />
-                    <input id="ModelUserImage" asp-for="Profile.Image" value="@Model.Profile.Image" class="form-control" readonly="readonly" />
-                    <input id="ModelId" asp-for="Id" value="@Model.Id" class="form-control" readonly="readonly" />
+                    <input id="ModelAccountDescription" asp-for="ProfileDescription" value="@Model.ProfileDescription" class="form-control" readonly="readonly" />
+                    <input id="ModelUserImage" asp-for="Image" value="@Model.Image" class="form-control" readonly="readonly" />
                 </form>
 
             </div>
@@ -325,8 +370,12 @@
 <script>
     function ApplyImageChanges () {
 
-        SetUpImageDependsOnTheModal();
+        SetUpImageDependsOnTheModal('@(_configuration["AzureBlobStorage:CustomersAccountImagesPath"])');
 
         $('#changeImageModal').modal('hide')
     };
+
+    function HideValidationError(elementId){
+        document.getElementById(elementId).setAttribute("class", "form-control");
+    }
 </script>

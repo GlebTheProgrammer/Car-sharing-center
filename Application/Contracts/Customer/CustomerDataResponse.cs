@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
 namespace CarSharingApp.Application.Contracts.Customer
 {
-    internal class CustomerDataResponse
-    {
-    }
+    public sealed record CustomerDataResponse(
+        [property: JsonPropertyName("firstName")] string FirstName,
+        [property: JsonPropertyName("lastName")] string LastName,
+        [property: JsonPropertyName("phoneNumber")] string PhoneNumber,
+        [property: JsonPropertyName("driverLicenseIdentifier")] string DriverLicenseIdentifier,
+        [property: JsonPropertyName("profileDescription")] string ProfileDescription,
+        [property: JsonPropertyName("image")] string Image,
+        [property: JsonPropertyName("login")] string Login,
+        [property: JsonPropertyName("email")] string Email,
+        [property: JsonPropertyName("hasAcceptedNewsSharing")] bool HasAcceptedNewsSharing
+    );
 }
