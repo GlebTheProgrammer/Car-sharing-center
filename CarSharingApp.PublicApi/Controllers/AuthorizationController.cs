@@ -55,15 +55,17 @@ namespace CarSharingApp.PublicApi.Controllers
 
             return CreatedAtAction(
                 actionName: nameof(GenerateToken),
-                value: MapTokenResponse(JWToken));
+                value: MapTokenResponse(JWToken, customer.Profile.Image));
         }
 
         #region Response mapping section
 
         [NonAction]
-        private static TokenResponse MapTokenResponse(string Token)
+        private static TokenResponse MapTokenResponse(string token, string image)
         {
-            return new TokenResponse(Token);
+            return new TokenResponse(
+                JWToken: token,
+                CustomerImage: image);
         }
 
         #endregion

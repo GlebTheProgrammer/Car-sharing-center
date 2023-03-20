@@ -56,12 +56,14 @@ namespace CarSharingApp.Controllers
                     break;
             }
 
-            TokenResponse tokenResponse = JsonSerializer.Deserialize<TokenResponse>(responseContent) ?? new TokenResponse(string.Empty);
+            TokenResponse tokenResponse = JsonSerializer.Deserialize<TokenResponse>(responseContent) ?? throw new NullReferenceException(nameof(tokenResponse));
 
             if (tokenResponse.JWToken is null)
                 throw new Exception("Token was'nt generated");
 
             HttpContext.Session.SetString("JWToken", tokenResponse.JWToken);
+            HttpContext.Session.SetString("CustomerImage", tokenResponse.CustomerImage);
+
             HttpContext.Session.SetString("SignedIn", "true");
 
             return RedirectToAction("Index", "Dashboard");

@@ -85,7 +85,8 @@
                         <ul class="navbar-nav d-flex flex-row ms-auto me-3">
                             <li class="nav-item me-3 me-lg-0 dropdown ms-1 me-1">
                                 <a id="personalAccountLink" class="nav-link dropdown-toggle ms-2 me-2" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <img src="@(string.Join("", _configuration["AzureBlobStorage:CustomersAccountImagesPath"], "image1.png"))" class="rounded-circle" height="30" loading="lazy" />
+@*                                    <img src="@(string.Join("", _configuration["AzureBlobStorage:CustomersAccountImagesPath"], "image1.png"))" class="rounded-circle" height="30" loading="lazy" />*@
+                                    <img src="@(string.Join("", _configuration["AzureBlobStorage:CustomersAccountImagesPath"], Accessor?.HttpContext?.Session.GetString("CustomerImage")))" class="rounded-circle" height="30" loading="lazy" />
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li><a href="@Url.Action("Index", "Dashboard")" id="myAccountChoice" class="dropdown-item text-secondary"><i class="fa-solid fa-user me-2"></i>Dashboard</a></li>

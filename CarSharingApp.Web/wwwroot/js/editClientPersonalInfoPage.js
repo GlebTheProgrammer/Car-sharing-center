@@ -17,21 +17,20 @@ function ShowCancelChangesConfirmationAlert() {
 
 // Function for working with change password
 function SubmitChangePasswordForm(form) {
-    alert("yo");
     if (!form.checkValidity()) {
-        alert("yo1");
         event.preventDefault();
         event.stopPropagation();
     }
     else {
-        alert("yo2");
-        event.preventDefault();
         if (document.getElementById("newPassword").value === document.getElementById("confirmNewPassword").value) {
-            alert("yo3");
-            document.getElementById("ChangePasswordForm").submit();
+            $("#changePasswordModal").modal('hide');
+/*            window.location.reload(true);*/
+            ShowSuccessfulMessageAfterUserHasChangedPassword();
+            /*document.getElementById("ChangePasswordForm").submit();*/
         }
         else {
-            document.getElementById("confirmPassword").setAttribute("class", "form-control is-invalid");
+            event.preventDefault();
+            document.getElementById("confirmNewPassword").setAttribute("class", "form-control is-invalid");
         }
     }
     form.classList.add('was-validated');

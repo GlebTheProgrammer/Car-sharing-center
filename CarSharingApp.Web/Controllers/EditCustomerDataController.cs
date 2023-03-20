@@ -40,6 +40,7 @@ namespace CarSharingApp.Controllers
             var response = await _customerServiceClient.EditCustomerInformation(
                 MapUpdateCustomerInfoRequest(request));
 
+            HttpContext.Session.SetString("CustomerImage", request.Image);
             HttpContext.Session.SetString("ChangedAccountData", "true");
 
             return RedirectToAction("Index");
@@ -47,16 +48,16 @@ namespace CarSharingApp.Controllers
 
         [HttpPost]
         [Route("password")]
-        public IActionResult ChangePassword([FromForm] string newPassword)
+        public async Task<IActionResult> ChangePassword([FromForm] string newPassword)
         {
+            var response = await _customerServiceClient.EditCustomerPassword(
+                MapUpdateCustomerPasswordRequest(newPassword));
 
-            //string userId = new JwtSecurityTokenHandler().ReadJwtToken(HttpContext.Session.GetString("JWToken")).Claims.First(c => c.Type == JwtRegisteredClaimNames.Sub).Value;
+            string url = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}" + Url.Action("Index", "Dashboard")
+                ?? throw new NullReferenceException(nameof(url));
 
-            //await _mongoDbService.ChangePassword(userId, newPassword);
-
-            //HttpContext.Session.SetString("ChangedPassword", "true");
-
-            return RedirectToAction("Index");
+            Response.Headers.Add("Location", url);
+            return Redirect(url);
         }
 
         private UpdateCustomerInfoRequest MapUpdateCustomerInfoRequest(CustomerDataResponse response)
@@ -69,6 +70,13 @@ namespace CarSharingApp.Controllers
                 response.HasAcceptedNewsSharing,
                 response.ProfileDescription,
                 response.Image);
+        }
+
+        private UpdateCustomerPasswordRequest MapUpdateCustomerPasswordRequest(string newPassword)
+        {
+            return new UpdateCustomerPasswordRequest(
+                currentPassword: string.Empty,
+                newPassword: newPassword);
         }
     }
 }

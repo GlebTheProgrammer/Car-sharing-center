@@ -31,6 +31,15 @@ namespace CarSharingApp.Web.Clients
             return await client.PutAsync("current/information", content);
         }
 
+        public async Task<HttpResponseMessage> EditCustomerPassword(UpdateCustomerPasswordRequest request)
+        {
+            var client = CreateNewClientInstance(clientIdentifier);
+
+            JsonContent content = JsonContent.Create(request);
+
+            return await client.PutAsync("current/password", content);
+        }
+
         public async Task<HttpResponseMessage> GetCreateNewCustomerRequestTemplate()
         {
             var client = CreateNewClientInstance(clientIdentifier);

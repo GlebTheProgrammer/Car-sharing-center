@@ -238,6 +238,42 @@ namespace CarSharingApp.PublicApi.Controllers
             return NoContent();
         }
 
+        [HttpPut("current/password")]
+        [Authorize]
+        public async Task<IActionResult> UpdateCurrentCustomerPassword([FromBody] UpdateCustomerPasswordRequest request)
+        {
+            JwtClaims? jwtClaims = GetJwtClaims();
+
+            if (jwtClaims is null)
+            {
+                return Forbid();
+            }
+
+            ErrorOr<Customer> getCustomerResult = await _customerService.GetCustomerAsync(Guid.Parse(jwtClaims.Id));
+
+            if (getCustomerResult.IsError)
+            {
+                _logger.LogInformation("Failed finding customer with ID: {customerId} when trying to update password.", jwtClaims.Id);
+                return Problem(getCustomerResult.Errors);
+            }
+
+            Customer customerWithOldPassword = getCustomerResult.Value;
+
+            ErrorOr<Customer> requestToCustomerResult = _customerService.From(customerWithOldPassword, request);
+            if (requestToCustomerResult.IsError)
+            {
+                return Problem(requestToCustomerResult.Errors);
+            }
+
+            Customer customerWithUpdatedPassword = requestToCustomerResult.Value;
+
+            await _customerService.UpdateCustomerPasswordAsync(customerWithUpdatedPassword);
+
+            _logger.LogInformation("Customer with ID: {registeredCustomerId} has successfully changed his password.", jwtClaims.Id);
+
+            return NoContent();
+        }
+
         [HttpDelete("{id:guid}")]
         [Authorize]
         public async Task<IActionResult> DeleteCustomer([FromRoute] Guid id)
