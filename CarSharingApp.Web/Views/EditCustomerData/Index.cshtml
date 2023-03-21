@@ -166,11 +166,11 @@
                         <iframe name="votar" style="display: none;"></iframe>
 
                         <form class="row needs-validation" method="post" target="votar" onsubmit="HideInputField('FirstName', this)" novalidate>
-                            <div class="col-sm-3 d-flex align-items-center">
+                            <div class="col-sm-3 d-flex align-items-center mb-2">
                                 <p class="mb-0">First Name</p>
                             </div>
 
-                            <div class="col-sm-6 d-flex flex-column justify-content-center">
+                            <div class="col-sm-6 d-flex flex-column justify-content-center mb-2">
                                 <label id="FirstNameText" class="text-muted mb-0">@Model.FirstName</label>
                                 <input id="FirstNameInput" type="text" class="form-control visually-hidden" required minlength="1" maxlength="20" pattern="^[^±!@@£$%^&*_+§¡€#¢§¶•ªº«\\/<>?:;|=.,]{1,20}$">
                                 <div class="valid-feedback">
@@ -189,10 +189,10 @@
                         <hr class="featurette-divider">
 
                         <form class="row needs-validation" method="post" target="votar" onsubmit="HideInputField('LastName', this)" novalidate>
-                            <div class="col-sm-3 d-flex align-items-center">
+                            <div class="col-sm-3 d-flex align-items-center mb-2">
                                 <p class="mb-0">Last Name</p>
                             </div>
-                            <div class="col-sm-6 d-flex flex-column justify-content-center">
+                            <div class="col-sm-6 d-flex flex-column justify-content-center mb-2">
                                 <label id="LastNameText" class="text-muted mb-0">@Model.LastName</label>
                                 <input id="LastNameInput" type="text" class="form-control visually-hidden" required minlength="1" maxlength="20" pattern="^[^±!@@£$%^&*_+§¡€#¢§¶•ªº«\\/<>?:;|=.,]{1,20}$">
                                 <div class="valid-feedback">
@@ -211,10 +211,10 @@
                         <hr class="featurette-divider">
 
                         <form class="row needs-validation" method="post" target="votar" onsubmit="HideInputField('Username', this)" novalidate>
-                            <div class="col-sm-3 d-flex align-items-center">
+                            <div class="col-sm-3 d-flex align-items-center mb-2">
                                 <p class="mb-0">Username</p>
                             </div>
-                            <div class="col-sm-6 d-flex flex-column justify-content-center">
+                            <div class="col-sm-6 d-flex flex-column justify-content-center mb-2">
                                 <label id="UsernameText" class="text-muted mb-0">@Model.Login</label>
                                 <input id="UsernameInput" type="text" class="form-control visually-hidden" required minlength="5" maxlength="15" pattern="[^\s]+">
                                 <div class="valid-feedback">
@@ -233,10 +233,10 @@
                         <hr class="featurette-divider">
 
                         <form class="row" method="post" target="votar" onsubmit="HideInputField('Email', this)" novalidate>
-                            <div class="col-sm-3 d-flex align-items-center">
+                            <div class="col-sm-3 d-flex align-items-center mb-2">
                                 <p class="mb-0">Email</p>
                             </div>
-                            <div class="col-sm-6 d-flex flex-column justify-content-center">
+                            <div class="col-sm-6 d-flex flex-column justify-content-center mb-2">
                                 <label id="EmailText" class="text-muted mb-0">@Model.Email</label>
                                 <input id="EmailInput" type="email" class="form-control visually-hidden" required maxlength="255" pattern="^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$">
                                 <div class="valid-feedback">
@@ -255,10 +255,10 @@
                         <hr class="featurette-divider">
 
                         <form class="row" method="post" target="votar" onsubmit="HideInputField('PhoneNumber', this)" novalidate>
-                            <div class="col-sm-3 d-flex align-items-center">
+                            <div class="col-sm-3 d-flex align-items-center mb-2">
                                 <p class="mb-0">Phone Number</p>
                             </div>
-                            <div class="col-sm-6 d-flex flex-column justify-content-center">
+                            <div class="col-sm-6 d-flex flex-column justify-content-center mb-2">
                                 <label id="PhoneNumberText" class="text-muted mb-0">@Model.PhoneNumber</label>
                                 <input id="PhoneNumberInput" type="tel" class="form-control visually-hidden" required pattern="\\(?\\+[0-9]{1,3}\\)? ?-?[0-9]{1,3} ?-?[0-9]{3,5} ?-?[0-9]{4}( ?-?[0-9]{3})? ?(\\w{1,10}\\s?\\d{1,6})?">
                                 <div class="valid-feedback">
@@ -277,10 +277,10 @@
                         <hr class="featurette-divider">
 
                         <form class="row" method="post" target="votar" onsubmit="HideInputField('DriverLicense', this)" novalidate>
-                            <div class="col-sm-3 d-flex align-items-center">
+                            <div class="col-sm-3 d-flex align-items-center mb-2">
                                 <p class="mb-0">Driver's License</p>
                             </div>
-                            <div class="col-sm-6 d-flex flex-column justify-content-center">
+                            <div class="col-sm-6 d-flex flex-column justify-content-center mb-2">
                                 <label id="DriverLicenseText" class="text-muted mb-0">@Model.DriverLicenseIdentifier</label>
                                 <input id="DriverLicenseInput" type="text" class="form-control visually-hidden" required maxlength="50">
                                 <div class="valid-feedback">
@@ -299,10 +299,10 @@
                         <hr class="featurette-divider">
 
                         <form class="row" method="post" target="votar" onsubmit="HideInputField('AccountDescription', this)" novalidate>
-                            <div class="col-sm-3 d-flex align-items-center">
+                            <div class="col-sm-3 d-flex align-items-center mb-2">
                                 <p class="mb-0">Account Description</p>
                             </div>
-                            <div class="col-sm-6 d-flex flex-column justify-content-center">
+                            <div class="col-sm-6 d-flex flex-column justify-content-center mb-2">
                                 <label id="AccountDescriptionText" class="text-muted mb-0">@Model.ProfileDescription</label>
                                 <input id="AccountDescriptionInput" type="text" class="form-control visually-hidden" required minlength="5" maxlength="100">
                                 <div class="valid-feedback">
@@ -322,7 +322,7 @@
 
                         <div class="row">
                             <div class="col-sm-5 d-flex align-items-center">
-                                <p class="mb-0">Has Accepting News Sharing</p>
+                                <p class="mb-2">Has Accepting News Sharing</p>
                             </div>
                             <div class="col-sm-7 d-flex justify-content-end">
 

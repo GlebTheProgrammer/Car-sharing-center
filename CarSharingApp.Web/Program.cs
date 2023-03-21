@@ -5,13 +5,9 @@ using CarSharingApp.Web.OptionsSetup;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.ConfigureLogging((context, logging) =>
-{
-    //logging.ClearProviders();
-    logging.AddConfiguration(context.Configuration.GetSection("Logging"));
-    logging.AddDebug();
-    //logging.AddConsole();
-});
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddSeq();
 
 builder.Services.AddControllersWithViews();
 
@@ -33,17 +29,6 @@ builder.Services.RegisterNewHttpClients("RentalsAPI", builder.Configuration);
 builder.Services.RegisterAzureBlobStorageClient(builder.Configuration);
 builder.Services.AddJwtBearerAuthentication(builder.Configuration);
 
-
-
-
-
-
-
-
-
-
-
-
 // Sessions setting
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
@@ -54,6 +39,8 @@ builder.Services.AddSession(options =>
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 var app = builder.Build();
+
+app.Logger.LogInformation("ClIENT APP CREATED...");
 
 if (!app.Environment.IsDevelopment())
 {
@@ -83,5 +70,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/");
+
+app.Logger.LogInformation("LAUNCHING CLIENT APPLICATION");
 
 app.Run();

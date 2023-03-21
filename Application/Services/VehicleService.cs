@@ -156,7 +156,7 @@ namespace CarSharingApp.Application.Services
                 vehicle.Specifications.Transmission.ToString(),
                 vehicle.Specifications.Engine.ToString(),
                 vehicle.Specifications.VIN,
-                request.Categories,
+                FlagEnums.GetListFromCategories(vehicle.Categories),
                 vehicle.Id,
                 vehicle.Status.IsPublished,
                 vehicle.Status.IsOrdered,

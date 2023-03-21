@@ -16,7 +16,7 @@
 <div class="card-body">
     <div class="datatable-wrapper datatable-loading no-footer sortable searchable fixed-columns">
         <div class="datatable-top d-flex align-items-center">
-            <div class="datatable-search d-flex align-items-center">
+            <div class="datatable-search table-responsive-sm d-flex align-items-center">
                 <label class="ms-2 me-4 text-nowrap">Search by:</label>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="searchRentalRadioOptions" id="searchRentalByVehicleNameRadio" value="option1" @(ViewBag.SearchBy == null || ViewBag.SearchBy == "VehicleName" ? "checked" : "")>
@@ -33,7 +33,7 @@
 
         <hr class="mt-3">
 
-        <div class="datatable-container mt-3">
+        <div class="datatable-container mt-3 table-responsive-sm">
             <table id="datatablesSimple" class="table table-hover">
                 <thead>
                     <tr>

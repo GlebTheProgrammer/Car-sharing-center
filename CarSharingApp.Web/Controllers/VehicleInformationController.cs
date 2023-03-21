@@ -20,16 +20,19 @@ namespace CarSharingApp.Controllers
         private readonly IStripePlatformPublicApiClient _stripePlatformClient;
         private readonly IRentalServicePublicApiClient _rentalServiceClient;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly ILogger<VehicleInformationController> _logger;
 
         public VehicleInformationController(IVehicleServicePublicApiClient vehicleServiceClient, 
                                             IStripePlatformPublicApiClient stripePlatformClient,
                                             IRentalServicePublicApiClient rentalServiceClient,
-                                            IWebHostEnvironment webHostEnvironment)
+                                            IWebHostEnvironment webHostEnvironment,
+                                            ILogger<VehicleInformationController> logger)
         {
             _vehicleServiceClient = vehicleServiceClient;
             _stripePlatformClient = stripePlatformClient;
             _rentalServiceClient = rentalServiceClient;
             _webHostEnvironment = webHostEnvironment;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -52,8 +55,12 @@ namespace CarSharingApp.Controllers
         [Route("payment/session")]
         public async Task<IActionResult> CreateCheckoutSession([FromForm] StripePaymentSessionRequest paymentRequest)
         {
+            _logger.LogInformation("CreateCheckoutSession rentalStartsLocalDateTime = {DateTime}", paymentRequest.RentalStartsDateTimeLocalStr);
+
             DateTime rentalStartsLocalDateTime = MyCustomDateTimeProvider.ParseFromViewIntoCurrentCustomerLocalDateTime(paymentRequest.RentalStartsDateTimeLocalStr);
             DateTime rentalEndsLocalDateTime = MyCustomDateTimeProvider.ParseFromViewIntoCurrentCustomerLocalDateTime(paymentRequest.RentalEndsDateTimeLocalStr);
+
+            _logger.LogInformation("CreateCheckoutSession rentalStartsLocalDateTime = {DateTime}", rentalStartsLocalDateTime);
 
             string hostedUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}";
 
@@ -145,6 +152,8 @@ namespace CarSharingApp.Controllers
         {
             DateTime rentalStartsUtcDateTime = MyCustomDateTimeProvider.ParseFromLocalToUtcDateTime(request.RentalStartsDateTimeLocalStr);
             DateTime rentalEndsUtcDateTime = MyCustomDateTimeProvider.ParseFromLocalToUtcDateTime(request.RentalEndsDateTimeLocalStr);
+
+            _logger.LogInformation("GenerateNewRequest rentalStartsUtcDateTime = {DateTime}", rentalStartsUtcDateTime);
 
             return new CreateNewRentalRequest(
                 VehicleId: request.VehicleId,

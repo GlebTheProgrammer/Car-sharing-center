@@ -64,15 +64,8 @@ namespace CarSharingApp.Infrastructure.Middlewares
                     }
                 }
             }
-            else
-            {
-                _logger.LogInformation("Timed Out Rentals Checkout Service didn't found any rental to finish.");
-            }
 
             var count = Interlocked.Increment(ref executionCount);
-
-            _logger.LogInformation(
-                "Timed Hosted Service is working. Iteration №: {Count}", count);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

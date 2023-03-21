@@ -72,6 +72,17 @@ namespace CarSharingApp.PublicApi.Controllers
                 errors => Problem(errors));
         }
 
+        [HttpGet("{id:guid}/information/edit")]
+        [Authorize]
+        public async Task<IActionResult> GetVehicleEditInformation([FromRoute] Guid id)
+        {
+            ErrorOr<Vehicle> getVehicleResult = await _vehicleService.GetVehicleAsync(id);
+
+            return getVehicleResult.Match(
+                vehicle => Ok(MapEditVehicleInformationResponse(vehicle)),
+                errors => Problem(errors));
+        }
+
         [HttpGet("{id:guid}/information")]
         [Authorize]
         public async Task<IActionResult> GetVehicleInformation([FromRoute] Guid id)
@@ -384,6 +395,34 @@ namespace CarSharingApp.PublicApi.Controllers
                 vehicle.PublishedTime,
                 vehicle.LastTimeOrdered,
                 vehicle.CustomerId.ToString().Equals(requestedCustomerId));
+        }
+
+        [NonAction]
+        private EditVehicleInformationResponse MapEditVehicleInformationResponse(Vehicle vehicle)
+        {
+            return new EditVehicleInformationResponse(
+                vehicle.Id.ToString(),
+                vehicle.Name,
+                vehicle.Image,
+                vehicle.BriefDescription,
+                vehicle.Description,
+                $"{vehicle.Tariff.HourlyRentalPrice}",
+                $"{vehicle.Tariff.DailyRentalPrice}",
+                vehicle.Location.StreetAddress,
+                vehicle.Location.AptSuiteEtc,
+                vehicle.Location.City,
+                vehicle.Location.Country.Name,
+                vehicle.Location.Latitude,
+                vehicle.Location.Longitude,
+                vehicle.Specifications.ProductionYear,
+                vehicle.Specifications.MaxSpeedKph,
+                vehicle.Specifications.ExteriorColor.Name,
+                vehicle.Specifications.InteriorColor.Name,
+                vehicle.Specifications.Drivetrain.Name,
+                vehicle.Specifications.FuelType.Name,
+                vehicle.Specifications.Transmission.Name,
+                vehicle.Specifications.Engine.Name,
+                vehicle.Specifications.VIN);
         }
 
         [NonAction]

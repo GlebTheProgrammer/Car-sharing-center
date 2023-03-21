@@ -71,6 +71,26 @@ namespace CarSharingApp.Web.Clients
             return await client.GetAsync(requestUri);
         }
 
+        public async Task<HttpResponseMessage> GetVehicleInformationForEdit(Guid id)
+        {
+            var client = CreateNewClientInstance(clientIdentifier);
+
+            string requestUri = $"{id}/information/edit";
+
+            return await client.GetAsync(requestUri);
+        }
+
+        public async Task<HttpResponseMessage> UpdateVehicleInformation(Guid id, UpdateVehicleRequest request)
+        {
+            var client = CreateNewClientInstance(clientIdentifier);
+
+            string requestUri = $"{id}";
+
+            JsonContent content = JsonContent.Create(request);
+
+            return await client.PutAsync(requestUri, content);
+        }
+
         public async Task<HttpResponseMessage> UpdateVehicleStatus(Guid id, UpdateVehicleStatusRequest request)
         {
             var client = CreateNewClientInstance(clientIdentifier);

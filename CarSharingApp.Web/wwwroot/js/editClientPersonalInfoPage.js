@@ -120,7 +120,6 @@ function ShowInputField(target) {
 
 // Function for hiding input field
 function HideInputField(target, form) {
-
     if (!form.checkValidity()) {
         event.preventDefault();
         event.stopPropagation();

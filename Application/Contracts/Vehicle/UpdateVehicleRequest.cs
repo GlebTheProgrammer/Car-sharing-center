@@ -10,7 +10,6 @@
         string City,
         string Country,
         string Latitude,
-        string Longitude,
-        List<string> Categories
+        string Longitude
     );
 }
