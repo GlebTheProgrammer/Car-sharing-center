@@ -1,11 +1,16 @@
 ﻿using CarSharingApp.Application.Contracts.Vehicle;
 using CarSharingApp.Web.Clients.Interfaces;
+using CarSharingApp.Web.Helpers.Models;
+using CarSharingApp.Web.Helpers;
+using CarSharingApp.Web.Primitives;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarSharingApp.Web.Controllers
 {
-    public class SearchNearbyVehiclesController : Controller
+    [AllowAnonymous]
+    [Route("nearbyVehicles")]
+    public sealed class SearchNearbyVehiclesController : WebAppController
     {
         private readonly IVehicleServicePublicApiClient _vehicleServiceClient;
 
@@ -14,7 +19,7 @@ namespace CarSharingApp.Web.Controllers
             _vehicleServiceClient = vehicleServiceClient;
         }
 
-        [AllowAnonymous]
+        [HttpGet]
         public IActionResult Index()
         {
             return View();
@@ -22,11 +27,24 @@ namespace CarSharingApp.Web.Controllers
 
         #region Partial views rendering 
 
+        [HttpGet]
+        [Route("mapPartial")]
         public async Task<IActionResult> RenderMapPartial()
         {
             var response = await _vehicleServiceClient.GetAllApprovedAndPublishedVehiclesMapRepresentation();
 
-            response.EnsureSuccessStatusCode();
+            if (!response.IsSuccessStatusCode)
+            {
+                MyControllerContext context = GenerateControllerContext();
+                var errorResponseViewModel = MyCustomResponseAnalyzer.Analize(myControllerContext: context,
+                                                                              response: response,
+                                                                              onErrorStatusCode_ViewName: "_MapArticle",
+                                                                              onErrorStatusCode_ViewModel: new List<VehicleDisplayOnMap>(),
+                                                                              isReturningPartialView: true);
+
+                return PartialView("_MapArticle", new List<VehicleDisplayOnMap>());
+                //return errorResponseViewModel ?? throw new NullReferenceException(nameof(errorResponseViewModel));
+            }
 
             VehiclesDisplayOnMapResponse responseModel = await response.Content.ReadFromJsonAsync<VehiclesDisplayOnMapResponse>()
                 ?? throw new NullReferenceException(nameof(responseModel));
@@ -38,19 +56,35 @@ namespace CarSharingApp.Web.Controllers
 
         #endregion
 
-        public async Task<JsonResult> GetNearbyVehicles(string latitude, string longitude, int vehiclesCount)
+        #region Partial views actions
+
+        [HttpGet]
+        [Route("getNearbyVehicles")]
+        public async Task<JsonResult> GetNearbyVehicles([FromQuery] string latitude, 
+                                                        [FromQuery] string longitude, 
+                                                        [FromQuery] int vehiclesCount)
         {
             var requestModel = new GetNearbyVehiclesMapRepresentationRequest(latitude, longitude, vehiclesCount);
 
             var response = await _vehicleServiceClient.GetAllApprovedAndPublishedNearbyVehiclesMapRepresentation(requestModel);
 
-            response.EnsureSuccessStatusCode();
+            if (!response.IsSuccessStatusCode)
+            {
+                MyControllerContext context = GenerateControllerContext();
+                var errorResponseViewModel = MyCustomResponseAnalyzer.Analize<object>(myControllerContext: context,
+                                                                                      response: response,
+                                                                                      onErrorStatusCode_ViewName: "",
+                                                                                      onErrorStatusCode_ViewModel: null);
+
+                return Json(new NearbyVehiclesDisplayOnMapResponse(new List<NearbyVehicleDisplayOnMapResponse>()));
+            }
 
             NearbyVehiclesDisplayOnMapResponse responseModel = await response.Content.ReadFromJsonAsync<NearbyVehiclesDisplayOnMapResponse>()
                 ?? throw new NullReferenceException(nameof(responseModel));
 
-            var resStr = await response.Content.ReadAsStringAsync();
             return Json(responseModel);
         }
+
+        #endregion
     }
 }

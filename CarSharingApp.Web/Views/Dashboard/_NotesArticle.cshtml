@@ -10,7 +10,7 @@
                 <div class="col py-2">
                     <div class="card border-success shadow">
                         <div class="card-body">
-                            <div class="float-right text-success">@(note.ActionMadeTime.ToString("ddd MMM dd yyy h:mm tt", new System.Globalization.CultureInfo("en-US")))</div>
+                            <div class="float-right text-success">@(TimeZoneInfo.ConvertTimeFromUtc(note.ActionMadeTime, TimeZoneInfo.Local).ToString("ddd MMM dd yyy h:mm tt", System.Globalization.CultureInfo.InvariantCulture))</div>
                             <h4 class="card-title text-success">@note.Type</h4>
                             <p class="card-text">@note.Note</p>
                             <button class="btn btn-sm btn-outline-secondary" type="button" data-target="#t2_details" data-toggle="collapse" onclick="TryRedirect('@note.ActionEntityId.ToString()')">Show Details ▼</button>
@@ -25,7 +25,7 @@
                 <div class="col py-2">
                     <div class="card">
                         <div class="card-body">
-                            <div class="float-right text-muted">@(note.ActionMadeTime.ToString("ddd MMM dd yyy h:mm tt", new System.Globalization.CultureInfo("en-US")))</div>
+                            <div class="float-right text-muted">@(TimeZoneInfo.ConvertTimeFromUtc(note.ActionMadeTime, TimeZoneInfo.Local).ToString("ddd MMM dd yyy h:mm tt", System.Globalization.CultureInfo.InvariantCulture))</div>
                             <h4 class="card-title text-muted">@note.Type</h4>
                             <p class="card-text">@note.Note</p>
                         </div>
@@ -40,14 +40,14 @@
     function TryRedirect(id){
         $.ajax({
             type: 'GET',
-            url: 'Dashboard/CheckIfVehicleExists',
+            url: 'dashboard/checkAvailability/vehicle',
             contentType: "application/json; charset=utf-8",
             data: {id: id},
             cache: false,
             async: true,
             success: function(data) {
                 if (data) {
-                    window.location.href = "/VehicleInformation?vehicleId=" + id
+                    window.location.href = "/vehicle/information?vehicleId=" + id
                 }
             },
             error: function (xhr, textStatus, errorThrown) {

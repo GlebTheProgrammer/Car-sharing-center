@@ -12,6 +12,7 @@ namespace CarSharingApp.Application.Interfaces
         Task<ErrorOr<Customer>> UpdateCustomerCredentialsAsync(Customer customer);
         Task<Updated> UpdateCustomerInfoAsync(Customer customer);
         Task<Updated> UpdateCustomerPasswordAsync(Customer customer);
+        Task<Updated> UpdateCustomerStatisticsAsync(Customer customer);
         Task<Deleted> DeleteCustomerAsync(Guid id);
         Task<ErrorOr<string>> CompareCustomerOldPasswordWithExistingOne(Guid id, string oldPassword);
 

@@ -1,6 +1,6 @@
 ﻿namespace CarSharingApp.Application.Contracts.Vehicle
 {
-    public record DeleteVehicleRequest(
+    public sealed record DeleteVehicleRequest(
         string VehicleId
     );
 }

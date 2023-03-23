@@ -82,6 +82,46 @@ function ShowSuccessfulMessageAfterVehicleWasDeleted() {
     });
 }
 
+// Function to show message about successful vehicle deletion
+function ShowSuccessfulMessageAfterRentalWasFinished() {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-start',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    });
+
+    Toast.fire({
+        icon: 'success',
+        title: 'Rental was finished successfully.'
+    });
+}
+
+// Function to show message about successful rental deletion
+function ShowSuccessfulMessageAfterRentalWasDeleted() {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-start',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    });
+
+    Toast.fire({
+        icon: 'success',
+        title: 'Rental information was deleted successfully.'
+    });
+}
+
 // Function to show user an alert press logout button
 function ShowLogoutConfirmationAlert() {
     Swal.fire({
@@ -94,7 +134,7 @@ function ShowLogoutConfirmationAlert() {
         confirmButtonText: 'Yes'
     }).then((result) => {
         if (result.isConfirmed) {
-            window.location.href = '/SignIn/Logout'
+            window.location.href = '/signIn/logout'
         }
     });
 }
@@ -199,7 +239,7 @@ function ShowSuccessfulCarSharingMessage() {
         reverseButtons: true
     }).then((result) => {
         if (result.isConfirmed) {
-            window.location.href = '/Dashboard/';
+            window.location.href = '/dashboard/';
         }
     })
 }
@@ -216,12 +256,28 @@ function ShowPurchaseCancelledMessage() {
 
 // Function to show message about completed order payment process
 function ShowPurchaseCompletedMessage() {
-    Swal.fire({
-        title: "Congratulations!",
+
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-primary',
+            cancelButton: 'btn btn-secondary'
+        }
+    })
+
+    swalWithBootstrapButtons.fire({
+        title: 'Congratulations!',
         text: "You have successfully completed payment process. Check new order in your Account.",
         icon: 'success',
-        confirmButtonColor: '#007aff'
-    });
+        showCancelButton: true,
+        confirmButtonColor: '#007aff',
+        confirmButtonText: 'Check',
+        cancelButtonText: 'Later',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = '/dashboard/';
+        }
+    })
 }
 
 // Function to show message about successful rental finish
@@ -263,4 +319,120 @@ function ThrowSignInErrorMessage() {
         icon: 'error',
         confirmButtonColor: '#007aff'
     });
+}
+
+//Function to show message about Unauthorized 401 error
+function ShowUnauthorizedErrorMessage() {
+
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-primary',
+            cancelButton: 'btn btn-secondary'
+        }
+    })
+
+    swalWithBootstrapButtons.fire({
+        title: '401 Unauthorized',
+        text: "We couldn't validate your credentials. Please sign in and then try again.",
+        icon: 'error',
+        showCancelButton: true,
+        confirmButtonColor: '#007aff',
+        confirmButtonText: 'Sign in',
+        cancelButtonText: 'Later',
+        timer: 10000,
+        timerProgressBar: true,
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = '/signIn/';
+        }
+    })
+}
+
+//Function to show message about Unauthorized 401 error
+function ShowForbiddenErrorMessage() {
+
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-primary',
+            cancelButton: 'btn btn-secondary'
+        }
+    })
+
+    swalWithBootstrapButtons.fire({
+        title: '401 Unauthorized',
+        text: "We couldn't validate your credentials. Please sign in and then try again.",
+        icon: 'error',
+        showCancelButton: true,
+        confirmButtonColor: '#007aff',
+        confirmButtonText: 'Sign in',
+        cancelButtonText: 'Later',
+        timer: 10000,
+        timerProgressBar: true,
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = '/signIn/';
+        }
+    })
+}
+
+//Function to show message about Forbidden 403 error
+function ShowForbiddenErrorMessage() {
+
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-primary',
+            cancelButton: 'btn btn-secondary'
+        }
+    })
+
+    swalWithBootstrapButtons.fire({
+        title: '403 Forbidden',
+        text: "Sorry but you don't have permission to access this area.",
+        icon: 'warning',
+        confirmButtonColor: '#007aff',
+        timer: 10000,
+        timerProgressBar: true
+    })
+}
+
+//Function to show message about NotFound 404 error
+function ShowNotFoundErrorMessage() {
+
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-primary',
+            cancelButton: 'btn btn-secondary'
+        }
+    })
+
+    swalWithBootstrapButtons.fire({
+        title: '404 Not Found',
+        text: "Sorry but there is no information about what you are looking for.",
+        icon: 'question',
+        confirmButtonColor: '#007aff',
+        timer: 10000,
+        timerProgressBar: true
+    })
+}
+
+//Function to show message about Internal Server Error 500 and Service Unavailable 503 error
+function ShowInternalServerErrorMessage() {
+
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: 'btn btn-primary',
+            cancelButton: 'btn btn-secondary'
+        }
+    })
+
+    swalWithBootstrapButtons.fire({
+        title: '500 Server Error',
+        text: "Something has happened on the server side or it might be overloaded. Please try againg later.",
+        icon: 'error',
+        confirmButtonColor: '#007aff',
+        timer: 10000,
+        timerProgressBar: true
+    })
 }

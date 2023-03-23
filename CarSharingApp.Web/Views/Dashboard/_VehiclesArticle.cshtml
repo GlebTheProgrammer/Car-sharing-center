@@ -16,7 +16,7 @@
 <div class="card-body">
     <div class="datatable-wrapper datatable-loading no-footer sortable searchable fixed-columns">
         <div class="datatable-top d-flex align-items-center">
-            <div class="datatable-search d-flex align-items-center">
+            <div class="datatable-search table-responsive-sm d-flex align-items-center">
                 <label class="ms-2 me-4 text-nowrap">Search by:</label>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="inlineRadioOptions" id="searchByNameRadio" value="option1" @(ViewBag.SearchBy == null || ViewBag.SearchBy == "Name" ? "checked" : "")>
@@ -33,7 +33,7 @@
 
         <hr class="mt-3">
 
-        <div class="datatable-container mt-3">
+        <div class="datatable-container mt-3 table-responsive-sm">
             <table id="datatablesSimple" class="table table-hover">
                 <thead>
                     <tr>
@@ -74,7 +74,7 @@
                                 <td class="text-center">@vehicle.Name</td>
                                 <td class="text-center">$@(vehicle.HourlyPrice.Length > 3 ? vehicle.HourlyPrice.Insert(vehicle.HourlyPrice.Length - 3, ",") : vehicle.HourlyPrice)</td>
                                 <td class="text-center">$@(vehicle.DailyPrice.Length > 3 ? vehicle.DailyPrice.Insert(vehicle.DailyPrice.Length - 3, ",") : vehicle.DailyPrice)</td>
-                                <td class="text-center">@vehicle.PublishedTime.ToString("dd/MM/yyyy")</td>
+                                <td class="text-center">@(TimeZoneInfo.ConvertTimeFromUtc(vehicle.PublishedTime, TimeZoneInfo.Local).ToString("dd/MM/yyyy"))</td>
                                 <td class="text-center">@vehicle.TimesOrdered</td>
 
                                 @if (!vehicle.IsConfirmedByAdmin)
@@ -96,7 +96,7 @@
                                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
                                                 <h6 class="dropdown-header">Available actions:</h6>
                                                 <a class="dropdown-item" href="#!" onclick="UpdateVehicleStatus('@vehicle.VehicleId', '@vehicle.IsConfirmedByAdmin', '@(!vehicle.IsPublished)', '@vehicle.IsOrdered')"><i class="fa-solid fa-share-nodes me-2"></i><span>Publish</span></a>
-                                                <a class="dropdown-item" href="#!"><i class="fa-solid fa-square-pen me-2"></i><span>Modify</span></a>
+                                                <a class="dropdown-item" href="@Url.Action("Index", "EditVehicleData", new {vehicleId = vehicle.VehicleId})"><i class="fa-solid fa-square-pen me-2"></i><span>Modify</span></a>
                                             </div>
                                         </div>
                                         <button class="btn btn-sm btn-outline-secondary ms-2" type="button" data-target="#t2_details" data-toggle="collapse" onclick="DeleteVehicle('@vehicle.VehicleId', '@vehicle.Image')">
@@ -197,9 +197,9 @@
         $('#searchButton').click(function () {
             var value = $("#searchInput").val();
             if (document.getElementById("searchByNameRadio").checked){
-                $('#vehiclesPartialZone').load("/Dashboard/VehiclesArticlePartial?searchBy=Name&searchInput=" + value);
+                $('#vehiclesPartialZone').load("/dashboard/vehiclesPartial?searchBy=Name&searchInput=" + value);
             } else if (document.getElementById("searchByPriceRadio").checked) {
-                $('#vehiclesPartialZone').load("/Dashboard/VehiclesArticlePartial?searchBy=Price&searchInput=" + value);
+                $('#vehiclesPartialZone').load("/dashboard/vehiclesPartial?searchBy=Price&searchInput=" + value);
             }
         })
     });
@@ -208,9 +208,9 @@
     function ChangePage(pageNumber){
         var value = $("#searchInput").val();
         if (document.getElementById("searchByNameRadio").checked) {
-            $('#vehiclesPartialZone').load("/Dashboard/VehiclesArticlePartial?searchBy=Name&searchInput=" + value + "&page=" + pageNumber);
+            $('#vehiclesPartialZone').load("/dashboard/vehiclesPartial?searchBy=Name&searchInput=" + value + "&page=" + pageNumber);
         } else if (document.getElementById("searchByPriceRadio").checked) {
-            $('#vehiclesPartialZone').load("/Dashboard/VehiclesArticlePartial?searchBy=Price&searchInput=" + value + "&page=" + pageNumber);
+            $('#vehiclesPartialZone').load("/dashboard/vehiclesPartial?searchBy=Price&searchInput=" + value + "&page=" + pageNumber);
         }
     };
 
@@ -229,14 +229,14 @@
             if (result.isConfirmed) {
                 var value = $("#searchInput").val();
                 if (document.getElementById("searchByNameRadio").checked) {
-                    $('#vehiclesPartialZone').load("/Dashboard/DeleteVehicleAndRenderVehiclesArticlePartial?vehicleId=" + vehicleId + "&vehicleImage=" + vehicleImage + "&searchBy=Name&searchInput=" + value, function (responseTxt, statusTxt, xhr) {
+                    $('#vehiclesPartialZone').load("/dashboard/deleteAndRenderPartial/vehicle?vehicleId=" + vehicleId + "&vehicleImage=" + vehicleImage + "&searchBy=Name&searchInput=" + value, function (responseTxt, statusTxt, xhr) {
                         if (statusTxt === "success") {
                             UpdateStatisticsAndNotesArticles();
                             ShowSuccessfulMessageAfterVehicleWasDeleted();
                         }
                     });
                 } else if (document.getElementById("searchByPriceRadio").checked) {
-                    $('#vehiclesPartialZone').load("/Dashboard/DeleteVehicleAndRenderVehiclesArticlePartial?vehicleId=" + vehicleId + "&vehicleImage=" + vehicleImage + "&searchBy=Price&searchInput=" + value, function (responseTxt, statusTxt, xhr) {
+                    $('#vehiclesPartialZone').load("/dashboard/deleteAndRenderPartial/vehicle?vehicleId=" + vehicleId + "&vehicleImage=" + vehicleImage + "&searchBy=Price&searchInput=" + value, function (responseTxt, statusTxt, xhr) {
                         if (statusTxt === "success") {
                             UpdateStatisticsAndNotesArticles();
                             ShowSuccessfulMessageAfterVehicleWasDeleted();
@@ -251,13 +251,13 @@
     function UpdateVehicleStatus(vehicleId, isConfirmedByAdmin, isPublished, isOrdered){
         var value = $("#searchInput").val();
         if (document.getElementById("searchByNameRadio").checked) {
-            $('#vehiclesPartialZone').load("/Dashboard/UpdateVehicleStatus?vehicleId=" + vehicleId + "&isConfirmedByAdmin=" + isConfirmedByAdmin + "&isPublished=" + isPublished + "&isOrdered=" + isOrdered + "&searchBy=Name&searchInput=" + value, function (responseTxt, statusTxt, xhr) {
+            $('#vehiclesPartialZone').load("/dashboard/updateAndRenderPartial/vehicle/status?vehicleId=" + vehicleId + "&isConfirmedByAdmin=" + isConfirmedByAdmin + "&isPublished=" + isPublished + "&isOrdered=" + isOrdered + "&searchBy=Name&searchInput=" + value, function (responseTxt, statusTxt, xhr) {
                 if (statusTxt === "success") {
                     UpdateStatisticsArticle();
                 }
             });
         } else if (document.getElementById("searchByPriceRadio").checked) {
-            $('#vehiclesPartialZone').load("/Dashboard/UpdateVehicleStatus?vehicleId=" + vehicleId + "&isConfirmedByAdmin=" + isConfirmedByAdmin + "&isPublished=" + isPublished + "&isOrdered=" + isOrdered + "&searchBy=Name&searchInput=" + value, function (responseTxt, statusTxt, xhr) {
+            $('#vehiclesPartialZone').load("/dashboard/updateAndRenderPartial/vehicle/status?vehicleId=" + vehicleId + "&isConfirmedByAdmin=" + isConfirmedByAdmin + "&isPublished=" + isPublished + "&isOrdered=" + isOrdered + "&searchBy=Name&searchInput=" + value, function (responseTxt, statusTxt, xhr) {
                 if (statusTxt === "success") {
                     UpdateStatisticsArticle();
                 }
@@ -266,10 +266,10 @@
     }
 
     function UpdateStatisticsAndNotesArticles(){
-        $('#notesPartialZone').load("/Dashboard/NotesArticlePartial?type=All");
-        $('#statisticsPartialZone').load("/Dashboard/StatisticsArticlePartial");
+        $('#notesPartialZone').load("/dashboard/notesPartial?type=All");
+        $('#statisticsPartialZone').load("/dashboard/statisticsPartial");
     }
     function UpdateStatisticsArticle() {
-        $('#statisticsPartialZone').load("/Dashboard/StatisticsArticlePartial");
+        $('#statisticsPartialZone').load("/dashboard/statisticsPartial");
     }
 </script>

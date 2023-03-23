@@ -1,52 +1,82 @@
-﻿using CarSharingApp.Models.MongoView;
-using CarSharingApp.Repository.MongoDbRepository;
+﻿using CarSharingApp.Application.Contracts.Customer;
+using CarSharingApp.Web.Clients.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace CarSharingApp.Controllers
 {
     [Authorize]
-    public class EditCustomerDataController : Controller
+    [Route("customer/current/edit")]
+    public sealed class EditCustomerDataController : Controller
     {
-        private readonly MongoDbService _mongoDbService;
+        private readonly ICustomerServicePublicApiClient _customerServiceClient;
 
-        public EditCustomerDataController(MongoDbService mongoDbService)
+        public EditCustomerDataController(ICustomerServicePublicApiClient customerServiceClient)
         {
-            _mongoDbService = mongoDbService;
+            _customerServiceClient = customerServiceClient;
         }
 
+        [HttpGet]
+        [Route("information")]
         public async Task<IActionResult> Index()
         {
-            string customerId = new JwtSecurityTokenHandler().ReadJwtToken(HttpContext.Session.GetString("JWToken")).Claims.First(c => c.Type == JwtRegisteredClaimNames.Sub).Value;
+            var response = await _customerServiceClient.GetCustomerInformation();
 
-            CustomerEditModel customerEditModel = await _mongoDbService.GetCustomer_EditRepresentation(customerId);
+            response.EnsureSuccessStatusCode();
 
-            return View(customerEditModel);
+            CustomerDataResponse responseModel = await response.Content.ReadFromJsonAsync<CustomerDataResponse>()
+                ?? throw new NullReferenceException(nameof(responseModel));
+
+            return View(responseModel);
         }
 
-        public async Task<IActionResult> EditCustomerData(CustomerEditModel customerEditModel)
+        [HttpPost]
+        [Route("information")]
+        public async Task<IActionResult> Edit([FromForm] CustomerDataResponse request)
         {
             if (!ModelState.IsValid)
-                return View("Index", customerEditModel);
+                return View("Index", request);
 
-            await _mongoDbService.EditCustomerData(customerEditModel);
+            var response = await _customerServiceClient.EditCustomerInformation(
+                MapUpdateCustomerInfoRequest(request));
 
+            HttpContext.Session.SetString("CustomerImage", request.Image);
             HttpContext.Session.SetString("ChangedAccountData", "true");
 
             return RedirectToAction("Index");
         }
 
         [HttpPost]
-        public async Task<IActionResult> ChangePassword(string newPassword)
+        [Route("password")]
+        public async Task<IActionResult> ChangePassword([FromForm] string newPassword)
         {
-            string userId = new JwtSecurityTokenHandler().ReadJwtToken(HttpContext.Session.GetString("JWToken")).Claims.First(c => c.Type == JwtRegisteredClaimNames.Sub).Value;
+            var response = await _customerServiceClient.EditCustomerPassword(
+                MapUpdateCustomerPasswordRequest(newPassword));
 
-            await _mongoDbService.ChangePassword(userId, newPassword);
+            string url = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}" + Url.Action("Index", "Dashboard")
+                ?? throw new NullReferenceException(nameof(url));
 
-            HttpContext.Session.SetString("ChangedPassword", "true");
+            Response.Headers.Add("Location", url);
+            return Redirect(url);
+        }
 
-            return RedirectToAction("Index");
+        private UpdateCustomerInfoRequest MapUpdateCustomerInfoRequest(CustomerDataResponse response)
+        {
+            return new UpdateCustomerInfoRequest(
+                response.FirstName,
+                response.LastName,
+                response.PhoneNumber,
+                response.DriverLicenseIdentifier,
+                response.HasAcceptedNewsSharing,
+                response.ProfileDescription,
+                response.Image);
+        }
+
+        private UpdateCustomerPasswordRequest MapUpdateCustomerPasswordRequest(string newPassword)
+        {
+            return new UpdateCustomerPasswordRequest(
+                currentPassword: string.Empty,
+                newPassword: newPassword);
         }
     }
 }

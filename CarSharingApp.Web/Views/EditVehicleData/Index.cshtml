@@ -1,4 +1,6 @@
-﻿@model CarSharingApp.Models.MongoView.VehicleEditModel
+﻿@inject IConfiguration _configuration;
+
+@model CarSharingApp.Application.Contracts.Vehicle.EditVehicleInformationResponse
 
 
 <section>
@@ -7,7 +9,7 @@
             <div class="col-lg-4">
                 <div class="card mb-4 mt-3">
                     <div class="card-body text-center">
-                        <img id="VehicleImage" src="~/vehicleImages/@Model.Image" alt="avatar"
+                        <img id="VehicleImage" src="@(_configuration["AzureBlobStorage:VehiclesImagesPath"] + Model.Image)" alt="avatar"
                              class="img-fluid mb-3" style="border-radius: 5%;">
                         <h5 class="mb-0">@Model.Name</h5>
                     </div>
@@ -18,7 +20,7 @@
                         <div class="d-flex justify-content-center flex-column mb-2">
                             <button type="submit" form="vehicleEditedDataForm" value="Submit" class="btn btn-outline-success mb-3">Save Changes</button>
                             <buton type="button" class="btn btn-outline-danger mb-3" onclick="ShowCancelChangesConfirmationAlert()">Cancel Changes</buton>
-                            <a asp-action="Index" asp-controller="CustomerPersonalAccount" type="button" class="btn btn-outline-secondary">Get Back</a>
+                            <a asp-action="Index" asp-controller="Dashboard" type="button" class="btn btn-outline-secondary">Get Back</a>
                         </div>
                     </div>
                 </div>
@@ -39,15 +41,15 @@
                                 </tr>
                                 <tr>
                                     <td>Max speed</td>
-                                    <td class="text-center">@Model.MaxSpeed</td>
+                                    <td class="text-center">@Model.MaxSpeedKph</td>
                                 </tr>
                                 <tr>
                                     <td>Exterior color</td>
-                                    <td class="text-center">@Model.ExteriorColor</td>
+                                    <td class="text-center">@Model.ExteriorColour</td>
                                 </tr>
                                 <tr>
                                     <td>Interior color</td>
-                                    <td class="text-center">@Model.InteriorColor</td>
+                                    <td class="text-center">@Model.InteriorColour</td>
                                 </tr>
                                 <tr>
                                     <td>Drivetrain</td>
@@ -70,7 +72,7 @@
                             <tfoot>
                                 <tr>
                                     <td>VIN</td>
-                                    <td class="text-center">@Model.VIN</td>
+                                    <td class="text-center">@Model.Vin</td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -86,88 +88,111 @@
 
                         <iframe name="votar" style="display: none;"></iframe>
 
-                        <form class="row" method="post" target="votar" onsubmit="HideInputField('BriefDescription')">
-                            <div class="col-sm-3 d-flex align-items-center">
+                        <form class="row needs-validation" method="post" target="votar" onsubmit="HideInputField('BriefDescription', this)" novalidate>
+                            <div class="col-sm-3 d-flex align-items-center mb-2">
                                 <p class="mb-0">Brief Description</p>
                             </div>
-                            <div class="col-sm-6 d-flex flex-column justify-content-center">
-                                <span asp-validation-for="BriefDescription" id="BriefDescriptionError" class="text-danger text-center flex-column"></span>
+                            <div class="col-sm-6 d-flex flex-column justify-content-center mb-2">
                                 <label id="BriefDescriptionText" class="text-muted mb-0">@Model.BriefDescription</label>
-                                <textarea id="BriefDescriptionInput" type="text" class="form-control visually-hidden" required minlength="10" maxlength="50" rows="4" style="resize: none;" onfocus="HideErrorSpan('BriefDescriptionError')" onkeydown="CheckTextAreaInput(event)"></textarea>
+                                <textarea id="BriefDescriptionInput" type="text" class="form-control visually-hidden" required minlength="30" maxlength="80" rows="4" style="resize: none;" onkeydown="CheckTextAreaInput(event)"></textarea>
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
+                                <div id="briefDescriptionErrorValidation" class="invalid-feedback">
+                                    Please provide a valid Brief description. (Must be ...)
+                                </div>
                             </div>
-                            <div class="col-sm-3 d-flex align-items-center justify-content-center">
-                                <button id="ChangeBriefDescriptionBtn" type="button" class="btn btn-outline-warning" onclick="ShowInputField('BriefDescription')"><i class="far fa-pen-to-square pr-2 text-center"></i>Change</button>
-                                <button id="SaveBriefDescriptionBtn" type="submit" class="btn btn-outline-success visually-hidden"><i class="fa-regular fa-circle-check pr-2 text-center"></i>Save</button>
+                            <div class="col-sm-3 d-flex align-items-center justify-content-center mb-2">
+                                <button id="ChangeBriefDescriptionBtn" type="button" class="btn btn-outline-warning" onclick="ShowInputField('BriefDescription')"><i class="far fa-pen-to-square me-2 text-center"></i>Change</button>
+                                <button id="SaveBriefDescriptionBtn" type="submit" class="btn btn-outline-success visually-hidden"><i class="fa-regular fa-circle-check me-2 text-center"></i>Save</button>
                             </div>
                         </form>
 
                         <hr class="featurette-divider">
 
-                        <form class="row" method="post" target="votar" onsubmit="HideInputField('Description')">
-                            <div class="col-sm-3 d-flex align-items-center">
+                        <form class="row needs-validation" method="post" target="votar" onsubmit="HideInputField('Description', this)" novalidate>
+                            <div class="col-sm-3 d-flex align-items-center mb-2">
                                 <p class="mb-0">Description</p>
                             </div>
-                            <div class="col-sm-6 d-flex flex-column justify-content-center">
-                                <span asp-validation-for="Description" id="DescriptionError" class="text-danger text-center flex-column"></span>
+                            <div class="col-sm-6 d-flex flex-column justify-content-center mb-2">
                                 <label id="DescriptionText" class="text-muted mb-0">@Model.Description</label>
-                                <textarea id="DescriptionInput" type="text" class="form-control visually-hidden" required minlength="30" maxlength="255" rows="9" style="resize: none;" onfocus="HideErrorSpan('DescriptionError')" onkeydown="CheckTextAreaInput(event)"></textarea>
+                                <textarea id="DescriptionInput" type="text" class="form-control visually-hidden" required minlength="50" maxlength="300" rows="9" style="resize: none;" onkeydown="CheckTextAreaInput(event)"></textarea>
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
+                                <div id="descriptionErrorValidation" class="invalid-feedback mb-2">
+                                    Please provide a valid Description. (Must be ...)
+                                </div>
                             </div>
                             <div class="col-sm-3 d-flex align-items-center justify-content-center">
-                                <button id="ChangeDescriptionBtn" type="button" class="btn btn-outline-warning" onclick="ShowInputField('Description')"><i class="far fa-pen-to-square pr-2 text-center"></i>Change</button>
-                                <button id="SaveDescriptionBtn" type="submit" class="btn btn-outline-success visually-hidden"><i class="fa-regular fa-circle-check pr-2 text-center"></i>Save</button>
+                                <button id="ChangeDescriptionBtn" type="button" class="btn btn-outline-warning" onclick="ShowInputField('Description')"><i class="far fa-pen-to-square me-2 text-center"></i>Change</button>
+                                <button id="SaveDescriptionBtn" type="submit" class="btn btn-outline-success visually-hidden"><i class="fa-regular fa-circle-check me-2 text-center"></i>Save</button>
                             </div>
                         </form>
 
                         <hr class="featurette-divider">
 
-                        <form class="row" method="post" target="votar" onsubmit="HideInputField('HourTariff')">
-                            <div class="col-sm-3 d-flex align-items-center">
+                        <form class="row needs-validation" method="post" target="votar" onsubmit="HideInputField('HourTariff', this)" novalidate>
+                            <div class="col-sm-3 d-flex align-items-center mb-2">
                                 <p class="mb-0">Hourly Price ($)</p>
                             </div>
-                            <div class="col-sm-6 d-flex flex-column justify-content-center">
-                                <span asp-validation-for="Tariff.TariffPerHour" id="HourTariffError" class="text-danger text-center flex-column"></span>
-                                <label id="HourTariffText" class="text-muted mb-0">@Model.Tariff.TariffPerHour</label>
-                                <input id="HourTariffInput" type="number" class="form-control visually-hidden" required min="1" max="9999" onfocus="HideErrorSpan('HourTariffError')">
+                            <div class="col-sm-6 d-flex flex-column justify-content-center mb-2">
+                                <label id="HourTariffText" class="text-muted mb-0">@Model.HourlyRentalPrice</label>
+                                <input id="HourTariffInput" type="text" class="form-control visually-hidden" required pattern="^[1-9]$|^[1-9][0-9]$|^[1-9][0-9][0-9]$|^[1-9][0-9][0-9][0-9]$|^(10000)$">
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
+                                <div id="hourlyRentalPriceErrorValidation" class="invalid-feedback">
+                                    Please provide a valid Hourly rental price. (Must be ...)
+                                </div>
                             </div>
                             <div class="col-sm-3 d-flex align-items-center justify-content-center">
-                                <button id="ChangeHourTariffBtn" type="button" class="btn btn-outline-warning" onclick="ShowInputField('HourTariff')"><i class="far fa-pen-to-square pr-2 text-center"></i>Change</button>
-                                <button id="SaveHourTariffBtn" type="submit" class="btn btn-outline-success visually-hidden"><i class="fa-regular fa-circle-check pr-2 text-center"></i>Save</button>
+                                <button id="ChangeHourTariffBtn" type="button" class="btn btn-outline-warning" onclick="ShowInputField('HourTariff')"><i class="far fa-pen-to-square me-2 text-center"></i>Change</button>
+                                <button id="SaveHourTariffBtn" type="submit" class="btn btn-outline-success visually-hidden"><i class="fa-regular fa-circle-check me-2 text-center"></i>Save</button>
                             </div>
                         </form>
 
                         <hr class="featurette-divider">
 
-                        <form class="row" method="post" target="votar" onsubmit="HideInputField('DailyTariff')">
-                            <div class="col-sm-3 d-flex align-items-center">
+                        <form class="row needs-validation" method="post" target="votar" onsubmit="HideInputField('DailyTariff', this)" novalidate>
+                            <div class="col-sm-3 d-flex align-items-center mb-2">
                                 <p class="mb-0">Daily Price ($)</p>
                             </div>
-                            <div class="col-sm-6 d-flex flex-column justify-content-center">
-                                <span asp-validation-for="Tariff.TariffPerDay" id="DailyTariffError" class="text-danger text-center flex-column"></span>
-                                <label id="DailyTariffText" class="text-muted mb-0">@Model.Tariff.TariffPerDay</label>
-                                <input id="DailyTariffInput" type="number" class="form-control visually-hidden" required min="1" max="9999" onfocus="HideErrorSpan('DailyTariffError')">
+                            <div class="col-sm-6 d-flex flex-column justify-content-center mb-2">
+                                <label id="DailyTariffText" class="text-muted mb-0">@Model.DailyRentalPrice</label>
+                                <input id="DailyTariffInput" type="text" class="form-control visually-hidden" required pattern="^[1-9]$|^[1-9][0-9]$|^[1-9][0-9][0-9]$|^[1-9][0-9][0-9][0-9]$|^(10000)$">
+                                <div class="valid-feedback">
+                                    Looks good!
+                                </div>
+                                <div id="dailyRentalPriceErrorValidation" class="invalid-feedback">
+                                    Please provide a valid Daily rental price. (Must be ...)
+                                </div>
                             </div>
                             <div class="col-sm-3 d-flex align-items-center justify-content-center">
-                                <button id="ChangeDailyTariffBtn" type="button" class="btn btn-outline-warning" onclick="ShowInputField('DailyTariff')"><i class="far fa-pen-to-square pr-2 text-center"></i>Change</button>
-                                <button id="SaveDailyTariffBtn" type="submit" class="btn btn-outline-success visually-hidden"><i class="fa-regular fa-circle-check pr-2 text-center"></i>Save</button>
+                                <button id="ChangeDailyTariffBtn" type="button" class="btn btn-outline-warning" onclick="ShowInputField('DailyTariff')"><i class="far fa-pen-to-square me-2 text-center"></i>Change</button>
+                                <button id="SaveDailyTariffBtn" type="submit" class="btn btn-outline-success visually-hidden"><i class="fa-regular fa-circle-check me-2 text-center"></i>Save</button>
                             </div>
                         </form>
 
                         <hr class="featurette-divider">
 
                         @{
-                            var latModel = float.Parse(Model.Location.Latitude.Replace('.', ','));
-                            var longModel = float.Parse(Model.Location.Longitude.Replace('.', ','));
+                            var latModel = float.Parse(Model.Latitude.Replace('.', ','));
+                            var longModel = float.Parse(Model.Longitude.Replace('.', ','));
                         }
 
                         <div class="row">
 
-                            <div class="col-sm-1 d-flex align-items-center">
+                            <div class="col-sm-1 d-flex align-items-center mb-2">
                                 <p class="mb-0">Location</p>
                             </div>
 
-                            <div class="col-sm-9 d-flex flex-column justify-content-center">
+                            <div class="col-sm-9 d-flex flex-column justify-content-center mb-2">
 
-                                <label id="AddressText" class="text-muted mb-0 visually-hidden">@Model.Location.Address</label>
+                                <label id="StreetAddressText" class="text-muted mb-0 visually-hidden">@Model.StreetAddress</label>
+                                <label id="AptSuiteEtcText" class="text-muted mb-0 visually-hidden">@Model.AptSuiteEtc</label>
+                                <label id="CityText" class="text-muted mb-0 visually-hidden">@Model.City</label>
+                                <label id="CountryText" class="text-muted mb-0 visually-hidden">@Model.Country</label>
 
                                 <div class="container-fluid">
                                     <div id="map" class="text-center" style="height: 400px; width: 100%;"></div>
@@ -202,18 +227,71 @@
                                 </div>
 
                                 <div class="mt-3">
-                                    <span asp-validation-for="Location.Address" id="AddressError" class="text-danger text-center d-flex justify-content-center"></span>
-                                    <div class="d-flex flex-row">
-                                        <input id="AddressInput" type="text" class="form-control visually-hidden" required maxlength="255" onfocus="HideErrorSpan('AddressError')">
-                                        <button id="SearchAddressBtn" class="btn btn-outline-primary ml-2 visually-hidden" type="button" onclick="setUpTheMarker()">Search</button>
-                                    </div>
+
+                                    <form class="needs-validation row" method="post" target="votar" onsubmit="GetNewMarkerLocation(this)" novalidate>
+                                        <div id="StreetAddressSection" class="col-6 visually-hidden">
+                                            <label class="form-label">Street address <label class="text-danger">*</label></label>
+                                            <input type="text" class="form-control" id="StreetAddressInput" required>
+                                            <div class="valid-feedback">
+                                                Looks good!
+                                            </div>
+                                            <div id="streetAddressErrorValidation" class="invalid-feedback">
+                                                Please provide a Street address.
+                                            </div>
+                                        </div>
+                                        <div id="AptSuiteEtcSection" class="col-6 visually-hidden">
+                                            <label class="form-label">Apt, suite, etc. <label class="text-danger">*</label></label>
+                                            <input type="text" class="form-control" id="AptSuiteEtcInput" required>
+                                            <div class="valid-feedback">
+                                                Looks good!
+                                            </div>
+                                            <div id="aptSuiteEtcErrorValidation" class="invalid-feedback">
+                                                Please provide vehicle Apt. or suite.
+                                            </div>
+                                        </div>
+                                        <div id="CountrySection" class="col-6 visually-hidden">
+                                            <label class="form-label mt-2">Country <label class="text-danger">*</label></label>
+                                            <select class="form-select" id="CountryInput" required>
+                                                @foreach (var country in CarSharingApp.Domain.SmartEnums.Country.GetPossibleEnumerations())
+                                                {
+                                                    if (country.Equals(Model.Country))
+                                                    {
+                                                        <option value="@CarSharingApp.Domain.SmartEnums.Country.FromName(country)" selected>@country</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@CarSharingApp.Domain.SmartEnums.Country.FromName(country)">@country</option>
+                                                    }
+                                                }
+                                            </select>
+                                            <div class="valid-feedback">
+                                                Looks good!
+                                            </div>
+                                            <div id="countryErrorValidation" class="invalid-feedback">
+                                                Please provide a Country.
+                                            </div>
+                                        </div>
+                                        <div id="CitySection" class="col-6 visually-hidden">
+                                            <label class="form-label mt-2">City <label class="text-danger">*</label></label>
+                                            <input type="text" class="form-control" id="CityInput" required>
+                                            <div class="valid-feedback">
+                                                Looks good!
+                                            </div>
+                                            <div id="cityErrorValidation" class="invalid-feedback">
+                                                Please provide a City.
+                                            </div>
+                                        </div>
+
+                                        <button id="SearchAddressBtn" class="btn btn-outline-primary ms-auto me-auto visually-hidden mt-3" style="width: 150px;" type="submit">Search</button>
+
+                                    </form>
                                 </div>
 
                             </div>
 
                             <div class="col-sm-2 d-flex align-items-center justify-content-center">
-                                <button id="ChangeAddressBtn" type="button" class="btn btn-outline-warning" onclick="ShowAddressInputField('Address')"><i class="far fa-pen-to-square pr-2 text-center"></i>Change</button>
-                                <button id="CancelAddressChangesBtn" type="button" class="btn btn-outline-danger visually-hidden" onclick="CancelMapChanges('Address')"><i class="fa-solid fa-circle-xmark pr-2 text-center"></i>Cancel</button>
+                                <button id="ChangeAddressBtn" type="button" class="btn btn-outline-warning" onclick="ShowLocationInputs()"><i class="far fa-pen-to-square me-2 text-center"></i>Change</button>
+                                <button id="CancelAddressChangesBtn" type="button" class="btn btn-outline-danger visually-hidden" onclick="CancelMapChanges()"><i class="fa-solid fa-circle-xmark me-2 text-center"></i>Cancel</button>
                             </div>
 
                         </div>
@@ -221,29 +299,32 @@
                     </div>
                 </div>
 
-                <form id="vehicleEditedDataForm" asp-controller="EditVehicleData" asp-action="EditVehicleData" method="post" enctype="multipart/form-data" class="visually-hidden">
+                <form id="vehicleEditedDataForm" asp-controller="EditVehicleData" asp-action="Edit" method="post" enctype="multipart/form-data" class="visually-hidden">
                     <input id="ModelBriefDescription" asp-for="BriefDescription" value="@Model.BriefDescription" class="form-control" readonly="readonly" />
                     <input id="ModelDescription" asp-for="Description" value="@Model.Description" class="form-control" readonly="readonly" />
-                    <input id="ModelHourTariff" asp-for="Tariff.TariffPerHour" value="@Model.Tariff.TariffPerHour" class="form-control" readonly="readonly" />
-                    <input id="ModelDailyTariff" asp-for="Tariff.TariffPerDay" value="@Model.Tariff.TariffPerDay" class="form-control" readonly="readonly" />
-                    <input id="ModelAddress" asp-for="Location.Address" value="@Model.Location.Address" class="form-control" readonly="readonly" />
-                    <input id="ModelLocationLatitude" asp-for="Location.Latitude" value="@Model.Location.Latitude" class="form-control" readonly="readonly" />
-                    <input id="ModelLocationLongitude" asp-for="Location.Longitude" value="@Model.Location.Longitude" class="form-control" readonly="readonly" />
+                    <input id="ModelHourTariff" asp-for="HourlyRentalPrice" value="@Model.HourlyRentalPrice" class="form-control" readonly="readonly" />
+                    <input id="ModelDailyTariff" asp-for="DailyRentalPrice" value="@Model.DailyRentalPrice" class="form-control" readonly="readonly" />
+                    <input id="ModelStreetAddress" asp-for="StreetAddress" value="@Model.StreetAddress" class="form-control" readonly="readonly" />
+                    <input id="ModelCity" asp-for="City" value="@Model.City" class="form-control" readonly="readonly" />
+                    <input id="ModelAptSuiteEtc" asp-for="AptSuiteEtc" value="@Model.AptSuiteEtc" class="form-control" readonly="readonly" />
+                    <input id="ModelCountry" asp-for="Country" value="@Model.Country" class="form-control" readonly="readonly" />
+                    <input id="ModelLocationLatitude" asp-for="Latitude" value="@Model.Latitude" class="form-control" readonly="readonly" />
+                    <input id="ModelLocationLongitude" asp-for="Longitude" value="@Model.Longitude" class="form-control" readonly="readonly" />
 
                     <!-- User can't change this fields -->
-                    <input id="ModelId" asp-for="VehicleId" value="@Model.VehicleId" class="form-control" readonly="readonly" />
+                    <input id="ModelId" asp-for="Id" value="@Model.Id" class="form-control" readonly="readonly" />
                     <input id="ModelName" asp-for="Name" value="@Model.Name" class="form-control" readonly="readonly" />
                     <input id="ModelImage" asp-for="Image" value="@Model.Image" class="form-control" readonly="readonly" />
 
                     <input id="ModelProductionYear" asp-for="ProductionYear" value="@Model.ProductionYear" class="form-control" readonly="readonly" />
-                    <input id="ModelMaxSpeed" asp-for="MaxSpeed" value="@Model.MaxSpeed" class="form-control" readonly="readonly" />
-                    <input id="ModelExteriorColor" asp-for="ExteriorColor" value="@Model.ExteriorColor" class="form-control" readonly="readonly" />
-                    <input id="ModelInteriorColor" asp-for="InteriorColor" value="@Model.InteriorColor" class="form-control" readonly="readonly" />
+                    <input id="ModelMaxSpeed" asp-for="MaxSpeedKph" value="@Model.MaxSpeedKph" class="form-control" readonly="readonly" />
+                    <input id="ModelExteriorColor" asp-for="ExteriorColour" value="@Model.ExteriorColour" class="form-control" readonly="readonly" />
+                    <input id="ModelInteriorColor" asp-for="InteriorColour" value="@Model.InteriorColour" class="form-control" readonly="readonly" />
                     <input id="ModelDrivetrain" asp-for="Drivetrain" value="@Model.Drivetrain" class="form-control" readonly="readonly" />
                     <input id="ModelFuelType" asp-for="FuelType" value="@Model.FuelType" class="form-control" readonly="readonly" />
                     <input id="ModelTransmission" asp-for="Transmission" value="@Model.Transmission" class="form-control" readonly="readonly" />
                     <input id="ModelEngine" asp-for="Engine" value="@Model.Engine" class="form-control" readonly="readonly" />
-                    <input id="ModelVIN" asp-for="VIN" value="@Model.VIN" class="form-control" readonly="readonly" />
+                    <input id="ModelVIN" asp-for="Vin" value="@Model.Vin" class="form-control" readonly="readonly" />
                 </form>
 
             </div>
@@ -252,3 +333,53 @@
 </section>
 
 <script src="~/js/editVehicleInfoPage.js" asp-append-version="true"></script>
+
+<script>
+    function ShowLocationInputs(){
+        clearAllMarkers();
+
+        ShowAddressInputField("StreetAddress");
+        ShowAddressInputField("AptSuiteEtc");
+        ShowAddressInputField("Country");
+        ShowAddressInputField("City");
+
+        var changeBtn = document.getElementById("ChangeAddressBtn");
+        var cancelChangesBtn = document.getElementById("CancelAddressChangesBtn");
+        var searchAddressBtn = document.getElementById("SearchAddressBtn");
+
+        changeBtn.setAttribute("class", "visually-hidden");
+        cancelChangesBtn.setAttribute("class", "btn btn-outline-danger");
+        searchAddressBtn.setAttribute("class", "btn btn-outline-primary ms-auto me-auto mt-3");
+    }
+
+    function CancelAndHideInput(target){
+        var section = document.getElementById(target + "Section");
+        section.setAttribute("class", "col-6 visually-hidden");
+    }
+
+    function HideLocationInputs(){
+        var changeBtn = document.getElementById("ChangeAddressBtn");
+        var cancelChangesBtn = document.getElementById("CancelAddressChangesBtn");
+        var searchAddressBtn = document.getElementById("SearchAddressBtn");
+
+        HideAddressInputField("StreetAddress");
+        HideAddressInputField("AptSuiteEtc");
+        HideAddressInputField("Country");
+        HideAddressInputField("City");
+
+        cancelChangesBtn.setAttribute("class", "visually-hidden");
+        searchAddressBtn.setAttribute("class", "visually-hidden");
+        changeBtn.setAttribute("class", "btn btn-outline-warning");
+    }
+
+    function GetNewMarkerLocation(form){
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        } else {
+            setUpTheMarker();
+            event.preventDefault();
+        }
+        form.classList.add('was-validated');
+    }
+</script>

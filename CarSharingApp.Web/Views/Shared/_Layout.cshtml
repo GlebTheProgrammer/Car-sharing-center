@@ -31,10 +31,13 @@
                 <a class="navbar-brand" href="@Url.Action("Index", "Home")">
                     <img src="~/Images/HomePage/samSolutionsLogo.png" height="37" />
                 </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item dropdown">
-                            <a id="theme" class="nav-link dropdown-toggle d-flex align-items-center" style="color: #8f9497" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" onmouseover="this.style = 'color: #c5c9cc;'" onmouseout="this.style = 'color: #8f9497'">
+                        <li class="nav-item dropdown ms-1 me-1">
+                            <a id="theme" class="nav-link dropdown-toggle d-flex align-items-center ms-2 me-2" style="color: #8f9497" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" onmouseover="this.style = 'color: #c5c9cc;'" onmouseout="this.style = 'color: #8f9497'">
                                 <i id="themeIcon" class="fa-solid fa-sun me-2 mt-1"></i>
                             </a>
                             <ul class="dropdown-menu">
@@ -42,19 +45,19 @@
                                 <li><a href="javascript:void(0);" id="setDarkTheme" class="dropdown-item text-secondary"><i class="fa-solid fa-moon me-2"></i>Dark</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item me-1">
-                            <a class="nav-link" asp-controller="Home" asp-action="Index">About Us</a>
+                        <li class="nav-item ms-1 me-1">
+                            <a class="nav-link ms-2 me-2" asp-controller="Home" asp-action="Index">About Us</a>
                         </li>
-                        <li class="nav-item me-1">
-                            <a class="nav-link" asp-controller="Catalog" asp-action="Index">Catalog and Pricing</a>
+                        <li class="nav-item ms-1 me-1">
+                            <a class="nav-link ms-2 me-2" asp-controller="Catalog" asp-action="Index">Catalog and Pricing</a>
                         </li>
-                        <li class="nav-item me-1">
-                            <a class="nav-link" asp-controller="SearchNearbyVehicles" asp-action="Index">Nearby Vehicles</a>
+                        <li class="nav-item ms-1 me-1">
+                            <a class="nav-link ms-2 me-2" asp-controller="SearchNearbyVehicles" asp-action="Index">Nearby Vehicles</a>
                         </li>
                         @if (Accessor?.HttpContext?.Session.GetString("JWToken") is not null)
                         {
-                            <li class="nav-item">
-                                <a id="ShareYourCarBtn" class="nav-link" asp-controller="AddVehicle" asp-action="Index">Share your vehicle</a>
+                            <li class="nav-item ms-1 me-1">
+                                <a id="ShareYourCarBtn" class="nav-link ms-2 me-2" asp-controller="AddVehicle" asp-action="Index">Share your vehicle</a>
                             </li>
                         }
 
@@ -80,9 +83,10 @@
                     @if (Accessor?.HttpContext?.Session.GetString("JWToken") is not null)
                     {
                         <ul class="navbar-nav d-flex flex-row ms-auto me-3">
-                            <li class="nav-item me-3 me-lg-0 dropdown">
-                                <a id="personalAccountLink" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <img src="@(string.Join("", _configuration["AzureBlobStorage:CustomersAccountImagesPath"], "image1.png"))" class="rounded-circle" height="30" loading="lazy" />
+                            <li class="nav-item me-3 me-lg-0 dropdown ms-1 me-1">
+                                <a id="personalAccountLink" class="nav-link dropdown-toggle ms-2 me-2" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+@*                                    <img src="@(string.Join("", _configuration["AzureBlobStorage:CustomersAccountImagesPath"], "image1.png"))" class="rounded-circle" height="30" loading="lazy" />*@
+                                    <img src="@(string.Join("", _configuration["AzureBlobStorage:CustomersAccountImagesPath"], Accessor?.HttpContext?.Session.GetString("CustomerImage")))" class="rounded-circle" height="30" loading="lazy" />
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li><a href="@Url.Action("Index", "Dashboard")" id="myAccountChoice" class="dropdown-item text-secondary"><i class="fa-solid fa-user me-2"></i>Dashboard</a></li>
@@ -322,6 +326,30 @@
         if (@(Accessor?.HttpContext?.Session.GetString("CancelledPayment") == null ? "false" : "true")) {
             ShowPurchaseCancelledMessage();
             @{Accessor?.HttpContext?.Session.Remove("CancelledPayment");}
+        }
+        if (@(Accessor?.HttpContext?.Session.GetString("CompletedPayment") == null ? "false" : "true")) {
+            ShowPurchaseCompletedMessage();
+            @{Accessor?.HttpContext?.Session.Remove("CompletedPayment");}
+        }
+        if (@(Accessor?.HttpContext?.Session.GetString("FinishedRental") == null ? "false" : "true")) {
+            ShowSuccessfulMessageAfterRentalWasFinished();
+            @{Accessor?.HttpContext?.Session.Remove("FinishedRental");}
+        }
+        if (@(Accessor?.HttpContext?.Session.GetString("Unauthorized401Error") == null ? "false" : "true")) {
+            ShowUnauthorizedErrorMessage();
+            @{Accessor?.HttpContext?.Session.Remove("Unauthorized401Error");}
+        }
+        if (@(Accessor?.HttpContext?.Session.GetString("Forbidden403Error") == null ? "false" : "true")) {
+            ShowForbiddenErrorMessage();
+            @{Accessor?.HttpContext?.Session.Remove("Forbidden403Error");}
+        }
+        if (@(Accessor?.HttpContext?.Session.GetString("NotFound404Error") == null ? "false" : "true")) {
+            ShowNotFoundErrorMessage();
+            @{Accessor?.HttpContext?.Session.Remove("NotFound404Error");}
+        }
+        if (@(Accessor?.HttpContext?.Session.GetString("InternalServer500Error") == null ? "false" : "true")) {
+            ShowInternalServerErrorMessage();
+            @{Accessor?.HttpContext?.Session.Remove("InternalServer500Error");}
         }
     });
 </script>

@@ -9,21 +9,26 @@ using Microsoft.AspNetCore.Authorization;
 namespace CarSharingApp.Web.Controllers
 {
     [Authorize]
-    public class DashboardController : Controller
+    [Route("dashboard")]
+    public sealed class DashboardController : Controller
     {
         private readonly IAccountServicePublicApiClient _accountServiceClient;
         private readonly IVehicleServicePublicApiClient _vehicleServiceClient;
+        private readonly IRentalServicePublicApiClient _rentalServiceClient;
         private readonly IAzureBlobStoragePublicApiClient _blobStorageClient;
 
         public DashboardController(IAccountServicePublicApiClient accountServiceClient, 
                                    IVehicleServicePublicApiClient vehicleServiceClient,
+                                   IRentalServicePublicApiClient rentalServiceClient,
                                    IAzureBlobStoragePublicApiClient blobStorageClient)
         {
             _accountServiceClient = accountServiceClient;
             _vehicleServiceClient = vehicleServiceClient;
+            _rentalServiceClient = rentalServiceClient;
             _blobStorageClient = blobStorageClient;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var response = await _accountServiceClient.GetCustomerAccountData();
@@ -44,9 +49,67 @@ namespace CarSharingApp.Web.Controllers
             return View(responseModel);
         }
 
-        // Partial views rendering goes below
+        #region Partial views rendering
 
-        public async Task<IActionResult> VehiclesArticlePartial(string searchBy, string searchInput, int page = 1, int pageSize = 3)
+        [HttpGet]
+        [Route("rentalsPartial")]
+        public async Task<IActionResult> RentalsArticlePartial([FromQuery] string searchBy, 
+                                                               [FromQuery] string searchInput, 
+                                                               [FromQuery] int page = 1, 
+                                                               [FromQuery] int pageSize = 3)
+        {
+            var response = await _accountServiceClient.GetCustomerRentalsAccountRepresentation();
+
+            response.EnsureSuccessStatusCode();
+
+            AccountRentalsDataResponse responseModel = await response.Content.ReadFromJsonAsync<AccountRentalsDataResponse>()
+                ?? throw new NullReferenceException(nameof(responseModel));
+
+            ViewBag.SearchBy = searchBy;
+            ViewBag.SearchRentalInput = searchInput;
+
+            if (page < 1)
+                page = 1;
+
+            if (searchBy == "Amount" && searchInput != null)
+            {
+                var partialViewModel = responseModel.Rentals.Where(r => r.Amount.StartsWith(searchInput)).ToList();
+
+                Pager pager = new Pager(partialViewModel.Count(), page, pageSize);
+                int rentalsSkip = (page - 1) * pageSize;
+                ViewBag.Pager = pager;
+                ViewBag.RentalsCount = partialViewModel.Count();
+
+                return PartialView("_RentalsArticle", partialViewModel.Skip(rentalsSkip).Take(pager.PageSize).ToList());
+            }
+            else if (searchBy == "VehicleName" && searchInput != null)
+            {
+                var partialViewModel = responseModel.Rentals.Where(r => r.VehicleName.StartsWith(searchInput)).ToList();
+
+                Pager pager = new Pager(partialViewModel.Count(), page, pageSize);
+                int rentalsSkip = (page - 1) * pageSize;
+                ViewBag.Pager = pager;
+                ViewBag.RentalsCount = partialViewModel.Count();
+
+                return PartialView("_RentalsArticle", partialViewModel.Skip(rentalsSkip).Take(pager.PageSize).ToList());
+            }
+            else
+            {
+                Pager pager = new Pager(responseModel.Rentals.Count(), page, pageSize);
+                int rentalsSkip = (page - 1) * pageSize;
+                ViewBag.Pager = pager;
+                ViewBag.RentalsCount = responseModel.Rentals.Count();
+
+                return PartialView("_RentalsArticle", responseModel.Rentals.Skip(rentalsSkip).Take(pager.PageSize).ToList());
+            }
+        }
+
+        [HttpGet]
+        [Route("vehiclesPartial")]
+        public async Task<IActionResult> VehiclesArticlePartial([FromQuery] string searchBy, 
+                                                                [FromQuery] string searchInput, 
+                                                                [FromQuery] int page = 1, 
+                                                                [FromQuery] int pageSize = 3)
         {
             var response = await _accountServiceClient.GetCustomerVehiclesAccountRepresentation();
 
@@ -93,7 +156,9 @@ namespace CarSharingApp.Web.Controllers
             }
         }
 
-        public async Task<IActionResult> NotesArticlePartial(string type)
+        [HttpGet]
+        [Route("notesPartial")]
+        public async Task<IActionResult> NotesArticlePartial([FromQuery] string type)
         {
             var response = await _accountServiceClient.GetActionNotesOfTheSpecificType(type);
 
@@ -105,6 +170,8 @@ namespace CarSharingApp.Web.Controllers
             return PartialView("_NotesArticle", responseModel);
         }
 
+        [HttpGet]
+        [Route("statisticsPartial")]
         public async Task<IActionResult> StatisticsArticlePartial()
         {
             var response = await _accountServiceClient.GetCustomerAccountStatistics();
@@ -117,35 +184,62 @@ namespace CarSharingApp.Web.Controllers
             return PartialView("_StatisticsArticle", responseModel);
         }
 
-        // Partial views actions go below
+        #endregion
 
-        public async Task<IActionResult> DeleteVehicleAndRenderVehiclesArticlePartial(string vehicleId, string vehicleImage, string searchBy, string searchInput)
+        #region Partial views actions
+
+        [HttpGet]
+        [Route("deleteAndRenderPartial/vehicle")]
+        public async Task<IActionResult> DeleteVehicleAndRenderVehiclesArticlePartial([FromQuery] string vehicleId, 
+                                                                                      [FromQuery] string vehicleImage, 
+                                                                                      [FromQuery] string searchBy, 
+                                                                                      [FromQuery] string searchInput)
         {
             var response = await _vehicleServiceClient.DeleteVehicle(vehicleId);
             response.EnsureSuccessStatusCode();
 
             await _blobStorageClient.DeleteBlobAsync(vehicleImage);
 
-            return Redirect($"/Dashboard/VehiclesArticlePartial?searchBy={searchBy}&searchInput={searchInput}");
+            return Redirect($"/dashboard/vehiclesPartial?searchBy={searchBy}&searchInput={searchInput}");
         }
 
-        public async Task<IActionResult> UpdateVehicleStatus(string vehicleId, string isConfirmedByAdmin, string isPublished, string isOrdered,
-                                                             string searchBy, string searchInput)
+        [HttpGet]
+        [Route("updateAndRenderPartial/vehicle/status")]
+        public async Task<IActionResult> UpdateVehicleStatus([FromQuery] string vehicleId,
+                                                             [FromQuery] string isConfirmedByAdmin, 
+                                                             [FromQuery] string isPublished, 
+                                                             [FromQuery] string isOrdered,
+                                                             [FromQuery] string searchBy, 
+                                                             [FromQuery] string searchInput)
         {
             var requestModel = new UpdateVehicleStatusRequest(
-                vehicleId,
                 bool.Parse(isOrdered),
                 bool.Parse(isPublished),
                 bool.Parse(isConfirmedByAdmin));
 
-            var response = await _vehicleServiceClient.UpdateVehicleStatus(requestModel);
+            var response = await _vehicleServiceClient.UpdateVehicleStatus(Guid.Parse(vehicleId), requestModel);
             response.EnsureSuccessStatusCode();
 
-            return Redirect($"/Dashboard/VehiclesArticlePartial?searchBy={searchBy}&searchInput={searchInput}");
+            return Redirect($"/dashboard/vehiclesPartial?searchBy={searchBy}&searchInput={searchInput}");
         }
 
         [HttpGet]
-        public async Task<JsonResult> CheckIfVehicleExists(string id)
+        [Route("finishAndRenderPartial/rental")]
+        public async Task<IActionResult> FinishRental([FromQuery] string rentalId, 
+                                                      [FromQuery] string searchBy, 
+                                                      [FromQuery] string searchInput)
+        {
+            var response = await _rentalServiceClient.FinishRentalRequest(Guid.Parse(rentalId));
+            response.EnsureSuccessStatusCode();
+
+            HttpContext.Session.SetString("FinishedRental", "True");
+
+            return Redirect($"/dashboard/rentalsPartial?searchBy={searchBy}&searchInput={searchInput}");
+        }
+
+        [HttpGet]
+        [Route("checkAvailability/vehicle")]
+        public async Task<JsonResult> CheckIfVehicleExists([FromQuery] string id)
         {
             var response = await _vehicleServiceClient.GetVehicleInformation(Guid.Parse(id));
 
@@ -154,5 +248,6 @@ namespace CarSharingApp.Web.Controllers
             return Json(new { data = true });
         }
 
+        #endregion
     }
 }

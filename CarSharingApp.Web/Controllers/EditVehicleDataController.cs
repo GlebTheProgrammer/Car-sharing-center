@@ -1,35 +1,64 @@
-﻿using CarSharingApp.Models.MongoView;
-using CarSharingApp.Repository.MongoDbRepository;
+﻿using CarSharingApp.Application.Contracts.Vehicle;
+using CarSharingApp.Web.Clients.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarSharingApp.Controllers
 {
-    public class EditVehicleDataController : Controller
+    [Authorize]
+    [Route("vehicle/information/edit")]
+    public sealed class EditVehicleDataController : Controller
     {
-        private readonly MongoDbService _mongoDbService;
+        private readonly IVehicleServicePublicApiClient _vehicleServiceClient;
 
-        public EditVehicleDataController(MongoDbService mongoDbService)
+        public EditVehicleDataController(IVehicleServicePublicApiClient vehicleServiceClient)
         {
-            _mongoDbService= mongoDbService;
+            _vehicleServiceClient = vehicleServiceClient;
         }
 
-        public async Task<IActionResult> Index(string vehicleId)
+        [HttpGet]
+        public async Task<IActionResult> Index([FromQuery] Guid vehicleId)
         {
-            VehicleEditModel vehicleEditModel = await _mongoDbService.GetVehicle_EditRepresentation(vehicleId);
+            var response = await _vehicleServiceClient.GetVehicleInformationForEdit(vehicleId);
 
-            return View(vehicleEditModel);
+            response.EnsureSuccessStatusCode();
+
+            EditVehicleInformationResponse responseModel = await response.Content.ReadFromJsonAsync<EditVehicleInformationResponse>()
+                ?? throw new NullReferenceException(nameof(responseModel));
+
+            return View(responseModel);
         }
 
-        public async Task<IActionResult> EditVehicleData(VehicleEditModel vehicleEditModel)
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditVehicleInformationResponse editVehicle)
         {
             if (!ModelState.IsValid)
-                return View("Index", vehicleEditModel);
+                return View("Index", editVehicle);
 
-            await _mongoDbService.EditVehicleData(vehicleEditModel);
+            var response = await _vehicleServiceClient.UpdateVehicleInformation(
+                Guid.Parse(editVehicle.Id),
+                MapUpdateVehicleRequest(editVehicle));
+
+            response.EnsureSuccessStatusCode();
 
             HttpContext.Session.SetString("ChangedVehicleData", "true");
 
-            return RedirectToAction("Index", new { vehicleId = vehicleEditModel.VehicleId });
+            return RedirectToAction("Index", new { vehicleId = editVehicle.Id });
+        }
+
+        private UpdateVehicleRequest MapUpdateVehicleRequest(EditVehicleInformationResponse editVehicle)
+        {
+            return new UpdateVehicleRequest(
+                editVehicle.BriefDescription,
+                editVehicle.Description,
+                decimal.Parse(editVehicle.HourlyRentalPrice, System.Globalization.CultureInfo.InvariantCulture),
+                decimal.Parse(editVehicle.DailyRentalPrice, System.Globalization.CultureInfo.InvariantCulture),
+                editVehicle.StreetAddress,
+                editVehicle.AptSuiteEtc,
+                editVehicle.City,
+                editVehicle.Country,
+                editVehicle.Latitude,
+                editVehicle.Longitude);
         }
     }
 }

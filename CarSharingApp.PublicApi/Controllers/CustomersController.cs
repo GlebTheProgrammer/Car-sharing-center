@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CarSharingApp.PublicApi.Controllers
 {
+    [Route("api/customers")]
     public sealed class CustomersController : ApiController
     {
         private readonly ICustomerService _customerService;
@@ -23,7 +24,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> CreateCustomer(CreateCustomerRequest request)
+        public async Task<IActionResult> CreateCustomer([FromBody] CreateCustomerRequest request)
         {
             ErrorOr<Customer> requestToCustomerResult = _customerService.From(request);
 
@@ -47,7 +48,7 @@ namespace CarSharingApp.PublicApi.Controllers
                 errors => Problem(errors));
         }
 
-        [HttpGet("NewCustomerRequestTemplate")]
+        [HttpGet("template")]
         [AllowAnonymous]
         public IActionResult GetCreateNewCustomerRequestTemplate()
         {
@@ -73,7 +74,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [HttpGet("{id:guid}")]
         [Authorize]
-        public async Task<IActionResult> GetCustomer(Guid id)
+        public async Task<IActionResult> GetCustomer([FromRoute] Guid id)
         {
             ErrorOr<Customer> getCustomerResult = await _customerService.GetCustomerAsync(id);
 
@@ -81,10 +82,30 @@ namespace CarSharingApp.PublicApi.Controllers
                 customer => Ok(MapCustomerResponse(customer)),
                 errors => Problem(errors));
         }
-        
-        [HttpPut("Info/{id:guid}")]
+
+        [HttpGet]
         [Authorize]
-        public async Task<IActionResult> UpdateCustomerInfo(Guid id, UpdateCustomerInfoRequest request)
+        [Route("current/information")]
+        public async Task<IActionResult> GetCustomerInformation()
+        {
+            JwtClaims? jwtClaims = GetJwtClaims();
+
+            if (jwtClaims is null)
+            {
+                return Forbid();
+            }
+
+            ErrorOr<Customer> getCustomerResult = await _customerService.GetCustomerAsync(Guid.Parse(jwtClaims.Id));
+
+            return getCustomerResult.Match(
+                customer => Ok(MapCustomerDataResponse(customer)),
+                errors => Problem(errors));
+        }
+        
+        [HttpPut("{id:guid}/information")]
+        [Authorize]
+        public async Task<IActionResult> UpdateCustomerInfo([FromRoute] Guid id, 
+                                                            [FromBody] UpdateCustomerInfoRequest request)
         {
             ErrorOr<Customer> getCustomerResult = await _customerService.GetCustomerAsync(id);
 
@@ -112,9 +133,47 @@ namespace CarSharingApp.PublicApi.Controllers
             return NoContent();
         }
 
-        [HttpPut("Credentials/{id:guid}")]
+        [HttpPut("current/information")]
         [Authorize]
-        public async Task<IActionResult> UpdateCustomerCredentials(Guid id, UpdateCustomerCredentialsRequest request)
+        public async Task<IActionResult> UpdateCurrentCustomerInfo([FromBody] UpdateCustomerInfoRequest request)
+        {
+            JwtClaims? jwtClaims = GetJwtClaims();
+
+            if (jwtClaims is null)
+            {
+                return Forbid();
+            }
+
+            ErrorOr<Customer> getCustomerResult = await _customerService.GetCustomerAsync(Guid.Parse(jwtClaims.Id));
+
+            if (getCustomerResult.IsError)
+            {
+                _logger.LogInformation("Failed finding customer with ID: {customerId} when trying to update data.", jwtClaims.Id);
+                return Problem(getCustomerResult.Errors);
+            }
+
+            Customer notUpdatedCustomerYet = getCustomerResult.Value;
+
+            ErrorOr<Customer> requestToCustomerResult = _customerService.From(notUpdatedCustomerYet, request);
+
+            if (requestToCustomerResult.IsError)
+            {
+                return Problem(requestToCustomerResult.Errors);
+            }
+
+            Customer customer = requestToCustomerResult.Value;
+
+            await _customerService.UpdateCustomerInfoAsync(customer);
+
+            _logger.LogInformation("Customer with ID: {registeredCustomerId} has successfully updated his data.", customer.Id);
+
+            return NoContent();
+        }
+
+        [HttpPut("{id:guid}/credentials")]
+        [Authorize]
+        public async Task<IActionResult> UpdateCustomerCredentials([FromRoute] Guid id, 
+                                                                   [FromBody] UpdateCustomerCredentialsRequest request)
         {
             ErrorOr<Customer> getCustomerResult = await _customerService.GetCustomerAsync(id);
 
@@ -142,9 +201,10 @@ namespace CarSharingApp.PublicApi.Controllers
             return NoContent();
         }
 
-        [HttpPut("Password/{id:guid}")]
+        [HttpPut("{id:guid}/password")]
         [Authorize]
-        public async Task<IActionResult> UpdateCustomerPassword(Guid id, UpdateCustomerPasswordRequest request)
+        public async Task<IActionResult> UpdateCustomerPassword([FromRoute] Guid id, 
+                                                                [FromBody] UpdateCustomerPasswordRequest request)
         {
             ErrorOr<Customer> getCustomerResult = await _customerService.GetCustomerAsync(id);
 
@@ -178,9 +238,45 @@ namespace CarSharingApp.PublicApi.Controllers
             return NoContent();
         }
 
+        [HttpPut("current/password")]
+        [Authorize]
+        public async Task<IActionResult> UpdateCurrentCustomerPassword([FromBody] UpdateCustomerPasswordRequest request)
+        {
+            JwtClaims? jwtClaims = GetJwtClaims();
+
+            if (jwtClaims is null)
+            {
+                return Forbid();
+            }
+
+            ErrorOr<Customer> getCustomerResult = await _customerService.GetCustomerAsync(Guid.Parse(jwtClaims.Id));
+
+            if (getCustomerResult.IsError)
+            {
+                _logger.LogInformation("Failed finding customer with ID: {customerId} when trying to update password.", jwtClaims.Id);
+                return Problem(getCustomerResult.Errors);
+            }
+
+            Customer customerWithOldPassword = getCustomerResult.Value;
+
+            ErrorOr<Customer> requestToCustomerResult = _customerService.From(customerWithOldPassword, request);
+            if (requestToCustomerResult.IsError)
+            {
+                return Problem(requestToCustomerResult.Errors);
+            }
+
+            Customer customerWithUpdatedPassword = requestToCustomerResult.Value;
+
+            await _customerService.UpdateCustomerPasswordAsync(customerWithUpdatedPassword);
+
+            _logger.LogInformation("Customer with ID: {registeredCustomerId} has successfully changed his password.", jwtClaims.Id);
+
+            return NoContent();
+        }
+
         [HttpDelete("{id:guid}")]
         [Authorize]
-        public async Task<IActionResult> DeleteCustomer(Guid id)
+        public async Task<IActionResult> DeleteCustomer([FromRoute] Guid id)
         {
             ErrorOr<Customer> getCustomerResult = await _customerService.GetCustomerAsync(id);
 
@@ -197,6 +293,9 @@ namespace CarSharingApp.PublicApi.Controllers
             return NoContent();
         }
 
+        #region Response mapping section
+
+        [NonAction]
         private static CustomerResponse MapCustomerResponse(Customer customer)
         {
             return new CustomerResponse(
@@ -211,5 +310,22 @@ namespace CarSharingApp.PublicApi.Controllers
                 customer.HasAcceptedNewsSharing,
                 customer.Credentials);
         }
+
+        [NonAction]
+        private static CustomerDataResponse MapCustomerDataResponse(Customer customer)
+        {
+            return new CustomerDataResponse(
+                customer.FirstName,
+                customer.LastName,
+                customer.PhoneNumber,
+                customer.DriverLicenseIdentifier,
+                customer.Profile.Description,
+                customer.Profile.Image,
+                customer.Credentials.Login,
+                customer.Credentials.Email,
+                customer.HasAcceptedNewsSharing);
+        }
+
+        #endregion
     }
 }

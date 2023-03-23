@@ -2,11 +2,11 @@
 
 namespace CarSharingApp.Application.Contracts.Vehicle
 {
-    public record VehiclesDisplayOnMapResponse(
+    public sealed record VehiclesDisplayOnMapResponse(
         [property: JsonPropertyName("vehicles")] List<VehicleDisplayOnMap> Vehicles
     );
 
-    public record VehicleDisplayOnMap(
+    public sealed record VehicleDisplayOnMap(
         [property: JsonPropertyName("name")] string Name,
         [property: JsonPropertyName("image")] string Image,
         [property: JsonPropertyName("latitude")] string Latitude,

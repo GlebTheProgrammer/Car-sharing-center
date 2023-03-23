@@ -48,6 +48,14 @@
                                 locale: {
                                     format: 'HH:mm DD MMMM YYYY'
                                 },
+                                ranges: {
+                                    '1 Hour': [moment().startOf('hour').add(1, 'hour'), moment().startOf('hour').add(2, 'hour')],
+                                    '6 Hours': [moment().startOf('hour').add(1, 'hour'), moment().startOf('hour').add(7, 'hour')],
+                                    '12 Hours': [moment().startOf('hour').add(1, 'hour'), moment().startOf('hour').add(13, 'hour')],
+                                    '1 Day': [moment().startOf('hour').add(1, 'hour'), moment().startOf('hour').add(25, 'hour')],
+                                    '3 Days': [moment().startOf('hour').add(1, 'hour'), moment().startOf('hour').add(73, 'hour')],
+                                    '1 Week': [moment().startOf('hour').add(1, 'hour'), moment().startOf('hour').add(169, 'hour')]
+                                },
 
                                 onselect: function () {
                                     var dateObj = $(this).daterangepicker('getDate');
@@ -81,16 +89,15 @@
                         <input asp-for="Amount" class="visually-hidden" type="text" id="totalPriceInput" placeholder="amount" value="@Model.TariffPerHour" readonly />
                         <input asp-for="VehicleName" class="visually-hidden" type="text" value="@Model.VehicleName" readonly />
 
-                        <input asp-for="StartMonth" class="visually-hidden" type="text" id="startMonthInput" value="@DateTime.Now.AddMinutes(60).ToString("MMMM")" readonly />
-                        <input asp-for="EndMonth" class="visually-hidden" type="text" id="endMonthInput" value="@DateTime.Now.AddMinutes(120).ToString("MMMM")" readonly />
-                        <input asp-for="StartDay" class="visually-hidden" type="text" id="startDayInput" value="@DateTime.Now.AddMinutes(60).Day" readonly />
-                        <input asp-for="EndDay" class="visually-hidden" type="text" id="endDayInput" value="@DateTime.Now.AddMinutes(120).Day" readonly />
-                        <input asp-for="StartHour" class="visually-hidden" type="text" id="startHourInput" value="@DateTime.Now.AddMinutes(60).Hour" readonly />
-                        <input asp-for="EndHour" class="visually-hidden" type="text" id="endHourInput" value="@DateTime.Now.AddMinutes(120).Hour" readonly />
-
                         <input asp-for="TariffPerHour" class="visually-hidden" type="number" id="tariffHourInput" value="@Model.TariffPerHour" readonly />
                         <input asp-for="TariffPerDay" class="visually-hidden" type="number" id="tariffDayInput" value="@Model.TariffPerDay" readonly />
 
+                        @{
+                            DateTime utcNow = DateTime.UtcNow;
+                        }
+
+                        <input asp-for="RentalStartsDateTimeLocalStr" class="visually-hidden" type="text" id="rentalStartsDateTimeLocalStrInput" value="@(TimeZoneInfo.ConvertTimeFromUtc(new DateTime(utcNow.Year, utcNow.Month, utcNow.Day, utcNow.Hour, 0, 0), TimeZoneInfo.Local).AddHours(1).ToString("ddd MMM dd yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture))" />
+                        <input asp-for="RentalEndsDateTimeLocalStr" class="visually-hidden" type="text" id="rentalEndsDateTimeLocalStrInput" value="@(TimeZoneInfo.ConvertTimeFromUtc(new DateTime(utcNow.Year, utcNow.Month, utcNow.Day, utcNow.Hour, 0, 0), TimeZoneInfo.Local).AddHours(2).ToString("ddd MMM dd yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture))" />
                     </div>
 
                 </div>
@@ -110,9 +117,11 @@
     $('#datetimesEnds').on('hide.daterangepicker', function (ev, picker) {
 
         var datetimesStartsStr = $('#datetimesStarts').data('daterangepicker').startDate.toString();
-        var datetimesEndsStr = $('#datetimesEnds').data('daterangepicker').startDate.toString();
+        var datetimesEndsStr = $('#datetimesEnds').data('daterangepicker').endDate.toString();
         var vehicleHourlyTariff = parseInt("@Model.TariffPerHour");
         var vehicleDailyTariff = parseInt("@Model.TariffPerDay");
+
+        document.getElementById("datetimesEnds").value = $('#datetimesEnds').data('daterangepicker').endDate.format('HH:mm DD MMMM YYYY');
 
         CalculateVehicleUsagePeriodAndSetUpAllInputs(datetimesStartsStr, datetimesEndsStr, vehicleHourlyTariff, vehicleDailyTariff);
     });

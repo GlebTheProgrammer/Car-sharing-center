@@ -1,6 +1,6 @@
 ﻿namespace CarSharingApp.Application.Contracts.Customer
 {
-    public record UpdateCustomerPasswordRequest(
+    public sealed record UpdateCustomerPasswordRequest(
         string currentPassword,
         string newPassword
     );

@@ -2,7 +2,7 @@
 
 namespace CarSharingApp.Application.Contracts.Vehicle
 {
-    public record VehicleInformationResponse(
+    public sealed record VehicleInformationResponse(
         [property: JsonPropertyName("id")] string Id,
         [property: JsonPropertyName("customerLogin")] string CustomerLogin,
         [property: JsonPropertyName("customerId")] string CustomerId,

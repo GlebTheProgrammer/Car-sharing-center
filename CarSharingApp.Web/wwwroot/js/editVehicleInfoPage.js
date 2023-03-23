@@ -39,21 +39,28 @@ function ShowInputField(target) {
 }
 
 // Function for hiding input fields and showing text content
-function HideInputField(target) {
+function HideInputField(target, form) {
+    if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+    } else {
+        var text = document.getElementById(target + "Text");
+        var changeBtn = document.getElementById("Change" + target + "Btn");
+        var input = document.getElementById(target + "Input");
+        var saveBtn = document.getElementById("Save" + target + "Btn");
 
-    var text = document.getElementById(target + "Text");
-    var changeBtn = document.getElementById("Change" + target + "Btn");
-    var input = document.getElementById(target + "Input");
-    var saveBtn = document.getElementById("Save" + target + "Btn");
+        text.textContent = input.value;
+        SetModelValue(target);
 
-    text.textContent = input.value;
-    SetModelValue(target);
+        input.setAttribute("class", "visually-hidden");
+        saveBtn.setAttribute("class", "visually-hidden");
 
-    input.setAttribute("class", "visually-hidden");
-    saveBtn.setAttribute("class", "visually-hidden");
+        text.setAttribute("class", "text-muted mb-0");
+        changeBtn.setAttribute("class", "btn btn-outline-warning");
 
-    text.setAttribute("class", "text-muted mb-0");
-    changeBtn.setAttribute("class", "btn btn-outline-warning");
+        event.preventDefault();
+    }
+    form.classList.add('was-validated');
 }
 
 // Function for refreshing form model property input value
@@ -75,19 +82,13 @@ function HideErrorSpan(componentId) {
 var markersArray = [];
 
 function setUpTheMarker() {
-    var address = document.getElementById('AddressInput').value;
-
-    if (address === "") {
-        var addressErrorSpan = document.getElementById("AddressError");
-        addressErrorSpan.textContent = "Address can't be empty";
-        addressErrorSpan.setAttribute("class", "text-danger text-center d-flex justify-content-center");
-        return;
-    }
+    var streetAddress = document.getElementById('StreetAddressInput').value;
+    var aptSuiteEtc = document.getElementById('AptSuiteEtcInput').value;
 
     geocoder = new google.maps.Geocoder();
 
     geocoder.geocode({
-        address: address
+        address: streetAddress + " " + aptSuiteEtc
     }, (results, status) => {
         if (status == google.maps.GeocoderStatus.OK) {
 
@@ -109,7 +110,7 @@ function setUpTheMarker() {
 
             map.setCenter({ lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng() });
 
-            HideAddressInputField("Address");
+            HideLocationInputs();
 
         } else {
             alert('Address was not found. Response: ' + status);
@@ -141,12 +142,15 @@ function CancelMapChanges(target) {
 
     map.setCenter({ lat: latSerialized, lng: longSerialized });
 
-    var changeBtn = document.getElementById("Change" + target + "Btn");
-    var input = document.getElementById(target + "Input");
-    var cancelChangesBtn = document.getElementById("Cancel" + target + "ChangesBtn");
-    var searchAddressBtn = document.getElementById("Search" + target + "Btn");
+    CancelAndHideInput("StreetAddress");
+    CancelAndHideInput("AptSuiteEtc");
+    CancelAndHideInput("City");
+    CancelAndHideInput("Country");
 
-    input.setAttribute("class", "visually-hidden");
+    var changeBtn = document.getElementById("ChangeAddressBtn");
+    var cancelChangesBtn = document.getElementById("CancelAddressChangesBtn");
+    var searchAddressBtn = document.getElementById("SearchAddressBtn");
+
     cancelChangesBtn.setAttribute("class", "visually-hidden");
     searchAddressBtn.setAttribute("class", "visually-hidden");
     changeBtn.setAttribute("class", "btn btn-outline-warning");
@@ -160,37 +164,24 @@ function clearAllMarkers() {
 }
 
 function ShowAddressInputField(target) {
-
-    clearAllMarkers();
     var text = document.getElementById(target + "Text");
-    var changeBtn = document.getElementById("Change" + target + "Btn");
     var input = document.getElementById(target + "Input");
-    var cancelChangesBtn = document.getElementById("Cancel" + target + "ChangesBtn");
-    var searchAddressBtn = document.getElementById("Search" + target + "Btn");
+    var section = document.getElementById(target + "Section");
 
-    changeBtn.setAttribute("class", "visually-hidden");
-
-    input.setAttribute("class", "form-control");
+    section.setAttribute("class", "col-6");
     input.value = text.textContent;
-    cancelChangesBtn.setAttribute("class", "btn btn-outline-danger");
-    searchAddressBtn.setAttribute("class", "btn btn-outline-primary ml-2");
 }
 
 function HideAddressInputField(target) {
 
     var text = document.getElementById(target + "Text");
-    var changeBtn = document.getElementById("Change" + target + "Btn");
     var input = document.getElementById(target + "Input");
-    var cancelChangesBtn = document.getElementById("Cancel" + target + "ChangesBtn");
-    var searchAddressBtn = document.getElementById("Search" + target + "Btn");
+    var section = document.getElementById(target + "Section");
 
     text.textContent = input.value;
+
     SetModelValue(target);
 
-    input.setAttribute("class", "visually-hidden");
-    cancelChangesBtn.setAttribute("class", "visually-hidden");
-    searchAddressBtn.setAttribute("class", "visually-hidden");
-
-    changeBtn.setAttribute("class", "btn btn-outline-warning");
+    section.setAttribute("class", "col-6 visually-hidden");
 }
 // Section for working with googleMaps ends here

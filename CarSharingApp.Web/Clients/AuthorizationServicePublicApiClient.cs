@@ -1,5 +1,6 @@
 ﻿using CarSharingApp.Application.Contracts.Authorization;
 using CarSharingApp.Web.Clients.Interfaces;
+using CarSharingApp.Web.Helpers;
 using CarSharingApp.Web.Primitives;
 
 namespace CarSharingApp.Web.Clients
@@ -17,9 +18,9 @@ namespace CarSharingApp.Web.Clients
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            JsonContent content = JsonContent.Create(request);
+            string requestUri = MyCustomQueryBuilder.Build("jwToken", request);
 
-            return await client.PostAsync(client.BaseAddress, content);
+            return await client.GetAsync(requestUri);
         }
     }
 }

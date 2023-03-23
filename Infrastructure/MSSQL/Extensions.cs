@@ -14,15 +14,16 @@ namespace CarSharingApp.Infrastructure.MSSQL
         {
             services.AddDbContext<CarSharingAppContext>(options => options.UseSqlServer
                 (configuration.GetConnectionString("MSSQL")), 
-                contextLifetime: ServiceLifetime.Singleton,
-                optionsLifetime: ServiceLifetime.Singleton);
+                contextLifetime: ServiceLifetime.Transient,
+                optionsLifetime: ServiceLifetime.Transient);
 
             return services;
         }
 
         public static IServiceCollection AddMSSQLRepository<T>(this IServiceCollection services) where T : Entity
         {
-            services.AddSingleton<IRepository<T>, MsSqlRepository<T>>();
+            //services.AddSingleton<IRepository<T>, MsSqlRepository<T>>();
+            services.AddTransient<IRepository<T>, MsSqlRepository<T>>();
 
             return services;
         }

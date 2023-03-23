@@ -202,7 +202,7 @@
         urlArray.push("SearchMyVehicles=" + includeSearchMy);
         urlArray.push("SearchAllExceptMyVehicles=" + includeSearchAllExceptMy);
 
-        $('#vehiclesPartialZone').load("/Catalog/AdvancedSearch?" + urlArray.join("&"));
+        $('#vehiclesPartialZone').load("/catalog/search?" + urlArray.join("&"));
         $('#searchByCriteriaModal').modal('hide');
         ShowSuccessfulMessageAfterAppliedFilters();
     });

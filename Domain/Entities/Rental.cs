@@ -36,7 +36,7 @@ namespace CarSharingApp.Domain.Entities
             VehicleId = vehicleId;
             RentalStartsDateTime = rentalStartsDateTime;
             RentalEndsDateTime = rentalEndsDateTime;
-            IsActive = false;
+            IsActive = true;
         }
 
         public static ErrorOr<Rental> Create(

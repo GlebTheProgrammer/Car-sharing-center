@@ -5,21 +5,27 @@ using System.Net;
 using CarSharingApp.Application.Contracts.ErrorType;
 using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
+using CarSharingApp.Web.Extensions;
 
 namespace CarSharingApp.Controllers
 {
     [Authorize]
+    [Route("vehicle/share")]
     public sealed class AddVehicleController : Controller
     {
         private readonly IVehicleServicePublicApiClient _vehicleServiceClient;
         private readonly IAzureBlobStoragePublicApiClient _blobStorageClient;
 
-        public AddVehicleController(IVehicleServicePublicApiClient vehicleServiceClient, IAzureBlobStoragePublicApiClient blobStorageClient)
+        public AddVehicleController(IVehicleServicePublicApiClient vehicleServiceClient, 
+                                    IAzureBlobStoragePublicApiClient blobStorageClient)
         {
             _vehicleServiceClient = vehicleServiceClient;
             _blobStorageClient = blobStorageClient;
         }
 
+        #region AddVehicle View action methods section
+
+        [HttpGet]
         public IActionResult Index()
         {
             var createNewVehicleRequest = ConfigureNewCreateVehicleRequest();
@@ -27,12 +33,16 @@ namespace CarSharingApp.Controllers
             return View(createNewVehicleRequest);
         }
 
-        public async Task<IActionResult> AddVehicle(CreateVehicleRequest createVehicleRequest, IFormFile file)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [PreventDuplicateRequest]
+        public async Task<IActionResult> AddVehicle([FromForm] CreateVehicleRequest createVehicleRequest, 
+                                                    [FromForm] IFormFile file)
         {
             if (file is null)
                 throw new Exception("Image can't be null");
 
-            DateTime dateTime = DateTime.Now;
+            DateTime dateTime = DateTime.UtcNow;
             string imageName = $"{dateTime.Hour}_{dateTime.Minute}_{dateTime.Second}_{file.FileName}";
 
             var response = await _vehicleServiceClient.CreateNewVehicle(ConfigureNewCreateVehicleRequest(createVehicleRequest, imageName));
@@ -68,6 +78,11 @@ namespace CarSharingApp.Controllers
             return RedirectToAction("Index", "Catalog");
         }
 
+        #endregion
+
+        #region Requests configuration section
+
+        [NonAction]
         private CreateVehicleRequest ConfigureNewCreateVehicleRequest(CreateVehicleRequest? requestFromView = null, string? image = null)
         {
             return new CreateVehicleRequest(
@@ -94,5 +109,7 @@ namespace CarSharingApp.Controllers
                 VIN: requestFromView?.VIN ?? string.Empty,
                 Categories: requestFromView?.Categories ?? string.Empty);
         }
+
+        #endregion
     }
 }

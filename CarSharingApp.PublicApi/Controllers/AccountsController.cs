@@ -11,28 +11,35 @@ using CarSharingApp.Application.ServiceErrors;
 
 namespace CarSharingApp.PublicApi.Controllers
 {
-    public class AccountsController : ApiController
+    [Route("api/accounts")]
+    public sealed class AccountsController : ApiController
     {
         private readonly ICustomerService _customerService;
         private readonly IVehicleService _vehicleService;
+        private readonly IRentalsService _rentalsService;
+        private readonly IPaymentsService _paymentsService;
         private readonly IActionNotesService _notesService;
         private readonly ILogger<AccountsController> _logger;
 
         public AccountsController(
             ICustomerService customerService,
             IVehicleService vehicleService,
+            IRentalsService rentalsService,
+            IPaymentsService paymentsService,
             IActionNotesService notesService,
             ILogger<AccountsController> logger)
         {
             _customerService = customerService;
             _vehicleService = vehicleService;
+            _rentalsService = rentalsService;
+            _paymentsService = paymentsService;
             _notesService = notesService;
             _logger = logger;
         }
 
         [HttpGet]
         [Authorize]
-        [Route("[action]")]
+        [Route("customer/information")]
         public async Task<IActionResult> AccountData()
         {
             JwtClaims? jwtClaims = GetJwtClaims();
@@ -58,10 +65,9 @@ namespace CarSharingApp.PublicApi.Controllers
             return Ok(MapAccountDataResponse(customer, vehicles));
         }
 
-        [HttpGet]
+        [HttpGet("customer/notes/{type}")]
         [Authorize]
-        [Route("[action]")]
-        public async Task<IActionResult> AccountNotes(string type)
+        public async Task<IActionResult> AccountNotes([FromRoute] string type)
         {
             JwtClaims? jwtClaims = GetJwtClaims();
 
@@ -101,7 +107,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [HttpGet]
         [Authorize]
-        [Route("[action]")]
+        [Route("customer/statistics")]
         public async Task<IActionResult> AccountStatistics()
         {
             JwtClaims? jwtClaims = GetJwtClaims();
@@ -128,7 +134,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
         [HttpGet]
         [Authorize]
-        [Route("[action]")]
+        [Route("customer/vehicles")]
         public async Task<IActionResult> AccountVehicles()
         {
             JwtClaims? jwtClaims = GetJwtClaims();
@@ -145,6 +151,28 @@ namespace CarSharingApp.PublicApi.Controllers
             return Ok(MapAccountVehiclesDataResponse(vehicles));
         }
 
+        [HttpGet]
+        [Authorize]
+        [Route("customer/rentals")]
+        public async Task<IActionResult> AccountRentals()
+        {
+            JwtClaims? jwtClaims = GetJwtClaims();
+
+            if (jwtClaims is null)
+            {
+                return Forbid();
+            }
+
+            _logger.LogInformation("Customer with ID: {customerId} asked for account rentals data.", jwtClaims.Id);
+
+            List<Rental> rentals = await _rentalsService.GetAllCustomerRentalsAsync(Guid.Parse(jwtClaims.Id));
+
+            return Ok(await MapAccountRentalsDataResponse(rentals));
+        }
+
+        #region Response mapping section
+
+        [NonAction]
         private AccountVehiclesDataResponse MapAccountVehiclesDataResponse(List<Vehicle> vehicles)
         {
             List<AccountVehicleData> accountVehicleDatas = new List<AccountVehicleData>();
@@ -167,6 +195,37 @@ namespace CarSharingApp.PublicApi.Controllers
             return new AccountVehiclesDataResponse(accountVehicleDatas);
         }
 
+        [NonAction]
+        private async Task<AccountRentalsDataResponse> MapAccountRentalsDataResponse(List<Rental> rentals)
+        {
+            List<AccountRentalData> accountRentalDatas = new List<AccountRentalData>();
+            ErrorOr<Vehicle> vehicle;
+            ErrorOr<Payment> payment;
+
+            foreach (Rental rental in rentals)
+            {
+                vehicle = await _vehicleService.GetVehicleAsync(rental.VehicleId);
+                payment = await _paymentsService.GetByRentalIdAsync(rental.Id);
+
+                if (vehicle.IsError || payment.IsError)
+                    throw new NullReferenceException(nameof(MapAccountRentalsDataResponse));
+
+                accountRentalDatas.Add(new AccountRentalData(
+                    RentalId: rental.Id.ToString(),
+                    VehicleName: vehicle.Value.Name,
+                    VehicleImage: vehicle.Value.Image,
+                    Amount: $"{payment.Value.Amount}",
+                    RentalMadeDateTime: payment.Value.PaymentDateTime,
+                    StartsDateTime: rental.RentalStartsDateTime,
+                    TimeLeftInMinutes: Convert.ToInt32((rental.RentalEndsDateTime - rental.RentalStartsDateTime).TotalMinutes),
+                    ExpiresDateTime: rental.RentalEndsDateTime,
+                    IsActive: rental.IsActive));
+            }
+
+            return new AccountRentalsDataResponse(accountRentalDatas);
+        }
+
+        [NonAction]
         private AccountStatisticsDataResponse MapAccountStatisticsDataResponse(Customer customer, List<Vehicle> vehicles)
         {
             int sharedVehicles = customer.Statistics.VehiclesShared;
@@ -180,6 +239,7 @@ namespace CarSharingApp.PublicApi.Controllers
                 sharedVehicles > rentedVehicles ? rentedVehicles * 100 / sharedVehicles : sharedVehicles * 100 / rentedVehicles);
         }
 
+        [NonAction]
         private AccountDataResponse MapAccountDataResponse(Customer customer, IReadOnlyCollection<Vehicle> vehicles)
         {
             CustomerToBeDisplayedInAccount customerToBeDisplayedInAccount = new(
@@ -218,14 +278,13 @@ namespace CarSharingApp.PublicApi.Controllers
                 vehiclesToBeDisplayed);
         }
 
+        [NonAction]
         private AccountActionNotesResponse MapAccountActionNotesResponse(List<ActionNote> notes)
         {
             return new AccountActionNotesResponse(MapListOfNotes(notes));
         }
 
-
-
-
+        [NonAction]
         private List<NoteToBeDisplayedInAccount> MapListOfNotes(IReadOnlyCollection<ActionNote> notes)
         {
             List<NoteToBeDisplayedInAccount> notesToBeDisplayedInAccount = new List<NoteToBeDisplayedInAccount>();
@@ -241,5 +300,7 @@ namespace CarSharingApp.PublicApi.Controllers
 
             return notesToBeDisplayedInAccount;
         }
+
+        #endregion
     }
 }

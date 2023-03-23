@@ -2,7 +2,8 @@
 
 namespace CarSharingApp.Application.Contracts.Authorization
 {
-    public record TokenResponse(
-        [property: JsonPropertyName("jwToken")] string JWToken
+    public sealed record TokenResponse(
+        [property: JsonPropertyName("jwToken")] string JWToken,
+        [property: JsonPropertyName("customerImage")] string CustomerImage
     );
 }

@@ -1,6 +1,6 @@
 ﻿namespace CarSharingApp.Middlewares
 {
-    public class GlobalExceptionHandlingMiddleware
+    public sealed class GlobalExceptionHandlingMiddleware
     {
         private readonly RequestDelegate _next;
 

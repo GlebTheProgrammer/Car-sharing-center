@@ -1,0 +1,338 @@
+﻿@inject IConfiguration _configuration;
+@model List<CarSharingApp.Application.Contracts.Account.AccountRentalData>
+
+@{
+    CarSharingApp.Web.Models.Pager pager = new CarSharingApp.Web.Models.Pager();
+
+    int pageNo = 0;
+
+    if (ViewBag.Pager != null)
+    {
+        pager = ViewBag.Pager;
+        pageNo = pager.CurrentPage;
+    }
+}
+
+<div class="card-body">
+    <div class="datatable-wrapper datatable-loading no-footer sortable searchable fixed-columns">
+        <div class="datatable-top d-flex align-items-center">
+            <div class="datatable-search table-responsive-sm d-flex align-items-center">
+                <label class="ms-2 me-4 text-nowrap">Search by:</label>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="searchRentalRadioOptions" id="searchRentalByVehicleNameRadio" value="option1" @(ViewBag.SearchBy == null || ViewBag.SearchBy == "VehicleName" ? "checked" : "")>
+                    <label class="form-check-label text-nowrap" for="searchRentalByVehicleNameRadio">Vehicle Name</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="searchRentalRadioOptions" id="searchRentalByAmountRadio" value="option2" @(ViewBag.SearchBy == "Amount" ? "checked" : "")>
+                    <label class="form-check-label text-nowrap" for="searchRentalByAmountRadio">Amount</label>
+                </div>
+                <input id="searchRentalInput" name="searchRentalInput" type="text" class="form-control ms-4" placeholder="Type here..." value="@ViewBag.SearchRentalInput">
+                <button id="searchRentalButton" type="button" class="btn btn-outline-secondary ms-2" style="border-radius: 30px;">Search</button>
+            </div>
+        </div>
+
+        <hr class="mt-3">
+
+        <div class="datatable-container mt-3 table-responsive-sm">
+            <table id="datatablesSimple" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th class="text-center" scope="col">
+                            <label class="datatable-sorter text-primary">Image</label>
+                        </th>
+                        <th class="text-center" scope="col">
+                            <label class="datatable-sorter text-primary">Vehicle Name</label>
+                        </th>
+                        <th class="text-center" scope="col">
+                            <label class="datatable-sorter text-primary">Amount</label>
+                        </th>
+                        <th class="text-center" scope="col">
+                            <label class="datatable-sorter text-primary">Rented</label>
+                        </th>
+                        <th class="text-center" scope="col">
+                            <label class="datatable-sorter text-primary">Starts</label>
+                        </th>
+                        <th class="text-center" scope="col">
+                            <label class="datatable-sorter text-primary">Time Left</label>
+                        </th>
+                        <th class="text-center" scope="col">
+                            <label class="datatable-sorter text-primary">Expires</label>
+                        </th>
+                        <th class="text-center" scope="col">
+                            <label class="datatable-sorter text-primary">Status</label>
+                        </th>
+                        <th class="text-center" scope="col">
+                            <label class="datatable-sorter text-primary">Actions</label>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Count() > 0)
+                    {
+                        int index = 0;
+                        @foreach (var rental in Model)
+                        {
+                            <tr data-index="@(index++)">
+                                <td class="text-center"><img src="@(_configuration["AzureBlobStorage:VehiclesImagesPath"] + rental.VehicleImage)" class="rounded-circle" style="max-height: 30px; width: auto;" loading="lazy" /></td>
+                                <td class="text-center">@rental.VehicleName</td>
+                                <td class="text-center">$@(rental.Amount)</td>
+                                <td class="text-center">@(TimeZoneInfo.ConvertTimeFromUtc(rental.RentalMadeDateTime, TimeZoneInfo.Local).ToString("dd/MM/yyyy"))</td>
+                                <td class="text-center">@(TimeZoneInfo.ConvertTimeFromUtc(rental.StartsDateTime, TimeZoneInfo.Local).ToString("dd/MM/yyyy hh:mm tt"))</td>
+                                @{
+                                    DateTime utcNow = DateTime.UtcNow;
+                                    System.Text.StringBuilder builder = new System.Text.StringBuilder();
+                                    if (utcNow > rental.StartsDateTime && utcNow < rental.ExpiresDateTime && rental.IsActive)
+                                    {
+                                        TimeSpan span = rental.ExpiresDateTime.Subtract(utcNow);
+                                        builder.Append(span.Days == 0 ? "" : $"{span.Days} days ");
+                                        builder.Append(span.Hours == 0 ? "" : $"{span.Hours} hours ");
+                                        builder.Append(span.Minutes == 0 ? "" : $"{span.Minutes + 1} min ");
+                                        builder.Append(span.Days == 0 && span.Hours == 0 && span.Minutes == 0 && span.Seconds != 0 ? "1 min" : "");
+                                    }
+                                    else if (utcNow < rental.StartsDateTime && rental.IsActive)
+                                    {
+                                        TimeSpan span = rental.ExpiresDateTime.Subtract(rental.StartsDateTime);
+                                        builder.Append(span.Days == 0 ? "" : $"{span.Days} days ");
+                                        builder.Append(span.Hours == 0 ? "" : $"{span.Hours} hours ");
+                                        builder.Append(span.Minutes == 0 ? "" : $"{span.Minutes + 1} min ");
+                                        builder.Append(span.Days == 0 && span.Hours == 0 && span.Minutes == 0 && span.Seconds != 0 ? "1 min" : "");
+                                    }
+                                    else
+                                    {
+                                        builder.Append("Expired");
+                                    }
+                                    <td class="text-center">@builder.ToString()</td>
+                                }
+                                <td class="text-center">@(TimeZoneInfo.ConvertTimeFromUtc(rental.ExpiresDateTime, TimeZoneInfo.Local).ToString("dd/MM/yyyy hh:mm tt"))</td>
+
+                                @if (rental.IsActive && DateTime.UtcNow < rental.StartsDateTime)
+                                {
+                                    <!--Rental has not started yet-->
+                                    <td class="text-center"><div class="badge bg-primary text-white rounded-pill">Forthcoming</div></td>
+                                    <td class="d-flex justify-content-center">
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" id="dropdownMenuButton" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Choose...
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                                <h6 class="dropdown-header">Available actions:</h6>
+                                                <a class="dropdown-item" href="#!"><i class="fa-solid fa-circle-info me-2"></i><span>Rental info</span></a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                }
+                                else if (rental.IsActive && DateTime.UtcNow >= rental.StartsDateTime && (rental.ExpiresDateTime - DateTime.UtcNow).TotalMinutes >= 60)
+                                {
+                                     <!--Rental has started-->
+                                    <td class="text-center"><div class="badge bg-success text-white rounded-pill">Active</div></td>
+                                    <td class="d-flex justify-content-center">
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" id="dropdownMenuButton" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Choose...
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                                <h6 class="dropdown-header">Available actions:</h6>
+                                                <a class="dropdown-item" href="#!"><i class="fa-solid fa-circle-info me-2"></i><span>Rental info</span></a>
+                                                <a class="dropdown-item" href="#!" onclick="FinishRental('@rental.RentalId')"><i class="fa-solid fa-flag-checkered me-2"></i><span>Finish</span></a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                }
+                                else if (rental.IsActive && DateTime.UtcNow >= rental.StartsDateTime && (rental.ExpiresDateTime - DateTime.UtcNow).TotalMinutes < 60)
+                                {
+                                    <!--Rental is gonna be expired in less then 60 minutes-->
+                                    <td class="text-center"><div class="badge bg-warning text-white rounded-pill">Expires</div></td>
+                                    <td class="d-flex justify-content-center">
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" id="dropdownMenuButton" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Choose...
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                                <h6 class="dropdown-header">Available actions:</h6>
+                                                <a class="dropdown-item" href="#!"><i class="fa-solid fa-circle-info me-2"></i><span>Rental info</span></a>
+                                                <a class="dropdown-item" href="#!" onclick="FinishRental('@rental.RentalId')"><i class="fa-solid fa-flag-checkered me-2"></i><span>Finish</span></a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <!--Rental is not active-->
+                                    <td class="text-center"><div class="badge bg-danger text-white rounded-pill">Finished</div></td>
+                                    <td class="d-flex justify-content-center">
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" id="dropdownMenuButton" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Choose...
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                                <h6 class="dropdown-header">Available actions:</h6>
+                                                <a class="dropdown-item" href="#!"><i class="fa-solid fa-circle-info me-2"></i><span>Rental info</span></a>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-sm btn-outline-secondary ms-2" type="button" data-target="#t2_details" data-toggle="collapse">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td class="text-center" colspan="9">
+                                Nothing was found.
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+        @if (Model.Count() > 0)
+        {
+            <div class="datatable-bottom d-flex align-items-center">
+                <div class="datatable-info">Showing @((pager.CurrentPage - 1) * pager.PageSize + 1) to @(Model.Count() >= pager.PageSize ? (pager.CurrentPage - 1) * pager.PageSize + pager.PageSize : (pager.CurrentPage - 1) * pager.PageSize + Model.Count()) of @(ViewBag.RentalsCount) rentals</div>
+                <nav class="datatable-pagination mb-0 ms-auto">
+                    @if (pager.TotalPages > 0)
+                    {
+                        <ul class="pagination mb-0">
+
+                            @if (pager.CurrentPage > 1)
+                            {
+                                <li class="page-item">
+                                    <a href="javascript:void(0);" class="page-link" onclick="ChangeRentalsPage(1)">First</a>
+                                </li>
+                                <li class="page-item">
+                                    <a href="javascript:void(0);" class="page-link" onclick="ChangeRentalsPage(@(pager.CurrentPage - 1))">Previous</a>
+                                </li>
+                            }
+
+                            @for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
+                            {
+                                <li class="page-item @(pge == pager.CurrentPage ? "active" : "")">
+                                    <a href="javascript:void(0);" class="page-link" onclick="ChangeRentalsPage(@(pge))">@pge</a>
+                                </li>
+                            }
+
+                            @if (pager.CurrentPage < pager.TotalPages)
+                            {
+                                <li class="page-item">
+                                    <a href="javascript:void(0);" class="page-link" onclick="ChangeRentalsPage(@(pager.CurrentPage + 1))">Next</a>
+                                </li>
+                                <li class="page-item">
+                                    <a href="javascript:void(0);" class="page-link" onclick="ChangeRentalsPage(@(pager.TotalPages))">Last</a>
+                                </li>
+                            }
+
+                        </ul>
+                    }
+                </nav>
+            </div>
+        }
+    </div>
+</div>
+
+
+
+<script>
+    window.addEventListener("load", (event) => {
+        setInterval(checkMinutes, 1000);
+    });
+
+    // When user click search button on rentals table
+    $(function SearchRental() {
+        $('#searchRentalButton').click(function () {
+            var value = $("#searchRentalInput").val();
+            if (document.getElementById("searchRentalByVehicleNameRadio").checked) {
+                $('#rentalsPartialZone').load("/dashboard/rentalsPartial?searchBy=VehicleName&searchInput=" + value);
+            } else if (document.getElementById("searchRentalByAmountRadio").checked) {
+                $('#rentalsPartialZone').load("/dashboard/rentalsPartial?searchBy=Amount&searchInput=" + value);
+            }
+        })
+    });
+
+    // When user click next/prev page on rentals table
+    function ChangeRentalsPage(pageNumber) {
+        var value = $("#searchRentalInput").val();
+        if (document.getElementById("searchRentalByVehicleNameRadio").checked) {
+            $('#rentalsPartialZone').load("/dashboard/rentalsPartial?searchBy=VehicleName&searchInput=" + value + "&page=" + pageNumber);
+        } else if (document.getElementById("searchRentalByAmountRadio").checked) {
+            $('#rentalsPartialZone').load("/dashboard/rentalsPartial?searchBy=Amount&searchInput=" + value + "&page=" + pageNumber);
+        }
+    };
+
+    // When user click delete rental button on rentals table
+    function DeleteVehicle(rentalId) {
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Rental note will be deleted with all the information about it!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#4FA64F',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var value = $("#searchRentalInput").val();
+                if (document.getElementById("searchRentalByVehicleNameRadio").checked) {
+                    $('#rentalsPartialZone').load("/Dashboard/DeleteRentalAndRenderRentalsArticlePartial?rentalId=" + rentalId + "&searchBy=VehicleName&searchInput=" + value, function (responseTxt, statusTxt, xhr) {
+                        if (statusTxt === "success") {
+                            UpdateNotesArticle();
+                            ShowSuccessfulMessageAfterRentalWasDeleted();
+                        }
+                    });
+                } else if (document.getElementById("searchRentalByAmountRadio").checked) {
+                    $('#rentalsPartialZone').load("/Dashboard/DeleteRentalAndRenderRentalsArticlePartial?rentalId=" + rentalId + "&searchBy=Amount&searchInput=" + value, function (responseTxt, statusTxt, xhr) {
+                        if (statusTxt === "success") {
+                            UpdateNotesArticle();
+                            ShowSuccessfulMessageAfterRentalWasDeleted();
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    // When user click either hide or publish button on vehicle in vehicles table
+    function FinishRental(rentalId) {
+        var value = $("#searchRentalInput").val();
+        if (document.getElementById("searchRentalByVehicleNameRadio").checked) {
+            $('#rentalsPartialZone').load("/dashboard/finishAndRenderPartial/rental?rentalId=" + rentalId + "&searchBy=Name&searchInput=" + value, function (responseTxt, statusTxt, xhr) {
+                if (statusTxt === "success") {
+                    UpdateNotesArticle();
+                }
+            });
+        } else if (document.getElementById("searchRentalByAmountRadio").checked) {
+            $('#rentalsPartialZone').load("/dashboard/finishAndRenderPartial/rental?rentalId=" + rentalId + "&searchBy=Name&searchInput=" + value, function (responseTxt, statusTxt, xhr) {
+                if (statusTxt === "success") {
+                    UpdateNotesArticle();
+                }
+            });
+        }
+    }
+
+    function UpdateNotesArticle() {
+        $('#notesPartialZone').load("/dashboard/notesPartial?type=All");
+    }
+</script>
+
+<script>
+    function checkMinutes() {
+        console.log('check');
+        var now = new Date().getMinutes();
+        if (now > checkMinutes.prevTime) {
+            // do something
+            console.log('nextminute arrived');
+
+            var value = $("#searchRentalInput").val();
+            if (document.getElementById("searchRentalByVehicleNameRadio").checked) {
+                $('#rentalsPartialZone').load("/dashboard/rentalsPartial?searchBy=VehicleName&searchInput=" + value + "&page=" + "@(pager.CurrentPage)");
+            } else if (document.getElementById("searchRentalByAmountRadio").checked) {
+                $('#rentalsPartialZone').load("/dashboard/rentalsPartial?searchBy=Amount&searchInput=" + value + "&page=" + "@(pager.CurrentPage)");
+            }
+        }
+        checkMinutes.prevTime = now;
+    }
+</script>

@@ -8,7 +8,7 @@ using ErrorOr;
 
 namespace CarSharingApp.Application.Services
 {
-    public class VehicleService : IVehicleService
+    public sealed class VehicleService : IVehicleService
     {
         private readonly IRepository<Vehicle> _vehicleRepository;
         private readonly IRepository<ActionNote> _noteRepository;
@@ -131,7 +131,7 @@ namespace CarSharingApp.Application.Services
                 request.Categories.Split(',').ToList());
         }
 
-        public ErrorOr<Vehicle> From(Vehicle vehicle, UpdateVehicleInfoRequest request)
+        public ErrorOr<Vehicle> From(Vehicle vehicle, UpdateVehicleRequest request)
         {
             return Vehicle.Create(
                 vehicle.CustomerId,
@@ -156,7 +156,7 @@ namespace CarSharingApp.Application.Services
                 vehicle.Specifications.Transmission.ToString(),
                 vehicle.Specifications.Engine.ToString(),
                 vehicle.Specifications.VIN,
-                request.Categories,
+                FlagEnums.GetListFromCategories(vehicle.Categories),
                 vehicle.Id,
                 vehicle.Status.IsPublished,
                 vehicle.Status.IsOrdered,

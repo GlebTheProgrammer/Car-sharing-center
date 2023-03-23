@@ -1,6 +1,6 @@
 ﻿namespace CarSharingApp.Application.Contracts.Customer
 {
-    public record CreateCustomerRequest(
+    public sealed record CreateCustomerRequest(
         string FirstName,
         string LastName,
         string StreetAddress,

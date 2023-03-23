@@ -2,7 +2,7 @@
 
 namespace CarSharingApp.Application.Contracts.Vehicle
 {
-    public record VehicleResponse(
+    public sealed record VehicleResponse(
         Guid Id,
         Guid CustomerId,
         string Name,

@@ -1,10 +1,11 @@
 ﻿using CarSharingApp.Application.Contracts.Payment;
 using CarSharingApp.Web.Clients.Interfaces;
+using CarSharingApp.Web.Helpers;
 using CarSharingApp.Web.Primitives;
 
 namespace CarSharingApp.Web.Clients
 {
-    public class StripePlatformPublicApiClient : PublicApiClient, IStripePlatformPublicApiClient
+    public sealed class StripePlatformPublicApiClient : PublicApiClient, IStripePlatformPublicApiClient
     {
         private const string clientIdentifier = "PaymentsAPI";
 
@@ -13,13 +14,22 @@ namespace CarSharingApp.Web.Clients
         {
         }
 
+        public async Task<HttpResponseMessage> GetStripePaymentDetails(string sessionId)
+        {
+            var client = CreateNewClientInstance(clientIdentifier);
+
+            string requestUri = $"session/{sessionId}/details";
+
+            return await client.GetAsync(requestUri);
+        }
+
         public async Task<HttpResponseMessage> GetStripeSessionUrl(StripePaymentSessionUrlRequest request)
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            JsonContent content = JsonContent.Create(request);
+            string requestUri = MyCustomQueryBuilder.Build("session", request);
 
-            return await client.PostAsync(client.BaseAddress, content);
+            return await client.GetAsync(requestUri);
         }
     }
 }

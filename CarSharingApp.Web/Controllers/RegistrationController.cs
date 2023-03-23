@@ -9,6 +9,8 @@ using System.Text.Json;
 
 namespace CarSharingApp.Controllers
 {
+    [AllowAnonymous]
+    [Route("registration")]
     public sealed class RegistrationController : Controller
     {
         private readonly ICustomerServicePublicApiClient _customerServiceClient;
@@ -18,7 +20,7 @@ namespace CarSharingApp.Controllers
             _customerServiceClient = customerServiceClient;
         }
 
-        [AllowAnonymous]
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var response = await _customerServiceClient.GetCreateNewCustomerRequestTemplate();
@@ -40,10 +42,10 @@ namespace CarSharingApp.Controllers
             return View(request);
         }
 
-        [AllowAnonymous]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         [PreventDuplicateRequest]
-        public async Task<IActionResult> Register(CreateCustomerRequest createCustomerRequest)
+        public async Task<IActionResult> Register([FromForm] CreateCustomerRequest createCustomerRequest)
         {
             if (!ModelState.IsValid)
                 return View("Index", createCustomerRequest);

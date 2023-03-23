@@ -1,0 +1,9 @@
+﻿<div id="unauthorized">
+    <div class="unauthorized text-center mt-5 mb-5">
+        <img class="mt-5" style="border-radius: 1%;" src="~/Images/ErrorPages/unauthorized.png" alt="Generic placeholder image" height="140" width="140">
+        <h1>401</h1>
+        <h2><span class="text-danger">UNAUTHORIZED!</span></h2>
+        <p>@ViewBag.ErrorDescription</p>
+        <a href="@Url.Action("Index", "Home")" style="text-decoration: none;">Back to homepage</a>
+    </div>
+</div>

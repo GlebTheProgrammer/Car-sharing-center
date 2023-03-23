@@ -1,28 +1,43 @@
-﻿using CarSharingApp.Application.Contracts.ErrorType;
-using CarSharingApp.Application.Contracts.Payment;
+﻿using CarSharingApp.Application.Contracts.Payment;
 using CarSharingApp.Application.Contracts.Rental;
 using CarSharingApp.Application.Contracts.Vehicle;
 using CarSharingApp.Web.Clients.Interfaces;
+using CarSharingApp.Web.Extensions;
+using CarSharingApp.Web.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 using System.Text.Json;
+using System.Web;
 
 namespace CarSharingApp.Controllers
 {
     [Authorize]
-    public class VehicleInformationController : Controller
+    [Route("vehicle")]
+    public sealed class VehicleInformationController : Controller
     {
         private readonly IVehicleServicePublicApiClient _vehicleServiceClient;
         private readonly IStripePlatformPublicApiClient _stripePlatformClient;
+        private readonly IRentalServicePublicApiClient _rentalServiceClient;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly ILogger<VehicleInformationController> _logger;
 
         public VehicleInformationController(IVehicleServicePublicApiClient vehicleServiceClient, 
-                                            IStripePlatformPublicApiClient stripePlatformClient)
+                                            IStripePlatformPublicApiClient stripePlatformClient,
+                                            IRentalServicePublicApiClient rentalServiceClient,
+                                            IWebHostEnvironment webHostEnvironment,
+                                            ILogger<VehicleInformationController> logger)
         {
             _vehicleServiceClient = vehicleServiceClient;
             _stripePlatformClient = stripePlatformClient;
+            _rentalServiceClient = rentalServiceClient;
+            _webHostEnvironment = webHostEnvironment;
+            _logger = logger;
         }
 
-        public async Task<IActionResult> Index(string vehicleId)
+        [HttpGet]
+        [Route("information")]
+        public async Task<IActionResult> Index([FromQuery] string vehicleId)
         {
             var response = await _vehicleServiceClient.GetVehicleInformation(Guid.Parse(vehicleId));
 
@@ -35,15 +50,32 @@ namespace CarSharingApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCheckoutSession(StripePaymentSessionRequest paymentRequest)
+        [ValidateAntiForgeryToken]
+        [PreventDuplicateRequest]
+        [Route("payment/session")]
+        public async Task<IActionResult> CreateCheckoutSession([FromForm] StripePaymentSessionRequest paymentRequest)
         {
+            _logger.LogInformation("CreateCheckoutSession rentalStartsLocalDateTime = {DateTime}", paymentRequest.RentalStartsDateTimeLocalStr);
+
+            DateTime rentalStartsLocalDateTime = MyCustomDateTimeProvider.ParseFromViewIntoCurrentCustomerLocalDateTime(paymentRequest.RentalStartsDateTimeLocalStr);
+            DateTime rentalEndsLocalDateTime = MyCustomDateTimeProvider.ParseFromViewIntoCurrentCustomerLocalDateTime(paymentRequest.RentalEndsDateTimeLocalStr);
+
+            _logger.LogInformation("CreateCheckoutSession rentalStartsLocalDateTime = {DateTime}", rentalStartsLocalDateTime);
+
             string hostedUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}";
+
+            string successResultUrl = HttpUtility.UrlEncode(hostedUrl + Url.Action("SuccessfulPayment", paymentRequest) 
+                ?? throw new ArgumentNullException(nameof(paymentRequest)));
+            string cancelledResultUrl = HttpUtility.UrlEncode(hostedUrl + Url.Action("CancelledPayment", paymentRequest) 
+                ?? throw new ArgumentNullException(nameof(paymentRequest)));
 
             var stripeSessionUrlResponse = await _stripePlatformClient.GetStripeSessionUrl(
                 GenerateNewStripePaymentSessionUrlRequest(
                     request: paymentRequest,
-                    successUrl: hostedUrl + Url.Action("SuccessfulPayment", paymentRequest),
-                    cancelationUrl: hostedUrl + Url.Action("CancelledPayment", paymentRequest)));
+                    rentalStartsUtcDateTime: rentalStartsLocalDateTime,
+                    rentalEndsUtcDateTime: rentalEndsLocalDateTime,
+                    successUrl: successResultUrl,
+                    cancelationUrl: cancelledResultUrl));
 
             string responseContent = await stripeSessionUrlResponse.Content.ReadAsStringAsync();
 
@@ -55,24 +87,35 @@ namespace CarSharingApp.Controllers
             return Redirect(stripeSessionUrl.SessionUrl);
         }
 
-        public async Task<IActionResult> SuccessfulPayment(StripePaymentSessionRequest completedPayment, string sessionId)
+        [HttpGet]
+        [Route("payment/compleated")]
+        public async Task<IActionResult> SuccessfulPayment([FromQuery] StripePaymentSessionRequest completedPayment, 
+                                                           [FromQuery] string sessionId)
         {
-            //await _mongoDbService
+            var paymentDetailsResponse = await _stripePlatformClient.GetStripePaymentDetails(sessionId);
+            string paymentDetailsResponseContent = await paymentDetailsResponse.Content.ReadAsStringAsync();
 
-            //var compleatedOrder = _orderProvider.Provide(payment, (int)_userStatusProvider.GetUserId());
+            StripePaymentDetailsResponse stripePaymentDetails = JsonSerializer.Deserialize<StripePaymentDetailsResponse>(paymentDetailsResponseContent)
+                ?? throw new NotImplementedException(nameof(SuccessfulPayment));
 
-            //_repositoryManager.OrdersRepository.AddNewOrder(compleatedOrder);
+            var submitNewRentalResponse = await _rentalServiceClient.CreateRentalRequest(
+                GenerateNewRequest(
+                    request: completedPayment,
+                    paymentResponse: stripePaymentDetails));
 
-            //_repositoryManager.VehiclesRepository.ChangeVehicleIsOrderedState(payment.VehicleId, true);
+            string submitNewRentalResponseContent = await submitNewRentalResponse.Content.ReadAsStringAsync();
 
-            //_userStatusProvider.ChangeCompletedPaymentProcessState(true);
+            RentalResponse newRental = JsonSerializer.Deserialize<RentalResponse>(submitNewRentalResponseContent)
+                ?? throw new NotImplementedException(nameof(SuccessfulPayment));
 
-            //_repositoryManager.ClientsRepository.IncreaseClientsVehiclesSharedAndOrderedCount((int)_userStatusProvider.GetUserId(), _repositoryManager.VehiclesRepository.GetVehicleById(payment.VehicleId).OwnerId);
+            HttpContext.Session.SetString("CompletedPayment", "true");
 
             return RedirectToAction("Index", "Catalog");
         }
 
-        public IActionResult CancelledPayment(StripePaymentSessionRequest cancelledPayment)
+        [HttpGet]
+        [Route("payment/cancelled")]
+        public IActionResult CancelledPayment([FromQuery] StripePaymentSessionRequest cancelledPayment)
         {
             HttpContext.Session.SetString("CancelledPayment", "true");
 
@@ -81,7 +124,12 @@ namespace CarSharingApp.Controllers
 
         #region Partial section starts here
 
-        public IActionResult RentOrderPartial(string vehicleId, string vehicleName, string vehicleOwnerId, string tariffPerHour, string tariffPerDay)
+        [Route("rentalPartial")]
+        public IActionResult RentOrderPartial([FromForm] string vehicleId, 
+                                              [FromForm] string vehicleName, 
+                                              [FromForm] string vehicleOwnerId, 
+                                              [FromForm] string tariffPerHour, 
+                                              [FromForm] string tariffPerDay)
         {
             var viewModel = new StripePaymentSessionRequest()
             {
@@ -97,21 +145,30 @@ namespace CarSharingApp.Controllers
 
         #endregion
 
-        #region Models parsing
+        #region Models parsing section starts here
 
-        private CreateNewRentalRequest GenerateNewRequest(StripePaymentSessionRequest request)
+        [NonAction]
+        private CreateNewRentalRequest GenerateNewRequest(StripePaymentSessionRequest request, StripePaymentDetailsResponse paymentResponse)
         {
-            throw new NotImplementedException();
-            //return new CreateNewRentalRequest(
-            //    VehicleId: request.VehicleId,
-            //    VehicleName: request.VehicleName,
-            //    VehicleOwnerId: request.VehicleOwnerId,
-            //    Amount: decimal.Parse(request.Amount),
-                
+            DateTime rentalStartsUtcDateTime = MyCustomDateTimeProvider.ParseFromLocalToUtcDateTime(request.RentalStartsDateTimeLocalStr);
+            DateTime rentalEndsUtcDateTime = MyCustomDateTimeProvider.ParseFromLocalToUtcDateTime(request.RentalEndsDateTimeLocalStr);
+
+            _logger.LogInformation("GenerateNewRequest rentalStartsUtcDateTime = {DateTime}", rentalStartsUtcDateTime);
+
+            return new CreateNewRentalRequest(
+                VehicleId: request.VehicleId,
+                VehicleName: request.VehicleName,
+                VehicleOwnerId: request.VehicleOwnerId,
+                PaymentAmount: paymentResponse.Amount / 100,
+                PaymentDateTime: paymentResponse.PaymentDateTime,
+                RentalStartsDateTime: rentalStartsUtcDateTime/*.ToString(CultureInfo.InvariantCulture)*/,
+                RentalEndsDateTime: rentalEndsUtcDateTime/*.ToString(CultureInfo.InvariantCulture)*/,
+                StripePaymentId: paymentResponse.PaymentId);
         }
 
+        [NonAction]
         private StripePaymentSessionUrlRequest GenerateNewStripePaymentSessionUrlRequest(
-            StripePaymentSessionRequest request, string successUrl, string cancelationUrl)
+            StripePaymentSessionRequest request, string successUrl, string cancelationUrl, DateTime rentalStartsUtcDateTime, DateTime rentalEndsUtcDateTime)
         {
             return new StripePaymentSessionUrlRequest(
                 VehicleId: request.VehicleId,
@@ -120,15 +177,10 @@ namespace CarSharingApp.Controllers
                 Amount: request.Amount,
                 TariffPerHour: request.TariffPerHour,
                 TariffPerDay: request.TariffPerDay,
-                StartHour: request.StartHour,
-                StartDay: request.StartDay,
-                StartMonth: request.StartMonth,
-                EndHour: request.EndHour,
-                EndDay: request.EndDay,
-                EndMonth: request.EndMonth,
+                RentalStartsDateTimeUTC: rentalStartsUtcDateTime.ToString(CultureInfo.InvariantCulture),
+                RentalEndsDateTimeUTC: rentalEndsUtcDateTime.ToString(CultureInfo.InvariantCulture),
                 SuccessUrl: successUrl,
                 CancelationUrl: cancelationUrl);
-
         }
 
         #endregion

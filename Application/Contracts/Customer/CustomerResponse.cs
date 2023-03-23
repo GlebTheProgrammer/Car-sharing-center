@@ -2,7 +2,7 @@
 
 namespace CarSharingApp.Application.Contracts.Customer
 {
-    public record CustomerResponse(
+    public sealed record CustomerResponse(
         Guid Id,
         string FirstName,
         string LastName,
@@ -12,5 +12,6 @@ namespace CarSharingApp.Application.Contracts.Customer
         Profile Profile,
         Statistics Statistics,
         bool HasAcceptedNewsSharing,
-        Credentials Credentials);
+        Credentials Credentials
+    );
 }

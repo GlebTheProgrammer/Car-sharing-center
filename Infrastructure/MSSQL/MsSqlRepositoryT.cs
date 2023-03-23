@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace CarSharingApp.Infrastructure.MSSQL
 {
-    public class MsSqlRepository<T> : IRepository<T> where T : Entity
+    public sealed class MsSqlRepository<T> : IRepository<T> where T : Entity
     {
         private readonly CarSharingAppContext _context;
 
@@ -22,7 +22,7 @@ namespace CarSharingApp.Infrastructure.MSSQL
                 throw new ArgumentNullException(nameof(entity));
             }
 
-            await _context.Set<T>().AddAsync(entity);
+            await _context.Set<T>().AddRangeAsync(entity);
             await _context.SaveChangesAsync();
         }
 

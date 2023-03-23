@@ -9,7 +9,7 @@ namespace CarSharingApp.Domain.Entities
     public sealed class Customer : Entity
     {
         public static readonly Regex FirstLastNameRegex = new Regex("^[^±!@£$%^&*_+§¡€#¢§¶•ªº«\\/<>?:;|=.,]{1,20}$");
-        public static readonly Regex PhoneNumberRegex = new Regex("^[\\+]?[(]?[0-9]{1,3}[)]?[-\\s\\.]?[0-9]{3}[-\\s\\.]?[0-9]{4,6}$");
+        public static readonly Regex PhoneNumberRegex = new Regex("\\(?\\+[0-9]{1,3}\\)? ?-?[0-9]{1,3} ?-?[0-9]{3,5} ?-?[0-9]{4}( ?-?[0-9]{3})? ?(\\w{1,10}\\s?\\d{1,6})?");
         public const int MinDriverLicenseIdentifierLength = 5;
         public const int MaxDriverLicenseIdentifierLength = 30;
 

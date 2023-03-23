@@ -6,7 +6,7 @@ using CarSharingApp.Web.Clients.Interfaces;
 
 namespace CarSharingApp.Web.Clients
 {
-    public class BlobStoragePublicApiClient : IAzureBlobStoragePublicApiClient
+    public sealed class BlobStoragePublicApiClient : IAzureBlobStoragePublicApiClient
     {
         private readonly BlobServiceClient _blobServiceClient;
         private readonly IConfiguration _configuration;

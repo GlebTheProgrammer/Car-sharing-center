@@ -1,8 +1,6 @@
 ﻿using Azure.Storage.Blobs;
 using CarSharingApp.Web.Clients.Interfaces;
-using Polly;
-using Polly.Contrib.WaitAndRetry;
-using Stripe;
+using CarSharingApp.Web.Clients.Policies;
 
 namespace CarSharingApp.Web.Clients.Extensions
 {
@@ -16,10 +14,9 @@ namespace CarSharingApp.Web.Clients.Extensions
             {
                 client.BaseAddress = new Uri(configuration[$"Clients:{identifier}:BaseAddress"]
                     ?? throw new ArgumentNullException(identifier));
-            })
-            .AddTransientHttpErrorPolicy(
-            polictBuilder =>
-                polictBuilder.WaitAndRetryAsync(Backoff.DecorrelatedJitterBackoffV2(TimeSpan.FromSeconds(1), 4)));
+            }).AddPolicyHandler(
+                request => request.Method == HttpMethod.Get ? new ClientPolicy(3).BackoffHttpRetry 
+                                                            : new ClientPolicy(3).BackoffHttpRetry);
 
             return services;
         }
@@ -30,18 +27,6 @@ namespace CarSharingApp.Web.Clients.Extensions
             services.AddSingleton(s => new BlobServiceClient(configuration["AzureBlobStorage:ConnectionString"]));
 
             services.AddSingleton<IAzureBlobStoragePublicApiClient, BlobStoragePublicApiClient>();
-
-            return services;
-        }
-
-        public static IServiceCollection RegisterStripePlatformClient<T>(this IServiceCollection services, T configuration)
-            where T : IConfigurationBuilder, IConfigurationRoot, IDisposable
-        {
-            StripeConfiguration.ApiKey = "sk_test_51M6B0AGBXizEWSwDh5mkyk4o3DvKzmywGwJh7Fg2cpd9mxmhLiIPkARsFcvN3Yov0Qyshlqu8gITm3NGPPReXtbW00dvIu6aGa";
-
-            services.AddSingleton(s => new BlobServiceClient(configuration["AzureBlobStorage:ConnectionString"]));
-
-            services.AddSingleton<IStripePlatformPublicApiClient, StripePlatformPublicApiClient>();
 
             return services;
         }

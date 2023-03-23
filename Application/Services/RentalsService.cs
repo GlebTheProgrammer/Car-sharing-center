@@ -7,7 +7,7 @@ using CarSharingApp.Application.ServiceErrors;
 
 namespace CarSharingApp.Application.Services
 {
-    public class RentalsService : IRentalsService
+    public sealed class RentalsService : IRentalsService
     {
         private readonly IRepository<Rental> _rentalsRepository;
         private readonly IRepository<Payment> _paymentsRepository;
@@ -53,7 +53,7 @@ namespace CarSharingApp.Application.Services
         public async Task<Created> SubmitNewRental(Rental rental, Payment payment)
         {
             // Create 1:1 Dependency
-            await _rentalsRepository.CreateAsync(rental);
+            //await _rentalsRepository.CreateAsync(rental);
             await _paymentsRepository.CreateAsync(Payment.CombinePaymentWithARental(payment, rental));
 
             Vehicle rentedVehicle = await _vehiclesRepository.GetAsync(rental.VehicleId);
@@ -83,6 +83,13 @@ namespace CarSharingApp.Application.Services
                 return ApplicationErrors.Rental.NotFound;
         }
 
+        public async Task<List<Rental>> GetAllCustomerRentalsAsync(Guid customerId)
+        {
+            var result = await _rentalsRepository.GetAllAsync(r => r.RentedCustomerId == customerId);
+
+            return result.ToList();
+        }
+
         public ErrorOr<Rental> From(CreateNewRentalRequest request, Guid rentedCustomerId)
         {
             return Rental.Create(
@@ -91,6 +98,13 @@ namespace CarSharingApp.Application.Services
                 vehicleId: Guid.Parse(request.VehicleId),
                 rentalStartsDateTime: request.RentalStartsDateTime,
                 rentalEndsDateTime: request.RentalEndsDateTime);
+        }
+
+        public async Task<List<Rental>> GetAllExpiredAndActiveRentals()
+        {
+            var result = await _rentalsRepository.GetAllAsync(r => r.IsActive && r.RentalEndsDateTime < DateTime.UtcNow);
+
+            return result.ToList();
         }
     }
 }

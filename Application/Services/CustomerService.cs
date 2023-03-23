@@ -8,7 +8,7 @@ using CarSharingApp.Domain.ValueObjects;
 
 namespace CarSharingApp.Application.Services
 {
-    public class CustomerService : ICustomerService
+    public sealed class CustomerService : ICustomerService
     {
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<ActionNote> _noteRepository;
@@ -96,6 +96,13 @@ namespace CarSharingApp.Application.Services
             return Result.Updated;
         }
 
+        public async Task<Updated> UpdateCustomerStatisticsAsync(Customer customer)
+        {
+            await _customerRepository.UpdateAsync(customer);
+
+            return Result.Updated;
+        }
+
         public async Task<ErrorOr<string>> CompareCustomerOldPasswordWithExistingOne(Guid id, string oldPassword)
         {
             Customer? customer = await _customerRepository.GetAsync(id);
@@ -142,11 +149,11 @@ namespace CarSharingApp.Application.Services
             return Customer.Create(
                 request.FirstName,
                 request.LastName,
-                request.StreetAddress,
-                request.AptSuiteEtc,
-                request.City,
-                request.Country, 
-                request.ZipPostCode,
+                existingCustomer.Address.StreetAddress,
+                existingCustomer.Address.AptSuiteEtc,
+                existingCustomer.Address.City,
+                existingCustomer.Address.Country.Name, 
+                existingCustomer.Address.ZipPostCode,
                 request.PhoneNumber,
                 request.DriverLicenseIdentifier,
                 request.HasAcceptedNewsSharing,

@@ -1,6 +1,6 @@
 ﻿namespace CarSharingApp.Web.Models
 {
-    public class Pager
+    public sealed class Pager
     {
         public Pager()
         {

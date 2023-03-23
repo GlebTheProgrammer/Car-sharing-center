@@ -2,7 +2,7 @@
 
 namespace CarSharingApp.Application.Contracts.Account
 {
-    public record AccountStatisticsDataResponse(
+    public sealed record AccountStatisticsDataResponse(
         [property: JsonPropertyName("vehiclesRentedToTheirTotalNumber")] int VehiclesRentedToTheirTotalNumber,
         [property: JsonPropertyName("vehiclesPublishedToTheirTotalNumber")] int VehiclesPublishedToTheirTotalNumber,
         [property: JsonPropertyName("vehiclesHiddenToTheirTotalNumber")] int VehiclesHiddenToTheirTotalNumber,

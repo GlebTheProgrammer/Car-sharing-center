@@ -2,7 +2,7 @@
 
 namespace CarSharingApp.Application.Contracts.Authorization
 {
-    public class AuthorizationRequest
+    public sealed class AuthorizationRequest
     {
         [Required]
         public string EmailOrLogin { get; set; } = string.Empty;

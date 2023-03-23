@@ -1,5 +1,6 @@
 ﻿using CarSharingApp.Application.Contracts.Vehicle;
 using CarSharingApp.Web.Clients.Interfaces;
+using CarSharingApp.Web.Helpers;
 using CarSharingApp.Web.Primitives;
 
 namespace CarSharingApp.Web.Clients
@@ -33,48 +34,72 @@ namespace CarSharingApp.Web.Clients
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            JsonContent content = JsonContent.Create(request);
-
-            return await client.PostAsync("NearbyVehiclesMapRepresentation", content);
+            string requestUri = MyCustomQueryBuilder.Build("nearbyMapRepresentation", request);
+            
+            return await client.GetAsync(requestUri);
         }
 
         public async Task<HttpResponseMessage> GetAllApprovedAndPublishedVehiclesCatalogRepresentation()
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            return await client.GetAsync("CatalogRepresentation");
+            return await client.GetAsync("catalogRepresentation");
         }
 
         public async Task<HttpResponseMessage> GetAllApprovedAndPublishedVehiclesMapRepresentation()
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            return await client.GetAsync("MapRepresentation");
+            return await client.GetAsync("mapRepresentation");
         }
 
         public async Task<HttpResponseMessage> GetAllApprovedAndPublishedVehiclesWithFilterCatalogRepresentation(GetVehiclesByCriteriaRequest request)
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            JsonContent content = JsonContent.Create(request);
+            string requestUri = MyCustomQueryBuilder.Build("criteriaCatalogRepresentation", request);
 
-            return await client.PostAsync("CriteriaCatalogRepresentation", content);
+            return await client.GetAsync(requestUri);
         }
 
         public async Task<HttpResponseMessage> GetVehicleInformation(Guid id)
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
-            return await client.GetAsync("Information" + $"?id={id}");
+            string requestUri = $"{id}/information";
+
+            return await client.GetAsync(requestUri);
         }
 
-        public async Task<HttpResponseMessage> UpdateVehicleStatus(UpdateVehicleStatusRequest request)
+        public async Task<HttpResponseMessage> GetVehicleInformationForEdit(Guid id)
         {
             var client = CreateNewClientInstance(clientIdentifier);
 
+            string requestUri = $"{id}/information/edit";
+
+            return await client.GetAsync(requestUri);
+        }
+
+        public async Task<HttpResponseMessage> UpdateVehicleInformation(Guid id, UpdateVehicleRequest request)
+        {
+            var client = CreateNewClientInstance(clientIdentifier);
+
+            string requestUri = $"{id}";
+
             JsonContent content = JsonContent.Create(request);
 
-            return await client.PutAsync("UpdateVehicleStatus", content);
+            return await client.PutAsync(requestUri, content);
+        }
+
+        public async Task<HttpResponseMessage> UpdateVehicleStatus(Guid id, UpdateVehicleStatusRequest request)
+        {
+            var client = CreateNewClientInstance(clientIdentifier);
+            
+            string requestUri = $"{id}/status";
+
+            JsonContent content = JsonContent.Create(request);
+
+            return await client.PutAsync(requestUri, content);
         }
     }
 }

@@ -4,7 +4,7 @@ using CarSharingApp.Domain.Entities;
 
 namespace CarSharingApp.Application.Services
 {
-    public class ActionNotesService : IActionNotesService
+    public sealed class ActionNotesService : IActionNotesService
     {
         private readonly IRepository<ActionNote> _noteRepository;
 

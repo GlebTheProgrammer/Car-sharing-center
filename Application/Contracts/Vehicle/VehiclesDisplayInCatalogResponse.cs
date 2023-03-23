@@ -2,11 +2,11 @@
 
 namespace CarSharingApp.Application.Contracts.Vehicle
 {
-    public record VehiclesDisplayInCatalogResponse(
+    public sealed record VehiclesDisplayInCatalogResponse(
         [property: JsonPropertyName("vehicles")] List<VehicleDisplayInCatalog> Vehicles
     );
 
-    public record VehicleDisplayInCatalog(
+    public sealed record VehicleDisplayInCatalog(
         [property: JsonPropertyName("vehicleId")] string VehicleId,
         [property: JsonPropertyName("name")] string Name,
         [property: JsonPropertyName("image")] string Image,
